@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Fauna.Client\Fauna.csproj" />
+    <ProjectReference Include="..\Fauna\Fauna.csproj" />
   </ItemGroup>
 
   <ItemGroup>
