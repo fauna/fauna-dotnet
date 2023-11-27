@@ -1,16 +1,16 @@
 using NUnit.Framework;
-using Fauna.Configuration;
 
 namespace Fauna.Test;
 
 [TestFixture]
-public class ClientTests
+public class ConfigBuilderTests
 {
   [Test]
   public void ConstructorWorksFine()
   {
-    var b = Config.CreateBuilder().SetSecret("secret");
+    var b = ClientConfig.CreateBuilder().SetSecret("secret").Build();
 
     Assert.AreEqual("secret", b.Secret);
+    Assert.AreEqual(new Uri(Constants.Endpoints.Default), b.Endpoint);
   }
 }

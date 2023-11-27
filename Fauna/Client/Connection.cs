@@ -1,6 +1,4 @@
-﻿using Fauna.Configuration;
-
-namespace Fauna;
+﻿namespace Fauna;
 
 public class Connection : IConnection
 {
@@ -28,10 +26,10 @@ public class Connection : IConnection
 
     public class Builder
     {
-        public Config? FaunaConfig { get; private set; }
+        public ClientConfig? FaunaConfig { get; private set; }
         public HttpClient? HttpClient { get; private set; }
 
-        public Builder SetFaunaConfig(Config faunaConfig)
+        public Builder SetFaunaConfig(ClientConfig faunaConfig)
         {
             FaunaConfig = faunaConfig;
             return this;

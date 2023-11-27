@@ -1,21 +1,17 @@
 using System.Globalization;
-using Fauna.Configuration;
 using Fauna.Constants;
-using Fauna.Encoding;
 
 namespace Fauna;
 
 public class RequestBuilder
 {
-    private readonly Config _faunaConfig;
-    private readonly Auth _auth;
+    private readonly ClientConfig _faunaConfig;
     private readonly Uri _uri;
 
     private RequestBuilder(Builder builder)
     {
         _faunaConfig = builder.FaunaConfig;
         _uri = _faunaConfig.Endpoint;
-        _auth = new Auth(_faunaConfig.Secret);
     }
 
     public static Builder CreateBuilder()
@@ -43,7 +39,7 @@ public class RequestBuilder
     {
         var headers = new Dictionary<string, string>
         {
-            { Headers.Authorization, _auth.Bearer() },
+            { Headers.Authorization, $"Bearer {_faunaConfig.Secret}" },
             { Headers.Format, "tagged" },
             { Headers.AcceptEncoding, "gzip" },
             { Headers.ContentType, "application/json;charset=utf-8" },
@@ -66,7 +62,7 @@ public class RequestBuilder
 
         if (_faunaConfig.QueryTags != null)
         {
-            headers.Add(Headers.QueryTags, QueryTags.Encode(_faunaConfig.QueryTags));
+            headers.Add(Headers.QueryTags, EncodeQueryTags(_faunaConfig.QueryTags));
         }
 
         if (!string.IsNullOrEmpty(_faunaConfig.TraceParent))
@@ -77,11 +73,16 @@ public class RequestBuilder
         return headers;
     }
 
+    private string EncodeQueryTags(Dictionary<string, string> tags)
+    {
+        return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
+    }
+
     public class Builder
     {
-        public Config? FaunaConfig { get; private set; }
+        public ClientConfig? FaunaConfig { get; private set; }
 
-        public Builder SetFaunaConfig(Config faunaConfig)
+        public Builder SetFaunaConfig(ClientConfig faunaConfig)
         {
             FaunaConfig = faunaConfig;
             return this;

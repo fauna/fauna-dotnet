@@ -1,10 +1,10 @@
-﻿namespace Fauna.Configuration;
+﻿namespace Fauna;
 
 /// <summary>
 /// FaunaConfig is a configuration class used to set up and configure a connection to Fauna.
 /// It encapsulates various settings such as the endpoint URL, secret key, query timeout, and others.
 /// </summary>
-public class Config
+public class ClientConfig
 {
     public Uri Endpoint { get; }
     public string Secret { get; }
@@ -16,7 +16,7 @@ public class Config
 
     private static readonly TimeSpan DefaultQueryTimeout = TimeSpan.FromSeconds(5);
 
-    private Config(Builder builder)
+    private ClientConfig(Builder builder)
     {
         Endpoint = builder.Endpoint;
         Secret = builder.Secret;
@@ -84,9 +84,9 @@ public class Config
             return this;
         }
 
-        public Config Build()
+        public ClientConfig Build()
         {
-            return new Config(this);
+            return new ClientConfig(this);
         }
     }
 }

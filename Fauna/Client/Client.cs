@@ -1,17 +1,20 @@
-﻿using Fauna.Configuration;
-
-namespace Fauna;
+﻿namespace Fauna;
 
 public class Client
 {
     private readonly IConnection _connection;
     private const int DefaultTimeout = 5;
 
-    public Client(Config faunaConfig, HttpClient? httpClient = null)
+    public Client(string secret, HttpClient? httpClient = null) :
+        this(ClientConfig.CreateBuilder().SetSecret(secret).Build(), httpClient)
+    {
+    }
+
+    public Client(ClientConfig clientConfig, HttpClient? httpClient = null)
     {
         // Initialize the connection
         _connection = Connection.CreateBuilder()
-            .SetFaunaConfig(faunaConfig)
+            .SetFaunaConfig(clientConfig)
             .SetHttpClient(httpClient ?? new HttpClient()
             {
                 Timeout = TimeSpan.FromSeconds(DefaultTimeout)
