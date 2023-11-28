@@ -32,7 +32,7 @@ public enum FaunaTokenType
     EndDocument,
     
     /// <summary>The token type is a Fauna property name.</summary>
-    PropertyName,
+    FieldName,
     
     /// <summary>The token type is a Fauna string.</summary>
     String,
