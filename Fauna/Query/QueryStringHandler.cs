@@ -22,6 +22,11 @@ public ref struct QueryStringHandler
         fragments.Add(value);
     }
 
+    public void AppendFormatted(Object value)
+    {
+        fragments.Add(new Query.Val(value));
+    }
+
     public Query Result()
     {
         return new Query.Expr(fragments);
