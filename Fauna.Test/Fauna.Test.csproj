@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Fauna.Client\Fauna.Client.csproj" />
+    <ProjectReference Include="..\Fauna\Fauna.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="JustMock" Version="2023.3.1122.188" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="nunit" Version="3.14.0" />
     <PackageReference Include="nunit3testadapter" Version="4.5.0" />
