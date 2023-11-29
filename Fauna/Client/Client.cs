@@ -9,15 +9,15 @@ public class Client
     {
     }
 
-    public Client(ClientConfig clientConfig, HttpClient? httpClient = null)
+    public Client(ClientConfig config, HttpClient? httpClient = null)
     {
         // Initialize the connection
         _connection = new Connection(
-            clientConfig,
+            config,
             httpClient ?? new HttpClient()
             {
-                BaseAddress = clientConfig.Endpoint,
-                Timeout = clientConfig.ConnectionTimeout
+                BaseAddress = config.Endpoint,
+                Timeout = config.ConnectionTimeout
             });
     }
 

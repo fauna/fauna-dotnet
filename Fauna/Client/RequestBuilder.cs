@@ -7,11 +7,11 @@ namespace Fauna;
 internal class RequestBuilder
 {
     private const string QueryPath = "/query/1";
-    private readonly ClientConfig _clientConfig;
+    private readonly ClientConfig _config;
 
     internal RequestBuilder(ClientConfig config)
     {
-        _clientConfig = config;
+        _config = config;
     }
 
     public HttpRequestMessage BuildRequest(string fql)
@@ -42,35 +42,35 @@ internal class RequestBuilder
     {
         var headers = new Dictionary<string, string>
         {
-            { Headers.Authorization, $"Bearer {_clientConfig.Secret}" },
+            { Headers.Authorization, $"Bearer {_config.Secret}" },
             { Headers.Format, "simple" },
             { Headers.AcceptEncoding, "gzip" },
             { Headers.ContentType, "application/json;charset=utf-8" },
             { Headers.Driver, "C#" },
             {
                 Headers.QueryTimeoutMs,
-                _clientConfig.QueryTimeout.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)
+                _config.QueryTimeout.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)
             }
         };
 
-        if (_clientConfig.Linearized != null)
+        if (_config.Linearized != null)
         {
-            headers.Add(Headers.Linearized, _clientConfig.Linearized.ToString());
+            headers.Add(Headers.Linearized, _config.Linearized.ToString());
         }
 
-        if (_clientConfig.TypeCheck != null)
+        if (_config.TypeCheck != null)
         {
-            headers.Add(Headers.TypeCheck, _clientConfig.TypeCheck.ToString());
+            headers.Add(Headers.TypeCheck, _config.TypeCheck.ToString());
         }
 
-        if (_clientConfig.QueryTags != null)
+        if (_config.QueryTags != null)
         {
-            headers.Add(Headers.QueryTags, EncodeQueryTags(_clientConfig.QueryTags));
+            headers.Add(Headers.QueryTags, EncodeQueryTags(_config.QueryTags));
         }
 
-        if (!string.IsNullOrEmpty(_clientConfig.TraceParent))
+        if (!string.IsNullOrEmpty(_config.TraceParent))
         {
-            headers.Add(Headers.TraceParent, _clientConfig.TraceParent);
+            headers.Add(Headers.TraceParent, _config.TraceParent);
         }
 
         return headers;
