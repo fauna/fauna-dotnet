@@ -1,7 +1,7 @@
 namespace Fauna.Constants;
 
-public struct Endpoints
+public readonly struct Endpoints
 {
-    public const string Default = "https://db.fauna.com";
-    public const string Local = "http://localhost:8443";
+    public static readonly Uri Default = new("https://db.fauna.com");
+    public static readonly Uri Local = new("http://localhost:8443");
 }

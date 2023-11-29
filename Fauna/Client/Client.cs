@@ -3,44 +3,46 @@
 public class Client
 {
     private readonly IConnection _connection;
-    private const int DefaultTimeout = 5;
 
     public Client(string secret, HttpClient? httpClient = null) :
-        this(ClientConfig.CreateBuilder().SetSecret(secret).Build(), httpClient)
+        this(new ClientConfig { Secret = secret }, httpClient)
     {
     }
 
     public Client(ClientConfig clientConfig, HttpClient? httpClient = null)
     {
         // Initialize the connection
-        _connection = Connection.CreateBuilder()
-            .SetFaunaConfig(clientConfig)
-            .SetHttpClient(httpClient ?? new HttpClient()
+        _connection = new Connection(
+            clientConfig,
+            httpClient ?? new HttpClient()
             {
-                Timeout = TimeSpan.FromSeconds(DefaultTimeout)
-            })
-            .Build();
+                BaseAddress = clientConfig.Endpoint,
+                Timeout = clientConfig.ConnectionTimeout
+            });
     }
 
-    public async Task<T?> QueryAsync<T>(string fql) where T : class
+    public async Task<string> QueryAsync(string query)
     {
-        if (fql == null) throw new ArgumentException("The provided FQL query is null.");
+        if (query == null) throw new ArgumentException("The provided FQL query is null.");
 
-        var response = await _connection.PerformRequestAsync(fql);
+        var response = await _connection.PerformRequestAsync(query);
 
-        //ProcessResponse<T>(response)
+        return ProcessResponse(response);
+    }
 
-        return null;
+    public async Task<string> QueryAsync(Query query)
+    {
+        throw new NotImplementedException();
     }
 
     // ProcessResponse method
-    private T? ProcessResponse<T>(HttpResponseMessage response) where T : class
+    private string ProcessResponse(HttpResponseMessage response)
     {
         int statusCode = (int)response.StatusCode;
         var body = response.Content.ReadAsStringAsync().Result;
 
         // Error handling
 
-        return null;
+        return body;
     }
 }
