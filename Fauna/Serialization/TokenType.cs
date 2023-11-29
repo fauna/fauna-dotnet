@@ -1,7 +1,7 @@
 namespace Fauna.Serialization;
 
 
-public enum FaunaTokenType
+public enum TokenType
 {
     /// <summary>There is no value. This is the default token type if no data has been read by the <see cref="T:Fauna.Serialization.Utf8FaunaReader" />.</summary>
     None,
@@ -10,6 +10,12 @@ public enum FaunaTokenType
     StartObject,
     /// <summary>The token type is the end of a Fauna object.</summary>
     EndObject,
+    
+    /// <summary>The token type is the start of an escaped Fauna object. This is only used internally.</summary>
+    StartEscapedObject,
+    
+    /// <summary>The token type is the start of a tagged Fauna object. This is only used internally.</summary>
+    StartTaggedObject,
     
     /// <summary>The token type is the start of a Fauna array.</summary>
     StartArray,
