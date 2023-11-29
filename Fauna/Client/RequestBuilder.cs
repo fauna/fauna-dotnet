@@ -4,7 +4,7 @@ using Fauna.Constants;
 
 namespace Fauna;
 
-internal sealed class RequestBuilder
+internal class RequestBuilder
 {
     private const string QueryPath = "/query/1";
     private readonly ClientConfig _clientConfig;
