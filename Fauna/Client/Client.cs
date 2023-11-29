@@ -21,16 +21,16 @@ public class Client
             });
     }
 
-    public async Task<string> QueryAsync(string query)
+    public async Task<string> QueryAsync(string fql)
     {
-        if (query == null) throw new ArgumentException("The provided FQL query is null.");
+        if (fql == null) throw new ArgumentException("The provided FQL query is null.");
 
-        var response = await _connection.PerformRequestAsync(query);
+        var response = await _connection.PerformRequestAsync(fql);
 
         return ProcessResponse(response);
     }
 
-    public async Task<string> QueryAsync(Query query)
+    public async Task<string> QueryAsync(Query fql)
     {
         throw new NotImplementedException();
     }
