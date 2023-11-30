@@ -1,6 +1,6 @@
 namespace Fauna.Constants;
 
-internal struct Headers
+internal readonly struct Headers
 {
     public const string LastTxnTs = "X-Last-Txn-Ts";
     public const string Linearized = "X-Linearized";

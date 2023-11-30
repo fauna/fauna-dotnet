@@ -1,30 +1,33 @@
 using System.Globalization;
+using System.Net.Http.Json;
 using Fauna.Constants;
 
 namespace Fauna;
 
-public class RequestBuilder
+internal class RequestBuilder
 {
-    private readonly ClientConfig _faunaConfig;
-    private readonly Uri _uri;
+    private const string QueryPath = "/query/1";
+    private readonly ClientConfig _config;
 
-    private RequestBuilder(Builder builder)
+    internal RequestBuilder(ClientConfig config)
     {
-        _faunaConfig = builder.FaunaConfig;
-        _uri = _faunaConfig.Endpoint;
-    }
-
-    public static Builder CreateBuilder()
-    {
-        return new Builder();
+        _config = config;
     }
 
     public HttpRequestMessage BuildRequest(string fql)
     {
-        var headers = BuildHeaders();
-        var httpRequest = new HttpRequestMessage(HttpMethod.Post, _uri)
+        var queryObj = new
         {
-            Content = new StringContent(fql)
+            query = new
+            {
+                fql = new[] { fql }
+            },
+            arguments = new { }
+        };
+        var headers = GetRequestHeaders();
+        var httpRequest = new HttpRequestMessage(HttpMethod.Post, QueryPath)
+        {
+            Content = JsonContent.Create(queryObj)
         };
 
         foreach (var header in headers)
@@ -35,39 +38,39 @@ public class RequestBuilder
         return httpRequest;
     }
 
-    private Dictionary<string, string> BuildHeaders()
+    private Dictionary<string, string> GetRequestHeaders()
     {
         var headers = new Dictionary<string, string>
         {
-            { Headers.Authorization, $"Bearer {_faunaConfig.Secret}" },
-            { Headers.Format, "tagged" },
+            { Headers.Authorization, $"Bearer {_config.Secret}" },
+            { Headers.Format, "simple" },
             { Headers.AcceptEncoding, "gzip" },
             { Headers.ContentType, "application/json;charset=utf-8" },
             { Headers.Driver, "C#" },
             {
                 Headers.QueryTimeoutMs,
-                _faunaConfig.QueryTimeout.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)
+                _config.QueryTimeout.TotalMilliseconds.ToString(CultureInfo.InvariantCulture)
             }
         };
 
-        if (_faunaConfig.Linearized != null)
+        if (_config.Linearized != null)
         {
-            headers.Add(Headers.Linearized, _faunaConfig.Linearized.ToString());
+            headers.Add(Headers.Linearized, _config.Linearized.ToString());
         }
 
-        if (_faunaConfig.TypeCheck != null)
+        if (_config.TypeCheck != null)
         {
-            headers.Add(Headers.TypeCheck, _faunaConfig.TypeCheck.ToString());
+            headers.Add(Headers.TypeCheck, _config.TypeCheck.ToString());
         }
 
-        if (_faunaConfig.QueryTags != null)
+        if (_config.QueryTags != null)
         {
-            headers.Add(Headers.QueryTags, EncodeQueryTags(_faunaConfig.QueryTags));
+            headers.Add(Headers.QueryTags, EncodeQueryTags(_config.QueryTags));
         }
 
-        if (!string.IsNullOrEmpty(_faunaConfig.TraceParent))
+        if (!string.IsNullOrEmpty(_config.TraceParent))
         {
-            headers.Add(Headers.TraceParent, _faunaConfig.TraceParent);
+            headers.Add(Headers.TraceParent, _config.TraceParent);
         }
 
         return headers;
@@ -76,21 +79,5 @@ public class RequestBuilder
     private string EncodeQueryTags(Dictionary<string, string> tags)
     {
         return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
-    }
-
-    public class Builder
-    {
-        public ClientConfig? FaunaConfig { get; private set; }
-
-        public Builder SetFaunaConfig(ClientConfig faunaConfig)
-        {
-            FaunaConfig = faunaConfig;
-            return this;
-        }
-
-        public RequestBuilder Build()
-        {
-            return new RequestBuilder(this);
-        }
     }
 }
