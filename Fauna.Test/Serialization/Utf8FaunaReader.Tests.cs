@@ -16,7 +16,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.String, reader.TokenType);
+        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
         Assert.AreEqual("hello", reader.GetString());
         Assert.False(reader.Read());
     }
@@ -28,7 +28,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.True, reader.TokenType);
+        Assert.AreEqual(TokenType.True, reader.CurrentTokenType);
         Assert.AreEqual(true, reader.GetBoolean());
         Assert.False(reader.Read());
     }
@@ -40,7 +40,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.False, reader.TokenType);
+        Assert.AreEqual(TokenType.False, reader.CurrentTokenType);
         Assert.AreEqual(false, reader.GetBoolean());
         Assert.False(reader.Read());
     }
@@ -52,7 +52,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.Null, reader.TokenType);
+        Assert.AreEqual(TokenType.Null, reader.CurrentTokenType);
         Assert.False(reader.Read());
     }
     
@@ -63,7 +63,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.Int, reader.TokenType);
+        Assert.AreEqual(TokenType.Int, reader.CurrentTokenType);
         Assert.AreEqual(123, reader.GetInt());
         Assert.False(reader.Read());
     }
@@ -75,7 +75,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.Long, reader.TokenType);
+        Assert.AreEqual(TokenType.Long, reader.CurrentTokenType);
         Assert.AreEqual(123L, reader.GetLong());
         Assert.False(reader.Read());
     }
@@ -87,7 +87,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.TokenType);
+        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
         Assert.AreEqual(1.2d, reader.GetDouble());
         Assert.False(reader.Read());
     }
@@ -99,7 +99,7 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.TokenType);
+        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
         Assert.AreEqual(1.2M, reader.GetDoubleAsDecimal());
         Assert.False(reader.Read());
     }
@@ -118,28 +118,28 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.StartDocument, reader.TokenType);
+        Assert.AreEqual(TokenType.StartDocument, reader.CurrentTokenType);
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("id", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.String, reader.TokenType);
+        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
         Assert.AreEqual("123", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("data", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.StartObject, reader.TokenType);
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("foo", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.String, reader.TokenType);
+        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
         Assert.AreEqual("bar", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.EndObject, reader.TokenType);
+        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
         reader.Read();
-        Assert.AreEqual(TokenType.EndDocument, reader.TokenType);
+        Assert.AreEqual(TokenType.EndDocument, reader.CurrentTokenType);
         Assert.False(reader.Read());
     }
     
@@ -162,88 +162,88 @@ public class Utf8FaunaReaderTests
         var bytes = Encoding.UTF8.GetBytes(s);
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
         reader.Read();
-        Assert.AreEqual(TokenType.StartObject, reader.TokenType);
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
         
         // String
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("aString", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.String, reader.TokenType);
+        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
         Assert.AreEqual("foo", reader.GetString());
         
         // Object
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("anObject", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.StartObject, reader.TokenType);
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("baz", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.String, reader.TokenType);
+        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
         Assert.AreEqual("luhrmann", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.EndObject, reader.TokenType);
+        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
 
         // Integer
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("anInt", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.Int, reader.TokenType);
+        Assert.AreEqual(TokenType.Int, reader.CurrentTokenType);
         Assert.AreEqual(2147483647, reader.GetInt());
         
         // Long
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("aLong", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.Long, reader.TokenType);
+        Assert.AreEqual(TokenType.Long, reader.CurrentTokenType);
         Assert.AreEqual(9223372036854775807L, reader.GetLong());
         
         // Double
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("aDouble", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.TokenType);
+        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
         Assert.AreEqual(3.14159d, reader.GetDouble());
         
         // Decimal
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("aDecimal", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.TokenType);
+        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
         Assert.AreEqual(0.1M, reader.GetDoubleAsDecimal());
         
         // True
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("true", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.True, reader.TokenType);
+        Assert.AreEqual(TokenType.True, reader.CurrentTokenType);
         Assert.AreEqual(true, reader.GetBoolean());
         
         // False
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("false", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.False, reader.TokenType);
+        Assert.AreEqual(TokenType.False, reader.CurrentTokenType);
         Assert.AreEqual(false, reader.GetBoolean());
         
         // Null
         reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.TokenType);
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("null", reader.GetString());
         reader.Read();
-        Assert.AreEqual(TokenType.Null, reader.TokenType);
+        Assert.AreEqual(TokenType.Null, reader.CurrentTokenType);
         
         reader.Read();
-        Assert.AreEqual(TokenType.EndObject, reader.TokenType);
+        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
         Assert.False(reader.Read());
     }
 

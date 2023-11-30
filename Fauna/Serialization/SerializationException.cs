@@ -8,7 +8,7 @@ public class SerializationException: Exception
     {
     }
     
-    public SerializationException(string? message, Exception? inneException) : base(message, inneException)
+    public SerializationException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 }
