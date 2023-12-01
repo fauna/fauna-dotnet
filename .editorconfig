@@ -1,0 +1,5 @@
+[*.cs]
+# Require switch expressions to be exhaustive
+dotnet_diagnostic.CS8509.severity = error
+# Don't require switch expressions to cover unamed enum variants
+dotnet_diagnostic.CS8524.severity = none
