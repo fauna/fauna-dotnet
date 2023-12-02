@@ -14,9 +14,6 @@ public enum TokenType
     /// <summary>The token type is the start of an escaped Fauna object. This is only used internally.</summary>
     StartEscapedObject,
     
-    /// <summary>The token type is the start of a tagged Fauna object. This is only used internally.</summary>
-    StartTaggedObject,
-    
     /// <summary>The token type is the start of a Fauna array.</summary>
     StartArray,
     /// <summary>The token type is the end of a Fauna array.</summary>
