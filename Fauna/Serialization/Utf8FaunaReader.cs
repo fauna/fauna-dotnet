@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using Fauna.Types;
 
@@ -17,6 +18,14 @@ public ref struct Utf8FaunaReader
     public Utf8FaunaReader(ReadOnlySequence<byte> bytes)
     {
         _json = new Utf8JsonReader(bytes);
+        CurrentTokenType = TokenType.None;
+    }
+    
+    public Utf8FaunaReader(string str)
+    {
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var seq = new ReadOnlySequence<byte>(bytes);
+        _json = new Utf8JsonReader(seq);
         CurrentTokenType = TokenType.None;
     }
 
