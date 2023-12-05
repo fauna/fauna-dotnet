@@ -9,11 +9,17 @@ namespace Fauna.Serialization;
 public ref struct Utf8FaunaReader
 {
     private Utf8JsonReader _json;
-    private readonly Stack<TokenType> _tokenStack = new();
+    private readonly Stack<object> _tokenStack = new();
     private bool _bufferedStartObject = false;
 
     private string? _taggedTokenValue = null;
     public TokenType CurrentTokenType { get; private set; }
+
+    private enum TokenTypeInternal
+    {
+        /// <summary>The token type is the start of an escaped Fauna object.</summary>
+        StartEscapedObject,
+    }
     
     public Utf8FaunaReader(ReadOnlySequence<byte> bytes)
     {
@@ -278,7 +284,7 @@ public ref struct Utf8FaunaReader
             case "@object":
                 AdvanceTrue();
                 CurrentTokenType = TokenType.StartObject;
-                _tokenStack.Push(TokenType.StartEscapedObject);
+                _tokenStack.Push(TokenTypeInternal.StartEscapedObject);
                 break;
             case "@ref":
                 AdvanceTrue();
@@ -318,7 +324,7 @@ public ref struct Utf8FaunaReader
                 CurrentTokenType = TokenType.EndRef;
                 AdvanceTrue();
                 break;
-            case TokenType.StartEscapedObject:
+            case TokenTypeInternal.StartEscapedObject:
                 CurrentTokenType = TokenType.EndObject;
                 AdvanceTrue();
                 break;
