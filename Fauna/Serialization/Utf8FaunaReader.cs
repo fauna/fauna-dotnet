@@ -1,5 +1,6 @@
 using System.Buffers;
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using Fauna.Types;
 
@@ -8,20 +9,36 @@ namespace Fauna.Serialization;
 public ref struct Utf8FaunaReader
 {
     private Utf8JsonReader _json;
-    private readonly Stack<TokenType> _tokenStack = new();
+    private readonly Stack<object> _tokenStack = new();
     private bool _bufferedStartObject = false;
 
     private string? _taggedTokenValue = null;
     public TokenType CurrentTokenType { get; private set; }
+
+    private enum TokenTypeInternal
+    {
+        /// <summary>The token type is the start of an escaped Fauna object.</summary>
+        StartEscapedObject,
+    }
     
     public Utf8FaunaReader(ReadOnlySequence<byte> bytes)
     {
         _json = new Utf8JsonReader(bytes);
         CurrentTokenType = TokenType.None;
     }
+    
+    public Utf8FaunaReader(string str)
+    {
+        var bytes = Encoding.UTF8.GetBytes(str);
+        var seq = new ReadOnlySequence<byte>(bytes);
+        _json = new Utf8JsonReader(seq);
+        CurrentTokenType = TokenType.None;
+    }
 
     public bool Read()
     {
+        _taggedTokenValue = null;
+
         if (_bufferedStartObject)
         {
             _bufferedStartObject = false;
@@ -33,18 +50,12 @@ public ref struct Utf8FaunaReader
         {
             return false;
         }
-            
+        
         switch (_json.TokenType)
         {
             case JsonTokenType.PropertyName:
-            {
                 CurrentTokenType = TokenType.FieldName;
                 break;
-            }
-            case JsonTokenType.Number:
-            {
-                throw new NotImplementedException();
-            }
             case JsonTokenType.None:
                 break;
             case JsonTokenType.StartObject:
@@ -54,10 +65,10 @@ public ref struct Utf8FaunaReader
                 HandleEndObject();
                 break;
             case JsonTokenType.StartArray:
+                CurrentTokenType = TokenType.StartArray;
                 break;
             case JsonTokenType.EndArray:
-                break;
-            case JsonTokenType.Comment:
+                CurrentTokenType = TokenType.EndArray;
                 break;
             case JsonTokenType.String:
                 CurrentTokenType = TokenType.String;
@@ -71,6 +82,10 @@ public ref struct Utf8FaunaReader
             case JsonTokenType.Null:
                 CurrentTokenType = TokenType.Null;
                 break;
+            case JsonTokenType.Comment:
+            case JsonTokenType.Number:
+            default:
+                throw new SerializationException($"Unhandled JSON token type {_json.TokenType}.");
         }
 
         return true;
@@ -105,9 +120,18 @@ public ref struct Utf8FaunaReader
         }
     }
 
-    public DateTime GetDateTime()
+    public DateTime GetDate()
     {
-        throw new NotImplementedException(); 
+        ValidateTaggedType(TokenType.Date);
+
+        try
+        {
+            return DateTime.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get date from {_taggedTokenValue}", e);
+        }
     }
     
     public double GetDouble()
@@ -116,7 +140,7 @@ public ref struct Utf8FaunaReader
         
          try
          { 
-             return double.Parse(_taggedTokenValue, CultureInfo.InvariantCulture);
+             return double.Parse(_taggedTokenValue!, CultureInfo.InvariantCulture);
          }
          catch (Exception e)
          {
@@ -130,7 +154,7 @@ public ref struct Utf8FaunaReader
         
         try
         { 
-            return decimal.Parse(_taggedTokenValue, CultureInfo.InvariantCulture);
+            return decimal.Parse(_taggedTokenValue!, CultureInfo.InvariantCulture);
         }
         catch (Exception e)
         {
@@ -144,7 +168,7 @@ public ref struct Utf8FaunaReader
         
         try
         { 
-            return int.Parse(_taggedTokenValue);
+            return int.Parse(_taggedTokenValue!);
         }
         catch (Exception e)
         {
@@ -158,7 +182,7 @@ public ref struct Utf8FaunaReader
         
         try
         {
-            return long.Parse(_taggedTokenValue);
+            return long.Parse(_taggedTokenValue!);
         }
         catch (Exception e)
         {
@@ -169,7 +193,23 @@ public ref struct Utf8FaunaReader
     
     public Module GetModule()
     {
-        throw new NotImplementedException();
+        ValidateTaggedType(TokenType.Module);
+
+        return new Module(_taggedTokenValue!);
+    }
+    
+    public DateTime GetTime()
+    {
+        ValidateTaggedType(TokenType.Time);
+
+        try
+        {
+            return DateTime.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get time from {_taggedTokenValue}", e);
+        }
     }
     
     public string TryGetString(out string value)
@@ -222,9 +262,12 @@ public ref struct Utf8FaunaReader
         switch (_json.GetString())
         {
             case "@date":
-                throw new NotImplementedException();
+                HandleTaggedString(TokenType.Date);
+                break;
             case "@doc":
-                HandleTaggedStart(TokenType.StartDocument);
+                AdvanceTrue();
+                CurrentTokenType = TokenType.StartDocument;
+                _tokenStack.Push(TokenType.StartDocument);
                 break;
             case "@double":
                 HandleTaggedString(TokenType.Double);
@@ -236,15 +279,26 @@ public ref struct Utf8FaunaReader
                 HandleTaggedString(TokenType.Long);
                 break;
             case "@mod":
-                throw new NotImplementedException();
+                HandleTaggedString(TokenType.Module);
+                break;
             case "@object":
-                throw new NotImplementedException();
+                AdvanceTrue();
+                CurrentTokenType = TokenType.StartObject;
+                _tokenStack.Push(TokenTypeInternal.StartEscapedObject);
+                break;
             case "@ref":
-                throw new NotImplementedException();
+                AdvanceTrue();
+                CurrentTokenType = TokenType.StartRef;
+                _tokenStack.Push(TokenType.StartRef);
+                break;
             case "@set":
-                throw new NotImplementedException();
+                AdvanceTrue();
+                CurrentTokenType = TokenType.StartSet;
+                _tokenStack.Push(TokenType.StartSet);
+                break;
             case "@time":
-                throw new NotImplementedException();
+                HandleTaggedString(TokenType.Time);
+                break;
             default:
                 _bufferedStartObject = true;
                 _tokenStack.Push(TokenType.StartObject);
@@ -255,7 +309,8 @@ public ref struct Utf8FaunaReader
 
     private void HandleEndObject()
     {
-        switch (_tokenStack.Pop())
+        var startToken = _tokenStack.Pop();
+        switch (startToken)
         {
             case TokenType.StartDocument:
                 CurrentTokenType = TokenType.EndDocument;
@@ -269,12 +324,15 @@ public ref struct Utf8FaunaReader
                 CurrentTokenType = TokenType.EndRef;
                 AdvanceTrue();
                 break;
+            case TokenTypeInternal.StartEscapedObject:
+                CurrentTokenType = TokenType.EndObject;
+                AdvanceTrue();
+                break;
             case TokenType.StartObject:
-            case TokenType.StartEscapedObject:
                 CurrentTokenType = TokenType.EndObject;
                 break;
             default:
-                throw new SerializationException("This is a bug. Unhandled object wrapper token.");
+                throw new SerializationException($"Unexpected token {startToken}. This might be a bug.");
         }
     }
     
@@ -295,27 +353,6 @@ public ref struct Utf8FaunaReader
         CurrentTokenType = token;
         _taggedTokenValue = _json.GetString();
         AdvanceTrue();
-    }
-    
-    /// <summary>
-    /// Method <c>HandleTaggedStart</c> is used to advance through JsonTokenType.StartObject when reading a tagged typed
-    /// with an object representation. For, example:
-    /// 
-    /// * Given { "@doc": { "id": "123", "data": {}} }
-    /// * Read JSON until JsonTokenType.PropertyName and you've determined it's a document
-    /// * Call HandleTaggedStart(TokenType.Document)
-    /// * The underlying JSON reader is advanced through the next JsonTokenType.StartObject
-    /// * TokenType.StartDocument is pushed onto a stack to track that we're in a document
-    /// * The Utf8FaunaReader is now ready to serve the contents of the document
-    /// * 
-    /// * Access the int via GetInt()
-    /// 
-    /// </summary>
-    private void HandleTaggedStart(TokenType token)
-    {
-        AdvanceTrue();
-        CurrentTokenType = token;
-        _tokenStack.Push(token);
     }
 
     private bool Advance()

@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Text;
 using Fauna.Serialization;
+using Fauna.Types;
 using NUnit.Framework;
 
 namespace Fauna.Test.Serialization;
@@ -8,100 +9,243 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class Utf8FaunaReaderTests
 {
+
+    private static void AssertReader(Utf8FaunaReader reader, IEnumerable<Tuple<TokenType, object?>> tokens)
+    {
+        foreach (var (token, obj) in tokens)
+        {
+            reader.Read();
+            Assert.AreEqual(token, reader.CurrentTokenType);
+
+            switch (token)
+            {
+                case TokenType.FieldName:
+                case TokenType.String:
+                    Assert.AreEqual(obj, reader.GetString());
+                    break;
+                case TokenType.Int:
+                    Assert.AreEqual(obj, reader.GetInt());
+                    break;
+                case TokenType.Long:
+                    Assert.AreEqual(obj, reader.GetLong());
+                    break;
+                case TokenType.Double:
+                    if (obj is decimal)
+                    {
+                        Assert.AreEqual(obj, reader.GetDoubleAsDecimal());
+                    }
+                    else
+                    {
+                        Assert.AreEqual(obj, reader.GetDouble());
+                    }
+                    break;
+                case TokenType.Date:
+                    Assert.AreEqual(obj, reader.GetDate());
+                    break;
+                case TokenType.Time:
+                    Assert.AreEqual(obj, reader.GetTime());
+                    break;
+                case TokenType.True:
+                case TokenType.False:
+                    Assert.AreEqual(obj, reader.GetBoolean());
+                    break;
+                case TokenType.Module:
+                    Assert.AreEqual(obj, reader.GetModule());
+                    break;
+                default:
+                    Assert.Null(obj);
+                    break;
+            }
+        }
+        
+        Assert.False(reader.Read());
+    }
+    
     
     [Test]
     public void ReadString()
     {
-        const string s = "\"hello\"";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
-        Assert.AreEqual("hello", reader.GetString());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader("\"hello\"");
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.String, "hello"),
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
     public void ReadTrue()
     {
-        const string s = "true";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.True, reader.CurrentTokenType);
-        Assert.AreEqual(true, reader.GetBoolean());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader("true");
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.True, true)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
     public void ReadFalse()
     {
-        const string s = "false";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.False, reader.CurrentTokenType);
-        Assert.AreEqual(false, reader.GetBoolean());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader("false");
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.False, false)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
     public void ReadNull()
     {
-        const string s = "null";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.Null, reader.CurrentTokenType);
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader("null");
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Null, null)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
-    public void ReadIntToken()
+    public void ReadInt()
     {
         const string s = """{"@int": "123"}""";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.Int, reader.CurrentTokenType);
-        Assert.AreEqual(123, reader.GetInt());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Int, 123)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
-    public void ReadLongToken()
+    public void ReadLong()
     {
         const string s = """{"@long": "123"}""";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.Long, reader.CurrentTokenType);
-        Assert.AreEqual(123L, reader.GetLong());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Long, 123L)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
-    public void ReadDoubleToken()
+    public void ReadDouble()
     {
         const string s = """{"@double": "1.2"}""";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
-        Assert.AreEqual(1.2d, reader.GetDouble());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Double, 1.2d)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
     public void ReadDoubleAsDecimal()
     {
         const string s = """{"@double": "1.2"}""";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
-        Assert.AreEqual(1.2M, reader.GetDoubleAsDecimal());
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Double, 1.2M)
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+
+    [Test]
+    public void ReadDate()
+    {
+        const string s = """{"@date": "2023-12-03"}""";
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Date, new DateTime(2023, 12, 3))
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+
+    [Test]
+    public void ReadTimePacific()
+    {
+        const string s = """{"@time": "2023-12-03T05:52:10.000001-09:00"}""";
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime())
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+    
+    [Test]
+    public void ReadTimeUtc()
+    {
+        const string s = """{"@time": "2023-12-03T14:52:10.000001Z"}""";
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime())
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+    
+    [Test]
+    public void ReadModule()
+    {
+        const string s = """{"@mod": "MyCollection"}""";
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Module, new Module("MyCollection"))
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+
+    [Test]
+    public void ReadEscapedObject()
+    {
+        const string s = """
+                         {
+                            "@object": {
+                                "@int": "notanint",
+                                "anInt": { "@int": "123" },
+                                "@object": "notanobject",
+                                "anEscapedObject": { "@object": { "@long": "notalong" } }
+                            }
+                         }
+                         """;
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "@int"),
+            new(TokenType.String, "notanint"),
+            new(TokenType.FieldName, "anInt"),
+            new(TokenType.Int, 123),
+            new(TokenType.FieldName, "@object"),
+            new(TokenType.String, "notanobject"),
+            new(TokenType.FieldName, "anEscapedObject"),
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "@long"),
+            new(TokenType.String, "notalong"),
+            new(TokenType.EndObject, null),
+            new(TokenType.EndObject, null)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
 
     [Test]
@@ -111,36 +255,77 @@ public class Utf8FaunaReaderTests
                          {
                             "@doc": {
                                 "id": "123",
+                                "coll": { "@mod": "Coll" },
+                                "ts": { "@time": "2023-12-03T16:07:23.111012Z" },
                                 "data": { "foo": "bar" }
                             }
                          }
                          """;
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.StartDocument, reader.CurrentTokenType);
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("id", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
-        Assert.AreEqual("123", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("data", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("foo", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
-        Assert.AreEqual("bar", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
-        reader.Read();
-        Assert.AreEqual(TokenType.EndDocument, reader.CurrentTokenType);
-        Assert.False(reader.Read());
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartDocument, null),
+            new(TokenType.FieldName, "id"),
+            new(TokenType.String, "123"),
+            new(TokenType.FieldName, "coll"),
+            new(TokenType.Module, new Module("Coll")),
+            new(TokenType.FieldName, "ts"),
+            new(TokenType.Time, new DateTime(2023, 12, 03, 16, 07, 23, 111, 12, DateTimeKind.Utc).ToLocalTime()),
+            new(TokenType.FieldName, "data"),
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "foo"),
+            new(TokenType.String, "bar"),
+            new(TokenType.EndObject, null),
+            new(TokenType.EndDocument, null)
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+    
+    [Test]
+    public void ReadSet()
+    {
+        const string s = """
+                         {
+                            "@set": {
+                                "data": [{"@int": "99"}],
+                                "after": "afterme"
+                            }
+                         }
+                         """;
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartSet, null),
+            new(TokenType.FieldName, "data"),
+            new(TokenType.StartArray, null),
+            new(TokenType.Int, 99),
+            new(TokenType.EndArray, null),
+            new(TokenType.FieldName, "after"),
+            new(TokenType.String, "afterme"),
+            new(TokenType.EndSet, null)
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+    
+    [Test]
+    public void ReadRef()
+    {
+        const string s = """{"@ref": {"id": "123", "coll": {"@mod": "Col"}}}""";
+
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartRef, null),
+            new(TokenType.FieldName, "id"),
+            new(TokenType.String, "123"),
+            new(TokenType.FieldName, "coll"),
+            new(TokenType.Module, new Module("Col")),
+            new(TokenType.EndRef, null)
+        };
+        
+        AssertReader(reader, expectedTokens);
     }
     
     [Test]
@@ -154,97 +339,135 @@ public class Utf8FaunaReaderTests
                             "aLong":{ "@long": "9223372036854775807" },
                             "aDouble":{ "@double": "3.14159" },
                             "aDecimal":{ "@double": "0.1" },
+                            "aDate":{ "@date": "2023-12-03" },
+                            "aTime":{ "@time": "2023-12-03T14:52:10.001001Z" },
+                            "anEscapedObject": { "@object": { "@int": "escaped" } },
+                            "anArray": [],
                             "true": true,
                             "false": false,
                             "null": null
                          }
                          """;
-        var bytes = Encoding.UTF8.GetBytes(s);
-        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
-        reader.Read();
-        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
-        
-        // String
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("aString", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
-        Assert.AreEqual("foo", reader.GetString());
-        
-        // Object
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("anObject", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("baz", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.String, reader.CurrentTokenType);
-        Assert.AreEqual("luhrmann", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
 
-        // Integer
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("anInt", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.Int, reader.CurrentTokenType);
-        Assert.AreEqual(2147483647, reader.GetInt());
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartObject, null),
+            
+            new(TokenType.FieldName, "aString"),
+            new(TokenType.String, "foo"),
+            
+            new(TokenType.FieldName, "anObject"),
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "baz"),
+            new(TokenType.String, "luhrmann"),
+            new(TokenType.EndObject, null),
+            
+            new(TokenType.FieldName, "anInt"),
+            new(TokenType.Int, 2147483647),
+            
+            new(TokenType.FieldName, "aLong"),
+            new(TokenType.Long, 9223372036854775807),
+            
+            new(TokenType.FieldName, "aDouble"),
+            new(TokenType.Double, 3.14159d),
+            
+            new(TokenType.FieldName, "aDecimal"),
+            new(TokenType.Double, 0.1M),
+            
+            new(TokenType.FieldName, "aDate"),
+            new(TokenType.Date, new DateTime(2023, 12, 3)),
+            
+            new(TokenType.FieldName, "aTime"),
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime()),
+            
+            new(TokenType.FieldName, "anEscapedObject"),
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "@int"),
+            new(TokenType.String, "escaped"),
+            new(TokenType.EndObject, null),
+            
+            new(TokenType.FieldName, "anArray"),
+            new(TokenType.StartArray, null),
+            new(TokenType.EndArray, null),
+            
+            new(TokenType.FieldName, "true"),
+            new(TokenType.True, true),
+            
+            new(TokenType.FieldName, "false"),
+            new(TokenType.False, false),
+            
+            new(TokenType.FieldName, "null"),
+            new(TokenType.Null, null),
+            
+            new(TokenType.EndObject, null),
+        };
         
-        // Long
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("aLong", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.Long, reader.CurrentTokenType);
-        Assert.AreEqual(9223372036854775807L, reader.GetLong());
+        AssertReader(reader, expectedTokens);
+    }
+    
+    [Test]
+    public void ReadArray()
+    {
+        const string s = """
+                         [
+                            "foo",
+                            { "baz": "luhrmann" },
+                            { "@int": "2147483647" },
+                            { "@long": "9223372036854775807" },
+                            { "@double": "3.14159" },
+                            { "@double": "0.1" },
+                            { "@date": "2023-12-03" },
+                            { "@time": "2023-12-03T14:52:10.001001Z" },
+                            { "@object": { "@int": "escaped" } },
+                            [],
+                            true,
+                            false,
+                            null
+                         ]
+                         """;
+                var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartArray, null),
+            
+            new(TokenType.String, "foo"),
+            
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "baz"),
+            new(TokenType.String, "luhrmann"),
+            new(TokenType.EndObject, null),
+            
+            new(TokenType.Int, 2147483647),
+            
+            new(TokenType.Long, 9223372036854775807),
+            
+            new(TokenType.Double, 3.14159d),
+            
+            new(TokenType.Double, 0.1M),
+            
+            new(TokenType.Date, new DateTime(2023, 12, 3)),
+            
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime()),
+            
+            new(TokenType.StartObject, null),
+            new(TokenType.FieldName, "@int"),
+            new(TokenType.String, "escaped"),
+            new(TokenType.EndObject, null),
+            
+            new(TokenType.StartArray, null),
+            new(TokenType.EndArray, null),
+            
+            new(TokenType.True, true),
+            
+            new(TokenType.False, false),
+            
+            new(TokenType.Null, null),
+            
+            new(TokenType.EndArray, null),
+        };
         
-        // Double
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("aDouble", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
-        Assert.AreEqual(3.14159d, reader.GetDouble());
-        
-        // Decimal
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("aDecimal", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.Double, reader.CurrentTokenType);
-        Assert.AreEqual(0.1M, reader.GetDoubleAsDecimal());
-        
-        // True
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("true", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.True, reader.CurrentTokenType);
-        Assert.AreEqual(true, reader.GetBoolean());
-        
-        // False
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("false", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.False, reader.CurrentTokenType);
-        Assert.AreEqual(false, reader.GetBoolean());
-        
-        // Null
-        reader.Read();
-        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
-        Assert.AreEqual("null", reader.GetString());
-        reader.Read();
-        Assert.AreEqual(TokenType.Null, reader.CurrentTokenType);
-        
-        reader.Read();
-        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
-        Assert.False(reader.Read());
+        AssertReader(reader, expectedTokens);
     }
 
     [Test]
