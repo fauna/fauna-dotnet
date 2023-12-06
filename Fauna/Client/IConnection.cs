@@ -1,6 +1,12 @@
 ﻿namespace Fauna;
 
-public interface IConnection
+internal interface IConnection
 {
-    Task<HttpResponseMessage> PerformRequestAsync(string fql);
+    long LastSeenTxn { get; set; }
+
+    Task<HttpResponseMessage> DoRequestAsync(
+        string fql,
+        int queryTimeoutSeconds,
+        Dictionary<string, string>? queryTags,
+        string? traceParent);
 }

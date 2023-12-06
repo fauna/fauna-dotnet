@@ -1,48 +1,66 @@
-﻿namespace Fauna;
+﻿using Fauna.Constants;
+
+namespace Fauna;
 
 public class Client
 {
+    private const int DefaultQueryTimeoutInSeconds = 30;
     private readonly IConnection _connection;
 
-    public Client(string secret, HttpClient? httpClient = null) :
-        this(new ClientConfig { Secret = secret }, httpClient)
+    public Client(string secret) :
+        this(new ClientConfig(secret))
     {
     }
 
     public Client(ClientConfig config, HttpClient? httpClient = null)
     {
+        var connectionHttpClient = httpClient ?? new HttpClient();
+        connectionHttpClient.Timeout = config.ConnectionTimeout;
+
         // Initialize the connection
-        _connection = new Connection(
-            config,
-            httpClient ?? new HttpClient()
-            {
-                BaseAddress = config.Endpoint,
-                Timeout = config.ConnectionTimeout
-            });
+        _connection = new Connection(config, connectionHttpClient);
     }
 
-    public async Task<string> QueryAsync(string fql)
+    public async Task<QuerySuccess<T>> QueryAsync<T>(
+        string fql,
+        int queryTimeoutSeconds = DefaultQueryTimeoutInSeconds,
+        Dictionary<string, string>? queryTags = null,
+        string? traceParent = null) where T : class
     {
-        if (fql == null) throw new ArgumentException("The provided FQL query is null.");
+        if (string.IsNullOrEmpty(fql)) throw new ArgumentException("The provided FQL query is null.");
 
-        var response = await _connection.PerformRequestAsync(fql);
+        var response = await _connection.DoRequestAsync(fql, queryTimeoutSeconds, queryTags, traceParent);
 
-        return ProcessResponse(response);
-    }
+        var queryResponse = GetQueryResponse<T>(response);
 
-    public async Task<string> QueryAsync(Query fql)
-    {
-        throw new NotImplementedException();
+        if (queryResponse is QueryFailure)
+        {
+            throw new Exception("Query failure");
+        }
+
+        return (QuerySuccess<T>)queryResponse;
     }
 
     // ProcessResponse method
-    private string ProcessResponse(HttpResponseMessage response)
+    private QueryResponse GetQueryResponse<T>(HttpResponseMessage response) where T : class
     {
-        int statusCode = (int)response.StatusCode;
+        QueryResponse queryResponse;
+
+        var statusCode = response.StatusCode;
         var body = response.Content.ReadAsStringAsync().Result;
+        var headers = response.Headers;
 
-        // Error handling
+        if (!((int)statusCode >= 200 && (int)statusCode < 400))
+        {
+            queryResponse = new QueryFailure(body);
+        }
+        else
+        {
+            queryResponse = new QuerySuccess<T>(body);
 
-        return body;
+            _connection.LastSeenTxn = queryResponse.LastSeenTxn;
+        }
+
+        return queryResponse;
     }
 }
