@@ -15,12 +15,35 @@ public class QueryTests
 
         var expected = new Query.Expr(
             "Book.where(.title == ",
-            new Query.Val("foo"),
+            new Query.Val<string>("foo"),
             " && .genre == ",
-            new Query.Val("bar"),
+            new Query.Val<string>("bar"),
             ")"
         );
 
         Assert.That(q, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BuildsAQueryWithSubquery()
+    {
+        int backorderLimit = 15;
+        bool isBackordered = false;
+
+        var subQuery = FQL($@"let product = Product.firstWhere(.backorderLimit == {backorderLimit} && .backordered == {isBackordered})!; product.quantity;");
+        var actual = FQL($@"Product.where(.quantity == {subQuery}).order(.title) {{ name, description }}");
+
+        var expected = new Query.Expr("Product.where(.quantity == ",
+            new Query.Expr(
+                "let product = Product.firstWhere(.backorderLimit == ",
+                new Query.Val<int>(backorderLimit),
+                " && .backordered == ",
+                new Query.Val<bool>(isBackordered),
+                ")!; product.quantity;"
+            ),
+            ").order(.title) { name, description }"
+        );
+
+        Assert.That(actual, Is.EqualTo(expected));
     }
 }

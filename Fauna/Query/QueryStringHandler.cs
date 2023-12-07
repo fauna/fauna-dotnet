@@ -22,9 +22,14 @@ public ref struct QueryStringHandler
         fragments.Add(value);
     }
 
+    public void AppendFormatted<T>(T value)
+    {
+        fragments.Add(new Query.Val<T>(value));
+    }
+
     public void AppendFormatted(Object value)
     {
-        fragments.Add(new Query.Val(value));
+        fragments.Add(new Query.Val<Object>(value));
     }
 
     public Query Result()
