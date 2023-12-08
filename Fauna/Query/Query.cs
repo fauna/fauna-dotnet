@@ -1,15 +1,12 @@
 namespace Fauna;
 
-public abstract partial class Query : IEquatable<Query>
+public abstract class Query : IEquatable<Query>
 {
-    public abstract bool Equals(Query? o);
+    public abstract override int GetHashCode();
 
-    public override bool Equals(object? o) => o is Query query && Equals(query);
+    public abstract override bool Equals(object? otherObject);
 
-    public override int GetHashCode()
-    {
-        return base.GetHashCode();
-    }
+    public abstract bool Equals(Query? otherQuery);
 
     public static Query FQL(ref QueryStringHandler handler)
     {
