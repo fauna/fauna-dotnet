@@ -20,29 +20,11 @@ internal class Connection : IConnection
 
     public async Task<HttpResponseMessage> DoRequestAsync(
         string fql,
-        int queryTimeoutSeconds,
-        Dictionary<string, string>? queryTags,
-        string? traceParent)
+        QueryOptions? queryOptions)
     {
+        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var request = GetHttpRequestMessage(fql);
-        var requestHeaders = GetRequestHeaders();
-
-        requestHeaders.Add(Headers.QueryTimeoutMs, (queryTimeoutSeconds * 1000).ToString());
-
-        if (queryTags != null)
-        {
-            requestHeaders.Add(Headers.QueryTags, EncodeQueryTags(queryTags));
-        }
-
-        if (!string.IsNullOrEmpty(traceParent))
-        {
-            requestHeaders.Add(Headers.TraceParent, traceParent);
-        }
-
-        if (LastSeenTxn > long.MinValue)
-        {
-            requestHeaders.Add(Headers.LastTxnTs, LastSeenTxn.ToString());
-        }
+        var requestHeaders = GetRequestHeaders(finalOptions);
 
         foreach (var header in requestHeaders)
         {
@@ -78,7 +60,7 @@ internal class Connection : IConnection
         return httpRequest;
     }
 
-    private Dictionary<string, string> GetRequestHeaders()
+    private Dictionary<string, string> GetRequestHeaders(QueryOptions? queryOptions)
     {
         var headers = new Dictionary<string, string>
         {
@@ -86,14 +68,39 @@ internal class Connection : IConnection
             { Headers.Driver, "C#" }
         };
 
-        if (_config.Linearized != null)
+        if (LastSeenTxn > long.MinValue)
         {
-            headers.Add(Headers.Linearized, _config.Linearized.ToString()!);
+            headers.Add(Headers.LastTxnTs, LastSeenTxn.ToString());
         }
 
-        if (_config.TypeCheck != null)
+        if (queryOptions != null)
         {
-            headers.Add(Headers.TypeCheck, _config.TypeCheck.ToString()!);
+            if (queryOptions.QueryTimeout.HasValue)
+            {
+                headers.Add(
+                    Headers.QueryTimeoutMs,
+                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString());
+            }
+
+            if (queryOptions.QueryTags != null)
+            {
+                headers.Add(Headers.QueryTags, EncodeQueryTags(queryOptions.QueryTags));
+            }
+
+            if (!string.IsNullOrEmpty(queryOptions.TraceParent))
+            {
+                headers.Add(Headers.TraceParent, queryOptions.TraceParent);
+            }
+
+            if (queryOptions.Linearized != null)
+            {
+                headers.Add(Headers.Linearized, queryOptions.Linearized.ToString()!);
+            }
+
+            if (queryOptions.TypeCheck != null)
+            {
+                headers.Add(Headers.TypeCheck, queryOptions.TypeCheck.ToString()!);
+            }
         }
 
         return headers;

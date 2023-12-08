@@ -4,7 +4,6 @@ namespace Fauna;
 
 public class Client
 {
-    private const int DefaultQueryTimeoutInSeconds = 30;
     private readonly IConnection _connection;
 
     public Client(string secret) :
@@ -23,15 +22,13 @@ public class Client
 
     public async Task<QuerySuccess<T>> QueryAsync<T>(
         string fql,
-        int queryTimeoutSeconds = DefaultQueryTimeoutInSeconds,
-        Dictionary<string, string>? queryTags = null,
-        string? traceParent = null) where T : class
+        QueryOptions? queryOptions = null) where T : class
     {
         if (string.IsNullOrEmpty(fql)) throw new ArgumentException("The provided FQL query is null.");
 
-        var response = await _connection.DoRequestAsync(fql, queryTimeoutSeconds, queryTags, traceParent);
+        var response = await _connection.DoRequestAsync(fql, queryOptions);
 
-        var queryResponse = GetQueryResponse<T>(response);
+        var queryResponse = await GetQueryResponseAsync<T>(response);
 
         if (queryResponse is QueryFailure)
         {
@@ -42,15 +39,15 @@ public class Client
     }
 
     // ProcessResponse method
-    private QueryResponse GetQueryResponse<T>(HttpResponseMessage response) where T : class
+    private async Task<QueryResponse> GetQueryResponseAsync<T>(HttpResponseMessage response) where T : class
     {
         QueryResponse queryResponse;
 
         var statusCode = response.StatusCode;
-        var body = response.Content.ReadAsStringAsync().Result;
+        var body = await response.Content.ReadAsStringAsync();
         var headers = response.Headers;
 
-        if (!((int)statusCode >= 200 && (int)statusCode < 400))
+        if (!response.IsSuccessStatusCode)
         {
             queryResponse = new QueryFailure(body);
         }

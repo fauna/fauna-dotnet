@@ -6,7 +6,5 @@ internal interface IConnection
 
     Task<HttpResponseMessage> DoRequestAsync(
         string fql,
-        int queryTimeoutSeconds,
-        Dictionary<string, string>? queryTags,
-        string? traceParent);
+        QueryOptions? queryOptions);
 }

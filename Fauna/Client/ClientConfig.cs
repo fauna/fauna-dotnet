@@ -8,9 +8,8 @@ public class ClientConfig
 {
     public string Secret { get; init; }
     public Uri Endpoint { get; init; } = Constants.Endpoints.Default;
-    public bool? Linearized { get; init; } = null;
-    public bool? TypeCheck { get; init; } = null;
     public TimeSpan ConnectionTimeout { get; init; } = DefaultConnectionTimeout;
+    public QueryOptions? DefaultQueryOptions { get; init; } = null;
 
     private static readonly TimeSpan DefaultConnectionTimeout = TimeSpan.FromSeconds(60);
 
