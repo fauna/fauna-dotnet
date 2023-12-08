@@ -9,15 +9,12 @@ public static class Serializer
 {
     public static object? Deserialize(string str)
     {
-        var reader = new Utf8FaunaReader(str);
-        var obj = DeserializeValueInternal(ref reader);
-
-        if (reader.Read())
-        {
-            throw new SerializationException("token stream not exhausted");
-        }
-
-        return obj;
+        return Deserialize(str, typeof(object));
+    }
+    
+    public static T? Deserialize<T>(string str)
+    {
+        return (T?)Deserialize(str, typeof(T));
     }
 
     public static object? Deserialize(string str, Type type)
@@ -75,7 +72,7 @@ public static class Serializer
     private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, Type? targetType = null)
     {
         reader.Read();
-        return targetType == null ? DeserializeDictionaryInternal(ref reader) : DeserializeClassInternal(ref reader, targetType);
+        return targetType == null || targetType == typeof(object) ? DeserializeDictionaryInternal(ref reader) : DeserializeClassInternal(ref reader, targetType);
     }
     
     private static object? DeserializeClassInternal(ref Utf8FaunaReader reader, Type t)

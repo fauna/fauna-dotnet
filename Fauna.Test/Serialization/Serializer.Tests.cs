@@ -136,7 +136,7 @@ public class SerializerTests
                              }
                              """;
         
-        var p = (TestPerson)Serializer.Deserialize(given, typeof(TestPerson))!;
+        var p = Serializer.Deserialize<TestPerson>(given);
         Assert.AreEqual("Baz", p.FirstName);
         Assert.AreEqual("Luhrmann", p.LastName);
         Assert.AreEqual(61, p.Age);
@@ -154,7 +154,7 @@ public class SerializerTests
                              }
                              """;
         
-        var p = (AttributedTestPerson)Serializer.Deserialize(given, typeof(AttributedTestPerson))!;
+        var p = Serializer.Deserialize<AttributedTestPerson>(given);
         Assert.AreEqual("Baz", p.FirstName);
         Assert.AreEqual("Luhrmann", p.LastName);
         Assert.AreEqual(61, p.Age);
