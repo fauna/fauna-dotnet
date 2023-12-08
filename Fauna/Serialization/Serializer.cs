@@ -99,10 +99,10 @@ public static class Serializer
 
         do
         {
+            if (reader.CurrentTokenType == TokenType.EndObject) break;
+
             switch (reader.CurrentTokenType)
             {
-                case TokenType.EndObject:
-                    break;
                 case TokenType.FieldName:
                     var fieldName = reader.GetString()!;
                     if (propMap.ContainsKey(fieldName))
@@ -113,8 +113,6 @@ public static class Serializer
                 default:
                     throw new SerializationException("unexpected token");
             }
-
-            if (reader.CurrentTokenType == TokenType.EndObject) break;
         } while (reader.Read());
 
         return instance;
@@ -125,18 +123,16 @@ public static class Serializer
         var obj = new Dictionary<string, object>();
         do
         {
+            if (reader.CurrentTokenType == TokenType.EndObject) break;
+            
             switch (reader.CurrentTokenType)
             {
-                case TokenType.EndObject:
-                    break;
                 case TokenType.FieldName:
                     obj[reader.GetString()!] = DeserializeValueInternal(ref reader)!;
                     break;
                 default:
                     throw new SerializationException("unexpected token");
             }
-            
-            if (reader.CurrentTokenType == TokenType.EndObject) break;
         } while (reader.Read());
 
         return obj;
