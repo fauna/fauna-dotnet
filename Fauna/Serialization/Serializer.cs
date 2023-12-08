@@ -1,4 +1,7 @@
 using System.Collections;
+using System.Reflection;
+using Fauna.Serialization.Attributes;
+using Type = System.Type;
 
 namespace Fauna.Serialization;
 
@@ -8,7 +11,7 @@ public static class Serializer
     {
         var reader = new Utf8FaunaReader(str);
         var obj = DeserializeValueInternal(ref reader);
-        
+
         if (reader.Read())
         {
             throw new SerializationException("token stream not exhausted");
@@ -17,15 +20,28 @@ public static class Serializer
         return obj;
     }
 
-    private static object? DeserializeValueInternal(ref Utf8FaunaReader reader)
+    public static object? Deserialize(string str, Type type)
+    {
+        var reader = new Utf8FaunaReader(str);
+        var obj = DeserializeValueInternal(ref reader, type);
+
+        if (reader.Read())
+        {
+            throw new SerializationException("token stream not exhausted");
+        }
+
+        return obj;
+    }
+
+    private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, Type? targetType = null)
     {
         object? value;
-        
+
         reader.Read();
         switch (reader.CurrentTokenType)
         {
             case TokenType.StartObject:
-                value = DeserializeObjectInternal(ref reader);
+                value = DeserializeObjectInternal(ref reader, targetType);
                 break;
             case TokenType.StartArray:
                 throw new NotImplementedException();
@@ -47,7 +63,7 @@ public static class Serializer
                 value = reader.GetValue();
                 break;
             case TokenType.Null:
-                value =  null;
+                value = null;
                 break;
             default:
                 throw new SerializationException("unexpected token");
@@ -55,23 +71,72 @@ public static class Serializer
 
         return value;
     }
-    
-    private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader)
+
+    private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, Type? targetType = null)
     {
         reader.Read();
+        return targetType == null ? DeserializeDictionaryInternal(ref reader) : DeserializeClassInternal(ref reader, targetType);
+    }
+    
+    private static object? DeserializeClassInternal(ref Utf8FaunaReader reader, Type t)
+    {
+        var instance = Activator.CreateInstance(t);
+        var propMap = new Dictionary<string, PropertyInfo>();
+        var props = t.GetProperties();
+
+        foreach (var prop in props)
+        {
+            var attr = prop.GetCustomAttribute<FaunaFieldName>();
+            if (attr != null)
+            {
+                propMap[attr.GetName()] = prop;
+            }
+            else
+            {
+                propMap[prop.Name] = prop;
+            }
+        }
+
+        do
+        {
+            switch (reader.CurrentTokenType)
+            {
+                case TokenType.EndObject:
+                    break;
+                case TokenType.FieldName:
+                    var fieldName = reader.GetString()!;
+                    if (propMap.ContainsKey(fieldName))
+                    {
+                        propMap[fieldName].SetValue(instance, DeserializeValueInternal(ref reader)!);
+                    }
+                    break;
+                default:
+                    throw new SerializationException("unexpected token");
+            }
+
+            if (reader.CurrentTokenType == TokenType.EndObject) break;
+        } while (reader.Read());
+
+        return instance;
+    }
+
+    private static object? DeserializeDictionaryInternal(ref Utf8FaunaReader reader)
+    {
         var obj = new Dictionary<string, object>();
         do
         {
             switch (reader.CurrentTokenType)
             {
                 case TokenType.EndObject:
-                    return obj;
+                    break;
                 case TokenType.FieldName:
                     obj[reader.GetString()!] = DeserializeValueInternal(ref reader)!;
                     break;
                 default:
                     throw new SerializationException("unexpected token");
             }
+            
+            if (reader.CurrentTokenType == TokenType.EndObject) break;
         } while (reader.Read());
 
         return obj;

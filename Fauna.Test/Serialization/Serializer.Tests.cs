@@ -1,4 +1,5 @@
 using Fauna.Serialization;
+using Fauna.Serialization.Attributes;
 using Fauna.Types;
 using NUnit.Framework;
 
@@ -7,6 +8,24 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class SerializerTests
 {
+    
+    internal class TestPerson
+    {
+        public string? FirstName { get; set; }
+        public string? LastName { get; set; }
+        public int Age { get; set; }
+    }
+    
+    internal class AttributedTestPerson
+    {
+        [FaunaFieldName("first_name")]
+        public string? FirstName { get; set; }
+        [FaunaFieldName("last_name")]
+        public string? LastName { get; set; }
+        [FaunaFieldName("age")]
+        public int Age { get; set; }
+    }
+
     
     [Test]
     public void DeserializeValues()
@@ -102,5 +121,42 @@ public class SerializerTests
             
         var result = Serializer.Deserialize(given);
         Assert.AreEqual(expected, result);
+    }
+    
+    
+    [Test]
+    public void DeserializeIntoPoco()
+    {
+        
+        const string given = """
+                             {
+                                "FirstName": "Baz",
+                                "LastName": "Luhrmann",
+                                "Age": { "@int": "61" }
+                             }
+                             """;
+        
+        var p = (TestPerson)Serializer.Deserialize(given, typeof(TestPerson))!;
+        Assert.AreEqual("Baz", p.FirstName);
+        Assert.AreEqual("Luhrmann", p.LastName);
+        Assert.AreEqual(61, p.Age);
+    }
+    
+    [Test]
+    public void DeserializeIntoPocoWithAttributes()
+    {
+        
+        const string given = """
+                             {
+                                "first_name": "Baz",
+                                "last_name": "Luhrmann",
+                                "age": { "@int": "61" }
+                             }
+                             """;
+        
+        var p = (AttributedTestPerson)Serializer.Deserialize(given, typeof(AttributedTestPerson))!;
+        Assert.AreEqual("Baz", p.FirstName);
+        Assert.AreEqual("Luhrmann", p.LastName);
+        Assert.AreEqual(61, p.Age);
     }
 }
