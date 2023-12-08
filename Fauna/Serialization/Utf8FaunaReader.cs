@@ -129,6 +129,34 @@ public ref struct Utf8FaunaReader
         return true;
     }
 
+    public object? GetValue()
+    {
+        switch (CurrentTokenType)
+        {
+            case TokenType.FieldName:
+            case TokenType.String:
+                return GetString();
+            case TokenType.Int:
+                return GetInt();
+            case TokenType.Long:
+                return GetLong();
+            case TokenType.Double:
+                return GetDouble();
+            case TokenType.Date:
+                return GetDate();
+            case TokenType.Time:
+                return GetTime();
+            case TokenType.True:
+            case TokenType.False:
+                return GetBoolean();
+            case TokenType.Module:
+                return GetModule();
+            default:
+                throw new SerializationException($"{CurrentTokenType} does not have an associated value");
+        }
+    }
+
+
     public string? GetString()
     {
         if (CurrentTokenType != TokenType.String && CurrentTokenType != TokenType.FieldName)
