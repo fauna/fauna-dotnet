@@ -1,29 +1,40 @@
+using System.Buffers;
+using System.Text;
+using Fauna.Serialization;
 using NUnit.Framework;
-using System.Text.Json;
 
 namespace Fauna.Test;
 
 [TestFixture]
 public class ClientTests
 {
-    private class Result
+    private void Write(string json)
     {
-        public Data data {get;set;}
-    }
+        var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(json)));
 
-    private class Data
-    {
-        public List<object> data {get;set;}
+        while (reader.Read())
+        {
+            Console.WriteLine($"Type: {reader.CurrentTokenType}");
+        }
     }
 
     [Test]
     public async Task CreateClient()
     {
         var t = new { data = new { data = Array.Empty<object>() } };
-        var c = new Client(new ClientConfig { Secret = "secret", Endpoint = Constants.Endpoints.Local });
-        var r = await c.QueryAsync("Collection.all()");
-        var j = JsonSerializer.Deserialize<Result>(r);
-
-        Console.WriteLine(j.data.data.First());
+        var c = new Client(
+            new ClientConfig("secret")
+            {
+                Endpoint = Constants.Endpoints.Local,
+                DefaultQueryOptions = new QueryOptions
+                {
+                    QueryTags = new Dictionary<string, string> { { "lorem", "ipsum" } }
+                }
+            });
+        var r = await c.QueryAsync<string>(
+            "let x = 123; x",
+            new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, {"baz", "luhrmann"} }});
+        Write(r.Data);
+        Console.WriteLine(string.Join(',',r.QueryTags!.Select(kv => $"{kv.Key}={kv.Value}")));
     }
 }

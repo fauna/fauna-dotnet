@@ -9,9 +9,6 @@ internal readonly struct Headers
     public const string TypeCheck = "X-Typecheck";
     public const string QueryTags = "X-Query-Tags";
     public const string TraceParent = "Traceparent";
-    public const string AcceptEncoding = "Accept-Encoding";
-    public const string Authorization = "Authorization";
-    public const string ContentType = "Content-Type";
     public const string Driver = "X-Driver";
     public const string DriverEnv = "X-Driver-Env";
     public const string Format = "X-Format";
