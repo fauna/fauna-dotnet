@@ -118,7 +118,7 @@ public class QueryTests
     }
 
     [Test]
-    public void BuildsAQuery_WithInvalidNestemParam()
+    public void BuildsAQuery_WithInvalidNestedParam()
     {
         var expressionValue = FQL($@"2");
         var arrayParam = CreateNestedArray(5, expressionValue);
