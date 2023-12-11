@@ -49,9 +49,44 @@ public class QueryTests
     }
 
     [Test]
+    public void BuildsAQuery_WithValidArrayParam()
+    {
+        var arrayParam = new object[] {
+            "item1",
+            143,
+            false,
+            new[] { "item21", "item22" },
+            new List<object> { "item1", 143, false, new[] { "item21", "item22" } },
+            new Dictionary<string, object> {
+                { "key1", "item1" },
+                { "key2", 143 },
+                { "key3", new[] { "item21", "item22" } }
+            }
+        };
+
+        var expected = new Expr("let x = ", new Query.Val<object[]>(arrayParam));
+
+        var actual = FQL($@"let x = {arrayParam}");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
     public void BuildsAQuery_WithValidListParam()
     {
-        var listParam = new List<object> { "item1", 2 };
+        var listParam = new List<object> {
+            "item1",
+            143,
+            false,
+            new[] { "item21", "item22" },
+            new List<object> { "item1", 143, false, new[] { "item21", "item22" } },
+            new Dictionary<string, object> {
+                { "key1", "item1" },
+                { "key2", 143 },
+                { "key3", new[] { "item21", "item22" } }
+            }
+        };
+
         var expected = new Expr("let x = ", new Query.Val<List<object>>(listParam));
 
         var actual = FQL($@"let x = {listParam}");
@@ -60,18 +95,60 @@ public class QueryTests
     }
 
     [Test]
-    public void BuildsAQuery_WithInvalidExprParam()
+    public void BuildsAQuery_WithValidDictionaryParam()
     {
-        var arrayParam = new object[] { "item1", FQL($@"2") };
-        var listParam = new List<object> { "item1", FQL($@"2") };
-        var dictionaryParam = new Dictionary<string, object>
-        {
-            { "validParamKey", "validParamValue" },
-            { "invalidParamKey", FQL($@"2") }
+        IDictionary<string, object> dictionaryParam = new Dictionary<string, object> {
+            { "key1", "item1" },
+            { "key2", 143 },
+            { "key3", new[] { "item21", "item22" } },
+            { "key4", new List<object> { "item1", 143, false, new[] { "item21", "item22" } } },
+            { "key5", new Dictionary<string, object> {
+                { "key1", "item1" },
+                { "key2", 143 },
+                { "key3", new[] { "item21", "item22" } }
+            } }
         };
+
+        var expected = new Expr("let x = ", new Query.Val<IDictionary<string, object>>(dictionaryParam));
+
+
+        var actual = FQL($@"let x = {dictionaryParam}");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BuildsAQuery_WithInvalidNestemParam()
+    {
+        var expressionValue = FQL($@"2");
+        var arrayParam = CreateNestedArray(5, expressionValue);
+        var listParam = new List<object> { CreateNestedArray(5, expressionValue) };
+        var dictionaryParam = CreateNestedDictionary(5, expressionValue);
 
         Assert.Throws<InvalidOperationException>(() => FQL($@"let x = {arrayParam}"));
         Assert.Throws<InvalidOperationException>(() => FQL($@"let x = {listParam}"));
         Assert.Throws<InvalidOperationException>(() => FQL($@"let x = {dictionaryParam}"));
+    }
+
+    private static Dictionary<string, object> CreateNestedDictionary(int depth, object innerValue)
+    {
+        object currentValue = innerValue;
+        for (int i = depth - 1; i >= 0; i--)
+        {
+            currentValue = new Dictionary<string, object> { { $"level{i + 1}Key", currentValue } };
+        }
+
+        return new Dictionary<string, object> { { "level0Key", currentValue } };
+    }
+
+    private static object[] CreateNestedArray(int depth, object innerValue)
+    {
+        object currentValue = innerValue;
+        for (int i = depth - 1; i >= 0; i--)
+        {
+            currentValue = new object[] { $"level{i + 1}Value", currentValue };
+        }
+
+        return ["level0Value", currentValue];
     }
 }

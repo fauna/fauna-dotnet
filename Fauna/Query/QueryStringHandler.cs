@@ -47,27 +47,53 @@ public ref struct QueryStringHandler
 
     private static bool ContainsExpr<T>(T value)
     {
-        if (value is IEnumerable enumerable && value is not string)
+        if (value is null)
         {
-            if (value is IDictionary dictionary)
+            return false;
+        }
+
+        var stack = new Stack<object>();
+        stack.Push(value);
+
+        while (stack.Count > 0)
+        {
+            var current = stack.Pop();
+
+            switch (current)
             {
-                foreach (DictionaryEntry entry in dictionary)
-                {
-                    if (entry.Value is Expr)
+                case null:
+                    continue;
+
+                case Expr:
+                    return true;
+
+                case IDictionary dictionary:
+                    foreach (DictionaryEntry entry in dictionary)
                     {
-                        return true;
+                        if (entry.Value is Expr)
+                        {
+                            return true;
+                        }
+                        else if (entry.Value is IEnumerable || entry.Value is IDictionary)
+                        {
+                            stack.Push(entry.Value);
+                        }
                     }
-                }
-            }
-            else
-            {
-                foreach (var item in enumerable)
-                {
-                    if (item is Expr)
+                    break;
+
+                case IEnumerable enumerable when current is not string:
+                    foreach (var item in enumerable)
                     {
-                        return true;
+                        if (item is Expr)
+                        {
+                            return true;
+                        }
+                        else if (item is IEnumerable || item is IDictionary)
+                        {
+                            stack.Push(item);
+                        }
                     }
-                }
+                    break;
             }
         }
 
