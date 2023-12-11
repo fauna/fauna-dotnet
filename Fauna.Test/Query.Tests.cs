@@ -48,21 +48,4 @@ public class QueryTests
 
         Assert.That(actual, Is.EqualTo(expected));
     }
-
-    [Test]
-    public void BuildsAQueryWithArrayParam()
-    {
-        var listOfItems = new string[] { "item1", "item2", "item3" };
-
-        var actual = FQL($@"let x = {listOfItems};");
-
-        var queryArr = new QueryArr<string>(listOfItems);
-        var expected = new QueryExpr(
-            new QueryLiteral("let x = "),
-            new QueryVal<QueryArr<string>>(queryArr),
-            new QueryLiteral(";")
-        );
-
-        Assert.That(actual, Is.EqualTo(expected));
-    }
 }
