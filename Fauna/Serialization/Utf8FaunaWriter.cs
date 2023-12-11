@@ -1,7 +1,6 @@
 using System.Buffers;
 using System.Globalization;
 using System.Text.Json;
-using Fauna.Serialization.Attributes;
 using Fauna.Types;
 
 namespace Fauna.Serialization;
