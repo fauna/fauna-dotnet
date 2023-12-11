@@ -24,7 +24,7 @@ public static class Serializer
 
         if (reader.Read())
         {
-            throw new SerializationException("token stream not exhausted");
+            throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
         }
 
         return obj;
@@ -32,39 +32,28 @@ public static class Serializer
 
     private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, Type? targetType = null)
     {
-        object? value;
-
         reader.Read();
-        switch (reader.CurrentTokenType)
+        
+        var value = reader.CurrentTokenType switch
         {
-            case TokenType.StartObject:
-                value = DeserializeObjectInternal(ref reader, targetType);
-                break;
-            case TokenType.StartArray:
-                throw new NotImplementedException();
-            case TokenType.StartSet:
-                throw new NotImplementedException();
-            case TokenType.StartRef:
-                throw new NotImplementedException();
-            case TokenType.StartDocument:
-                throw new NotImplementedException();
-            case TokenType.String:
-            case TokenType.Int:
-            case TokenType.Long:
-            case TokenType.Double:
-            case TokenType.Date:
-            case TokenType.Time:
-            case TokenType.True:
-            case TokenType.False:
-            case TokenType.Module:
-                value = reader.GetValue();
-                break;
-            case TokenType.Null:
-                value = null;
-                break;
-            default:
-                throw new SerializationException("unexpected token");
-        }
+            TokenType.StartObject => DeserializeObjectInternal(ref reader, targetType),
+            TokenType.StartArray => throw new NotImplementedException(),
+            TokenType.StartSet => throw new NotImplementedException(),
+            TokenType.StartRef => throw new NotImplementedException(),
+            TokenType.StartDocument => throw new NotImplementedException(),
+            TokenType.String => reader.GetValue(),
+            TokenType.Int => reader.GetValue(),
+            TokenType.Long => reader.GetValue(),
+            TokenType.Double => reader.GetValue(),
+            TokenType.Date => reader.GetValue(),
+            TokenType.Time => reader.GetValue(),
+            TokenType.True => reader.GetValue(),
+            TokenType.False => reader.GetValue(),
+            TokenType.Module => reader.GetValue(),
+            TokenType.Null => null,
+            _ => throw new SerializationException(
+                $"Unexpected token while deserializing: {reader.CurrentTokenType}")
+        };
 
         return value;
     }
@@ -86,7 +75,7 @@ public static class Serializer
             var attr = prop.GetCustomAttribute<FaunaFieldName>();
             if (attr != null)
             {
-                propMap[attr.GetName()] = prop;
+                propMap[attr.Name] = prop;
             }
             else
             {
@@ -96,19 +85,22 @@ public static class Serializer
 
         do
         {
-            if (reader.CurrentTokenType == TokenType.EndObject) break;
-
-            switch (reader.CurrentTokenType)
+            if (reader.CurrentTokenType == TokenType.EndObject)
             {
-                case TokenType.FieldName:
-                    var fieldName = reader.GetString()!;
-                    if (propMap.ContainsKey(fieldName))
-                    {
-                        propMap[fieldName].SetValue(instance, DeserializeValueInternal(ref reader)!);
-                    }
-                    break;
-                default:
-                    throw new SerializationException("unexpected token");
+                break;
+            }
+
+            if (reader.CurrentTokenType == TokenType.FieldName)
+            {
+                var fieldName = reader.GetString()!;
+                if (propMap.ContainsKey(fieldName))
+                {
+                    propMap[fieldName].SetValue(instance, DeserializeValueInternal(ref reader)!);
+                }
+            }
+            else
+            {
+                throw new SerializationException($"Unexpected token while deserializing into class {t.Name}: {reader.CurrentTokenType}");
             }
         } while (reader.Read());
 
@@ -128,7 +120,7 @@ public static class Serializer
                     obj[reader.GetString()!] = DeserializeValueInternal(ref reader)!;
                     break;
                 default:
-                    throw new SerializationException("unexpected token");
+                    throw new SerializationException($"Unexpected token while deserializing into dictionary: {reader.CurrentTokenType}");
             }
         } while (reader.Read());
 

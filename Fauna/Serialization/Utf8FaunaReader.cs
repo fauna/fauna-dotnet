@@ -131,29 +131,18 @@ public ref struct Utf8FaunaReader
 
     public object? GetValue()
     {
-        switch (CurrentTokenType)
+        return CurrentTokenType switch
         {
-            case TokenType.FieldName:
-            case TokenType.String:
-                return GetString();
-            case TokenType.Int:
-                return GetInt();
-            case TokenType.Long:
-                return GetLong();
-            case TokenType.Double:
-                return GetDouble();
-            case TokenType.Date:
-                return GetDate();
-            case TokenType.Time:
-                return GetTime();
-            case TokenType.True:
-            case TokenType.False:
-                return GetBoolean();
-            case TokenType.Module:
-                return GetModule();
-            default:
-                throw new SerializationException($"{CurrentTokenType} does not have an associated value");
-        }
+            TokenType.FieldName or TokenType.String => GetString(),
+            TokenType.Int => GetInt(),
+            TokenType.Long => GetLong(),
+            TokenType.Double => GetDouble(),
+            TokenType.Date => GetDate(),
+            TokenType.Time => GetTime(),
+            TokenType.True or TokenType.False => GetBoolean(),
+            TokenType.Module => GetModule(),
+            _ => throw new SerializationException($"{CurrentTokenType} does not have an associated value")
+        };
     }
 
 
