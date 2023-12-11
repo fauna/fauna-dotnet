@@ -60,7 +60,6 @@ public static class Serializer
 
     private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, Type? targetType = null)
     {
-        reader.Read();
         return targetType == null || targetType == typeof(object) ? DeserializeDictionaryInternal(ref reader) : DeserializeClassInternal(ref reader, targetType);
     }
     
@@ -83,13 +82,8 @@ public static class Serializer
             }
         }
 
-        do
+        while (reader.Read() && reader.CurrentTokenType != TokenType.EndObject)
         {
-            if (reader.CurrentTokenType == TokenType.EndObject)
-            {
-                break;
-            }
-
             if (reader.CurrentTokenType == TokenType.FieldName)
             {
                 var fieldName = reader.GetString()!;
@@ -102,7 +96,7 @@ public static class Serializer
             {
                 throw new SerializationException($"Unexpected token while deserializing into class {t.Name}: {reader.CurrentTokenType}");
             }
-        } while (reader.Read());
+        }
 
         return instance;
     }
@@ -110,19 +104,15 @@ public static class Serializer
     private static object? DeserializeDictionaryInternal(ref Utf8FaunaReader reader)
     {
         var obj = new Dictionary<string, object>();
-        do
+
+        while (reader.Read() && reader.CurrentTokenType != TokenType.EndObject)
         {
-            if (reader.CurrentTokenType == TokenType.EndObject) break;
-            
-            switch (reader.CurrentTokenType)
-            {
-                case TokenType.FieldName:
-                    obj[reader.GetString()!] = DeserializeValueInternal(ref reader)!;
-                    break;
-                default:
-                    throw new SerializationException($"Unexpected token while deserializing into dictionary: {reader.CurrentTokenType}");
-            }
-        } while (reader.Read());
+            if (reader.CurrentTokenType == TokenType.FieldName)
+                obj[reader.GetString()!] = DeserializeValueInternal(ref reader)!;
+            else
+                throw new SerializationException(
+                    $"Unexpected token while deserializing into dictionary: {reader.CurrentTokenType}");
+        }
 
         return obj;
     }
