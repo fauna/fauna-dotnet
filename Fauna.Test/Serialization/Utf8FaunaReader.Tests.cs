@@ -215,6 +215,22 @@ public class Utf8FaunaReaderTests
     }
 
     [Test]
+    public void ReadArrayWithEmptyObject()
+    {
+        const string s = "[{}]";
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>
+        {
+            new(TokenType.StartArray, null),
+            new(TokenType.StartObject, null),
+            new(TokenType.EndObject, null),
+            new(TokenType.EndArray, null),
+        };
+        
+        AssertReader(reader, expectedTokens);
+    }
+
+    [Test]
     public void ReadEscapedObject()
     {
         const string s = """
@@ -426,7 +442,9 @@ public class Utf8FaunaReaderTests
                             null
                          ]
                          """;
-                var reader = new Utf8FaunaReader(s);
+        
+        var reader = new Utf8FaunaReader(s);
+        
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
             new(TokenType.StartArray, null),
@@ -474,15 +492,89 @@ public class Utf8FaunaReaderTests
     public void ThrowsOnMalformedJson()
     {
         const string s = "{";
-        var bytes = Encoding.UTF8.GetBytes(s);
-        
         var ex = Assert.Throws<SerializationException>(() =>
         {
-            var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(bytes));
+            var reader = new Utf8FaunaReader(s);
             reader.Read();
             reader.Read();
         });
         
         Assert.AreEqual("Failed to advance underlying JSON reader.", ex?.Message);
+    }
+
+    [Test]
+    public void SkipValues()
+    {
+        var tests = new List<string>()
+        {
+            """{"k1": {}, "k2": {}}""",
+            """["k1",[],{}]""",
+            """{"@ref": {}}""",
+            """{"@doc": {}}""",
+            """{"@set": {}}""",
+            """{"@object":{}}"""
+        };
+        
+        foreach (var test in tests)
+        {
+            var reader = new Utf8FaunaReader(test);
+            reader.Read();
+            reader.Skip();
+            Assert.IsFalse(reader.Read());
+        }
+    }
+    
+    [Test]
+    public void SkipNestedEscapedObject()
+    {
+        const string test = """{"@object":{"inner":{"@object":{"foo": "bar"}},"k2":{}}}""";
+        var reader = new Utf8FaunaReader(test);
+        reader.Read(); // {"@object":{
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
+        reader.Read(); // inner
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        reader.Read(); // {"@object":{
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
+        reader.Skip(); // "foo": "bar"}}
+        Assert.AreEqual(TokenType.EndObject,reader.CurrentTokenType);
+        reader.Read(); 
+        Assert.AreEqual(TokenType.FieldName,reader.CurrentTokenType);
+        Assert.AreEqual("k2",reader.GetString());
+    }
+    
+    [Test]
+    public void SkipNestedObject()
+    {
+        const string test = """{"k":{"inner":{}},"k2":{}}""";
+        var reader = new Utf8FaunaReader(test);
+        reader.Read(); // {
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
+        reader.Read(); // k
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        reader.Read(); // {
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
+        reader.Skip(); // "inner":{}}
+        Assert.AreEqual(TokenType.EndObject,reader.CurrentTokenType);
+        reader.Read(); 
+        Assert.AreEqual(TokenType.FieldName,reader.CurrentTokenType);
+        Assert.AreEqual("k2",reader.GetString());
+    }
+    
+    [Test]
+    public void SkipNestedArrays()
+    {
+        const string test = """{"k":["1","2"],"k2":{}}""";
+        var reader = new Utf8FaunaReader(test);
+        reader.Read(); // {
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
+        reader.Read(); // k
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        reader.Read(); // [
+        Assert.AreEqual(TokenType.StartArray, reader.CurrentTokenType);
+        reader.Skip(); // "1","2"]
+        Assert.AreEqual(TokenType.EndArray,reader.CurrentTokenType);
+        reader.Read(); 
+        Assert.AreEqual(TokenType.FieldName,reader.CurrentTokenType);
+        Assert.AreEqual("k2",reader.GetString());
     }
 }

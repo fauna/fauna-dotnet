@@ -10,7 +10,16 @@ public ref struct Utf8FaunaReader
 {
     private Utf8JsonReader _json;
     private readonly Stack<object> _tokenStack = new();
-    private bool _bufferedStartObject = false;
+    private TokenType? _bufferedTokenType = null;
+
+    private readonly HashSet<TokenType> _closers = new()
+    {
+        TokenType.EndObject,
+        TokenType.EndSet,
+        TokenType.EndDocument,
+        TokenType.EndRef,
+        TokenType.EndArray
+    };
 
     private string? _taggedTokenValue = null;
     public TokenType CurrentTokenType { get; private set; }
@@ -35,14 +44,41 @@ public ref struct Utf8FaunaReader
         CurrentTokenType = TokenType.None;
     }
 
+    public void Skip()
+    {
+        switch (CurrentTokenType)
+        {
+            case TokenType.StartObject:
+            case TokenType.StartArray:
+            case TokenType.StartSet:
+            case TokenType.StartRef:
+            case TokenType.StartDocument:
+                SkipInternal();
+                break;
+        }
+    }
+
+    private void SkipInternal()
+    {
+        var startCount = _tokenStack.Count;
+        while (Read())
+        {
+            if (_tokenStack.Count < startCount) break;
+        }
+    }
+
     public bool Read()
     {
         _taggedTokenValue = null;
 
-        if (_bufferedStartObject)
+        if (_bufferedTokenType != null)
         {
-            _bufferedStartObject = false;
-            CurrentTokenType = TokenType.FieldName;
+            CurrentTokenType = (TokenType)_bufferedTokenType;
+            _bufferedTokenType = null;
+            if (_closers.Contains(CurrentTokenType))
+            {
+                _tokenStack.Pop();
+            }
             return true;
         }
             
@@ -65,9 +101,11 @@ public ref struct Utf8FaunaReader
                 HandleEndObject();
                 break;
             case JsonTokenType.StartArray:
+                _tokenStack.Push(TokenType.StartArray);
                 CurrentTokenType = TokenType.StartArray;
                 break;
             case JsonTokenType.EndArray:
+                _tokenStack.Pop();
                 CurrentTokenType = TokenType.EndArray;
                 break;
             case JsonTokenType.String:
@@ -258,55 +296,67 @@ public ref struct Utf8FaunaReader
     private void HandleStartObject()
     {
         AdvanceTrue();
-                        
-        switch (_json.GetString())
+        
+        switch (_json.TokenType)
         {
-            case "@date":
-                HandleTaggedString(TokenType.Date);
+            case JsonTokenType.PropertyName:
+                switch (_json.GetString())
+                {
+                    case "@date":
+                        HandleTaggedString(TokenType.Date);
+                        break;
+                    case "@doc":
+                        AdvanceTrue();
+                        CurrentTokenType = TokenType.StartDocument;
+                        _tokenStack.Push(TokenType.StartDocument);
+                        break;
+                    case "@double":
+                        HandleTaggedString(TokenType.Double);
+                        break;
+                    case "@int":
+                        HandleTaggedString(TokenType.Int);
+                        break;
+                    case "@long":
+                        HandleTaggedString(TokenType.Long);
+                        break;
+                    case "@mod":
+                        HandleTaggedString(TokenType.Module);
+                        break;
+                    case "@object":
+                        AdvanceTrue();
+                        CurrentTokenType = TokenType.StartObject;
+                        _tokenStack.Push(TokenTypeInternal.StartEscapedObject);
+                        break;
+                    case "@ref":
+                        AdvanceTrue();
+                        CurrentTokenType = TokenType.StartRef;
+                        _tokenStack.Push(TokenType.StartRef);
+                        break;
+                    case "@set":
+                        AdvanceTrue();
+                        CurrentTokenType = TokenType.StartSet;
+                        _tokenStack.Push(TokenType.StartSet);
+                        break;
+                    case "@time":
+                        HandleTaggedString(TokenType.Time);
+                        break;
+                    default:
+                        _bufferedTokenType = TokenType.FieldName;
+                        _tokenStack.Push(TokenType.StartObject);
+                        CurrentTokenType = TokenType.StartObject;
+                        break;
+                }
                 break;
-            case "@doc":
-                AdvanceTrue();
-                CurrentTokenType = TokenType.StartDocument;
-                _tokenStack.Push(TokenType.StartDocument);
-                break;
-            case "@double":
-                HandleTaggedString(TokenType.Double);
-                break;
-            case "@int":
-                HandleTaggedString(TokenType.Int);
-                break;
-            case "@long":
-                HandleTaggedString(TokenType.Long);
-                break;
-            case "@mod":
-                HandleTaggedString(TokenType.Module);
-                break;
-            case "@object":
-                AdvanceTrue();
-                CurrentTokenType = TokenType.StartObject;
-                _tokenStack.Push(TokenTypeInternal.StartEscapedObject);
-                break;
-            case "@ref":
-                AdvanceTrue();
-                CurrentTokenType = TokenType.StartRef;
-                _tokenStack.Push(TokenType.StartRef);
-                break;
-            case "@set":
-                AdvanceTrue();
-                CurrentTokenType = TokenType.StartSet;
-                _tokenStack.Push(TokenType.StartSet);
-                break;
-            case "@time":
-                HandleTaggedString(TokenType.Time);
-                break;
-            default:
-                _bufferedStartObject = true;
+            case JsonTokenType.EndObject:
+                _bufferedTokenType = TokenType.EndObject;
                 _tokenStack.Push(TokenType.StartObject);
                 CurrentTokenType = TokenType.StartObject;
                 break;
+            default:
+                throw new SerializationException($"Unexpected token following StartObject: {_json.TokenType}");
         }
     }
-
+    
     private void HandleEndObject()
     {
         var startToken = _tokenStack.Pop();
