@@ -19,6 +19,16 @@ public static partial class Serializer
         return Encoding.UTF8.GetString(stream.ToArray());
     }
     
+    public static void Serialize(Stream stream, object? obj)
+    {
+        using var writer = new Utf8FaunaWriter(stream);
+
+        var context = new SerializationContext();
+        SerializeValueInternal(writer, obj, context);
+        writer.Flush();
+    }
+
+    
     private static void SerializeValueInternal(Utf8FaunaWriter writer, object? obj, SerializationContext context, FaunaType? typeHint = null)
     {
         if (typeHint != null)
