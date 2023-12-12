@@ -48,4 +48,55 @@ public class QueryTests
 
         Assert.That(actual, Is.EqualTo(expected));
     }
+
+    [Test]
+    public void BuildsAQueryWithArrayParam()
+    {
+        var arrayParam = new object[] {
+            "item1",
+            143,
+            false,
+            new[] { "item21", "item22" }
+        };
+
+        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal<object[]>(arrayParam));
+
+        var actual = FQL($@"let x = {arrayParam}");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BuildsAQueryWithListParam()
+    {
+        var listParam = new List<object> {
+            "item1",
+            143,
+            false,
+            new[] { "item21", "item22" }
+        };
+
+        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal<List<object>>(listParam));
+
+        var actual = FQL($@"let x = {listParam}");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
+    public void BuildsAQueryWithDictionaryParam()
+    {
+        IDictionary<string, object> dictionaryParam = new Dictionary<string, object> {
+            { "key1", "item1" },
+            { "key2", 143 },
+            { "key3", new[] { "item21", "item22" } }
+        };
+
+        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal<IDictionary<string, object>>(dictionaryParam));
+
+
+        var actual = FQL($@"let x = {dictionaryParam}");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
 }
