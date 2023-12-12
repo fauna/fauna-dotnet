@@ -2,7 +2,7 @@
 
 namespace Fauna;
 
-public sealed class QueryExpr : Query, IQueryFragment<ReadOnlyCollection<IQueryFragment>>
+public sealed class QueryExpr : Query, IQueryFragment
 {
     public QueryExpr(IList<IQueryFragment> fragments)
     {

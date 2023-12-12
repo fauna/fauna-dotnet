@@ -1,6 +1,6 @@
 ﻿namespace Fauna;
 
-public sealed class QueryLiteral : Query, IQueryFragment<string>
+public sealed class QueryLiteral : Query, IQueryFragment
 {
     public QueryLiteral(string v)
     {

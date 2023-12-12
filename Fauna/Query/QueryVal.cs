@@ -1,6 +1,6 @@
 ﻿namespace Fauna;
 
-public sealed class QueryVal<T> : Query, IQueryFragment<T>
+public sealed class QueryVal<T> : Query, IQueryFragment
 {
     public QueryVal(T v)
     {

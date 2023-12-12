@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace Fauna;
 
-internal sealed class QueryArr<T> : Query, IQueryFragment<ReadOnlyCollection<T>>, IEnumerable<T>
+internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
 {
     public QueryArr(IEnumerable<T> v)
     {
