@@ -5,7 +5,7 @@ using Type = System.Type;
 
 namespace Fauna.Serialization;
 
-public static class Serializer
+public static partial class Serializer
 {
     public static object? Deserialize(string str)
     {
