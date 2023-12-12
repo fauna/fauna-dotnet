@@ -4,11 +4,6 @@ public sealed class QueryVal<T> : Query, IQueryFragment
 {
     public QueryVal(T v)
     {
-        if (v == null)
-        {
-            throw new ArgumentNullException(nameof(v), "Value cannot be null.");
-        }
-
         Unwrap = v;
     }
 
