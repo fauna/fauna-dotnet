@@ -1,3 +1,4 @@
+using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
 
 namespace Fauna;
@@ -25,7 +26,11 @@ public class QuerySuccess<T> : QueryResponse where T : class
 
 public class QueryFailure : QueryResponse
 {
+    public ErrorInfo ErrorInfo { get; init; }
+
     public QueryFailure(string rawResponseText) : base(rawResponseText)
     {
+        var errorBlock = _responseBody.GetProperty(ErrorFieldName);
+        ErrorInfo = errorBlock.Deserialize<ErrorInfo>();
     }
 }
