@@ -13,6 +13,7 @@ public interface IQueryFragment
 /// <typeparam name="T">The type of the value wrapped by the query fragment.</typeparam>
 public interface IQueryFragment<T> : IQueryFragment
 {
+    /// <summary>
     /// Gets the wrapped value of the query fragment
     /// </summary>
     T Unwrap { get; }
