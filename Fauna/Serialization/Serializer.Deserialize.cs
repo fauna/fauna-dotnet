@@ -80,9 +80,8 @@ public static partial class Serializer
                 }
                 else
                 {
-                    // Test DeserializeIntoPocoWithAttributes fails until we have Skip()
-                    // reader.Read();
-                    // reader.Skip();
+                    reader.Read();
+                    reader.Skip();
                 }
             }
             else
