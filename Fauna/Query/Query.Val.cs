@@ -6,11 +6,6 @@ public abstract partial class Query
     {
         public Val(T v)
         {
-            if (v == null)
-            {
-                throw new ArgumentNullException(nameof(v), "Value cannot be null.");
-            }
-
             Unwrap = v;
         }
 

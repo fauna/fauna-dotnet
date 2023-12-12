@@ -51,9 +51,11 @@ public class QueryValTests
     }
 
     [Test]
-    public void Ctor_ThrowsArgumentNullExceptionForNullValue()
+    public void Ctor_WrapsNullCorrectly()
     {
-        Assert.Throws<ArgumentNullException>(() => new Query.Val<string?>(null));
+        string? expected = null;
+        var actual = new Query.Val<string?>(expected);
+        Assert.IsNull(actual.Unwrap);
     }
 
     [Test]
