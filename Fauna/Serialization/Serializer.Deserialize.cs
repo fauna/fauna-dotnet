@@ -20,7 +20,8 @@ public static partial class Serializer
     public static object? Deserialize(string str, Type type)
     {
         var reader = new Utf8FaunaReader(str);
-        var obj = DeserializeValueInternal(ref reader, type);
+        var context = new SerializationContext();
+        var obj = DeserializeValueInternal(ref reader, context, type);
 
         if (reader.Read())
         {
@@ -30,13 +31,13 @@ public static partial class Serializer
         return obj;
     }
 
-    private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, Type? targetType = null)
+    private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
     {
         reader.Read();
         
         var value = reader.CurrentTokenType switch
         {
-            TokenType.StartObject => DeserializeObjectInternal(ref reader, targetType),
+            TokenType.StartObject => DeserializeObjectInternal(ref reader, context, targetType),
             TokenType.StartArray => throw new NotImplementedException(),
             TokenType.StartSet => throw new NotImplementedException(),
             TokenType.StartRef => throw new NotImplementedException(),
@@ -58,38 +59,30 @@ public static partial class Serializer
         return value;
     }
 
-    private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, Type? targetType = null)
+    private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
     {
-        return targetType == null || targetType == typeof(object) ? DeserializeDictionaryInternal(ref reader) : DeserializeClassInternal(ref reader, targetType);
+        return targetType == null || targetType == typeof(object) ? DeserializeDictionaryInternal(ref reader, context) : DeserializeClassInternal(ref reader, context, targetType);
     }
     
-    private static object? DeserializeClassInternal(ref Utf8FaunaReader reader, Type t)
+    private static object? DeserializeClassInternal(ref Utf8FaunaReader reader, SerializationContext context, Type t)
     {
+        var fieldMap = context.GetFieldMap(t);
         var instance = Activator.CreateInstance(t);
-        var propMap = new Dictionary<string, PropertyInfo>();
-        var props = t.GetProperties();
-
-        foreach (var prop in props)
-        {
-            var attr = prop.GetCustomAttribute<FaunaFieldName>();
-            if (attr != null)
-            {
-                propMap[attr.Name] = prop;
-            }
-            else
-            {
-                propMap[prop.Name] = prop;
-            }
-        }
 
         while (reader.Read() && reader.CurrentTokenType != TokenType.EndObject)
         {
             if (reader.CurrentTokenType == TokenType.FieldName)
             {
                 var fieldName = reader.GetString()!;
-                if (propMap.ContainsKey(fieldName))
+                if (fieldMap.ContainsKey(fieldName))
                 {
-                    propMap[fieldName].SetValue(instance, DeserializeValueInternal(ref reader)!);
+                    fieldMap[fieldName].Info!.SetValue(instance, DeserializeValueInternal(ref reader, context)!);
+                }
+                else
+                {
+                    // Test DeserializeIntoPocoWithAttributes fails until we have Skip()
+                    // reader.Read();
+                    // reader.Skip();
                 }
             }
             else
@@ -101,14 +94,14 @@ public static partial class Serializer
         return instance;
     }
 
-    private static object? DeserializeDictionaryInternal(ref Utf8FaunaReader reader)
+    private static object? DeserializeDictionaryInternal(ref Utf8FaunaReader reader, SerializationContext context)
     {
         var obj = new Dictionary<string, object>();
 
         while (reader.Read() && reader.CurrentTokenType != TokenType.EndObject)
         {
             if (reader.CurrentTokenType == TokenType.FieldName)
-                obj[reader.GetString()!] = DeserializeValueInternal(ref reader)!;
+                obj[reader.GetString()!] = DeserializeValueInternal(ref reader, context)!;
             else
                 throw new SerializationException(
                     $"Unexpected token while deserializing into dictionary: {reader.CurrentTokenType}");

@@ -9,21 +9,23 @@ namespace Fauna.Test.Serialization;
 public class SerializerTests
 {
     
-    internal class TestPerson
+    private class TestPerson
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public int Age { get; set; }
     }
     
-    internal class AttributedTestPerson
+    [FaunaObject]
+    private class TestPersonWithAttributes
     {
-        [FaunaFieldName("first_name")]
+        [Field("first_name")]
         public string? FirstName { get; set; }
-        [FaunaFieldName("last_name")]
+        [Field("last_name")]
         public string? LastName { get; set; }
-        [FaunaFieldName("age")]
+        [Field("age")]
         public int Age { get; set; }
+        public string? Ignored { get; set; }
     }
 
     
@@ -145,18 +147,19 @@ public class SerializerTests
     [Test]
     public void DeserializeIntoPocoWithAttributes()
     {
-        
         const string given = """
                              {
                                 "first_name": "Baz",
                                 "last_name": "Luhrmann",
-                                "age": { "@int": "61" }
+                                "age": { "@int": "61" },
+                                "Ignored": "should be null"
                              }
                              """;
         
-        var p = Serializer.Deserialize<AttributedTestPerson>(given);
+        var p = Serializer.Deserialize<TestPersonWithAttributes>(given);
         Assert.AreEqual("Baz", p.FirstName);
         Assert.AreEqual("Luhrmann", p.LastName);
         Assert.AreEqual(61, p.Age);
+        Assert.IsNull(p.Ignored);
     }
 }
