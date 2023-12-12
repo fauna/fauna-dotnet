@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace Fauna;
@@ -22,11 +21,6 @@ public ref struct QueryStringHandler
         if (value is QueryExpr expr)
         {
             fragments.Add(expr);
-        }
-        else if (value is IEnumerable enumerableValue && !(value is string))
-        {
-            // TODO: Implement support for QueryArr when Fauna is ready to handle these.
-            throw new NotSupportedException("IEnumerable is not supported in Fauna queries yet.");
         }
         else
         {
