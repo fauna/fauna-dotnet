@@ -33,8 +33,6 @@ public class QueryTests
         var subQuery = FQL($@"let product = Product.firstWhere(.backorderLimit == {backorderLimit} && .backordered == {isBackordered})!; product.quantity;");
         var actual = FQL($@"Product.where(.quantity == {subQuery}).order(.title) {{ name, description }}");
 
-        var asd = new QueryLiteral("Product.where(.quantity == ");
-
         var expected = new QueryExpr(new QueryLiteral("Product.where(.quantity == "),
             new QueryExpr(
                 new QueryLiteral("let product = Product.firstWhere(.backorderLimit == "),
