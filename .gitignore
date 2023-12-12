@@ -1,2 +1,3 @@
-bin
-obj
+[Bb]in/
+[Oo]bj/
+.vs/
