@@ -4,20 +4,27 @@ namespace Fauna;
 
 public class Client
 {
+    private const string QueryUriPath = "/query/1";
+
+    private readonly ClientConfig _config;
     private readonly IConnection _connection;
+
+    public long LastSeenTxn { get; private set; }
 
     public Client(string secret) :
         this(new ClientConfig(secret))
     {
     }
 
-    public Client(ClientConfig config, HttpClient? httpClient = null)
+    public Client(ClientConfig config) :
+        this(config, new Connection(config.Endpoint, config.ConnectionTimeout))
     {
-        var connectionHttpClient = httpClient ?? new HttpClient();
-        connectionHttpClient.Timeout = config.ConnectionTimeout;
+    }
 
-        // Initialize the connection
-        _connection = new Connection(config, connectionHttpClient);
+    public Client(ClientConfig config, IConnection connection)
+    {
+        _config = config;
+        _connection = connection;
     }
 
     public async Task<QuerySuccess<T>> QueryAsync<T>(
@@ -26,38 +33,73 @@ public class Client
     {
         if (string.IsNullOrEmpty(fql)) throw new ArgumentException("The provided FQL query is null.");
 
-        var response = await _connection.DoRequestAsync(fql, queryOptions);
+        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
+        var headers = GetRequestHeaders(finalOptions);
 
-        var queryResponse = await GetQueryResponseAsync<T>(response);
+        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, fql, headers);
 
-        if (queryResponse is QueryFailure)
+        if (queryResponse is QueryFailure failure)
         {
-            throw new Exception("Query failure");
+            throw new FaunaException(failure, "Query failure");
+        }
+        else
+        {
+            LastSeenTxn = queryResponse.LastSeenTxn;
         }
 
         return (QuerySuccess<T>)queryResponse;
     }
 
-    // ProcessResponse method
-    private async Task<QueryResponse> GetQueryResponseAsync<T>(HttpResponseMessage response) where T : class
+    private Dictionary<string, string> GetRequestHeaders(QueryOptions? queryOptions)
     {
-        QueryResponse queryResponse;
-
-        var statusCode = response.StatusCode;
-        var body = await response.Content.ReadAsStringAsync();
-        var headers = response.Headers;
-
-        if (!response.IsSuccessStatusCode)
+        var headers = new Dictionary<string, string>
         {
-            queryResponse = new QueryFailure(body);
-        }
-        else
-        {
-            queryResponse = new QuerySuccess<T>(body);
 
-            _connection.LastSeenTxn = queryResponse.LastSeenTxn;
+            { Headers.Authorization, $"Bearer {_config.Secret}"},
+            { Headers.Format, "tagged" },
+            { Headers.Driver, "C#" }
+        };
+
+        if (LastSeenTxn > long.MinValue)
+        {
+            headers.Add(Headers.LastTxnTs, LastSeenTxn.ToString());
         }
 
-        return queryResponse;
+        if (queryOptions != null)
+        {
+            if (queryOptions.QueryTimeout.HasValue)
+            {
+                headers.Add(
+                    Headers.QueryTimeoutMs,
+                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString());
+            }
+
+            if (queryOptions.QueryTags != null)
+            {
+                headers.Add(Headers.QueryTags, EncodeQueryTags(queryOptions.QueryTags));
+            }
+
+            if (!string.IsNullOrEmpty(queryOptions.TraceParent))
+            {
+                headers.Add(Headers.TraceParent, queryOptions.TraceParent);
+            }
+
+            if (queryOptions.Linearized != null)
+            {
+                headers.Add(Headers.Linearized, queryOptions.Linearized.ToString()!);
+            }
+
+            if (queryOptions.TypeCheck != null)
+            {
+                headers.Add(Headers.TypeCheck, queryOptions.TypeCheck.ToString()!);
+            }
+        }
+
+        return headers;
+    }
+
+    private static string EncodeQueryTags(Dictionary<string, string> tags)
+    {
+        return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
     }
 }

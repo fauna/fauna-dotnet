@@ -1,10 +1,10 @@
 ﻿namespace Fauna;
 
-internal interface IConnection
+public interface IConnection
 {
-    long LastSeenTxn { get; set; }
-
-    Task<HttpResponseMessage> DoRequestAsync(
-        string fql,
-        QueryOptions? queryOptions);
+    Task<QueryResponse> DoPostAsync<T>(
+        string path,
+        string body,
+        Dictionary<string, string> headers)
+        where T : class;
 }
