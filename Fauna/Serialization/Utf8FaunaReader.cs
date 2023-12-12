@@ -129,6 +129,23 @@ public ref struct Utf8FaunaReader
         return true;
     }
 
+    public object? GetValue()
+    {
+        return CurrentTokenType switch
+        {
+            TokenType.FieldName or TokenType.String => GetString(),
+            TokenType.Int => GetInt(),
+            TokenType.Long => GetLong(),
+            TokenType.Double => GetDouble(),
+            TokenType.Date => GetDate(),
+            TokenType.Time => GetTime(),
+            TokenType.True or TokenType.False => GetBoolean(),
+            TokenType.Module => GetModule(),
+            _ => throw new SerializationException($"{CurrentTokenType} does not have an associated value")
+        };
+    }
+
+
     public string? GetString()
     {
         if (CurrentTokenType != TokenType.String && CurrentTokenType != TokenType.FieldName)
