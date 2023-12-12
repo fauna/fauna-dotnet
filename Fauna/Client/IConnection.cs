@@ -2,8 +2,9 @@
 
 public interface IConnection
 {
-    Task<HttpResponseMessage> DoPostAsync(
+    Task<QueryResponse> DoPostAsync<T>(
         string path,
         string body,
-        Dictionary<string, string> headers);
+        Dictionary<string, string> headers)
+        where T : class;
 }

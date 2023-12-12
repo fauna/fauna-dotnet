@@ -6,6 +6,25 @@ namespace Fauna;
 public abstract class QueryResponse : QueryInfo
 {
     internal QueryResponse(string rawResponseText) : base(rawResponseText) { }
+
+    public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(HttpResponseMessage message)
+        where T : class
+    {
+        QueryResponse queryResponse;
+
+        var body = await message.Content.ReadAsStringAsync();
+
+        if (!message.IsSuccessStatusCode)
+        {
+            queryResponse = new QueryFailure(body);
+        }
+        else
+        {
+            queryResponse = new QuerySuccess<T>(body);
+        }
+
+        return queryResponse;
+    }
 }
 
 public class QuerySuccess<T> : QueryResponse where T : class

@@ -18,10 +18,11 @@ public class Connection : IConnection
         };
     }
 
-    public async Task<HttpResponseMessage> DoPostAsync(
+    public async Task<QueryResponse> DoPostAsync<T>(
         string path,
         string body,
         Dictionary<string, string> headers)
+        where T : class
     {
         // TODO: Serialize body here
         var queryObj = new
@@ -48,6 +49,8 @@ public class Connection : IConnection
             request.Headers.Add(header.Key, header.Value);
         }
 
-        return await _httpClient.SendAsync(request);
+        var response = await _httpClient.SendAsync(request);
+
+        return await QueryResponse.GetFromHttpResponseAsync<T>(response);
     }
 }

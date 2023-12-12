@@ -22,6 +22,7 @@ public class ClientTests
     }
 
     [Test]
+    [Ignore("connected test")]
     public async Task CreateClient()
     {
         var t = new { data = new { data = Array.Empty<object>() } };
@@ -42,6 +43,7 @@ public class ClientTests
     }
 
     [Test]
+    [Ignore("connected test")]
     public async Task CreateClientError()
     {
         var t = new { data = new { data = Array.Empty<object>() } };
@@ -71,7 +73,7 @@ public class ClientTests
     }
 
     [Test]
-    public async Task MockedTestError()
+    public async Task AbortReturnsQueryFailureAndThrows()
     {
         var responseBody = @"{
             ""error"": {
@@ -97,14 +99,15 @@ public class ClientTests
         {
             Content = new StringContent(responseBody)
         };
+        var qr = await QueryResponse.GetFromHttpResponseAsync<string>(testMessage);
         var conn = Mock.Create<IConnection>();
         Mock.Arrange(() =>
-            conn.DoPostAsync(
+            conn.DoPostAsync<string>(
                 Arg.IsAny<string>(),
                 Arg.IsAny<string>(),
                 Arg.IsAny<Dictionary<string, string>>()
             )
-        ).Returns(Task.FromResult(testMessage));
+        ).Returns(Task.FromResult(qr));
 
         var c = new Client(new ClientConfig("secret"), conn);
 
@@ -119,7 +122,7 @@ public class ClientTests
     }
 
     [Test]
-    public async Task MockedTest()
+    public async Task LastSeenTxnPropagatesToSubsequentQueries()
     {
         var responseBody = @"{
             ""data"": ""123"",
@@ -142,14 +145,15 @@ public class ClientTests
         {
             Content = new StringContent(responseBody)
         };
+        var qr = await QueryResponse.GetFromHttpResponseAsync<string>(testMessage);
         var conn = Mock.Create<IConnection>();
         Mock.Arrange(() =>
-            conn.DoPostAsync(
+            conn.DoPostAsync<string>(
                 Arg.IsAny<string>(),
                 Arg.IsAny<string>(),
                 Arg.IsAny<Dictionary<string, string>>()
             )
-        ).Returns(Task.FromResult(testMessage));
+        ).Returns(Task.FromResult(qr));
 
         var c = new Client(new ClientConfig("secret"), conn);
         var r = await c.QueryAsync<string>("let x = 123; x");
@@ -157,7 +161,7 @@ public class ClientTests
         bool check = false;
 
         Mock.Arrange(() =>
-            conn.DoPostAsync(
+            conn.DoPostAsync<string>(
                 Arg.IsAny<string>(),
                 Arg.IsAny<string>(),
                 Arg.IsAny<Dictionary<string, string>>()
@@ -166,7 +170,7 @@ public class ClientTests
         {
             Assert.AreEqual(1702346199930000.ToString(), headers[Headers.LastTxnTs]);
             check = true;
-        }).Returns(Task.FromResult(testMessage));
+        }).Returns(Task.FromResult(qr));
 
         var r2 = await c.QueryAsync<string>("let x = 123; x");
 

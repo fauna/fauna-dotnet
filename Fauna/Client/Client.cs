@@ -36,13 +36,15 @@ public class Client
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 
-        var response = await _connection.DoPostAsync(QueryUriPath, fql, headers);
-
-        var queryResponse = await GetQueryResponseAsync<T>(response);
+        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, fql, headers);
 
         if (queryResponse is QueryFailure failure)
         {
             throw new FaunaException(failure, "Query failure");
+        }
+        else
+        {
+            LastSeenTxn = queryResponse.LastSeenTxn;
         }
 
         return (QuerySuccess<T>)queryResponse;
@@ -99,27 +101,5 @@ public class Client
     private static string EncodeQueryTags(Dictionary<string, string> tags)
     {
         return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
-    }
-
-    private async Task<QueryResponse> GetQueryResponseAsync<T>(HttpResponseMessage response) where T : class
-    {
-        QueryResponse queryResponse;
-
-        var statusCode = response.StatusCode;
-        var body = await response.Content.ReadAsStringAsync();
-        var headers = response.Headers;
-
-        if (!response.IsSuccessStatusCode)
-        {
-            queryResponse = new QueryFailure(body);
-        }
-        else
-        {
-            queryResponse = new QuerySuccess<T>(body);
-
-            LastSeenTxn = queryResponse.LastSeenTxn;
-        }
-
-        return queryResponse;
     }
 }
