@@ -6,28 +6,8 @@ using NUnit.Framework;
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
-public class SerializerTests
+public partial class SerializerTests
 {
-
-    private class TestPerson
-    {
-        public string? FirstName { get; set; }
-        public string? LastName { get; set; }
-        public int Age { get; set; }
-    }
-
-    [FaunaObject]
-    private class TestPersonWithAttributes
-    {
-        [Field("first_name")]
-        public string? FirstName { get; set; }
-        [Field("last_name")]
-        public string? LastName { get; set; }
-        [Field("age")]
-        public int Age { get; set; }
-        public string? Ignored { get; set; }
-    }
-
 
     [Test]
     public void DeserializeValues()
@@ -132,16 +112,16 @@ public class SerializerTests
 
         const string given = """
                              {
-                                "FirstName": "Baz",
-                                "LastName": "Luhrmann",
-                                "Age": { "@int": "61" }
+                                "FirstName": "Baz2",
+                                "LastName": "Luhrmann2",
+                                "Age": { "@int": "612" }
                              }
                              """;
 
-        var p = Serializer.Deserialize<TestPerson>(given);
-        Assert.AreEqual("Baz", p.FirstName);
-        Assert.AreEqual("Luhrmann", p.LastName);
-        Assert.AreEqual(61, p.Age);
+        var p = Serializer.Deserialize<Person>(given);
+        Assert.AreEqual("Baz2", p.FirstName);
+        Assert.AreEqual("Luhrmann2", p.LastName);
+        Assert.AreEqual(612, p.Age);
     }
 
     [Test]
@@ -149,17 +129,17 @@ public class SerializerTests
     {
         const string given = """
                              {
-                                "first_name": "Baz",
-                                "last_name": "Luhrmann",
-                                "age": { "@int": "61" },
+                                "first_name": "Baz2",
+                                "last_name": "Luhrmann2",
+                                "age": { "@int": "612" },
                                 "Ignored": "should be null"
                              }
                              """;
 
-        var p = Serializer.Deserialize<TestPersonWithAttributes>(given);
-        Assert.AreEqual("Baz", p.FirstName);
-        Assert.AreEqual("Luhrmann", p.LastName);
-        Assert.AreEqual(61, p.Age);
+        var p = Serializer.Deserialize<PersonWithAttributes>(given);
+        Assert.AreEqual("Baz2", p.FirstName);
+        Assert.AreEqual("Luhrmann2", p.LastName);
+        Assert.AreEqual(612, p.Age);
         Assert.IsNull(p.Ignored);
     }
 }
