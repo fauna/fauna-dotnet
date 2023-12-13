@@ -1,4 +1,6 @@
-﻿using Fauna.Serialization;
+﻿using System.Text;
+using System.Text.Json;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -11,10 +13,12 @@ public sealed class QueryVal<T> : Query, IQueryFragment
 
     public T Unwrap { get; }
 
-    public override string Serialize()
+    protected override void SerializeInternal(Stream stream)
     {
-        string serializedValue = Serializer.Serialize(Unwrap);
-        return $"{{\"value\":{serializedValue}}}";
+        stream.Write(Encoding.UTF8.GetBytes("{\"value\":"));
+        Serializer.Serialize(stream, Unwrap);
+        stream.Write(Encoding.UTF8.GetBytes("}"));
+        stream.Flush();
     }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryVal<T>);
