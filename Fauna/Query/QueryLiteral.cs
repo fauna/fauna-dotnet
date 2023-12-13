@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Fauna;
 
-public sealed class QueryLiteral : Query, IQueryFragment
+public sealed class QueryLiteral : IQueryFragment
 {
     public QueryLiteral(string v)
     {
@@ -22,14 +22,15 @@ public sealed class QueryLiteral : Query, IQueryFragment
         return $"QueryLiteral({Unwrap})";
     }
 
-    protected override void SerializeInternal(Stream stream)
+    public void Serialize(Stream stream)
     {
         stream.Write(Encoding.UTF8.GetBytes($"\"{Unwrap}\""));
-        stream.Flush();
     }
 
-    public override bool Equals(Query? otherQuery)
+    public override bool Equals(object? other)
     {
+        var otherQuery = other as IQueryFragment;
+
         if (otherQuery is null)
         {
             return false;
@@ -46,11 +47,6 @@ public sealed class QueryLiteral : Query, IQueryFragment
         }
 
         return false;
-    }
-
-    public override bool Equals(object? otherObject)
-    {
-        return Equals(otherObject as Query);
     }
 
     public override int GetHashCode()

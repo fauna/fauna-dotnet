@@ -13,12 +13,11 @@ public sealed class QueryVal<T> : Query, IQueryFragment
 
     public T Unwrap { get; }
 
-    protected override void SerializeInternal(Stream stream)
+    public override void Serialize(Stream stream)
     {
         stream.Write(Encoding.UTF8.GetBytes("{\"value\":"));
         Serializer.Serialize(stream, Unwrap);
         stream.Write(Encoding.UTF8.GetBytes("}"));
-        stream.Flush();
     }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryVal<T>);

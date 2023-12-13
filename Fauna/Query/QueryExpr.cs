@@ -21,7 +21,7 @@ public sealed class QueryExpr : Query, IQueryFragment
 
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
 
-    protected override void SerializeInternal(Stream stream)
+    public override void Serialize(Stream stream)
     {
         stream.Write(Encoding.UTF8.GetBytes("{\"fql\":["));
         for (var i = 0; i < Unwrap.Count; i++)
@@ -35,7 +35,6 @@ public sealed class QueryExpr : Query, IQueryFragment
         }
 
         stream.Write(Encoding.UTF8.GetBytes("]}"));
-        stream.Flush();
     }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryExpr);
