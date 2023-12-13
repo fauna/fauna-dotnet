@@ -110,4 +110,24 @@ public class QueryValTests
 
         Assert.IsTrue(val1 != val2);
     }
+
+    [Test]
+    public void Serialize_WithIntValue()
+    {
+        int intValue = 5;
+        string intExpected = $@"{{""value"":{{""@int"":""{intValue}""}}}}";
+        var intActual = new QueryVal<int>(intValue).Serialize();
+
+        Assert.AreEqual(intExpected, intActual);
+    }
+
+    [Test]
+    public void Serialize_WithBoolValue()
+    {
+        bool boolValue = true;
+        string boolExpected = $@"{{""value"":{boolValue.ToString().ToLowerInvariant()}}}";
+        var boolActual = new QueryVal<bool>(boolValue).Serialize();
+
+        Assert.AreEqual(boolExpected, boolActual);
+    }
 }

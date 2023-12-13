@@ -1,4 +1,7 @@
-﻿namespace Fauna;
+﻿using System.Text;
+using System.Text.Json;
+
+namespace Fauna;
 
 public sealed class QueryLiteral : Query, IQueryFragment
 {
@@ -17,6 +20,12 @@ public sealed class QueryLiteral : Query, IQueryFragment
     public override string ToString()
     {
         return $"QueryLiteral({Unwrap})";
+    }
+
+    protected override void SerializeInternal(Stream stream)
+    {
+        stream.Write(Encoding.UTF8.GetBytes($"\"{Unwrap}\""));
+        stream.Flush();
     }
 
     public override bool Equals(Query? otherQuery)

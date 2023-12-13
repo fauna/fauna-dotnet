@@ -1,4 +1,7 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text;
+using System.Text.Json;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -17,6 +20,23 @@ public sealed class QueryExpr : Query, IQueryFragment
     public ReadOnlyCollection<IQueryFragment> Unwrap { get; }
 
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
+
+    protected override void SerializeInternal(Stream stream)
+    {
+        stream.Write(Encoding.UTF8.GetBytes("{\"fql\":["));
+        for (var i = 0; i < Unwrap.Count; i++)
+        {
+            var t = Unwrap[i];
+            t.Serialize(stream);
+            if (i < Unwrap.Count - 1)
+            {
+                stream.Write(Encoding.UTF8.GetBytes(","));
+            }
+        }
+
+        stream.Write(Encoding.UTF8.GetBytes("]}"));
+        stream.Flush();
+    }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryExpr);
 

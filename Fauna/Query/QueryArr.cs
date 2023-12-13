@@ -21,6 +21,11 @@ internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
 
     public T this[int index] => Unwrap[index];
 
+    protected override void SerializeInternal(Stream stream)
+    {
+        throw new NotImplementedException();
+    }
+
     public override bool Equals(Query? o)
     {
         return o is QueryArr<T> other && Unwrap.SequenceEqual(other.Unwrap);
