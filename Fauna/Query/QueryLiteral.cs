@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace Fauna;
+﻿namespace Fauna;
 
 public sealed class QueryLiteral : Query, IQueryFragment
 {
