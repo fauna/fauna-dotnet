@@ -14,7 +14,7 @@ public class SerializerSerializeTests
         public string? LastName { get; set; }
         public int Age { get; set; }
     }
-    
+
     [FaunaObject]
     private class PersonWithContext
     {
@@ -40,14 +40,15 @@ public class SerializerSerializeTests
             {"null", null},
         };
 
-        foreach(var entry in tests)
+        foreach (var entry in tests)
         {
             var result = Serializer.Serialize(entry.Value);
             Assert.AreEqual(entry.Key, result);
         }
     }
-    
-    [Test] public void SerializeUserDefinedClass()
+
+    [Test]
+    public void SerializeUserDefinedClass()
     {
         var test = new Person
         {
@@ -59,8 +60,9 @@ public class SerializerSerializeTests
         var actual = Serializer.Serialize(test);
         Assert.AreEqual("""{"FirstName":"Baz","LastName":"Luhrmann","Age":{"@int":"61"}}""", actual);
     }
-    
-    [Test] public void SerializeUserDefinedClassWithContext()
+
+    [Test]
+    public void SerializeUserDefinedClassWithContext()
     {
         var test = new PersonWithContext
         {

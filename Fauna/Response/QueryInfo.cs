@@ -27,7 +27,8 @@ public class QueryInfo
 
             if (!string.IsNullOrEmpty(queryTagsString))
             {
-                var tagPairs = queryTagsString.Split(',').Select(tag => {
+                var tagPairs = queryTagsString.Split(',').Select(tag =>
+                {
                     var tokens = tag.Split('=');
                     return KeyValuePair.Create(tokens[0], tokens[1]);
                 });

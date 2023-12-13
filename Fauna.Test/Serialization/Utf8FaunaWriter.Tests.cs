@@ -12,13 +12,15 @@ public class Utf8FaunaWriterTests
     private Utf8FaunaWriter _writer;
     private MemoryStream _stream;
 
-    [SetUp] public void Init()
+    [SetUp]
+    public void Init()
     {
         _stream = new MemoryStream();
         _writer = new Utf8FaunaWriter(_stream);
     }
-    
-    [TearDown] public void Cleanup()
+
+    [TearDown]
+    public void Cleanup()
     {
         _writer.Dispose();
     }
@@ -30,48 +32,55 @@ public class Utf8FaunaWriterTests
         Assert.AreEqual(expected, actual);
     }
 
-    [Test] public void WriteIntValue()
+    [Test]
+    public void WriteIntValue()
     {
         _writer.WriteIntValue(42);
         AssertWriter("""{"@int":"42"}""");
     }
-    
-    [Test] public void WriteLongValue()
+
+    [Test]
+    public void WriteLongValue()
     {
         _writer.WriteLongValue(42L);
         AssertWriter("""{"@long":"42"}""");
     }
-    
-    [Test] public void WriteDoubleValue()
+
+    [Test]
+    public void WriteDoubleValue()
     {
         _writer.WriteDoubleValue(1.2d);
         AssertWriter("""{"@double":"1.2"}""");
     }
-    
-    [Test] public void WriteTrueValue()
+
+    [Test]
+    public void WriteTrueValue()
     {
         _writer.WriteBooleanValue(true);
         AssertWriter("true");
     }
-    
-    [Test] public void WriteFalseValue()
+
+    [Test]
+    public void WriteFalseValue()
     {
         _writer.WriteBooleanValue(false);
         AssertWriter("false");
     }
-    
-    [Test] public void WriteNullValue()
+
+    [Test]
+    public void WriteNullValue()
     {
         _writer.WriteNullValue();
         AssertWriter("null");
     }
-    
-    [Test] public void WriteModuleValue()
+
+    [Test]
+    public void WriteModuleValue()
     {
         _writer.WriteModuleValue(new Module("Authors"));
         AssertWriter("""{"@mod":"Authors"}""");
     }
-    
+
     [Test]
     public void WriteDate()
     {
@@ -87,8 +96,9 @@ public class Utf8FaunaWriterTests
         _writer.WriteTimeValue(d);
         AssertWriter("""{"@time":"2023-01-01T14:04:30.0010010Z"}""");
     }
-    
-    [Test] public void WriteObject()
+
+    [Test]
+    public void WriteObject()
     {
         _writer.WriteStartObject();
         _writer.WriteInt("anInt", 42);
@@ -99,7 +109,7 @@ public class Utf8FaunaWriterTests
         _writer.WriteBoolean("false", false);
         _writer.WriteString("foo", "bar");
         _writer.WriteDate("aDate", new DateTime(2023, 12, 4));
-        _writer.WriteTime("aTime", new DateTime(2023, 12, 4, 0,0,0,0,0, DateTimeKind.Utc));
+        _writer.WriteTime("aTime", new DateTime(2023, 12, 4, 0, 0, 0, 0, 0, DateTimeKind.Utc));
         _writer.WriteNull("aNull");
         _writer.WriteFieldName("anArray");
         _writer.WriteStartArray();
@@ -110,19 +120,20 @@ public class Utf8FaunaWriterTests
         _writer.WriteEndObject();
         AssertWriter("""{"anInt":{"@int":"42"},"aLong":{"@long":"42"},"aDouble":{"@double":"1.2"},"aDecimal":{"@double":"3.14"},"true":true,"false":false,"foo":"bar","aDate":{"@date":"2023-12-04"},"aTime":{"@time":"2023-12-04T00:00:00.0000000Z"},"aNull":null,"anArray":[],"anObject":{}}""");
     }
-    
-    [Test] public void WriteArray()
+
+    [Test]
+    public void WriteArray()
     {
         _writer.WriteStartArray();
-        _writer.WriteIntValue( 42);
+        _writer.WriteIntValue(42);
         _writer.WriteLongValue(42L);
         _writer.WriteDoubleValue(1.2d);
         _writer.WriteDoubleValue(3.14M);
         _writer.WriteBooleanValue(true);
-        _writer.WriteBooleanValue( false);
+        _writer.WriteBooleanValue(false);
         _writer.WriteStringValue("bar");
         _writer.WriteDateValue(new DateTime(2023, 12, 4));
-        _writer.WriteTimeValue(new DateTime(2023, 12, 4, 0,0,0,0,0, DateTimeKind.Utc));
+        _writer.WriteTimeValue(new DateTime(2023, 12, 4, 0, 0, 0, 0, 0, DateTimeKind.Utc));
         _writer.WriteNullValue();
         _writer.WriteStartArray();
         _writer.WriteEndArray();
@@ -139,7 +150,7 @@ public class Utf8FaunaWriterTests
         _writer.WriteEndEscapedObject();
         AssertWriter("""{"@object":{}}""");
     }
-    
+
     [Test]
     public void WriteRef()
     {

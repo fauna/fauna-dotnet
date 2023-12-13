@@ -11,7 +11,7 @@ public static partial class Serializer
     {
         return Deserialize(str, typeof(object));
     }
-    
+
     public static T? Deserialize<T>(string str)
     {
         return (T?)Deserialize(str, typeof(T));
@@ -34,7 +34,7 @@ public static partial class Serializer
     private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
     {
         reader.Read();
-        
+
         var value = reader.CurrentTokenType switch
         {
             TokenType.StartObject => DeserializeObjectInternal(ref reader, context, targetType),
@@ -63,7 +63,7 @@ public static partial class Serializer
     {
         return targetType == null || targetType == typeof(object) ? DeserializeDictionaryInternal(ref reader, context) : DeserializeClassInternal(ref reader, context, targetType);
     }
-    
+
     private static object? DeserializeClassInternal(ref Utf8FaunaReader reader, SerializationContext context, Type t)
     {
         var fieldMap = context.GetFieldMap(t);

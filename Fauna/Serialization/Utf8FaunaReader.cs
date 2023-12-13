@@ -29,13 +29,13 @@ public ref struct Utf8FaunaReader
         /// <summary>The token type is the start of an escaped Fauna object.</summary>
         StartEscapedObject,
     }
-    
+
     public Utf8FaunaReader(ReadOnlySequence<byte> bytes)
     {
         _json = new Utf8JsonReader(bytes);
         CurrentTokenType = TokenType.None;
     }
-    
+
     public Utf8FaunaReader(string str)
     {
         var bytes = Encoding.UTF8.GetBytes(str);
@@ -81,12 +81,12 @@ public ref struct Utf8FaunaReader
             }
             return true;
         }
-            
+
         if (!Advance())
         {
             return false;
         }
-        
+
         switch (_json.TokenType)
         {
             case JsonTokenType.PropertyName:
@@ -152,9 +152,9 @@ public ref struct Utf8FaunaReader
         {
             throw new InvalidOperationException($"Fauna token value isn't a {TokenType.String.ToString()} or a {TokenType.FieldName.ToString()}.");
         }
-        
+
         try
-        { 
+        {
             return _json.GetString();
         }
         catch (Exception e)
@@ -162,11 +162,11 @@ public ref struct Utf8FaunaReader
             throw new SerializationException("Failed to get string", e);
         }
     }
-    
+
     public bool GetBoolean()
     {
         try
-        { 
+        {
             return _json.GetBoolean();
         }
         catch (Exception e)
@@ -188,27 +188,27 @@ public ref struct Utf8FaunaReader
             throw new SerializationException($"Failed to get date from {_taggedTokenValue}", e);
         }
     }
-    
+
     public double GetDouble()
     {
         ValidateTaggedType(TokenType.Double);
-        
-         try
-         { 
-             return double.Parse(_taggedTokenValue!, CultureInfo.InvariantCulture);
-         }
-         catch (Exception e)
-         {
-             throw new SerializationException($"Failed to get double from {_taggedTokenValue}", e);
-         }
+
+        try
+        {
+            return double.Parse(_taggedTokenValue!, CultureInfo.InvariantCulture);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get double from {_taggedTokenValue}", e);
+        }
     }
-    
+
     public decimal GetDoubleAsDecimal()
     {
         ValidateTaggedType(TokenType.Double);
-        
+
         try
-        { 
+        {
             return decimal.Parse(_taggedTokenValue!, CultureInfo.InvariantCulture);
         }
         catch (Exception e)
@@ -216,13 +216,13 @@ public ref struct Utf8FaunaReader
             throw new SerializationException($"Failed to get decimal from {_taggedTokenValue}", e);
         }
     }
-    
+
     public int GetInt()
     {
         ValidateTaggedType(TokenType.Int);
-        
+
         try
-        { 
+        {
             return int.Parse(_taggedTokenValue!);
         }
         catch (Exception e)
@@ -230,11 +230,11 @@ public ref struct Utf8FaunaReader
             throw new SerializationException($"Failed to get int from {_taggedTokenValue}", e);
         }
     }
-    
+
     public long GetLong()
     {
         ValidateTaggedType(TokenType.Long);
-        
+
         try
         {
             return long.Parse(_taggedTokenValue!);
@@ -244,15 +244,15 @@ public ref struct Utf8FaunaReader
             throw new SerializationException($"Failed to get long from {_taggedTokenValue}", e);
         }
     }
-    
-    
+
+
     public Module GetModule()
     {
         ValidateTaggedType(TokenType.Module);
 
         return new Module(_taggedTokenValue!);
     }
-    
+
     public DateTime GetTime()
     {
         ValidateTaggedType(TokenType.Time);
@@ -266,37 +266,37 @@ public ref struct Utf8FaunaReader
             throw new SerializationException($"Failed to get time from {_taggedTokenValue}", e);
         }
     }
-    
+
     public string TryGetString(out string value)
     {
-        throw new NotImplementedException(); 
+        throw new NotImplementedException();
     }
-    
+
     public bool TryGetBoolean(out bool value)
     {
-        throw new NotImplementedException(); 
+        throw new NotImplementedException();
     }
 
     public DateTime TryGetDateTime(out DateTime value)
     {
-        throw new NotImplementedException(); 
+        throw new NotImplementedException();
     }
-    
+
     public double TryGetDouble(out double value)
     {
         throw new NotImplementedException();
     }
-    
+
     public int TryGetInt(out int value)
     {
         throw new NotImplementedException();
     }
-    
+
     public long TryGetLong(out long value)
     {
         throw new NotImplementedException();
     }
-    
+
     public Module TryGetModule(out Module value)
     {
         throw new NotImplementedException();
@@ -313,7 +313,7 @@ public ref struct Utf8FaunaReader
     private void HandleStartObject()
     {
         AdvanceTrue();
-        
+
         switch (_json.TokenType)
         {
             case JsonTokenType.PropertyName:
@@ -373,7 +373,7 @@ public ref struct Utf8FaunaReader
                 throw new SerializationException($"Unexpected token following StartObject: {_json.TokenType}");
         }
     }
-    
+
     private void HandleEndObject()
     {
         var startToken = _tokenStack.Pop();
@@ -402,7 +402,7 @@ public ref struct Utf8FaunaReader
                 throw new SerializationException($"Unexpected token {startToken}. This might be a bug.");
         }
     }
-    
+
     /// <summary>
     /// Method <c>HandleTaggedString</c> is used to advance through a JSON object that represents a tagged type with a
     /// a string value. For example:

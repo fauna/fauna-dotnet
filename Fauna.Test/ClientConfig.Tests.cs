@@ -20,13 +20,13 @@ public class ClientConfigTests
         var defaults = new QueryOptions
         {
             TypeCheck = true,
-            QueryTags = new Dictionary<string, string> {{"foo", "bar"}, {"baz", "luhrmann"}},
+            QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } },
             QueryTimeout = TimeSpan.FromSeconds(30)
         };
         var overrides = new QueryOptions
         {
             Linearized = true,
-            QueryTags = new Dictionary<string, string> {{"foo", "yep"}}
+            QueryTags = new Dictionary<string, string> { { "foo", "yep" } }
         };
 
         var finalOptions = QueryOptions.GetFinalQueryOptions(defaults, overrides);

@@ -7,7 +7,7 @@ namespace Fauna.Serialization;
 
 public static partial class Serializer
 {
-    
+
     public static string Serialize(object? obj)
     {
         using var stream = new MemoryStream();
@@ -18,7 +18,7 @@ public static partial class Serializer
         writer.Flush();
         return Encoding.UTF8.GetString(stream.ToArray());
     }
-    
+
     public static void Serialize(Stream stream, object? obj)
     {
         using var writer = new Utf8FaunaWriter(stream);
@@ -28,13 +28,13 @@ public static partial class Serializer
         writer.Flush();
     }
 
-    
+
     private static void SerializeValueInternal(Utf8FaunaWriter writer, object? obj, SerializationContext context, FaunaType? typeHint = null)
     {
         if (typeHint != null)
         {
             if (obj is null) throw new ArgumentNullException(nameof(obj));
-                
+
             switch (typeHint)
             {
                 case FaunaType.Int:
@@ -70,11 +70,11 @@ public static partial class Serializer
                     {
                         throw new SerializationException($"Unsupported Time conversion. Provided value must be a DateTime but was a {obj.GetType()}");
                     }
-                    
+
                     writer.WriteTimeValue(time);
                     break;
                 case FaunaType.Boolean:
-                    
+
                     writer.WriteBooleanValue((bool)obj);
                     break;
                 default:
@@ -135,7 +135,7 @@ public static partial class Serializer
     {
         var t = obj.GetType();
         var fieldMap = context.GetFieldMap(t);
-        
+
         writer.WriteStartObject();
         foreach (var field in fieldMap.Values)
         {

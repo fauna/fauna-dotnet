@@ -13,11 +13,11 @@ public class SerializationContext
         {
             return fieldMap;
         }
-        
+
         var props = t.GetProperties();
-        var newFieldMap = new Dictionary<string,FieldAttribute>();
+        var newFieldMap = new Dictionary<string, FieldAttribute>();
         var hasAttributes = t.GetCustomAttribute<FaunaObjectAttribute>() != null;
-        
+
         foreach (var prop in props)
         {
             FieldAttribute attr;
