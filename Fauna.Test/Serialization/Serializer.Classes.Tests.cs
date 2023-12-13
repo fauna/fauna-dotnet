@@ -30,7 +30,7 @@ public partial class SerializerTests
             return Name;
         }
     }
-    
+
     [FaunaObject]
     private class PersonWithTypeOverrides
     {
@@ -42,23 +42,23 @@ public partial class SerializerTests
         // Int Conversions
         [Field("short_to_int", FaunaType.Int)] public short? ShortToInt { get; set; } = 4;
         [Field("int_to_int", FaunaType.Int)] public int? IntToInt { get; set; } = 5;
-        
+
         // Double Conversions
         [Field("short_to_double", FaunaType.Double)] public short? ShortToDouble { get; set; } = 6;
         [Field("int_to_double", FaunaType.Double)] public int? IntToDouble { get; set; } = 7;
         [Field("long_to_double", FaunaType.Double)] public long? LongToDouble { get; set; } = 8L;
         [Field("decimal_to_double", FaunaType.Double)] public decimal? DecimalToDouble { get; set; } = 9.2M;
         [Field("double_to_double", FaunaType.Double)] public double? DoubleToDouble { get; set; } = 10.1d;
-        
+
         // Bool conversions
         [Field("true_to_true", FaunaType.Boolean)] public bool? TrueToTrue { get; set; } = true;
         [Field("false_to_false", FaunaType.Boolean)] public bool? FalseToFalse { get; set; } = false;
-        
+
         // String conversions
         [Field("class_to_string", FaunaType.String)]
         public ThingWithStringOverride? ThingToString { get; set; } = new();
         [Field("string_to_string", FaunaType.String)] public string? StringToString { get; set; } = "aString";
-        
+
         // Date conversions
         [Field("datetime_to_date", FaunaType.Date)]
         public DateTime? DateTimeToDate { get; set; } = new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc);
@@ -66,7 +66,7 @@ public partial class SerializerTests
         public DateOnly? DateOnlyToDate { get; set; } = new DateOnly(2023, 12, 13);
         [Field("datetimeoffset_to_date", FaunaType.Date)]
         public DateTimeOffset? DateTimeOffsetToDate { get; set; } = new DateTimeOffset(new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc));
-        
+
         // Time conversions
         [Field("datetime_to_time", FaunaType.Time)]
         public DateTime? DateTimeToTime { get; set; } = new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc);
@@ -74,61 +74,61 @@ public partial class SerializerTests
         public DateTimeOffset? DateTimeOffsetToTime { get; set; } = new DateTimeOffset(new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc));
     }
 
-    
+
     [FaunaObject]
     private class PersonWithIntConflict
     {
         [Field("@int")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithLongConflict
     {
         [Field("@long")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithDoubleConflict
     {
         [Field("@double")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithModConflict
     {
         [Field("@mod")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithRefConflict
     {
         [Field("@ref")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithDocConflict
     {
         [Field("@doc")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithObjectConflict
     {
         [Field("@object")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithSetConflict
     {
         [Field("@set")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithTimeConflict
     {
         [Field("@time")] public string? Field { get; set; } = "not";
     }
-    
+
     [FaunaObject]
     private class PersonWithDateConflict
     {

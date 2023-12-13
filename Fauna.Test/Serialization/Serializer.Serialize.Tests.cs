@@ -13,7 +13,7 @@ public partial class SerializerTests
     public void SerializeValues()
     {
         var dt = new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc);
-        
+
         var tests = new Dictionary<string, object?>
         {
             {"\"hello\"", "hello"},
@@ -48,7 +48,7 @@ public partial class SerializerTests
             { "foo", "bar" },
             { "list", new List<object>()},
             { "obj", new Dictionary<string, object>()}
-            
+
         };
 
         var actual = Serializer.Serialize(test);
@@ -93,7 +93,7 @@ public partial class SerializerTests
         var actual = Serializer.Serialize(test);
         Assert.AreEqual("""[{"@int":"42"},"foo bar",[],{}]""", actual);
     }
-    
+
     [Test]
     public void SerializeClass()
     {
@@ -126,7 +126,7 @@ public partial class SerializerTests
             { new PersonWithSetConflict(), """{"@object":{"@set":"not"}}""" },
             { new PersonWithTimeConflict(), """{"@object":{"@time":"not"}}""" }
         };
-        
+
         foreach (var (test, expected) in tests)
         {
             var actual = Serializer.Serialize(test);

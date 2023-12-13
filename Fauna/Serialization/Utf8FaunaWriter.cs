@@ -188,13 +188,13 @@ public sealed class Utf8FaunaWriter : IAsyncDisposable, IDisposable
         var str = value.ToString("yyyy-MM-dd");
         WriteTaggedValue("@date", str);
     }
-    
+
     public void WriteDateValue(DateOnly value)
     {
         var str = value.ToString("yyyy-MM-dd");
         WriteTaggedValue("@date", str);
     }
-    
+
     public void WriteDateValue(DateTimeOffset value)
     {
         var str = value.ToString("yyyy-MM-dd");
@@ -206,7 +206,7 @@ public sealed class Utf8FaunaWriter : IAsyncDisposable, IDisposable
         var str = value.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
         WriteTaggedValue("@time", str);
     }
-    
+
     public void WriteTimeValue(DateTimeOffset value)
     {
         var str = value.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);

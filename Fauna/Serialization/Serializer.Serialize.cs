@@ -10,7 +10,7 @@ public static partial class Serializer
     {
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
-    
+
     public static string Serialize(object? obj)
     {
         using var stream = new MemoryStream();
@@ -206,7 +206,7 @@ public static partial class Serializer
         var t = obj.GetType();
         var fieldMap = context.GetFieldMap(t);
         var shouldEscape = Tags.Overlaps(fieldMap.Values.Select(x => x.Name));
-        
+
         if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
         foreach (var field in fieldMap.Values)
         {
