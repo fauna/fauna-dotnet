@@ -1,4 +1,5 @@
-﻿using Fauna.Constants;
+﻿using System.Text;
+using Fauna.Constants;
 
 namespace Fauna;
 
@@ -28,15 +29,16 @@ public class Client
     }
 
     public async Task<QuerySuccess<T>> QueryAsync<T>(
-        string fql,
-        QueryOptions? queryOptions = null) where T : class
+        Query query,
+        QueryOptions? queryOptions = null)
     {
-        if (string.IsNullOrEmpty(fql)) throw new ArgumentException("The provided FQL query is null.");
-
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 
-        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, fql, headers);
+        using var stream = new MemoryStream();
+        Serialize(stream, query);
+
+        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, stream, headers);
 
         if (queryResponse is QueryFailure failure)
         {
@@ -48,6 +50,14 @@ public class Client
         }
 
         return (QuerySuccess<T>)queryResponse;
+    }
+
+    private static void Serialize(Stream stream, Query query)
+    {
+        stream.Write(Encoding.UTF8.GetBytes("{\"query\":"));
+        query.Serialize(stream);
+        stream.Write(Encoding.UTF8.GetBytes("}"));
+        stream.Flush();
     }
 
     private Dictionary<string, string> GetRequestHeaders(QueryOptions? queryOptions)

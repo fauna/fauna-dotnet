@@ -4,7 +4,6 @@ public interface IConnection
 {
     Task<QueryResponse> DoPostAsync<T>(
         string path,
-        string body,
-        Dictionary<string, string> headers)
-        where T : class;
+        Stream body,
+        Dictionary<string, string> headers);
 }

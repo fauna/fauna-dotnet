@@ -20,23 +20,13 @@ public class Connection : IConnection
 
     public async Task<QueryResponse> DoPostAsync<T>(
         string path,
-        string body,
+        Stream body,
         Dictionary<string, string> headers)
-        where T : class
     {
-        // TODO: Serialize body here
-        var queryObj = new
-        {
-            query = new
-            {
-                fql = new[] { body }
-            },
-            arguments = new { }
-        };
-
+        body.Position = 0;
         var request = new HttpRequestMessage()
         {
-            Content = JsonContent.Create(queryObj),
+            Content = new StreamContent(body),
             Method = HttpMethod.Post,
             RequestUri = new Uri(_endpoint, path)
         };
