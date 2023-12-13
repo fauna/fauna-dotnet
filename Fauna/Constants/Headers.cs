@@ -2,6 +2,7 @@ namespace Fauna.Constants;
 
 internal readonly struct Headers
 {
+    public const string Authorization = "Authorization";
     public const string LastTxnTs = "X-Last-Txn-Ts";
     public const string Linearized = "X-Linearized";
     public const string MaxContentionRetries = "X-Max-Contention-Retries";

@@ -57,11 +57,11 @@ public class Utf8FaunaReaderTests
                     break;
             }
         }
-        
+
         Assert.False(reader.Read());
     }
-    
-    
+
+
     [Test]
     public void ReadString()
     {
@@ -70,10 +70,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.String, "hello"),
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadTrue()
     {
@@ -82,10 +82,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.True, true)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadFalse()
     {
@@ -94,10 +94,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.False, false)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadNull()
     {
@@ -106,10 +106,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Null, null)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadInt()
     {
@@ -119,10 +119,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Int, 123)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadLong()
     {
@@ -132,10 +132,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Long, 123L)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadDouble()
     {
@@ -145,10 +145,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Double, 1.2d)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadDoubleAsDecimal()
     {
@@ -158,7 +158,7 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Double, 1.2M)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
 
@@ -171,7 +171,7 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Date, new DateTime(2023, 12, 3))
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
 
@@ -184,10 +184,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime())
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadTimeUtc()
     {
@@ -197,10 +197,10 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime())
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadModule()
     {
@@ -210,7 +210,7 @@ public class Utf8FaunaReaderTests
         {
             new(TokenType.Module, new Module("MyCollection"))
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
 
@@ -226,7 +226,7 @@ public class Utf8FaunaReaderTests
             new(TokenType.EndObject, null),
             new(TokenType.EndArray, null),
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
 
@@ -260,7 +260,7 @@ public class Utf8FaunaReaderTests
             new(TokenType.EndObject, null),
             new(TokenType.EndObject, null)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
 
@@ -294,10 +294,10 @@ public class Utf8FaunaReaderTests
             new(TokenType.EndObject, null),
             new(TokenType.EndDocument, null)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadSet()
     {
@@ -321,10 +321,10 @@ public class Utf8FaunaReaderTests
             new(TokenType.String, "afterme"),
             new(TokenType.EndSet, null)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadRef()
     {
@@ -340,10 +340,10 @@ public class Utf8FaunaReaderTests
             new(TokenType.Module, new Module("Col")),
             new(TokenType.EndRef, null)
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadObjectTokens()
     {
@@ -369,59 +369,59 @@ public class Utf8FaunaReaderTests
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
             new(TokenType.StartObject, null),
-            
+
             new(TokenType.FieldName, "aString"),
             new(TokenType.String, "foo"),
-            
+
             new(TokenType.FieldName, "anObject"),
             new(TokenType.StartObject, null),
             new(TokenType.FieldName, "baz"),
             new(TokenType.String, "luhrmann"),
             new(TokenType.EndObject, null),
-            
+
             new(TokenType.FieldName, "anInt"),
             new(TokenType.Int, 2147483647),
-            
+
             new(TokenType.FieldName, "aLong"),
             new(TokenType.Long, 9223372036854775807),
-            
+
             new(TokenType.FieldName, "aDouble"),
             new(TokenType.Double, 3.14159d),
-            
+
             new(TokenType.FieldName, "aDecimal"),
             new(TokenType.Double, 0.1M),
-            
+
             new(TokenType.FieldName, "aDate"),
             new(TokenType.Date, new DateTime(2023, 12, 3)),
-            
+
             new(TokenType.FieldName, "aTime"),
             new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime()),
-            
+
             new(TokenType.FieldName, "anEscapedObject"),
             new(TokenType.StartObject, null),
             new(TokenType.FieldName, "@int"),
             new(TokenType.String, "escaped"),
             new(TokenType.EndObject, null),
-            
+
             new(TokenType.FieldName, "anArray"),
             new(TokenType.StartArray, null),
             new(TokenType.EndArray, null),
-            
+
             new(TokenType.FieldName, "true"),
             new(TokenType.True, true),
-            
+
             new(TokenType.FieldName, "false"),
             new(TokenType.False, false),
-            
+
             new(TokenType.FieldName, "null"),
             new(TokenType.Null, null),
-            
+
             new(TokenType.EndObject, null),
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
-    
+
     [Test]
     public void ReadArray()
     {
@@ -442,49 +442,49 @@ public class Utf8FaunaReaderTests
                             null
                          ]
                          """;
-        
+
         var reader = new Utf8FaunaReader(s);
-        
+
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
             new(TokenType.StartArray, null),
-            
+
             new(TokenType.String, "foo"),
-            
+
             new(TokenType.StartObject, null),
             new(TokenType.FieldName, "baz"),
             new(TokenType.String, "luhrmann"),
             new(TokenType.EndObject, null),
-            
+
             new(TokenType.Int, 2147483647),
-            
+
             new(TokenType.Long, 9223372036854775807),
-            
+
             new(TokenType.Double, 3.14159d),
-            
+
             new(TokenType.Double, 0.1M),
-            
+
             new(TokenType.Date, new DateTime(2023, 12, 3)),
-            
+
             new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime()),
-            
+
             new(TokenType.StartObject, null),
             new(TokenType.FieldName, "@int"),
             new(TokenType.String, "escaped"),
             new(TokenType.EndObject, null),
-            
+
             new(TokenType.StartArray, null),
             new(TokenType.EndArray, null),
-            
+
             new(TokenType.True, true),
-            
+
             new(TokenType.False, false),
-            
+
             new(TokenType.Null, null),
-            
+
             new(TokenType.EndArray, null),
         };
-        
+
         AssertReader(reader, expectedTokens);
     }
 
@@ -498,7 +498,7 @@ public class Utf8FaunaReaderTests
             reader.Read();
             reader.Read();
         });
-        
+
         Assert.AreEqual("Failed to advance underlying JSON reader.", ex?.Message);
     }
 
@@ -514,7 +514,7 @@ public class Utf8FaunaReaderTests
             """{"@set": {}}""",
             """{"@object":{}}"""
         };
-        
+
         foreach (var test in tests)
         {
             var reader = new Utf8FaunaReader(test);
@@ -523,7 +523,7 @@ public class Utf8FaunaReaderTests
             Assert.IsFalse(reader.Read());
         }
     }
-    
+
     [Test]
     public void SkipNestedEscapedObject()
     {
@@ -536,12 +536,12 @@ public class Utf8FaunaReaderTests
         reader.Read(); // {"@object":{
         Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
         reader.Skip(); // "foo": "bar"}}
-        Assert.AreEqual(TokenType.EndObject,reader.CurrentTokenType);
-        reader.Read(); 
-        Assert.AreEqual(TokenType.FieldName,reader.CurrentTokenType);
-        Assert.AreEqual("k2",reader.GetString());
+        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
+        reader.Read();
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        Assert.AreEqual("k2", reader.GetString());
     }
-    
+
     [Test]
     public void SkipNestedObject()
     {
@@ -554,12 +554,12 @@ public class Utf8FaunaReaderTests
         reader.Read(); // {
         Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
         reader.Skip(); // "inner":{}}
-        Assert.AreEqual(TokenType.EndObject,reader.CurrentTokenType);
-        reader.Read(); 
-        Assert.AreEqual(TokenType.FieldName,reader.CurrentTokenType);
-        Assert.AreEqual("k2",reader.GetString());
+        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
+        reader.Read();
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        Assert.AreEqual("k2", reader.GetString());
     }
-    
+
     [Test]
     public void SkipNestedArrays()
     {
@@ -572,9 +572,9 @@ public class Utf8FaunaReaderTests
         reader.Read(); // [
         Assert.AreEqual(TokenType.StartArray, reader.CurrentTokenType);
         reader.Skip(); // "1","2"]
-        Assert.AreEqual(TokenType.EndArray,reader.CurrentTokenType);
-        reader.Read(); 
-        Assert.AreEqual(TokenType.FieldName,reader.CurrentTokenType);
-        Assert.AreEqual("k2",reader.GetString());
+        Assert.AreEqual(TokenType.EndArray, reader.CurrentTokenType);
+        reader.Read();
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        Assert.AreEqual("k2", reader.GetString());
     }
 }

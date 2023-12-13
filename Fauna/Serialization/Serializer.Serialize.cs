@@ -7,30 +7,34 @@ namespace Fauna.Serialization;
 
 public static partial class Serializer
 {
-    
+
     public static string Serialize(object? obj)
     {
-        var stream = new MemoryStream();
-        var writer = new Utf8FaunaWriter(stream);
+        using var stream = new MemoryStream();
+        using var writer = new Utf8FaunaWriter(stream);
 
-        try
-        {
-            SerializeValueInternal(writer, obj);
-            writer.Flush();
-            return Encoding.UTF8.GetString(stream.ToArray());
-        }
-        finally
-        {
-            writer.Dispose();
-        }
+        var context = new SerializationContext();
+        SerializeValueInternal(writer, obj, context);
+        writer.Flush();
+        return Encoding.UTF8.GetString(stream.ToArray());
     }
-    
-    private static void SerializeValueInternal(Utf8FaunaWriter writer, object? obj, FaunaType? typeHint = null)
+
+    public static void Serialize(Stream stream, object? obj)
+    {
+        using var writer = new Utf8FaunaWriter(stream);
+
+        var context = new SerializationContext();
+        SerializeValueInternal(writer, obj, context);
+        writer.Flush();
+    }
+
+
+    private static void SerializeValueInternal(Utf8FaunaWriter writer, object? obj, SerializationContext context, FaunaType? typeHint = null)
     {
         if (typeHint != null)
         {
             if (obj is null) throw new ArgumentNullException(nameof(obj));
-                
+
             switch (typeHint)
             {
                 case FaunaType.Int:
@@ -66,11 +70,11 @@ public static partial class Serializer
                     {
                         throw new SerializationException($"Unsupported Time conversion. Provided value must be a DateTime but was a {obj.GetType()}");
                     }
-                    
+
                     writer.WriteTimeValue(time);
                     break;
                 case FaunaType.Boolean:
-                    
+
                     writer.WriteBooleanValue((bool)obj);
                     break;
                 default:
@@ -106,13 +110,13 @@ public static partial class Serializer
                     writer.WriteModuleValue(v);
                     break;
                 default:
-                    SerializeObjectInternal(writer, obj);
+                    SerializeObjectInternal(writer, obj, context);
                     break;
             }
         }
     }
 
-    private static void SerializeObjectInternal(Utf8FaunaWriter writer, object obj)
+    private static void SerializeObjectInternal(Utf8FaunaWriter writer, object obj, SerializationContext context)
     {
         switch (obj)
         {
@@ -122,31 +126,22 @@ public static partial class Serializer
             case IEnumerable<object>:
                 break;
             default:
-                SerializeClassInternal(writer, obj);
+                SerializeClassInternal(writer, obj, context);
                 break;
         }
     }
 
-    private static void SerializeClassInternal(Utf8FaunaWriter writer, object obj)
+    private static void SerializeClassInternal(Utf8FaunaWriter writer, object obj, SerializationContext context)
     {
         var t = obj.GetType();
-        var props = t.GetProperties();
-        var fields = new List<SerializationContext>();
-        
-        foreach (var prop in props)
-        {
-            var attr = prop.GetCustomAttribute<SerializationContext>() ?? new SerializationContext();
-            attr.Name ??= prop.Name;
-            attr.Info = prop;
-            fields.Add(attr);
-        }
-        
+        var fieldMap = context.GetFieldMap(t);
+
         writer.WriteStartObject();
-        foreach (var field in fields)
+        foreach (var field in fieldMap.Values)
         {
             writer.WriteFieldName(field.Name!);
             var v = field.Info?.GetValue(obj);
-            SerializeValueInternal(writer, v, field.Type);
+            SerializeValueInternal(writer, v, context, field.Type);
         }
         writer.WriteEndObject();
     }
