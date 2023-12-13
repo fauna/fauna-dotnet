@@ -1,4 +1,4 @@
-name: Run dotnet format
+name: Code formatting
 
 on:
   pull_request:

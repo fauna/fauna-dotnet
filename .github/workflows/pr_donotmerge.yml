@@ -1,4 +1,4 @@
-name: Validate pull request (do not merge)
+name: do-not-merge flag
 
 on:
   pull_request:
