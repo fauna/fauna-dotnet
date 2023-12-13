@@ -166,7 +166,7 @@ public class ClientTests
                 Arg.IsAny<string>(),
                 Arg.IsAny<Dictionary<string, string>>()
             )
-        ).DoInstead((string path, string body, Dictionary<string, string> headers) => 
+        ).DoInstead((string path, string body, Dictionary<string, string> headers) =>
         {
             Assert.AreEqual(1702346199930000.ToString(), headers[Headers.LastTxnTs]);
             check = true;

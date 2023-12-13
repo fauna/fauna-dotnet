@@ -35,7 +35,7 @@ public class QuerySuccess<T> : QueryResponse where T : class
     public QuerySuccess(string rawResponseText) : base(rawResponseText)
     {
         Data = _responseBody.GetProperty(DataFieldName).GetRawText() as T;
-        
+
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {
             StaticType = jsonElement.GetString();

@@ -1,6 +1,6 @@
 namespace Fauna.Types;
 
-public class Module: IEquatable<Module>
+public class Module : IEquatable<Module>
 {
     public string Name { get; }
 

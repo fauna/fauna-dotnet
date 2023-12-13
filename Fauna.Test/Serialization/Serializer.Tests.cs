@@ -8,14 +8,14 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class SerializerTests
 {
-    
+
     private class TestPerson
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public int Age { get; set; }
     }
-    
+
     [FaunaObject]
     private class TestPersonWithAttributes
     {
@@ -28,7 +28,7 @@ public class SerializerTests
         public string? Ignored { get; set; }
     }
 
-    
+
     [Test]
     public void DeserializeValues()
     {
@@ -44,14 +44,14 @@ public class SerializerTests
             {"false", false},
             {"null", null},
         };
-        
-        foreach(KeyValuePair<string, object?> entry in tests)
+
+        foreach (KeyValuePair<string, object?> entry in tests)
         {
             var result = Serializer.Deserialize(entry.Key);
             Assert.AreEqual(entry.Value, result);
         }
     }
-    
+
     [Test]
     public void DeserializeObject()
     {
@@ -74,7 +74,7 @@ public class SerializerTests
         {
             { "baz",  "luhrmann" }
         };
-        
+
         var expected = new Dictionary<string, object?>
         {
             { "aString", "foo" },
@@ -88,11 +88,11 @@ public class SerializerTests
             { "false", false },
             { "null", null }
         };
-            
+
         var result = Serializer.Deserialize(given);
         Assert.AreEqual(expected, result);
     }
-    
+
     [Test]
     public void DeserializeEscapedObject()
     {
@@ -111,25 +111,25 @@ public class SerializerTests
         {
             { "@long",  "notalong" }
         };
-        
+
         var expected = new Dictionary<string, object>
         {
             { "@int", "notanint" },
             { "anInt", 123 },
             { "@object", "notanobject" },
             { "anEscapedObject", inner }
-            
+
         };
-            
+
         var result = Serializer.Deserialize(given);
         Assert.AreEqual(expected, result);
     }
-    
-    
+
+
     [Test]
     public void DeserializeIntoPoco()
     {
-        
+
         const string given = """
                              {
                                 "FirstName": "Baz",
@@ -137,13 +137,13 @@ public class SerializerTests
                                 "Age": { "@int": "61" }
                              }
                              """;
-        
+
         var p = Serializer.Deserialize<TestPerson>(given);
         Assert.AreEqual("Baz", p.FirstName);
         Assert.AreEqual("Luhrmann", p.LastName);
         Assert.AreEqual(61, p.Age);
     }
-    
+
     [Test]
     public void DeserializeIntoPocoWithAttributes()
     {
@@ -155,7 +155,7 @@ public class SerializerTests
                                 "Ignored": "should be null"
                              }
                              """;
-        
+
         var p = Serializer.Deserialize<TestPersonWithAttributes>(given);
         Assert.AreEqual("Baz", p.FirstName);
         Assert.AreEqual("Luhrmann", p.LastName);
