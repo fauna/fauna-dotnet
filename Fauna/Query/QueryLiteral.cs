@@ -25,7 +25,6 @@ public sealed class QueryLiteral : IQueryFragment
     public void Serialize(Stream stream)
     {
         stream.Write(Encoding.UTF8.GetBytes($"\"{Unwrap}\""));
-        stream.Flush();
     }
 
     public override bool Equals(object? other)

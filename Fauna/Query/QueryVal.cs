@@ -18,7 +18,6 @@ public sealed class QueryVal<T> : Query, IQueryFragment
         stream.Write(Encoding.UTF8.GetBytes("{\"value\":"));
         Serializer.Serialize(stream, Unwrap);
         stream.Write(Encoding.UTF8.GetBytes("}"));
-        stream.Flush();
     }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryVal<T>);

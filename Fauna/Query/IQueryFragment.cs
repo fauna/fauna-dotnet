@@ -21,6 +21,7 @@ public static class IQueryFragmentExtensions
     {
         using var ms = new MemoryStream();
         fragment.Serialize(ms);
+        ms.Flush();
         return Encoding.UTF8.GetString(ms.ToArray());
     }
 }
