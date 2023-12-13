@@ -15,11 +15,11 @@ public partial class SerializerTests
         var tests = new Dictionary<string, object?>
         {
             {"\"hello\"", "hello"},
-            {"""{"@int":"42"}""", 42},
-            {"""{"@long":"42"}""", 42L},
-            {"""{"@double": "1.2"}""", 1.2d},
-            {"""{"@date": "2023-12-03"}""", new DateTime(2023, 12, 3)},
-            {"""{"@time": "2023-12-03T05:52:10.000001-09:00"}""", new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime()},
+            {@"{""@int"":""42""}", 42},
+            {@"{""@long"":""42""}", 42L},
+            {@"{""@double"": ""1.2""}", 1.2d},
+            {@"{""@date"": ""2023-12-03""}", new DateTime(2023, 12, 3)},
+            {@"{""@time"": ""2023-12-03T05:52:10.000001-09:00""}", new DateTime(2023, 12, 3, 14, 52, 10, 0, DateTimeKind.Utc).AddTicks(10).ToLocalTime()},
             {"true", true},
             {"false", false},
             {"null", null},
@@ -35,20 +35,20 @@ public partial class SerializerTests
     [Test]
     public void DeserializeObject()
     {
-        const string given = """
+        const string given = @"
                              {
-                                "aString": "foo",
-                                "anObject": { "baz": "luhrmann" },
-                                "anInt": { "@int": "2147483647" },
-                                "aLong":{ "@long": "9223372036854775807" },
-                                "aDouble":{ "@double": "3.14159" },
-                                "aDate":{ "@date": "2023-12-03" },
-                                "aTime":{ "@time": "2023-12-03T14:52:10.001001Z" },
-                                "true": true,
-                                "false": false,
-                                "null": null
+                                ""aString"": ""foo"",
+                                ""anObject"": { ""baz"": ""luhrmann"" },
+                                ""anInt"": { ""@int"": ""2147483647"" },
+                                ""aLong"":{ ""@long"": ""9223372036854775807"" },
+                                ""aDouble"":{ ""@double"": ""3.14159"" },
+                                ""aDate"":{ ""@date"": ""2023-12-03"" },
+                                ""aTime"":{ ""@time"": ""2023-12-03T14:52:10.001001Z"" },
+                                ""true"": true,
+                                ""false"": false,
+                                ""null"": null
                              }
-                             """;
+                             ";
 
         var inner = new Dictionary<string, object>
         {
@@ -63,7 +63,7 @@ public partial class SerializerTests
             { "aLong", 9223372036854775807 },
             { "aDouble", 3.14159d },
             { "aDate", new DateTime(2023, 12, 3) },
-            { "aTime", new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime() },
+            { "aTime", new DateTime(2023, 12, 3, 14, 52, 10, 1, DateTimeKind.Utc).AddTicks(10).ToLocalTime() },
             { "true", true },
             { "false", false },
             { "null", null }
@@ -76,16 +76,16 @@ public partial class SerializerTests
     [Test]
     public void DeserializeEscapedObject()
     {
-        const string given = """
+        const string given = @"
                              {
-                                "@object": {
-                                    "@int": "notanint",
-                                    "anInt": { "@int": "123" },
-                                    "@object": "notanobject",
-                                    "anEscapedObject": { "@object": { "@long": "notalong" } }
+                                ""@object"": {
+                                    ""@int"": ""notanint"",
+                                    ""anInt"": { ""@int"": ""123"" },
+                                    ""@object"": ""notanobject"",
+                                    ""anEscapedObject"": { ""@object"": { ""@long"": ""notalong"" } }
                                 }
                              }
-                             """;
+                             ";
 
         var inner = new Dictionary<string, object>
         {
@@ -110,13 +110,13 @@ public partial class SerializerTests
     public void DeserializeIntoPoco()
     {
 
-        const string given = """
+        const string given = @"
                              {
-                                "FirstName": "Baz2",
-                                "LastName": "Luhrmann2",
-                                "Age": { "@int": "612" }
+                                ""FirstName"": ""Baz2"",
+                                ""LastName"": ""Luhrmann2"",
+                                ""Age"": { ""@int"": ""612"" }
                              }
-                             """;
+                             ";
 
         var p = Serializer.Deserialize<Person>(given);
         Assert.AreEqual("Baz2", p.FirstName);
@@ -127,14 +127,14 @@ public partial class SerializerTests
     [Test]
     public void DeserializeIntoPocoWithAttributes()
     {
-        const string given = """
+        const string given = @"
                              {
-                                "first_name": "Baz2",
-                                "last_name": "Luhrmann2",
-                                "age": { "@int": "612" },
-                                "Ignored": "should be null"
+                                ""first_name"": ""Baz2"",
+                                ""last_name"": ""Luhrmann2"",
+                                ""age"": { ""@int"": ""612"" },
+                                ""Ignored"": ""should be null""
                              }
-                             """;
+                             ";
 
         var p = Serializer.Deserialize<PersonWithAttributes>(given);
         Assert.AreEqual("Baz2", p.FirstName);

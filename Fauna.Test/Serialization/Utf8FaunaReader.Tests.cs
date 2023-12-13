@@ -113,7 +113,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadInt()
     {
-        const string s = """{"@int": "123"}""";
+        const string s = @"{""@int"": ""123""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
@@ -126,7 +126,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadLong()
     {
-        const string s = """{"@long": "123"}""";
+        const string s = @"{""@long"": ""123""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
@@ -139,7 +139,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadDouble()
     {
-        const string s = """{"@double": "1.2"}""";
+        const string s = @"{""@double"": ""1.2""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
@@ -152,7 +152,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadDoubleAsDecimal()
     {
-        const string s = """{"@double": "1.2"}""";
+        const string s = @"{""@double"": ""1.2""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
@@ -165,7 +165,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadDate()
     {
-        const string s = """{"@date": "2023-12-03"}""";
+        const string s = @"{""@date"": ""2023-12-03""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
@@ -178,11 +178,11 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadTimePacific()
     {
-        const string s = """{"@time": "2023-12-03T05:52:10.000001-09:00"}""";
+        const string s = @"{""@time"": ""2023-12-03T05:52:10.000001-09:00""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
-            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime())
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, DateTimeKind.Utc).AddTicks(10).ToLocalTime())
         };
 
         AssertReader(reader, expectedTokens);
@@ -191,11 +191,11 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadTimeUtc()
     {
-        const string s = """{"@time": "2023-12-03T14:52:10.000001Z"}""";
+        const string s = @"{""@time"": ""2023-12-03T14:52:10.000001Z""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
-            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, 1, DateTimeKind.Utc).ToLocalTime())
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 0, DateTimeKind.Utc).AddTicks(10).ToLocalTime())
         };
 
         AssertReader(reader, expectedTokens);
@@ -204,7 +204,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadModule()
     {
-        const string s = """{"@mod": "MyCollection"}""";
+        const string s = @"{""@mod"": ""MyCollection""}";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
@@ -233,16 +233,16 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadEscapedObject()
     {
-        const string s = """
+        const string s = @"
                          {
-                            "@object": {
-                                "@int": "notanint",
-                                "anInt": { "@int": "123" },
-                                "@object": "notanobject",
-                                "anEscapedObject": { "@object": { "@long": "notalong" } }
+                            ""@object"": {
+                                ""@int"": ""notanint"",
+                                ""anInt"": { ""@int"": ""123"" },
+                                ""@object"": ""notanobject"",
+                                ""anEscapedObject"": { ""@object"": { ""@long"": ""notalong"" } }
                             }
                          }
-                         """;
+                         ";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
@@ -267,16 +267,16 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadDocumentTokens()
     {
-        const string s = """
+        const string s = @"
                          {
-                            "@doc": {
-                                "id": "123",
-                                "coll": { "@mod": "Coll" },
-                                "ts": { "@time": "2023-12-03T16:07:23.111012Z" },
-                                "data": { "foo": "bar" }
+                            ""@doc"": {
+                                ""id"": ""123"",
+                                ""coll"": { ""@mod"": ""Coll"" },
+                                ""ts"": { ""@time"": ""2023-12-03T16:07:23.111012Z"" },
+                                ""data"": { ""foo"": ""bar"" }
                             }
                          }
-                         """;
+                         ";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
@@ -286,7 +286,7 @@ public class Utf8FaunaReaderTests
             new(TokenType.FieldName, "coll"),
             new(TokenType.Module, new Module("Coll")),
             new(TokenType.FieldName, "ts"),
-            new(TokenType.Time, new DateTime(2023, 12, 03, 16, 07, 23, 111, 12, DateTimeKind.Utc).ToLocalTime()),
+            new(TokenType.Time, new DateTime(2023, 12, 03, 16, 07, 23, 111, DateTimeKind.Utc).AddTicks(120).ToLocalTime()),
             new(TokenType.FieldName, "data"),
             new(TokenType.StartObject, null),
             new(TokenType.FieldName, "foo"),
@@ -301,14 +301,14 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadSet()
     {
-        const string s = """
+        const string s = @"
                          {
-                            "@set": {
-                                "data": [{"@int": "99"}],
-                                "after": "afterme"
+                            ""@set"": {
+                                ""data"": [{""@int"": ""99""}],
+                                ""after"": ""afterme""
                             }
                          }
-                         """;
+                         ";
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
@@ -328,7 +328,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadRef()
     {
-        const string s = """{"@ref": {"id": "123", "coll": {"@mod": "Col"}}}""";
+        const string s = @"{""@ref"": {""id"": ""123"", ""coll"": {""@mod"": ""Col""}}}";
 
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>
@@ -347,23 +347,23 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadObjectTokens()
     {
-        const string s = """
+        const string s = @"
                          {
-                            "aString": "foo",
-                            "anObject": { "baz": "luhrmann" },
-                            "anInt": { "@int": "2147483647" },
-                            "aLong":{ "@long": "9223372036854775807" },
-                            "aDouble":{ "@double": "3.14159" },
-                            "aDecimal":{ "@double": "0.1" },
-                            "aDate":{ "@date": "2023-12-03" },
-                            "aTime":{ "@time": "2023-12-03T14:52:10.001001Z" },
-                            "anEscapedObject": { "@object": { "@int": "escaped" } },
-                            "anArray": [],
-                            "true": true,
-                            "false": false,
-                            "null": null
+                            ""aString"": ""foo"",
+                            ""anObject"": { ""baz"": ""luhrmann"" },
+                            ""anInt"": { ""@int"": ""2147483647"" },
+                            ""aLong"":{ ""@long"": ""9223372036854775807"" },
+                            ""aDouble"":{ ""@double"": ""3.14159"" },
+                            ""aDecimal"":{ ""@double"": ""0.1"" },
+                            ""aDate"":{ ""@date"": ""2023-12-03"" },
+                            ""aTime"":{ ""@time"": ""2023-12-03T14:52:10.001001Z"" },
+                            ""anEscapedObject"": { ""@object"": { ""@int"": ""escaped"" } },
+                            ""anArray"": [],
+                            ""true"": true,
+                            ""false"": false,
+                            ""null"": null
                          }
-                         """;
+                         ";
 
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>
@@ -395,7 +395,7 @@ public class Utf8FaunaReaderTests
             new(TokenType.Date, new DateTime(2023, 12, 3)),
 
             new(TokenType.FieldName, "aTime"),
-            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime()),
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, DateTimeKind.Utc).AddTicks(10).ToLocalTime()),
 
             new(TokenType.FieldName, "anEscapedObject"),
             new(TokenType.StartObject, null),
@@ -425,23 +425,23 @@ public class Utf8FaunaReaderTests
     [Test]
     public void ReadArray()
     {
-        const string s = """
+        const string s = @"
                          [
-                            "foo",
-                            { "baz": "luhrmann" },
-                            { "@int": "2147483647" },
-                            { "@long": "9223372036854775807" },
-                            { "@double": "3.14159" },
-                            { "@double": "0.1" },
-                            { "@date": "2023-12-03" },
-                            { "@time": "2023-12-03T14:52:10.001001Z" },
-                            { "@object": { "@int": "escaped" } },
+                            ""foo"",
+                            { ""baz"": ""luhrmann"" },
+                            { ""@int"": ""2147483647"" },
+                            { ""@long"": ""9223372036854775807"" },
+                            { ""@double"": ""3.14159"" },
+                            { ""@double"": ""0.1"" },
+                            { ""@date"": ""2023-12-03"" },
+                            { ""@time"": ""2023-12-03T14:52:10.001001Z"" },
+                            { ""@object"": { ""@int"": ""escaped"" } },
                             [],
                             true,
                             false,
                             null
                          ]
-                         """;
+                         ";
 
         var reader = new Utf8FaunaReader(s);
 
@@ -466,7 +466,7 @@ public class Utf8FaunaReaderTests
 
             new(TokenType.Date, new DateTime(2023, 12, 3)),
 
-            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, 1, DateTimeKind.Utc).ToLocalTime()),
+            new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, DateTimeKind.Utc).AddTicks(10).ToLocalTime()),
 
             new(TokenType.StartObject, null),
             new(TokenType.FieldName, "@int"),
@@ -507,12 +507,12 @@ public class Utf8FaunaReaderTests
     {
         var tests = new List<string>()
         {
-            """{"k1": {}, "k2": {}}""",
-            """["k1",[],{}]""",
-            """{"@ref": {}}""",
-            """{"@doc": {}}""",
-            """{"@set": {}}""",
-            """{"@object":{}}"""
+            @"{""k1"": {}, ""k2"": {}}",
+            @"[""k1"",[],{}]",
+            @"{""@ref"": {}}",
+            @"{""@doc"": {}}",
+            @"{""@set"": {}}",
+            @"{""@object"":{}}"
         };
 
         foreach (var test in tests)
@@ -527,7 +527,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void SkipNestedEscapedObject()
     {
-        const string test = """{"@object":{"inner":{"@object":{"foo": "bar"}},"k2":{}}}""";
+        const string test = @"{""@object"":{""inner"":{""@object"":{""foo"": ""bar""}},""k2"":{}}}";
         var reader = new Utf8FaunaReader(test);
         reader.Read(); // {"@object":{
         Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
@@ -545,7 +545,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void SkipNestedObject()
     {
-        const string test = """{"k":{"inner":{}},"k2":{}}""";
+        const string test = @"{""k"":{""inner"":{}},""k2"":{}}";
         var reader = new Utf8FaunaReader(test);
         reader.Read(); // {
         Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
@@ -563,7 +563,7 @@ public class Utf8FaunaReaderTests
     [Test]
     public void SkipNestedArrays()
     {
-        const string test = """{"k":["1","2"],"k2":{}}""";
+        const string test = @"{""k"":[""1"",""2""],""k2"":{}}";
         var reader = new Utf8FaunaReader(test);
         reader.Read(); // {
         Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
