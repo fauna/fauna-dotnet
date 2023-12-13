@@ -1,13 +1,16 @@
-namespace Fauna;
-
 using System.Linq.Expressions;
+
+namespace Fauna;
 
 internal class ExpressionSwitch<TResult>
 {
-    // Apply this switch to an expression
-    public TResult Apply(Expression expr) => ApplyImpl(expr);
+    // if true, will transparently handle certain node types (Quote, Convert, etc.)
+    protected virtual bool Simplified { get => true; }
 
-    protected virtual TResult ApplyDefault(Expression expr)
+    // Apply this switch to an expression
+    public TResult Apply(Expression? expr) => ApplyImpl(expr);
+
+    protected virtual TResult ApplyDefault(Expression? expr)
         => throw new NotSupportedException($"Unsupported expression: {expr}");
 
     protected virtual TResult BinaryExpr(BinaryExpression expr) => ApplyDefault(expr);
@@ -36,8 +39,10 @@ internal class ExpressionSwitch<TResult>
     protected virtual TResult TypeBinaryExpr(TypeBinaryExpression expr) => ApplyDefault(expr);
     protected virtual TResult UnaryExpr(UnaryExpression expr) => ApplyDefault(expr);
 
-    public TResult ApplyImpl(Expression expr)
+    public TResult ApplyImpl(Expression? expr)
     {
+        if (expr is null) return ApplyDefault(expr);
+
         return expr.NodeType switch
         {
             ExpressionType.Add or
@@ -132,6 +137,12 @@ internal class ExpressionSwitch<TResult>
             ExpressionType.TypeEqual or
             ExpressionType.TypeIs =>
                 TypeBinaryExpr((TypeBinaryExpression)expr),
+
+            ExpressionType.Convert or
+            ExpressionType.ConvertChecked or
+            ExpressionType.Quote
+            when Simplified =>
+                ApplyImpl(((UnaryExpression)expr).Operand),
 
             ExpressionType.ArrayLength or
             ExpressionType.Convert or
