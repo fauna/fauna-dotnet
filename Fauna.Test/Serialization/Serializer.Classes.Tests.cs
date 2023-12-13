@@ -61,17 +61,17 @@ public partial class SerializerTests
 
         // Date conversions
         [Field("datetime_to_date", FaunaType.Date)]
-        public DateTime? DateTimeToDate { get; set; } = new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc);
+        public DateTime? DateTimeToDate { get; set; } = DateTime.Parse("2023-12-13T12:12:12.001001Z");
         [Field("dateonly_to_date", FaunaType.Date)]
         public DateOnly? DateOnlyToDate { get; set; } = new DateOnly(2023, 12, 13);
         [Field("datetimeoffset_to_date", FaunaType.Date)]
-        public DateTimeOffset? DateTimeOffsetToDate { get; set; } = new DateTimeOffset(new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc));
+        public DateTimeOffset? DateTimeOffsetToDate { get; set; } = DateTimeOffset.Parse("2023-12-13T12:12:12.001001Z");
 
         // Time conversions
         [Field("datetime_to_time", FaunaType.Time)]
-        public DateTime? DateTimeToTime { get; set; } = new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc);
+        public DateTime? DateTimeToTime { get; set; } = DateTime.Parse("2023-12-13T12:12:12.001001Z");
         [Field("datetimeoffset_to_time", FaunaType.Time)]
-        public DateTimeOffset? DateTimeOffsetToTime { get; set; } = new DateTimeOffset(new DateTime(2023, 12, 13, 12, 12, 12, 1, 1, DateTimeKind.Utc));
+        public DateTimeOffset? DateTimeOffsetToTime { get; set; } = new DateTimeOffset(DateTime.Parse("2023-12-13T12:12:12.001001Z"));
     }
 
 
