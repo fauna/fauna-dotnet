@@ -36,7 +36,7 @@ public class ClientTests
                 }
             });
         var r = await c.QueryAsync<string>(
-            "let x = 123; x",
+            new QueryExpr(new QueryLiteral("let x = 123; x")),
             new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
         Write(r.Data);
         Console.WriteLine(string.Join(',', r.QueryTags!.Select(kv => $"{kv.Key}={kv.Value}")));
@@ -60,7 +60,7 @@ public class ClientTests
         try
         {
             var r = await c.QueryAsync<string>(
-                "let x = 123; abort(x)",
+                new QueryExpr(new QueryLiteral("let x = 123; abort(x)")),
                 new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
         }
         catch (FaunaException ex)
@@ -104,7 +104,7 @@ public class ClientTests
         Mock.Arrange(() =>
             conn.DoPostAsync<string>(
                 Arg.IsAny<string>(),
-                Arg.IsAny<string>(),
+                Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()
             )
         ).Returns(Task.FromResult(qr));
@@ -113,7 +113,8 @@ public class ClientTests
 
         try
         {
-            var r = await c.QueryAsync<string>("let x = 123; abort(x)");
+            var query = new QueryExpr(new QueryLiteral("let x = 123; abort(x)"));
+            var r = await c.QueryAsync<string>(query);
         }
         catch (FaunaException ex)
         {
@@ -150,29 +151,29 @@ public class ClientTests
         Mock.Arrange(() =>
             conn.DoPostAsync<string>(
                 Arg.IsAny<string>(),
-                Arg.IsAny<string>(),
+                Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()
             )
         ).Returns(Task.FromResult(qr));
 
         var c = new Client(new ClientConfig("secret"), conn);
-        var r = await c.QueryAsync<string>("let x = 123; x");
+        var r = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         bool check = false;
 
         Mock.Arrange(() =>
             conn.DoPostAsync<string>(
                 Arg.IsAny<string>(),
-                Arg.IsAny<string>(),
+                Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()
             )
-        ).DoInstead((string path, string body, Dictionary<string, string> headers) =>
+        ).DoInstead((string path, Stream body, Dictionary<string, string> headers) =>
         {
             Assert.AreEqual(1702346199930000.ToString(), headers[Headers.LastTxnTs]);
             check = true;
         }).Returns(Task.FromResult(qr));
 
-        var r2 = await c.QueryAsync<string>("let x = 123; x");
+        var r2 = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         Assert.IsTrue(check);
     }

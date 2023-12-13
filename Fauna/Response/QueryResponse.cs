@@ -1,3 +1,5 @@
+using Fauna.Serialization;
+using System;
 using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
 
@@ -8,7 +10,6 @@ public abstract class QueryResponse : QueryInfo
     internal QueryResponse(string rawResponseText) : base(rawResponseText) { }
 
     public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(HttpResponseMessage message)
-        where T : class
     {
         QueryResponse queryResponse;
 
@@ -27,14 +28,14 @@ public abstract class QueryResponse : QueryInfo
     }
 }
 
-public class QuerySuccess<T> : QueryResponse where T : class
+public class QuerySuccess<T> : QueryResponse
 {
     public T Data { get; init; }
     public string? StaticType { get; init; }
 
     public QuerySuccess(string rawResponseText) : base(rawResponseText)
     {
-        Data = _responseBody.GetProperty(DataFieldName).GetRawText() as T;
+        Data = Serializer.Deserialize<T>(_responseBody.GetProperty(DataFieldName).GetRawText());
 
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {
