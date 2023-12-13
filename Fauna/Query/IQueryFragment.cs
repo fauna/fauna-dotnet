@@ -5,4 +5,9 @@
 /// </summary>
 public interface IQueryFragment
 {
+    /// <summary>
+    /// Serializes the query fragment into a string format.
+    /// </summary>
+    /// <returns>A string representation of the query fragment.</returns>
+    string Serialize();
 }

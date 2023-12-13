@@ -1,4 +1,6 @@
-﻿namespace Fauna;
+﻿using System.Runtime.Serialization;
+
+namespace Fauna;
 
 public sealed class QueryLiteral : Query, IQueryFragment
 {
@@ -17,6 +19,11 @@ public sealed class QueryLiteral : Query, IQueryFragment
     public override string ToString()
     {
         return $"QueryLiteral({Unwrap})";
+    }
+
+    public override string Serialize()
+    {
+        return $"\"{Unwrap}\"";
     }
 
     public override bool Equals(Query? otherQuery)

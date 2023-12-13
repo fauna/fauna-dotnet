@@ -1,7 +1,9 @@
 namespace Fauna;
 
-public abstract class Query : IEquatable<Query>
+public abstract class Query : IEquatable<Query>, IQueryFragment
 {
+    public abstract string Serialize();
+
     public abstract override int GetHashCode();
 
     public abstract override bool Equals(object? otherObject);

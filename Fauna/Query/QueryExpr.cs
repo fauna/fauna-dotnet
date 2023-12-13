@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Text;
 
 namespace Fauna;
 
@@ -17,6 +18,28 @@ public sealed class QueryExpr : Query, IQueryFragment
     public ReadOnlyCollection<IQueryFragment> Unwrap { get; }
 
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
+
+    public override string Serialize()
+    {
+        var serializedFragments = new StringBuilder();
+
+        serializedFragments.Append("{\"fql\":[");
+
+        for (int i = 0; i < Unwrap.Count; i++)
+        {
+            var fragment = Unwrap[i].Serialize();
+            serializedFragments.Append($"{fragment}");
+
+            if (i < Unwrap.Count - 1)
+            {
+                serializedFragments.Append(",");
+            }
+        }
+
+        serializedFragments.Append("]}");
+
+        return serializedFragments.ToString();
+    }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryExpr);
 
