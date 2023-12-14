@@ -8,7 +8,7 @@ public class QueryInfo
     protected JsonElement _responseBody;
 
     public long LastSeenTxn { get; init; }
-    public int SchemaVersion { get; init; }
+    public long SchemaVersion { get; init; }
     public string Summary { get; init; }
     public Dictionary<string, string>? QueryTags { get; init; }
     public QueryStats Stats { get; init; }
@@ -18,7 +18,7 @@ public class QueryInfo
         _responseBody = JsonSerializer.Deserialize<JsonElement>(rawResponseText);
 
         LastSeenTxn = _responseBody.GetProperty(LastSeenTxnFieldName).GetInt64();
-        SchemaVersion = _responseBody.GetProperty(SchemaVersionFieldName).GetInt32();
+        SchemaVersion = _responseBody.GetProperty(SchemaVersionFieldName).GetInt64();
         Summary = _responseBody.GetProperty(SummaryFieldName).GetString()!;
 
         if (_responseBody.TryGetProperty(QueryTagsFieldName, out var queryTagsElement))
