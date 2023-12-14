@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -22,9 +23,9 @@ public sealed class QueryLiteral : IQueryFragment
         return $"QueryLiteral({Unwrap})";
     }
 
-    public void Serialize(Stream stream)
+    public void Serialize(Utf8FaunaWriter writer)
     {
-        stream.Write(Encoding.UTF8.GetBytes($"\"{Unwrap}\""));
+        writer.WriteStringValue(Unwrap);
     }
 
     public override bool Equals(object? other)

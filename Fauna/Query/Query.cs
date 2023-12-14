@@ -1,8 +1,10 @@
+using Fauna.Serialization;
+
 namespace Fauna;
 
 public abstract class Query : IEquatable<Query>, IQueryFragment
 {
-    public abstract void Serialize(Stream stream);
+    public abstract void Serialize(Utf8FaunaWriter writer);
 
     public abstract override int GetHashCode();
 

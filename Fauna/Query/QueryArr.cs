@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -21,7 +22,7 @@ internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
 
     public T this[int index] => Unwrap[index];
 
-    public override void Serialize(Stream stream)
+    public override void Serialize(Utf8FaunaWriter writer)
     {
         throw new NotImplementedException();
     }
