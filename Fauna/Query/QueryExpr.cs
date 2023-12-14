@@ -21,20 +21,17 @@ public sealed class QueryExpr : Query, IQueryFragment
 
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
 
-    public override void Serialize(Stream stream)
+    public override void Serialize(Utf8FaunaWriter writer)
     {
-        stream.Write(Encoding.UTF8.GetBytes("{\"fql\":["));
-        for (var i = 0; i < Unwrap.Count; i++)
+        writer.WriteStartObject();
+        writer.WriteFieldName("fql");
+        writer.WriteStartArray();
+        foreach (var t in Unwrap)
         {
-            var t = Unwrap[i];
-            t.Serialize(stream);
-            if (i < Unwrap.Count - 1)
-            {
-                stream.Write(Encoding.UTF8.GetBytes(","));
-            }
+            t.Serialize(writer);
         }
-
-        stream.Write(Encoding.UTF8.GetBytes("]}"));
+        writer.WriteEndArray();
+        writer.WriteEndObject();
     }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryExpr);
