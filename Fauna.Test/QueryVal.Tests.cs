@@ -91,19 +91,19 @@ public class QueryValTests
         int value2 = 123;
         var dictionary = new Dictionary<string, object> { { "key1", value1 }, { "key2", value2 } };
         var queryVal = new QueryVal<IDictionary<string, object>>(dictionary);
-        Assert.AreEqual(2, dictionary.Count);
-        Assert.AreEqual(value1, dictionary["key1"]);
-        Assert.AreEqual(value2, dictionary["key2"]);
+        Assert.AreEqual(2, queryVal.Unwrap.Count);
+        Assert.AreEqual(value1, queryVal.Unwrap["key1"]);
+        Assert.AreEqual(value2, queryVal.Unwrap["key2"]);
     }
 
     [Test]
-    public void Ctor_WrapsIEnumerable()
+    public void Ctor_WrapsList()
     {
         var list = new List<int> { 57, 75 };
-        var queryVal = new QueryVal<IEnumerable<int>>(list);
-        Assert.AreEqual(2, queryVal.Unwrap.Count());
-        Assert.AreEqual(57, list[0]);
-        Assert.AreEqual(75, list[1]);
+        var queryVal = new QueryVal<List<int>>(list);
+        Assert.AreEqual(2, queryVal.Unwrap.Count);
+        Assert.AreEqual(57, queryVal.Unwrap[0]);
+        Assert.AreEqual(75, queryVal.Unwrap[1]);
     }
 
     [Test]

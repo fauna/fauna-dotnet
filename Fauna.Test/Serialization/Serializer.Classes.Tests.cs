@@ -27,7 +27,7 @@ public partial class SerializerTests
         [Field("first_name", FaunaType.Int)] public string FirstName { get; set; } = "NotANumber";
     }
 
-    private class ClassWithoutFaunaObjectAttribute
+    private class ClassWithFieldAttributeAndWithoutFaunaObjectAttribute
     {
         [Field("first_name")] public string? FirstName { get; set; } = "Baz";
     }
