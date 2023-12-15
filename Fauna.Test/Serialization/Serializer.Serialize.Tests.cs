@@ -165,4 +165,94 @@ public partial class SerializerTests
         var actual = Serializer.Serialize(test);
         Assert.AreEqual(expected, actual);
     }
+
+    [Test]
+    public void SerializeObjectWithInvalidTypeHint()
+    {
+        var obj = new ClassWithInvalidPropertyTypeHint();
+        Assert.Throws<SerializationException>(() => Serializer.Serialize(obj));
+    }
+
+    [Test]
+    public void SerializeObjectWithoutFaunaObjectAttribute()
+    {
+        var obj = new ClassWithoutFaunaObjectAttribute();
+        var expected = "{\"FirstName\":\"Baz\"}";
+        var actual = Serializer.Serialize(obj);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void SerializeObjectWithPropertyWithoutFieldAttribute()
+    {
+        var obj = new ClassWithPropertyWithoutFieldAttribute();
+        var expected = "{}";
+        var actual = Serializer.Serialize(obj);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void SerializeAnonymousClassObject()
+    {
+        var obj = new { FirstName = "John", LastName = "Doe" };
+        var expected = "{\"FirstName\":\"John\",\"LastName\":\"Doe\"}";
+        var actual = Serializer.Serialize(obj);
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void SerializeCollectionEdgeCases()
+    {
+        var tests = new Dictionary<object, string>
+        {
+            { new List<object>(), "[]" },
+            { new Dictionary<string, object>(), "{}" },
+            { new List<object> { new List<object>(), new Dictionary<string, object>() }, "[[],{}]" }
+        };
+
+        foreach (var (value, expected) in tests)
+        {
+            var actual = Serializer.Serialize(value);
+            Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [Test]
+    public void Serialize_ExtremeNumericValues()
+    {
+        var tests = new Dictionary<object, string>
+        {
+            { short.MaxValue, @"{""@int"":""32767""}" },
+            { short.MinValue, @"{""@int"":""-32768""}" },
+            { int.MaxValue, @"{""@int"":""2147483647""}" },
+            { int.MinValue, @"{""@int"":""-2147483648""}" },
+            { long.MaxValue, @"{""@long"":""9223372036854775807""}" },
+            { long.MinValue, @"{""@long"":""-9223372036854775808""}" },
+            { double.MaxValue, @"{""@double"":""1.7976931348623157E\u002B308""}" },
+            { double.MinValue, @"{""@double"":""-1.7976931348623157E\u002B308""}" }
+        };
+
+        foreach (var (value, expected) in tests)
+        {
+            var actual = Serializer.Serialize(value);
+            Assert.AreEqual(expected, actual);
+        }
+    }
+
+    [Test]
+    public void SerializeNumericEdgeCases()
+    {
+        var tests = new Dictionary<object, string>
+        {
+            { double.NaN, @"{""@double"":""NaN""}" },
+            { double.PositiveInfinity, @"{""@double"":""Infinity""}" },
+            { double.NegativeInfinity, @"{""@double"":""-Infinity""}" }
+        };
+
+        foreach (var (value, expected) in tests)
+        {
+            var actual = Serializer.Serialize(value);
+            Assert.AreEqual(expected, actual);
+        }
+    }
 }

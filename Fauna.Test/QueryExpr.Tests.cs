@@ -113,4 +113,46 @@ public class QueryExprTests
 
         Assert.AreEqual(expected, actual);
     }
+
+    [Test]
+    public void Serialize_WithEmptyFragmentsList()
+    {
+        var emptyExpr = new QueryExpr(new List<IQueryFragment>());
+        Assert.AreEqual("{\"fql\":[]}", emptyExpr.Serialize());
+    }
+
+    [Test]
+    public void Serialize_WithDifferentFragmentTypes()
+    {
+        var mixedExpr = new QueryExpr(
+            new QueryLiteral("literal"),
+            new QueryVal<int>(123),
+            new QueryExpr(new QueryLiteral("nested"))
+        );
+        var query = mixedExpr.Serialize();
+    }
+
+    [Test]
+    public void Serialize_WithMixedAndNestedFragments()
+    {
+        int numberOfExpressions = 100;
+        var random = new Random();
+
+        IQueryFragment GenerateRandomFragment(int i)
+        {
+            return random.Next(3) switch
+            {
+                0 => new QueryLiteral($"literal{i}"),
+                1 => new QueryVal<string>($"value{i}"),
+                2 => new QueryExpr(new QueryLiteral($"nestedLiteral{i}"), new QueryVal<int>(i)),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        IQueryFragment CreateMixedExpr() => new QueryExpr(Enumerable.Range(0, numberOfExpressions).Select(i => GenerateRandomFragment(i)).ToList());
+
+        var largeExpr = new QueryExpr(Enumerable.Range(0, numberOfExpressions).Select(_ => CreateMixedExpr()).ToList());
+
+        Assert.DoesNotThrow(() => largeExpr.Serialize());
+    }
 }

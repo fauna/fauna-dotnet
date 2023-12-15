@@ -17,7 +17,25 @@ public class QueryLiteralTests
     public void Ctor_WithNullValue_ThrowsArgumentNullException()
     {
         string? literal = null;
+#nullable disable
         Assert.Throws<ArgumentNullException>(() => new QueryLiteral(literal));
+#nullable restore
+    }
+
+    [Test]
+    public void Ctor_WithLongString()
+    {
+        var longString = new string('a', 10000);
+        Assert.DoesNotThrow(() => new QueryLiteral(longString));
+    }
+
+    [TestCase(" ")]
+    [TestCase("\t")]
+    [TestCase("\n")]
+    public void Ctor_WithWhitespaceString(string expected)
+    {
+        var queryLiteral = new QueryLiteral(expected);
+        Assert.AreEqual(expected, queryLiteral.Unwrap);
     }
 
     [Test]
@@ -70,10 +88,28 @@ public class QueryLiteralTests
     }
 
     [Test]
+    public void GetHashCode_DifferentValues_ShouldProduceDifferentHashCodes()
+    {
+        var literal1 = new QueryLiteral("test1");
+        var literal2 = new QueryLiteral("test2");
+        Assert.AreNotEqual(literal1.GetHashCode(), literal2.GetHashCode());
+    }
+
+    [Test]
     public void Serialize_ReturnsCorrectStringValue()
     {
         var queryLiteral = new QueryLiteral("test value");
         var expected = "\"test value\"";
+        var actual = queryLiteral.Serialize();
+        Assert.AreEqual(expected, actual);
+    }
+
+    [Test]
+    public void Serialize_WithSpecialCharacters()
+    {
+        var stringValue = "Line1\nLine2\t\"Quote\" and a \\ backslash";
+        var expected = "\"Line1\\nLine2\\t\\\"Quote\\\" and a \\\\ backslash\"";
+        var queryLiteral = new QueryLiteral(stringValue);
         var actual = queryLiteral.Serialize();
         Assert.AreEqual(expected, actual);
     }
