@@ -207,7 +207,6 @@ public static partial class Serializer
                 }
                 else
                 {
-                    reader.Read();
                     reader.Skip();
                 }
             }

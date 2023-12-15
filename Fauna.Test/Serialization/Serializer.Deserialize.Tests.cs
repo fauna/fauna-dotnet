@@ -88,6 +88,23 @@ public partial class SerializerTests
     }
 
     [Test]
+    public void DeserializeDocumentToClass()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize<ClassForDocument>(given);
+        Assert.AreEqual("user_value", actual.UserField);
+    }
+
+    [Test]
     public void DeserializeRef()
     {
         const string given = @"

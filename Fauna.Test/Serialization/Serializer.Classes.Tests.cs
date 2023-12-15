@@ -13,6 +13,12 @@ public partial class SerializerTests
     }
 
     [FaunaObject]
+    private class ClassForDocument
+    {
+        [Field("user_field")] public string? UserField { get; set; }
+    }
+
+    [FaunaObject]
     private class PersonWithAttributes
     {
         [Field("first_name")] public string? FirstName { get; set; } = "Baz";
@@ -20,6 +26,7 @@ public partial class SerializerTests
         [Field("age", FaunaType.Long)] public int Age { get; set; } = 61;
         public string? Ignored { get; set; }
     }
+
 
     [FaunaObject]
     private class ClassWithInvalidPropertyTypeHint
