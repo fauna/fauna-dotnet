@@ -130,6 +130,8 @@ public class QueryExprTests
             new QueryExpr(new QueryLiteral("nested"))
         );
         var query = mixedExpr.Serialize();
+
+        Assert.AreEqual(@"{""fql"":[""literal"",{""value"":{""@int"":""123""}},{""fql"":[""nested""]}]}", query);
     }
 
     [Test]
