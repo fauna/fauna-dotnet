@@ -104,13 +104,13 @@ public class QueryLiteralTests
         Assert.AreEqual(expected, actual);
     }
 
-
     [Test]
     public void Serialize_CorrectlyEncodesNewLineCharacters()
     {
-        var queryLiteral = new QueryLiteral(@"test
-value");
-        var expected = "\"test\\nvalue\"";
+        var newline = Environment.NewLine;
+        var expectedNewline = newline.Replace("\r", "\\r").Replace("\n", "\\n");
+        var queryLiteral = new QueryLiteral("test" + newline + "value");
+        var expected = $"\"test{expectedNewline}value\"";
         var actual = queryLiteral.Serialize();
         Assert.AreEqual(expected, actual);
     }
