@@ -1,6 +1,5 @@
 using System.Text.RegularExpressions;
 using Fauna.Serialization;
-using Fauna.Serialization.Attributes;
 using Fauna.Types;
 using NUnit.Framework;
 

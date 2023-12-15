@@ -312,14 +312,14 @@ public class Utf8FaunaReaderTests
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>
         {
-            new(TokenType.StartSet, null),
+            new(TokenType.StartPage, null),
             new(TokenType.FieldName, "data"),
             new(TokenType.StartArray, null),
             new(TokenType.Int, 99),
             new(TokenType.EndArray, null),
             new(TokenType.FieldName, "after"),
             new(TokenType.String, "afterme"),
-            new(TokenType.EndSet, null)
+            new(TokenType.EndPage, null)
         };
 
         AssertReader(reader, expectedTokens);
