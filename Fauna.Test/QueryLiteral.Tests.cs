@@ -104,6 +104,17 @@ public class QueryLiteralTests
         Assert.AreEqual(expected, actual);
     }
 
+
+    [Test]
+    public void Serialize_CorrectlyEncodesNewLineCharacters()
+    {
+        var queryLiteral = new QueryLiteral(@"test
+value");
+        var expected = "\"test\\nvalue\"";
+        var actual = queryLiteral.Serialize();
+        Assert.AreEqual(expected, actual);
+    }
+
     [Test]
     public void Serialize_WithSpecialCharacters()
     {

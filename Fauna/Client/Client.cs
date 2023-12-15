@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Fauna.Constants;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -54,10 +55,12 @@ public class Client
 
     private static void Serialize(Stream stream, Query query)
     {
-        stream.Write(Encoding.UTF8.GetBytes("{\"query\":"));
-        query.Serialize(stream);
-        stream.Write(Encoding.UTF8.GetBytes("}"));
-        stream.Flush();
+        using var writer = new Utf8FaunaWriter(stream);
+        writer.WriteStartObject();
+        writer.WriteFieldName("query");
+        query.Serialize(writer);
+        writer.WriteEndObject();
+        writer.Flush();
     }
 
     private Dictionary<string, string> GetRequestHeaders(QueryOptions? queryOptions)

@@ -13,11 +13,12 @@ public sealed class QueryVal<T> : Query, IQueryFragment
 
     public T Unwrap { get; }
 
-    public override void Serialize(Stream stream)
+    public override void Serialize(Utf8FaunaWriter writer)
     {
-        stream.Write(Encoding.UTF8.GetBytes("{\"value\":"));
-        Serializer.Serialize(stream, Unwrap);
-        stream.Write(Encoding.UTF8.GetBytes("}"));
+        writer.WriteStartObject();
+        writer.WriteFieldName("value");
+        Serializer.Serialize(writer, Unwrap);
+        writer.WriteEndObject();
     }
 
     public override bool Equals(Query? o) => IsEqual(o as QueryVal<T>);

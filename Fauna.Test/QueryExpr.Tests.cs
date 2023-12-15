@@ -99,7 +99,7 @@ public class QueryExprTests
                     ""fql"": [
                         ""let product = Product.firstWhere(.backorderLimit == "",
                         { ""value"": { ""@int"": ""15""} },
-                        "" && .backordered == "",
+                        "" \u0026\u0026 .backordered == "",
                         { ""value"": false },
                         "")!; product.quantity;""
                     ]
