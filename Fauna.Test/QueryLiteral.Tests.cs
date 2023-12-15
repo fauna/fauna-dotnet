@@ -119,7 +119,7 @@ public class QueryLiteralTests
     public void Serialize_WithSpecialCharacters()
     {
         var stringValue = "Line1\nLine2\t\"Quote\" and a \\ backslash";
-        var expected = "\"Line1\\nLine2\\t\\\"Quote\\\" and a \\\\ backslash\"";
+        var expected = @"""Line1\nLine2\t\u0022Quote\u0022 and a \\ backslash""";
         var queryLiteral = new QueryLiteral(stringValue);
         var actual = queryLiteral.Serialize();
         Assert.AreEqual(expected, actual);
