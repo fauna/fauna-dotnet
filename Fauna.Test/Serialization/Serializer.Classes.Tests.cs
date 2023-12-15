@@ -21,6 +21,28 @@ public partial class SerializerTests
         public string? Ignored { get; set; }
     }
 
+    [FaunaObject]
+    private class ClassWithInvalidPropertyTypeHint
+    {
+        [Field("first_name", FaunaType.Int)] public string FirstName { get; set; } = "NotANumber";
+    }
+
+    private class ClassWithFieldAttributeAndWithoutFaunaObjectAttribute
+    {
+        [Field("first_name")] public string? FirstName { get; set; } = "Baz";
+    }
+
+    [FaunaObject]
+    private class ClassWithPropertyWithoutFieldAttribute
+    {
+        public string FirstName { get; set; } = "NotANumber";
+    }
+
+    private class ClassWithoutFieldAttribute
+    {
+        public string FirstName { get; set; } = "NotANumber";
+    }
+
     private class ThingWithStringOverride
     {
         private const string Name = "TheThing";

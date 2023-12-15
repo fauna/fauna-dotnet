@@ -5,6 +5,12 @@ namespace Fauna.Test;
 [TestFixture]
 public class QueryValTests
 {
+    class TestPoco
+    {
+        public string? Property1 { get; set; }
+        public int Property2 { get; set; }
+    }
+
     [Test]
     public void Ctor_WrapsFloatCorrectly()
     {
@@ -55,6 +61,49 @@ public class QueryValTests
     {
         var actual = new QueryVal<string?>(null);
         Assert.IsNull(actual.Unwrap);
+    }
+
+    [TestCase(" ")]
+    [TestCase("\t")]
+    [TestCase("\n")]
+    public void Ctor_WrapsWhitespaceString(string expected)
+    {
+        var queryLiteral = new QueryVal<string>(expected);
+        Assert.AreEqual(expected, queryLiteral.Unwrap);
+    }
+
+    [Test]
+    public void Ctor_WrapsPoco()
+    {
+        string property1 = "value123";
+        int property2 = 123;
+        var poco = new TestPoco { Property1 = property1, Property2 = property2 };
+        var queryVal = new QueryVal<TestPoco>(poco);
+        Assert.IsInstanceOf<TestPoco>(queryVal.Unwrap);
+        Assert.AreEqual(property1, queryVal.Unwrap.Property1);
+        Assert.AreEqual(property2, queryVal.Unwrap.Property2);
+    }
+
+    [Test]
+    public void Ctor_WrapsDictionary()
+    {
+        string value1 = "value123";
+        int value2 = 123;
+        var dictionary = new Dictionary<string, object> { { "key1", value1 }, { "key2", value2 } };
+        var queryVal = new QueryVal<IDictionary<string, object>>(dictionary);
+        Assert.AreEqual(2, queryVal.Unwrap.Count);
+        Assert.AreEqual(value1, queryVal.Unwrap["key1"]);
+        Assert.AreEqual(value2, queryVal.Unwrap["key2"]);
+    }
+
+    [Test]
+    public void Ctor_WrapsList()
+    {
+        var list = new List<int> { 57, 75 };
+        var queryVal = new QueryVal<List<int>>(list);
+        Assert.AreEqual(2, queryVal.Unwrap.Count);
+        Assert.AreEqual(57, queryVal.Unwrap[0]);
+        Assert.AreEqual(75, queryVal.Unwrap[1]);
     }
 
     [Test]
