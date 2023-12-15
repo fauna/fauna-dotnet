@@ -8,11 +8,10 @@ namespace Fauna;
 public interface IQueryFragment
 {
     /// <summary>
-    /// Serializes the query fragment into a string format.
+    /// Serializes the query fragment into the provided stream.
     /// </summary>
-    /// <returns>A string representation of the query fragment.</returns>
+    /// <param name="stream">The stream to which the query fragment is serialized.</param>
     void Serialize(Stream stream);
-    // string Serialize();
 }
 
 public static class IQueryFragmentExtensions
