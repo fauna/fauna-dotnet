@@ -1,5 +1,4 @@
 using Fauna.Serialization;
-using Fauna.Serialization.Attributes;
 using Fauna.Types;
 using NUnit.Framework;
 
@@ -8,7 +7,6 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public partial class SerializerTests
 {
-
     [Test]
     public void DeserializeValues()
     {
@@ -30,6 +28,79 @@ public partial class SerializerTests
             var result = Serializer.Deserialize(entry.Key);
             Assert.AreEqual(entry.Value, result);
         }
+    }
+
+    [Test]
+    public void DeserializeStringGeneric()
+    {
+        var result = Serializer.Deserialize<string>("\"hello\"");
+        Assert.AreEqual("hello", result);
+    }
+
+    [Test]
+    public void DeserializeNullableGeneric()
+    {
+        var result = Serializer.Deserialize<string?>("null");
+        Assert.IsNull(result);
+    }
+
+    [Test]
+    public void DeserializeIntGeneric()
+    {
+        var result = Serializer.Deserialize<int>(@"{""@int"":""42""}");
+        Assert.AreEqual(42, result);
+    }
+
+
+    [Test]
+    public void DeserializeDateGeneric()
+    {
+        var result = Serializer.Deserialize<DateTime>(@"{""@date"": ""2023-12-03""}");
+        Assert.AreEqual(new DateTime(2023, 12, 3), result);
+    }
+
+    [Test]
+    public void DeserializeTimeGeneric()
+    {
+        var result = Serializer.Deserialize<DateTime>(@"{""@time"": ""2023-12-03T05:52:10.000001-09:00""}");
+        var expected = new DateTime(2023, 12, 3, 14, 52, 10, 0, DateTimeKind.Utc).AddTicks(10).ToLocalTime();
+        Assert.AreEqual(expected, result);
+    }
+
+    [Test]
+    public void DeserializeDocument()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize<Document>(given);
+        Assert.AreEqual("123", actual.Id);
+        Assert.AreEqual(new Module("MyColl"), actual.Collection);
+        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
+        Assert.AreEqual("user_value", actual["user_field"]);
+    }
+
+    [Test]
+    public void DeserializeRef()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""}
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize<Ref>(given);
+        Assert.AreEqual("123", actual.Id);
+        Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
 
     [Test]
@@ -105,6 +176,23 @@ public partial class SerializerTests
         Assert.AreEqual(expected, result);
     }
 
+    [Test]
+    public void DeserializeIntoGenericDictionary()
+    {
+        const string given = @"{
+""k1"": { ""@int"": ""1"" },
+""k2"": { ""@int"": ""2"" },
+""k3"": { ""@int"": ""3"" }
+}";
+        var expected = new Dictionary<string, int>()
+        {
+            {"k1", 1},
+            {"k2", 2},
+            {"k3", 3}
+        };
+        var actual = Serializer.Deserialize<Dictionary<string, int>>(given);
+        Assert.AreEqual(expected, actual);
+    }
 
     [Test]
     public void DeserializeIntoPoco()
@@ -141,5 +229,42 @@ public partial class SerializerTests
         Assert.AreEqual("Luhrmann2", p.LastName);
         Assert.AreEqual(612, p.Age);
         Assert.IsNull(p.Ignored);
+    }
+
+    [Test]
+    public void DeserializeIntoList()
+    {
+        const string given = @"[""item1"",""item2""]";
+        var expected = new List<object> { "item1", "item2" };
+        var p = Serializer.Deserialize(given);
+        Assert.AreEqual(expected, p);
+    }
+
+    [Test]
+    public void DeserializeIntoGenericListWithPrimitive()
+    {
+        const string given = @"[""item1"",""item2""]";
+        var expected = new List<string> { "item1", "item2" };
+        var p = Serializer.Deserialize<List<string>>(given);
+        Assert.AreEqual(expected, p);
+    }
+
+    [Test]
+    public void DeserializeIntoGenericListWithPocoWithAttributes()
+    {
+        const string given = @"[
+{""first_name"":""Cleve"",""last_name"":""Stuart"",""age"":{""@int"":""100""}},
+{""first_name"":""Darren"",""last_name"":""Cunningham"",""age"":{""@int"":""101""}}
+]";
+        var peeps = Serializer.Deserialize<List<PersonWithAttributes>>(given);
+        var cleve = peeps[0];
+        var darren = peeps[1];
+        Assert.AreEqual("Cleve", cleve.FirstName);
+        Assert.AreEqual("Stuart", cleve.LastName);
+        Assert.AreEqual(100, cleve.Age);
+
+        Assert.AreEqual("Darren", darren.FirstName);
+        Assert.AreEqual("Cunningham", darren.LastName);
+        Assert.AreEqual(101, darren.Age);
     }
 }

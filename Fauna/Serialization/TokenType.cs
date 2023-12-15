@@ -17,10 +17,10 @@ public enum TokenType
     /// <summary>The token type is the end of a Fauna array.</summary>
     EndArray,
 
-    /// <summary>The token type is the start of a Fauna set.</summary>
-    StartSet,
-    /// <summary>The token type is the end of a Fauna set.</summary>
-    EndSet,
+    /// <summary>The token type is the start of a Fauna set (a.k.a. page).</summary>
+    StartPage,
+    /// <summary>The token type is the end of a Fauna set (a.k.a. page).</summary>
+    EndPage,
 
     /// <summary>The token type is the start of a Fauna ref.</summary>
     StartRef,

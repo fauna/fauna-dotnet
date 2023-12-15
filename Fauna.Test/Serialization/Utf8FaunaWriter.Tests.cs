@@ -22,6 +22,7 @@ public class Utf8FaunaWriterTests
     public void Cleanup()
     {
         _writer.Dispose();
+        _stream.Dispose();
     }
 
     private void AssertWriter(string expected)

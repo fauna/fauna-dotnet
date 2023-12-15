@@ -15,7 +15,7 @@ public ref struct Utf8FaunaReader
     private readonly HashSet<TokenType> _closers = new()
     {
         TokenType.EndObject,
-        TokenType.EndSet,
+        TokenType.EndPage,
         TokenType.EndDocument,
         TokenType.EndRef,
         TokenType.EndArray
@@ -50,7 +50,7 @@ public ref struct Utf8FaunaReader
         {
             case TokenType.StartObject:
             case TokenType.StartArray:
-            case TokenType.StartSet:
+            case TokenType.StartPage:
             case TokenType.StartRef:
             case TokenType.StartDocument:
                 SkipInternal();
@@ -351,8 +351,8 @@ public ref struct Utf8FaunaReader
                         break;
                     case "@set":
                         AdvanceTrue();
-                        CurrentTokenType = TokenType.StartSet;
-                        _tokenStack.Push(TokenType.StartSet);
+                        CurrentTokenType = TokenType.StartPage;
+                        _tokenStack.Push(TokenType.StartPage);
                         break;
                     case "@time":
                         HandleTaggedString(TokenType.Time);
@@ -383,8 +383,8 @@ public ref struct Utf8FaunaReader
                 CurrentTokenType = TokenType.EndDocument;
                 AdvanceTrue();
                 break;
-            case TokenType.StartSet:
-                CurrentTokenType = TokenType.EndSet;
+            case TokenType.StartPage:
+                CurrentTokenType = TokenType.EndPage;
                 AdvanceTrue();
                 break;
             case TokenType.StartRef:
