@@ -141,9 +141,4 @@ public class Client
     {
         return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
     }
-
-    private static string FormatMessage(string errorType, string message)
-    {
-        return $"{errorType}: {message}";
-    }
 }
