@@ -28,7 +28,7 @@ public class FaunaAbortException : FaunaQueryRuntimeException
     private void InitializeAbortData(QueryFailure queryFailure)
     {
         AbortData = queryFailure?.ErrorInfo.Abort is not null
-            ? Serializer.Deserialize(queryFailure.ErrorInfo.Abort.ToString())
+            ? Serializer.Deserialize(queryFailure.ErrorInfo.Abort)
             : null;
     }
 }
