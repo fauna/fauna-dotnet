@@ -15,5 +15,5 @@ public readonly struct ErrorInfo
     public object ConstraintFailures { get; init; }
 
     [JsonPropertyName(Error_AbortFieldName)]
-    public object Abort { get; init; }
+    public string Abort { get; init; }
 }
