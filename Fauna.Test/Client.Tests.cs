@@ -1,9 +1,9 @@
-using System.Buffers;
-using System.Net;
-using System.Text;
 using Fauna.Constants;
 using Fauna.Serialization;
 using NUnit.Framework;
+using System.Buffers;
+using System.Net;
+using System.Text;
 using Telerik.JustMock;
 
 namespace Fauna.Test;
@@ -46,6 +46,7 @@ public class ClientTests
     [Ignore("connected test")]
     public async Task CreateClientError()
     {
+        var expected = 123;
         var t = new { data = new { data = Array.Empty<object>() } };
         var c = new Client(
             new ClientConfig("secret")
@@ -60,14 +61,14 @@ public class ClientTests
         try
         {
             var r = await c.QueryAsync<string>(
-                new QueryExpr(new QueryLiteral("let x = 123; abort(x)")),
+                new QueryExpr(new QueryLiteral($"let x = {expected}; abort(x)")),
                 new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
         }
-        catch (FaunaException ex)
+        catch (FaunaAbortException ex)
         {
             Assert.AreEqual("abort", ex.QueryFailure.ErrorInfo.Code);
-            var abortNum = GetIntFromReader(ex.QueryFailure.ErrorInfo.Abort.ToString()!);
-            Assert.AreEqual(123, abortNum);
+            Assert.IsInstanceOf<int>(ex.AbortData);
+            Assert.AreEqual(expected, ex.AbortData);
             Console.WriteLine(ex.QueryFailure.Summary);
         }
     }
@@ -75,15 +76,16 @@ public class ClientTests
     [Test]
     public async Task AbortReturnsQueryFailureAndThrows()
     {
-        var responseBody = @"{
-            ""error"": {
-                ""code"": ""testAbort"",
+        var expected = 123;
+        var responseBody = $@"{{
+            ""error"": {{
+                ""code"": ""abort"",
                 ""message"": ""Query aborted."",
-                ""abort"": ""123""
-            },
-            ""summary"": ""error: Query aborted.\nat *query*:1:19\n  |\n1 | let x = 123; abort(x)\n  |                   ^^^\n  |"",
+                ""abort"": ""{{\""@int\"":\""{expected}\""}}""
+            }},
+            ""summary"": ""error: Query aborted.\nat *query*:1:19\n  |\n1 | let x = {expected}; abort(x)\n  |                   ^^^\n  |"",
             ""txn_ts"": 1702346199930000,
-            ""stats"": {
+            ""stats"": {{
                 ""compute_ops"": 1,
                 ""read_ops"": 0,
                 ""write_ops"": 0,
@@ -92,9 +94,9 @@ public class ClientTests
                 ""storage_bytes_read"": 261,
                 ""storage_bytes_write"": 0,
                 ""rate_limits_hit"": []
-            },
+            }},
             ""schema_version"": 0
-        }";
+        }}";
         var testMessage = new HttpResponseMessage(HttpStatusCode.BadRequest)
         {
             Content = new StringContent(responseBody)
@@ -113,12 +115,14 @@ public class ClientTests
 
         try
         {
-            var query = new QueryExpr(new QueryLiteral("let x = 123; abort(x)"));
+            var query = new QueryExpr(new QueryLiteral($"let x = {expected}; abort(x)"));
             var r = await c.QueryAsync<string>(query);
         }
-        catch (FaunaException ex)
+        catch (FaunaAbortException ex)
         {
-            Assert.AreEqual("testAbort", ex.QueryFailure.ErrorInfo.Code);
+            Assert.AreEqual("abort", ex.QueryFailure.ErrorInfo.Code);
+            Assert.IsInstanceOf<int>(ex.AbortData);
+            Assert.AreEqual(expected, ex.AbortData);
         }
     }
 
@@ -176,12 +180,5 @@ public class ClientTests
         var r2 = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         Assert.IsTrue(check);
-    }
-
-    private static int GetIntFromReader(string input)
-    {
-        var reader = new Utf8FaunaReader(input);
-        reader.Read();
-        return reader.GetInt();
     }
 }

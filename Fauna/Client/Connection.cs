@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
+using System.Security.Authentication;
+using System.Text.Json;
 
 namespace Fauna;
 
@@ -23,24 +24,72 @@ public class Connection : IConnection
         Stream body,
         Dictionary<string, string> headers)
     {
-        body.Position = 0;
-        var request = new HttpRequestMessage()
-        {
-            Content = new StreamContent(body),
-            Method = HttpMethod.Post,
-            RequestUri = new Uri(_endpoint, path)
-        };
+        string FormatMessage(string errorType, string message) => $"{errorType}: {message}";
 
-        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
-
-        foreach (var header in headers)
+        try
         {
-            request.Headers.Add(header.Key, header.Value);
+            body.Position = 0;
+            var request = new HttpRequestMessage()
+            {
+                Content = new StreamContent(body),
+                Method = HttpMethod.Post,
+                RequestUri = new Uri(_endpoint, path)
+            };
+
+            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+
+            foreach (var header in headers)
+            {
+                request.Headers.Add(header.Key, header.Value);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+
+            return await QueryResponse.GetFromHttpResponseAsync<T>(response);
         }
-
-        var response = await _httpClient.SendAsync(request);
-
-        return await QueryResponse.GetFromHttpResponseAsync<T>(response);
+        catch (HttpRequestException ex)
+        {
+            throw new FaunaNetworkException(FormatMessage("Network Error", ex.Message), ex);
+        }
+        catch (TimeoutException ex)
+        {
+            throw new FaunaQueryTimeoutException(FormatMessage("Operation Timed Out", ex.Message), ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            if (ex.CancellationToken.IsCancellationRequested)
+            {
+                throw new FaunaRetryableException(FormatMessage("Operation Canceled", ex.Message), ex);
+            }
+            else
+            {
+                throw new FaunaQueryTimeoutException(FormatMessage("Operation Timed Out", ex.Message), ex);
+            }
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new FaunaClientException(FormatMessage("Null Argument", ex.Message), ex);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new FaunaClientException(FormatMessage("Invalid Operation", ex.Message), ex);
+        }
+        catch (JsonException ex)
+        {
+            throw new FaunaProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
+        }
+        catch (AuthenticationException ex)
+        {
+            throw new FaunaServiceException(FormatMessage("Authentication Failed", ex.Message), ex);
+        }
+        catch (NotSupportedException ex)
+        {
+            throw new FaunaInvalidRequestException(FormatMessage("Not Supported Operation", ex.Message), ex);
+        }
+        catch (Exception ex)
+        {
+            throw new FaunaBaseException(FormatMessage("Unexpected Error", ex.Message), ex);
+        }
     }
 }

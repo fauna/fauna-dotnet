@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Fauna.Constants;
+﻿using Fauna.Constants;
 using Fauna.Serialization;
 
 namespace Fauna;
@@ -43,7 +42,34 @@ public class Client
 
         if (queryResponse is QueryFailure failure)
         {
-            throw new FaunaException(failure, "Query failure");
+            string FormatMessage(string errorType) => $"{errorType}: {failure.ErrorInfo.Message}";
+
+            throw failure.ErrorInfo.Code switch
+            {
+                // Authentication Errors
+                "unauthorized" => new FaunaServiceException(FormatMessage("Unauthorized"), failure),
+
+                // Query Errors
+                "invalid_query" => new FaunaQueryCheckException(FormatMessage("Invalid Query"), failure),
+                "invalid_argument" => new FaunaQueryRuntimeException(FormatMessage("Invalid Argument"), failure),
+                "abort" => new FaunaAbortException(FormatMessage("Abort"), failure),
+
+                // Request/Transaction Errors
+                "invalid_request" => new FaunaInvalidRequestException(FormatMessage("Invalid Request"), failure),
+                "contended_transaction" => new FaunaContendedTransactionException(FormatMessage("Contended Transaction"), failure),
+
+                // Capacity Errors
+                "limit_exceeded" => new FaunaThrottlingException(FormatMessage("Limit Exceeded"), failure),
+                "time_limit_exceeded" => new FaunaQueryTimeoutException(FormatMessage("Time Limit Exceeded"), failure),
+
+                // Server/Network Errors
+                "internal_error" => new FaunaServiceException(FormatMessage("Internal Error"), failure),
+                "bad_gateway" => new FaunaNetworkException(FormatMessage("Bad Gateway"), failure),
+                "timeout" => new FaunaQueryTimeoutException(FormatMessage("Timeout"), failure),
+                "gateway_timeout" => new FaunaNetworkException(FormatMessage("Gateway Timeout"), failure),
+
+                _ => new FaunaBaseException(FormatMessage("Unexpected Error"), failure),
+            };
         }
         else
         {
@@ -114,5 +140,10 @@ public class Client
     private static string EncodeQueryTags(Dictionary<string, string> tags)
     {
         return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
+    }
+
+    private static string FormatMessage(string errorType, string message)
+    {
+        return $"{errorType}: {message}";
     }
 }
