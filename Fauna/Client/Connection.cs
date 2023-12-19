@@ -54,7 +54,7 @@ public class Connection : IConnection
         }
         catch (TimeoutException ex)
         {
-            throw new FaunaQueryTimeoutException(FormatMessage("Operation Timed Out", ex.Message), ex);
+            throw new FaunaClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
         }
         catch (TaskCanceledException ex)
         {
@@ -64,7 +64,7 @@ public class Connection : IConnection
             }
             else
             {
-                throw new FaunaQueryTimeoutException(FormatMessage("Operation Timed Out", ex.Message), ex);
+                throw new FaunaClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
             }
         }
         catch (ArgumentNullException ex)
@@ -81,11 +81,11 @@ public class Connection : IConnection
         }
         catch (AuthenticationException ex)
         {
-            throw new FaunaServiceException(FormatMessage("Authentication Failed", ex.Message), ex);
+            throw new FaunaClientException(FormatMessage("Authentication Failed", ex.Message), ex);
         }
         catch (NotSupportedException ex)
         {
-            throw new FaunaInvalidRequestException(FormatMessage("Not Supported Operation", ex.Message), ex);
+            throw new FaunaClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
         }
         catch (Exception ex)
         {

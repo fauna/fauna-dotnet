@@ -5,9 +5,9 @@
 /// </summary>
 public class FaunaNetworkException : FaunaBaseException, IFaunaRetryableException
 {
-    public FaunaNetworkException(string message, QueryFailure? queryFailure = null)
-        : base(message, queryFailure) { }
+    public FaunaNetworkException(string message)
+        : base(message) { }
 
-    public FaunaNetworkException(string message, Exception innerException, QueryFailure? queryFailure = null)
-        : base(message, innerException, queryFailure) { }
+    public FaunaNetworkException(string message, Exception innerException)
+        : base(message, innerException) { }
 }

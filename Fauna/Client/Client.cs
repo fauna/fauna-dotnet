@@ -69,11 +69,11 @@ public class Client
 
                 // Server/Network Errors
                 "internal_error" => new FaunaServiceException(FormatMessage("Internal Error"), failure),
-                "bad_gateway" => new FaunaNetworkException(FormatMessage("Bad Gateway"), failure),
                 "timeout" => new FaunaQueryTimeoutException(FormatMessage("Timeout"), failure),
-                "gateway_timeout" => new FaunaNetworkException(FormatMessage("Gateway Timeout"), failure),
+                "bad_gateway" => new FaunaNetworkException(FormatMessage("Bad Gateway")),
+                "gateway_timeout" => new FaunaNetworkException(FormatMessage("Gateway Timeout")),
 
-                _ => new FaunaBaseException(FormatMessage("Unexpected Error"), failure),
+                _ => new FaunaBaseException(FormatMessage("Unexpected Error")),
             };
         }
         else
