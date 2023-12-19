@@ -32,6 +32,11 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
     {
+        if (query == null)
+        {
+            throw new FaunaClientException("Query cannot be null");
+        }
+
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 

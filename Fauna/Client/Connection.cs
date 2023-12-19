@@ -58,9 +58,9 @@ public class Connection : IConnection
         }
         catch (TaskCanceledException ex)
         {
-            if (ex.CancellationToken.IsCancellationRequested)
+            if (!ex.CancellationToken.IsCancellationRequested)
             {
-                throw new FaunaRetryableException(FormatMessage("Operation Canceled", ex.Message), ex);
+                throw new FaunaClientException(FormatMessage("Operation Canceled", ex.Message), ex);
             }
             else
             {
