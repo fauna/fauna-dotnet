@@ -43,7 +43,7 @@ public class FaunaAbortException : FaunaQueryRuntimeException
 
     private object? DeserializeAbortData()
     {
-        var abortDataString = QueryFailure?.ErrorInfo.Abort?.ToString();
+        var abortDataString = QueryFailure.ErrorInfo.Abort?.ToString();
         return !string.IsNullOrEmpty(abortDataString) ? Serializer.Deserialize(abortDataString) : null;
     }
 }
