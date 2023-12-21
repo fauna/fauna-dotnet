@@ -1,4 +1,5 @@
 using Fauna.Constants;
+using Fauna.Exceptions;
 using Fauna.Serialization;
 using NUnit.Framework;
 using System.Buffers;
@@ -85,13 +86,13 @@ public class ClientTests
 
         try
         {
-            var r = await c.QueryAsync<string>(
+            var r = await c.QueryAsync<int>(
                 new QueryExpr(new QueryLiteral($"let x = {expected}; abort(x)")),
                 new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
         }
-        catch (FaunaAbortException ex)
+        catch (AbortException ex)
         {
-            var abortData = ex.GetData<int>();
+            var abortData = ex.GetData();
             Assert.AreEqual("abort", ex.QueryFailure?.ErrorInfo.Code);
             Assert.IsInstanceOf<int>(abortData);
             Assert.AreEqual(expected, abortData);
@@ -132,9 +133,9 @@ public class ClientTests
             var query = new QueryExpr(new QueryLiteral($"let x = {expected}; abort(x)"));
             var r = await c.QueryAsync<string>(query);
         }
-        catch (FaunaAbortException ex)
+        catch (AbortException ex)
         {
-            var abortData = ex.GetData<int>();
+            var abortData = ex.GetData();
             Assert.AreEqual("abort", ex.QueryFailure?.ErrorInfo.Code);
             Assert.IsInstanceOf<int>(abortData);
             Assert.AreEqual(expected, abortData);

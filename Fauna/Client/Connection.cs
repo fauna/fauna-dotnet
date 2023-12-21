@@ -1,6 +1,7 @@
-﻿using System.Net.Http.Headers;
-using System.Security.Authentication;
+﻿using Fauna.Exceptions;
+using System.Net.Http.Headers;
 using System.Text.Json;
+using AuthenticationException = System.Security.Authentication.AuthenticationException;
 
 namespace Fauna;
 
@@ -50,46 +51,42 @@ public class Connection : IConnection
         }
         catch (HttpRequestException ex)
         {
-            throw new FaunaNetworkException(FormatMessage("Network Error", ex.Message), ex);
-        }
-        catch (TimeoutException ex)
-        {
-            throw new FaunaClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
+            throw new NetworkException(FormatMessage("Network Error", ex.Message), ex);
         }
         catch (TaskCanceledException ex)
         {
             if (!ex.CancellationToken.IsCancellationRequested)
             {
-                throw new FaunaClientException(FormatMessage("Operation Canceled", ex.Message), ex);
+                throw new ClientException(FormatMessage("Operation Canceled", ex.Message), ex);
             }
             else
             {
-                throw new FaunaClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
+                throw new ClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
             }
         }
         catch (ArgumentNullException ex)
         {
-            throw new FaunaClientException(FormatMessage("Null Argument", ex.Message), ex);
+            throw new ClientException(FormatMessage("Null Argument", ex.Message), ex);
         }
         catch (InvalidOperationException ex)
         {
-            throw new FaunaClientException(FormatMessage("Invalid Operation", ex.Message), ex);
+            throw new ClientException(FormatMessage("Invalid Operation", ex.Message), ex);
         }
         catch (JsonException ex)
         {
-            throw new FaunaProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
+            throw new ProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
         }
         catch (AuthenticationException ex)
         {
-            throw new FaunaClientException(FormatMessage("Authentication Failed", ex.Message), ex);
+            throw new ClientException(FormatMessage("Authentication Failed", ex.Message), ex);
         }
         catch (NotSupportedException ex)
         {
-            throw new FaunaClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
+            throw new ClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
         }
         catch (Exception ex)
         {
-            throw new FaunaBaseException(FormatMessage("Unexpected Error", ex.Message), ex);
+            throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
         }
     }
 }

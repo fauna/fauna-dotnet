@@ -1,4 +1,5 @@
 ﻿using Fauna.Constants;
+using Fauna.Exceptions;
 using Fauna.Serialization;
 
 namespace Fauna;
@@ -34,7 +35,7 @@ public class Client
     {
         if (query == null)
         {
-            throw new FaunaClientException("Query cannot be null");
+            throw new ClientException("Query cannot be null");
         }
 
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
@@ -51,29 +52,35 @@ public class Client
 
             throw failure.ErrorInfo.Code switch
             {
-                // Authentication Errors
-                "unauthorized" => new FaunaServiceException(FormatMessage("Unauthorized"), failure),
+                // Auth Errors
+                "unauthorized" => new AuthenticationException(failure, FormatMessage("Unauthorized")),
+                "forbidden" => new AuthorizationException(failure, FormatMessage("Forbidden")),
 
                 // Query Errors
-                "invalid_query" => new FaunaQueryCheckException(FormatMessage("Invalid Query"), failure),
-                "invalid_argument" => new FaunaQueryRuntimeException(FormatMessage("Invalid Argument"), failure),
-                "abort" => new FaunaAbortException(FormatMessage("Abort"), failure),
+                "invalid_query" or
+                "invalid_function_definition" or
+                "invalid_identifier" or
+                "invalid_syntax" or
+                "invalid_type" => new QueryCheckException(failure, FormatMessage("Invalid Query")),
+                "invalid_argument" => new QueryRuntimeException(failure, FormatMessage("Invalid Argument")),
+                "abort" => new AbortException(failure, FormatMessage("Abort")),
 
                 // Request/Transaction Errors
-                "invalid_request" => new FaunaInvalidRequestException(FormatMessage("Invalid Request"), failure),
-                "contended_transaction" => new FaunaContendedTransactionException(FormatMessage("Contended Transaction"), failure),
+                "invalid_request" => new InvalidRequestException(failure, FormatMessage("Invalid Request")),
+                "contended_transaction" => new ContendedTransactionException(failure, FormatMessage("Contended Transaction")),
 
                 // Capacity Errors
-                "limit_exceeded" => new FaunaThrottlingException(FormatMessage("Limit Exceeded"), failure),
-                "time_limit_exceeded" => new FaunaQueryTimeoutException(FormatMessage("Time Limit Exceeded"), failure),
+                "limit_exceeded" => new ThrottlingException(failure, FormatMessage("Limit Exceeded")),
+                "time_limit_exceeded" => new QueryTimeoutException(failure, FormatMessage("Time Limit Exceeded")),
 
                 // Server/Network Errors
-                "internal_error" => new FaunaServiceException(FormatMessage("Internal Error"), failure),
-                "timeout" => new FaunaQueryTimeoutException(FormatMessage("Timeout"), failure),
-                "bad_gateway" => new FaunaNetworkException(FormatMessage("Bad Gateway")),
-                "gateway_timeout" => new FaunaNetworkException(FormatMessage("Gateway Timeout")),
+                "internal_error" => new ServiceException(failure, FormatMessage("Internal Error")),
+                "timeout" or
+                "time_out" => new QueryTimeoutException(failure, FormatMessage("Timeout")),
+                "bad_gateway" => new NetworkException(FormatMessage("Bad Gateway")),
+                "gateway_timeout" => new NetworkException(FormatMessage("Gateway Timeout")),
 
-                _ => new FaunaBaseException(FormatMessage("Unexpected Error")),
+                _ => new FaunaException(FormatMessage("Unexpected Error")),
             };
         }
         else
