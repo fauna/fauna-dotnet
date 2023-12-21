@@ -105,10 +105,10 @@ public class AbortExceptionTests
         var queryFailure = CreateQueryFailure(@$"{{\""@object\"":{{\""Name\"":\""{mockData.Name}\"",\""Age\"":{{\""@int\"":\""{mockData.Age}\""}}}}}}");
         var exception = new AbortException(queryFailure, "Test message");
 
-        var callResult1 = exception.GetData<TestClass>();
-        var typedCallResult1 = exception.GetData();
-        var callResult2 = exception.GetData<TestClass>();
-        var typedCallResult2 = exception.GetData();
+        var callResult1 = exception.GetData();
+        var typedCallResult1 = exception.GetData<TestClass>();
+        var callResult2 = exception.GetData();
+        var typedCallResult2 = exception.GetData<TestClass>();
 
         Assert.AreSame(callResult1, callResult2);
         Assert.AreSame(typedCallResult1, typedCallResult2);
