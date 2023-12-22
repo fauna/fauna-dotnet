@@ -1,4 +1,5 @@
 ﻿using Fauna.Exceptions;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using AuthenticationException = System.Security.Authentication.AuthenticationException;
@@ -9,10 +10,14 @@ public class Connection : IConnection
 {
     private readonly Uri _endpoint;
     private readonly HttpClient _httpClient;
+    private readonly int _maxRetries;
+    private readonly TimeSpan _maxBackoff;
 
-    public Connection(Uri endpoint, TimeSpan connectionTimeout)
+    public Connection(Uri endpoint, TimeSpan connectionTimeout, int maxRetries, TimeSpan maxBackoff)
     {
         _endpoint = endpoint;
+        _maxRetries = maxRetries;
+        _maxBackoff = maxBackoff;
         _httpClient = new HttpClient()
         {
             BaseAddress = endpoint,
@@ -27,66 +32,94 @@ public class Connection : IConnection
     {
         string FormatMessage(string errorType, string message) => $"{errorType}: {message}";
 
-        try
+        HttpResponseMessage? response = null;
+        for (int attempt = 0; attempt < _maxRetries; attempt++)
         {
-            body.Position = 0;
-            var request = new HttpRequestMessage()
+            try
             {
-                Content = new StreamContent(body),
-                Method = HttpMethod.Post,
-                RequestUri = new Uri(_endpoint, path)
-            };
+                var request = CreateHttpRequest(path, body, headers);
+                response = await _httpClient.SendAsync(request);
 
-            request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+                if (response.IsSuccessStatusCode || response.StatusCode != HttpStatusCode.TooManyRequests)
+                {
+                    return await QueryResponse.GetFromHttpResponseAsync<T>(response);
+                }
 
-            foreach (var header in headers)
-            {
-                request.Headers.Add(header.Key, header.Value);
+                if (attempt < _maxRetries - 1)
+                {
+                    await ApplyExponentialBackoff(attempt);
+                }
             }
-
-            var response = await _httpClient.SendAsync(request);
-
-            return await QueryResponse.GetFromHttpResponseAsync<T>(response);
-        }
-        catch (HttpRequestException ex)
-        {
-            throw new NetworkException(FormatMessage("Network Error", ex.Message), ex);
-        }
-        catch (TaskCanceledException ex)
-        {
-            if (!ex.CancellationToken.IsCancellationRequested)
+            catch (HttpRequestException ex)
             {
-                throw new ClientException(FormatMessage("Operation Canceled", ex.Message), ex);
+                throw new NetworkException(FormatMessage("Network Error", ex.Message), ex);
             }
-            else
+            catch (TaskCanceledException ex)
             {
-                throw new ClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
+                if (!ex.CancellationToken.IsCancellationRequested)
+                {
+                    throw new ClientException(FormatMessage("Operation Canceled", ex.Message), ex);
+                }
+                else
+                {
+                    throw new ClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
+                }
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ClientException(FormatMessage("Null Argument", ex.Message), ex);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new ClientException(FormatMessage("Invalid Operation", ex.Message), ex);
+            }
+            catch (JsonException ex)
+            {
+                throw new ProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
+            }
+            catch (AuthenticationException ex)
+            {
+                throw new ClientException(FormatMessage("Authentication Failed", ex.Message), ex);
+            }
+            catch (NotSupportedException ex)
+            {
+                throw new ClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
+            }
+            catch (Exception ex)
+            {
+                throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
             }
         }
-        catch (ArgumentNullException ex)
+
+        return response is null
+            ? throw new ClientException("No response received from the server.")
+            : await QueryResponse.GetFromHttpResponseAsync<T>(response);
+    }
+
+    private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)
+    {
+        body.Position = 0;
+        var request = new HttpRequestMessage
         {
-            throw new ClientException(FormatMessage("Null Argument", ex.Message), ex);
-        }
-        catch (InvalidOperationException ex)
+            Content = new StreamContent(body),
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(_endpoint, path)
+        };
+
+        request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
+
+        foreach (var header in headers)
         {
-            throw new ClientException(FormatMessage("Invalid Operation", ex.Message), ex);
+            request.Headers.Add(header.Key, header.Value);
         }
-        catch (JsonException ex)
-        {
-            throw new ProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
-        }
-        catch (AuthenticationException ex)
-        {
-            throw new ClientException(FormatMessage("Authentication Failed", ex.Message), ex);
-        }
-        catch (NotSupportedException ex)
-        {
-            throw new ClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
-        }
-        catch (Exception ex)
-        {
-            throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
-        }
+
+        return request;
+    }
+
+    private async Task ApplyExponentialBackoff(int attempt)
+    {
+        var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt));
+        await Task.Delay(delay > _maxBackoff ? _maxBackoff : delay);
     }
 }
