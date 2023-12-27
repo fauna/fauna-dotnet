@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Fauna.Constants;
+﻿using Fauna.Constants;
+using Fauna.Exceptions;
 using Fauna.Serialization;
 
 namespace Fauna;
@@ -19,7 +19,7 @@ public class Client
     }
 
     public Client(ClientConfig config) :
-        this(config, new Connection(config.Endpoint, config.ConnectionTimeout))
+        this(config, new Connection(config.Endpoint, config.ConnectionTimeout, config.MaxRetries, config.MaxBackoff))
     {
     }
 
@@ -33,6 +33,11 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
     {
+        if (query == null)
+        {
+            throw new ClientException("Query cannot be null");
+        }
+
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 
@@ -43,7 +48,40 @@ public class Client
 
         if (queryResponse is QueryFailure failure)
         {
-            throw new FaunaException(failure, "Query failure");
+            string FormatMessage(string errorType) => $"{errorType}: {failure.ErrorInfo.Message}";
+
+            throw failure.ErrorInfo.Code switch
+            {
+                // Auth Errors
+                "unauthorized" => new AuthenticationException(failure, FormatMessage("Unauthorized")),
+                "forbidden" => new AuthorizationException(failure, FormatMessage("Forbidden")),
+
+                // Query Errors
+                "invalid_query" or
+                "invalid_function_definition" or
+                "invalid_identifier" or
+                "invalid_syntax" or
+                "invalid_type" => new QueryCheckException(failure, FormatMessage("Invalid Query")),
+                "invalid_argument" => new QueryRuntimeException(failure, FormatMessage("Invalid Argument")),
+                "abort" => new AbortException(failure, FormatMessage("Abort")),
+
+                // Request/Transaction Errors
+                "invalid_request" => new InvalidRequestException(failure, FormatMessage("Invalid Request")),
+                "contended_transaction" => new ContendedTransactionException(failure, FormatMessage("Contended Transaction")),
+
+                // Capacity Errors
+                "limit_exceeded" => new ThrottlingException(failure, FormatMessage("Limit Exceeded")),
+                "time_limit_exceeded" => new QueryTimeoutException(failure, FormatMessage("Time Limit Exceeded")),
+
+                // Server/Network Errors
+                "internal_error" => new ServiceException(failure, FormatMessage("Internal Error")),
+                "timeout" or
+                "time_out" => new QueryTimeoutException(failure, FormatMessage("Timeout")),
+                "bad_gateway" => new NetworkException(FormatMessage("Bad Gateway")),
+                "gateway_timeout" => new NetworkException(FormatMessage("Gateway Timeout")),
+
+                _ => new FaunaException(FormatMessage("Unexpected Error")),
+            };
         }
         else
         {

@@ -29,8 +29,7 @@ public class IntegrationTests
             LastName = "O'Keeffe",
             Age = 136
         };
-
-        var conn = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5));
+        var conn = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
         var client = new Client(new ClientConfig("secret"), conn);
         var query = FQL($"{expected}");
         var result = await client.QueryAsync<Person>(query);

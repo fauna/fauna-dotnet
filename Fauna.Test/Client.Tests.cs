@@ -1,9 +1,10 @@
+using Fauna.Constants;
+using Fauna.Exceptions;
+using Fauna.Serialization;
+using NUnit.Framework;
 using System.Buffers;
 using System.Net;
 using System.Text;
-using Fauna.Constants;
-using Fauna.Serialization;
-using NUnit.Framework;
 using Telerik.JustMock;
 
 namespace Fauna.Test;
@@ -11,6 +12,49 @@ namespace Fauna.Test;
 [TestFixture]
 public class ClientTests
 {
+    private IConnection? _mockConnection;
+    private ClientConfig? _defaultConfig;
+
+
+    [SetUp]
+    public void SetUp()
+    {
+        _mockConnection = Mock.Create<IConnection>();
+        _defaultConfig = new ClientConfig("secret")
+        {
+            Endpoint = Endpoints.Local,
+            DefaultQueryOptions = new QueryOptions
+            {
+                QueryTags = new Dictionary<string, string> { { "lorem", "ipsum" } }
+            },
+            ConnectionTimeout = TimeSpan.FromSeconds(10)
+        };
+    }
+
+    private Client CreateClientWithMockConnection(ClientConfig? config = null, IConnection? connection = null)
+    {
+        return new Client(
+            config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"),
+            connection ?? _mockConnection ?? throw new InvalidOperationException("Mock connection is not set")
+        );
+    }
+
+    private Client CreateClient(ClientConfig? config = null, IConnection? connection = null)
+    {
+        return connection != null
+            ? new Client(config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"), connection)
+            : new Client(config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"));
+    }
+
+    private async Task<QueryResponse> MockQueryResponseAsync<T>(string responseBody, HttpStatusCode statusCode)
+    {
+        var testMessage = new HttpResponseMessage(statusCode)
+        {
+            Content = new StringContent(responseBody)
+        };
+        return await QueryResponse.GetFromHttpResponseAsync<T>(testMessage);
+    }
+
     private void Write(string json)
     {
         var reader = new Utf8FaunaReader(new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(json)));
@@ -23,22 +67,13 @@ public class ClientTests
 
     [Test]
     [Ignore("connected test")]
-    public async Task CreateClient()
+    public async Task CreateClientTest()
     {
-        var t = new { data = new { data = Array.Empty<object>() } };
-        var c = new Client(
-            new ClientConfig("secret")
-            {
-                Endpoint = Constants.Endpoints.Local,
-                DefaultQueryOptions = new QueryOptions
-                {
-                    QueryTags = new Dictionary<string, string> { { "lorem", "ipsum" } }
-                }
-            });
-        var r = await c.QueryAsync<string>(
+        var c = CreateClient();
+        var r = await c.QueryAsync<int>(
             new QueryExpr(new QueryLiteral("let x = 123; x")),
             new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
-        Write(r.Data);
+        Write(r.Data.ToString());
         Console.WriteLine(string.Join(',', r.QueryTags!.Select(kv => $"{kv.Key}={kv.Value}")));
     }
 
@@ -46,44 +81,38 @@ public class ClientTests
     [Ignore("connected test")]
     public async Task CreateClientError()
     {
-        var t = new { data = new { data = Array.Empty<object>() } };
-        var c = new Client(
-            new ClientConfig("secret")
-            {
-                Endpoint = Endpoints.Local,
-                DefaultQueryOptions = new QueryOptions
-                {
-                    QueryTags = new Dictionary<string, string> { { "lorem", "ipsum" } }
-                }
-            });
+        var expected = 123;
+        var c = CreateClient();
 
         try
         {
-            var r = await c.QueryAsync<string>(
-                new QueryExpr(new QueryLiteral("let x = 123; abort(x)")),
+            var r = await c.QueryAsync<int>(
+                new QueryExpr(new QueryLiteral($"let x = {expected}; abort(x)")),
                 new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
         }
-        catch (FaunaException ex)
+        catch (AbortException ex)
         {
-            Assert.AreEqual("abort", ex.QueryFailure.ErrorInfo.Code);
-            var abortNum = GetIntFromReader(ex.QueryFailure.ErrorInfo.Abort.ToString()!);
-            Assert.AreEqual(123, abortNum);
-            Console.WriteLine(ex.QueryFailure.Summary);
+            var abortData = ex.GetData();
+            Assert.AreEqual("abort", ex.QueryFailure?.ErrorInfo.Code);
+            Assert.IsInstanceOf<int>(abortData);
+            Assert.AreEqual(expected, abortData);
+            Console.WriteLine(ex.QueryFailure?.Summary);
         }
     }
 
     [Test]
     public async Task AbortReturnsQueryFailureAndThrows()
     {
-        var responseBody = @"{
-            ""error"": {
-                ""code"": ""testAbort"",
+        var expected = 123;
+        var responseBody = $@"{{
+            ""error"": {{
+                ""code"": ""abort"",
                 ""message"": ""Query aborted."",
-                ""abort"": ""123""
-            },
-            ""summary"": ""error: Query aborted.\nat *query*:1:19\n  |\n1 | let x = 123; abort(x)\n  |                   ^^^\n  |"",
+                ""abort"": ""{{\""@int\"":\""{expected}\""}}""
+            }},
+            ""summary"": ""error: Query aborted.\nat *query*:1:19\n  |\n1 | let x = {expected}; abort(x)\n  |                   ^^^\n  |"",
             ""txn_ts"": 1702346199930000,
-            ""stats"": {
+            ""stats"": {{
                 ""compute_ops"": 1,
                 ""read_ops"": 0,
                 ""write_ops"": 0,
@@ -92,33 +121,24 @@ public class ClientTests
                 ""storage_bytes_read"": 261,
                 ""storage_bytes_write"": 0,
                 ""rate_limits_hit"": []
-            },
+            }},
             ""schema_version"": 0
-        }";
-        var testMessage = new HttpResponseMessage(HttpStatusCode.BadRequest)
-        {
-            Content = new StringContent(responseBody)
-        };
-        var qr = await QueryResponse.GetFromHttpResponseAsync<string>(testMessage);
-        var conn = Mock.Create<IConnection>();
-        Mock.Arrange(() =>
-            conn.DoPostAsync<string>(
-                Arg.IsAny<string>(),
-                Arg.IsAny<Stream>(),
-                Arg.IsAny<Dictionary<string, string>>()
-            )
-        ).Returns(Task.FromResult(qr));
-
-        var c = new Client(new ClientConfig("secret"), conn);
+        }}";
+        var qr = await MockQueryResponseAsync<string>(responseBody, HttpStatusCode.BadRequest);
+        Mock.Arrange(() => _mockConnection.DoPostAsync<string>(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
+        var c = CreateClientWithMockConnection();
 
         try
         {
-            var query = new QueryExpr(new QueryLiteral("let x = 123; abort(x)"));
+            var query = new QueryExpr(new QueryLiteral($"let x = {expected}; abort(x)"));
             var r = await c.QueryAsync<string>(query);
         }
-        catch (FaunaException ex)
+        catch (AbortException ex)
         {
-            Assert.AreEqual("testAbort", ex.QueryFailure.ErrorInfo.Code);
+            var abortData = ex.GetData();
+            Assert.AreEqual("abort", ex.QueryFailure?.ErrorInfo.Code);
+            Assert.IsInstanceOf<int>(abortData);
+            Assert.AreEqual(expected, abortData);
         }
     }
 
@@ -142,27 +162,16 @@ public class ClientTests
             },
             ""schema_version"": 0
         }";
-        var testMessage = new HttpResponseMessage(HttpStatusCode.OK)
-        {
-            Content = new StringContent(responseBody)
-        };
-        var qr = await QueryResponse.GetFromHttpResponseAsync<string>(testMessage);
-        var conn = Mock.Create<IConnection>();
-        Mock.Arrange(() =>
-            conn.DoPostAsync<string>(
-                Arg.IsAny<string>(),
-                Arg.IsAny<Stream>(),
-                Arg.IsAny<Dictionary<string, string>>()
-            )
-        ).Returns(Task.FromResult(qr));
+        var qr = await MockQueryResponseAsync<string>(responseBody, HttpStatusCode.OK);
+        Mock.Arrange(() => _mockConnection.DoPostAsync<string>(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
 
-        var c = new Client(new ClientConfig("secret"), conn);
+        var c = CreateClientWithMockConnection();
         var r = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         bool check = false;
 
         Mock.Arrange(() =>
-            conn.DoPostAsync<string>(
+            _mockConnection.DoPostAsync<string>(
                 Arg.IsAny<string>(),
                 Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()
@@ -176,12 +185,5 @@ public class ClientTests
         var r2 = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         Assert.IsTrue(check);
-    }
-
-    private static int GetIntFromReader(string input)
-    {
-        var reader = new Utf8FaunaReader(input);
-        reader.Read();
-        return reader.GetInt();
     }
 }

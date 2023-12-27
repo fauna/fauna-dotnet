@@ -1,11 +1,14 @@
-namespace Fauna;
+﻿namespace Fauna.Exceptions;
 
+/// <summary>
+/// Represents the base exception class for all exceptions specific to Fauna interactions.
+/// </summary>
 public class FaunaException : Exception
 {
-    public QueryFailure QueryFailure { get; init; }
+    public FaunaException() { }
 
-    public FaunaException(QueryFailure queryFailure, string? message = null) : base(message)
-    {
-        QueryFailure = queryFailure;
-    }
+    public FaunaException(string message) : base(message) { }
+
+    public FaunaException(string message, Exception innerException)
+    : base(message, innerException) { }
 }
