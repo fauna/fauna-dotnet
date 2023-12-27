@@ -6,6 +6,9 @@ using AuthenticationException = System.Security.Authentication.AuthenticationExc
 
 namespace Fauna;
 
+/// <summary>
+/// Represents a connection to a Fauna database.
+/// </summary>
 public class Connection : IConnection
 {
     private readonly Uri _endpoint;
@@ -13,6 +16,13 @@ public class Connection : IConnection
     private readonly int _maxRetries;
     private readonly TimeSpan _maxBackoff;
 
+    /// <summary>
+    /// Initializes a new instance of the Connection class.
+    /// </summary>
+    /// <param name="endpoint">The URI of the Fauna database endpoint.</param>
+    /// <param name="connectionTimeout">The timeout duration for HTTP connections.</param>
+    /// <param name="maxRetries">The maximum number of retry attempts for a request.</param>
+    /// <param name="maxBackoff">The maximum duration to wait before retrying a request.</param>
     public Connection(Uri endpoint, TimeSpan connectionTimeout, int maxRetries, TimeSpan maxBackoff)
     {
         _endpoint = endpoint;
@@ -25,6 +35,20 @@ public class Connection : IConnection
         };
     }
 
+    /// <summary>
+    /// Asynchronously sends a POST request to the specified path with the provided body and headers.
+    /// Implements retry logic with exponential backoff and handles various HTTP and network-related exceptions.
+    /// </summary>
+    /// <typeparam name="T">The type of the response expected from the request.</typeparam>
+    /// <param name="path">The path of the resource to send the request to.</param>
+    /// <param name="body">The stream containing the request body.</param>
+    /// <param name="headers">A dictionary of headers to be included in the request.</param>
+    /// <returns>A Task representing the asynchronous operation, which upon completion contains the response from the server as <see cref="QueryResponse"/>.</returns>
+    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
+    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
+    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ProtocolException">Thrown when response parsing fails.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public async Task<QueryResponse> DoPostAsync<T>(
         string path,
         Stream body,
