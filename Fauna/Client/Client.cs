@@ -19,7 +19,7 @@ public class Client
     }
 
     public Client(ClientConfig config) :
-        this(config, new Connection(config.Endpoint, config.ConnectionTimeout))
+        this(config, new Connection(config.Endpoint, config.ConnectionTimeout, config.MaxRetries, config.MaxBackoff))
     {
     }
 
