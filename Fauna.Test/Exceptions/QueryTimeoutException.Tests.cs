@@ -10,7 +10,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureAndMessage_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("timeout_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("time_limit_exceeded");
             var message = "Query timeout error";
             var exception = new QueryTimeoutException(queryFailure, message);
 
@@ -21,7 +21,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureMessageAndInnerException_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("timeout_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("time_limit_exceeded");
             var message = "Query timeout error";
             var innerException = new Exception("Inner exception");
             var exception = new QueryTimeoutException(queryFailure, message, innerException);

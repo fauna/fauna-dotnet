@@ -10,7 +10,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureAndMessage_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("throttling_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("limit_exceeded");
             var message = "Throttling error occurred";
             var exception = new ThrottlingException(queryFailure, message);
 
@@ -21,7 +21,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureMessageAndInnerException_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("throttling_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("limit_exceeded");
             var message = "Throttling error occurred";
             var innerException = new Exception("Inner exception");
             var exception = new ThrottlingException(queryFailure, message, innerException);

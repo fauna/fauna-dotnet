@@ -10,7 +10,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureAndMessage_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("service_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("internal_error");
             var message = "Service error";
             var exception = new ServiceException(queryFailure, message);
 
@@ -21,7 +21,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureMessageAndInnerException_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("service_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("internal_error");
             var message = "Service error";
             var innerException = new Exception("Inner exception");
             var exception = new ServiceException(queryFailure, message, innerException);

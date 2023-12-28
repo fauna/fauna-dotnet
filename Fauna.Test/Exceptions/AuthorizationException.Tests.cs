@@ -10,7 +10,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureAndMessage_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("authorization_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("forbidden");
             var message = "Authorization error";
             var exception = new AuthorizationException(queryFailure, message);
 
@@ -21,7 +21,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void CtorWithQueryFailureMessageAndInnerException_ShouldSetProperties()
         {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("authorization_error");
+            var queryFailure = ExceptionTestHelper.CreateQueryFailure("forbidden");
             var message = "Authorization error";
             var innerException = new Exception("Inner exception");
             var exception = new AuthorizationException(queryFailure, message, innerException);
