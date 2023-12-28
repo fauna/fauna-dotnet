@@ -1,6 +1,7 @@
 using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
+using Fauna.Test.Helpers;
 using NUnit.Framework;
 using System.Buffers;
 using System.Net;
@@ -53,30 +54,6 @@ public class ClientTests
             Content = new StringContent(responseBody)
         };
         return await QueryResponse.GetFromHttpResponseAsync<T>(testMessage);
-    }
-
-    private QueryFailure CreateQueryFailure(string code, string? message = null)
-    {
-        var rawResponseText = $@"{{
-            ""error"": {{
-                ""code"": ""{code}"",
-                ""message"": ""{message}""
-            }},
-            ""summary"": ""error: Query aborted."",
-            ""txn_ts"": 1702346199930000,
-            ""stats"": {{
-                ""compute_ops"": 1,
-                ""read_ops"": 0,
-                ""write_ops"": 0,
-                ""query_time_ms"": 105,
-                ""contention_retries"": 0,
-                ""storage_bytes_read"": 261,
-                ""storage_bytes_write"": 0,
-                ""rate_limits_hit"": []
-            }},
-            ""schema_version"": 0
-        }}";
-        return new QueryFailure(rawResponseText);
     }
 
     private void Write(string json)
@@ -152,7 +129,7 @@ public class ClientTests
                 Arg.IsAny<string>(),
                 Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()))
-            .Returns(Task.FromResult<QueryResponse>(CreateQueryFailure(errorCode)));
+            .Returns(Task.FromResult<QueryResponse>(ExceptionTestHelper.CreateQueryFailure(errorCode)));
 
         async Task TestDelegate() => await client.QueryAsync<object>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 

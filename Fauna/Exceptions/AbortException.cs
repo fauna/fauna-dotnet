@@ -36,7 +36,7 @@ public class AbortException : QueryRuntimeException
     {
         if (!cache.TryGetValue(NonTypedKey, out var cachedData))
         {
-            var abortDataString = QueryFailure.ErrorInfo.Abort.ToString();
+            var abortDataString = QueryFailure.ErrorInfo.Abort?.ToString();
             if (!string.IsNullOrEmpty(abortDataString))
             {
                 cachedData = Serializer.Deserialize(abortDataString);
