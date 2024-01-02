@@ -47,7 +47,8 @@ public class Client
         using var stream = new MemoryStream();
         Serialize(stream, query);
 
-        var queryResponse = await connection.DoPostAsync<T>(QueryUriPath, stream, headers);
+        using var httpResponse = await connection.DoPostAsync(QueryUriPath, stream, headers);
+        var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(httpResponse);
 
         if (queryResponse is QueryFailure failure)
         {

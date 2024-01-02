@@ -25,7 +25,7 @@ public class Connection : IConnection
         };
     }
 
-    public async Task<QueryResponse> DoPostAsync<T>(
+    public async Task<HttpResponseMessage> DoPostAsync(
         string path,
         Stream body,
         Dictionary<string, string> headers)
@@ -47,7 +47,7 @@ public class Connection : IConnection
                 }
                 else
                 {
-                    return await QueryResponse.GetFromHttpResponseAsync<T>(response);
+                    return response;
                 }
             }
             catch (HttpRequestException ex)

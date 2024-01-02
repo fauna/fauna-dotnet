@@ -1,5 +1,4 @@
 using Fauna.Serialization;
-using System;
 using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
 

@@ -46,13 +46,13 @@ public class ClientTests
             : new Client(config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"));
     }
 
-    private async Task<QueryResponse> MockQueryResponseAsync<T>(string responseBody, HttpStatusCode statusCode)
+    private async Task<HttpResponseMessage> MockQueryResponseAsync(string responseBody, HttpStatusCode statusCode)
     {
         var testMessage = new HttpResponseMessage(statusCode)
         {
             Content = new StringContent(responseBody)
         };
-        return await QueryResponse.GetFromHttpResponseAsync<T>(testMessage);
+        return testMessage;
     }
 
     private void Write(string json)
@@ -124,8 +124,8 @@ public class ClientTests
             }},
             ""schema_version"": 0
         }}";
-        var qr = await MockQueryResponseAsync<string>(responseBody, HttpStatusCode.BadRequest);
-        Mock.Arrange(() => _mockConnection.DoPostAsync<string>(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
+        var qr = await MockQueryResponseAsync(responseBody, HttpStatusCode.BadRequest);
+        Mock.Arrange(() => _mockConnection.DoPostAsync(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
         var c = CreateClientWithMockConnection();
 
         try
@@ -162,8 +162,8 @@ public class ClientTests
             },
             ""schema_version"": 0
         }";
-        var qr = await MockQueryResponseAsync<string>(responseBody, HttpStatusCode.OK);
-        Mock.Arrange(() => _mockConnection.DoPostAsync<string>(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
+        var qr = await MockQueryResponseAsync(responseBody, HttpStatusCode.OK);
+        Mock.Arrange(() => _mockConnection.DoPostAsync(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
 
         var c = CreateClientWithMockConnection();
         var r = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
@@ -171,7 +171,7 @@ public class ClientTests
         bool check = false;
 
         Mock.Arrange(() =>
-            _mockConnection.DoPostAsync<string>(
+            _mockConnection.DoPostAsync(
                 Arg.IsAny<string>(),
                 Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()
