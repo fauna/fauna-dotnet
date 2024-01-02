@@ -8,8 +8,8 @@ public class Client
 {
     private const string QueryUriPath = "/query/1";
 
-    private readonly ClientConfig _config;
-    private readonly IConnection _connection;
+    private readonly ClientConfig config;
+    private readonly IConnection connection;
 
     public long LastSeenTxn { get; private set; }
 
@@ -25,8 +25,8 @@ public class Client
 
     public Client(ClientConfig config, IConnection connection)
     {
-        _config = config;
-        _connection = connection;
+        this.config = config;
+        this.connection = connection;
     }
 
     public async Task<QuerySuccess<T>> QueryAsync<T>(
@@ -38,13 +38,13 @@ public class Client
             throw new ClientException("Query cannot be null");
         }
 
-        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
+        var finalOptions = QueryOptions.GetFinalQueryOptions(config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 
         using var stream = new MemoryStream();
         Serialize(stream, query);
 
-        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, stream, headers);
+        var queryResponse = await connection.DoPostAsync<T>(QueryUriPath, stream, headers);
 
         if (queryResponse is QueryFailure failure)
         {
@@ -106,7 +106,7 @@ public class Client
         var headers = new Dictionary<string, string>
         {
 
-            { Headers.Authorization, $"Bearer {_config.Secret}"},
+            { Headers.Authorization, $"Bearer {config.Secret}"},
             { Headers.Format, "tagged" },
             { Headers.Driver, "C#" }
         };
