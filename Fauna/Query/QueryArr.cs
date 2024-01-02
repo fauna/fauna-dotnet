@@ -22,7 +22,7 @@ internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
 
     public T this[int index] => Unwrap[index];
 
-    public override void Serialize(Utf8FaunaWriter writer)
+    public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         throw new NotImplementedException();
     }

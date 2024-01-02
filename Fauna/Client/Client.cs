@@ -10,6 +10,8 @@ public class Client
 
     private readonly ClientConfig config;
     private readonly IConnection connection;
+    // FIXME(matt) look at moving to a database context which wraps client, perhaps
+    private readonly SerializationContext serializationCtx;
 
     public long LastSeenTxn { get; private set; }
 
@@ -27,6 +29,7 @@ public class Client
     {
         this.config = config;
         this.connection = connection;
+        this.serializationCtx = new SerializationContext();
     }
 
     public async Task<QuerySuccess<T>> QueryAsync<T>(
@@ -91,12 +94,12 @@ public class Client
         return (QuerySuccess<T>)queryResponse;
     }
 
-    private static void Serialize(Stream stream, Query query)
+    private void Serialize(Stream stream, Query query)
     {
         using var writer = new Utf8FaunaWriter(stream);
         writer.WriteStartObject();
         writer.WriteFieldName("query");
-        query.Serialize(writer);
+        query.Serialize(serializationCtx, writer);
         writer.WriteEndObject();
         writer.Flush();
     }

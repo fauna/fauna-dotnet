@@ -11,7 +11,7 @@ public sealed class QueryVal<T> : Query, IQueryFragment
 
     public T Unwrap { get; }
 
-    public override void Serialize(Utf8FaunaWriter writer)
+    public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");

@@ -21,7 +21,7 @@ public sealed class QueryLiteral : IQueryFragment
         return $"QueryLiteral({Unwrap})";
     }
 
-    public void Serialize(Utf8FaunaWriter writer)
+    public void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStringValue(Unwrap);
     }

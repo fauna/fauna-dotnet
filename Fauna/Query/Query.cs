@@ -4,7 +4,7 @@ namespace Fauna;
 
 public abstract class Query : IEquatable<Query>, IQueryFragment
 {
-    public abstract void Serialize(Utf8FaunaWriter writer);
+    public abstract void Serialize(SerializationContext ctx, Utf8FaunaWriter writer);
 
     public abstract override int GetHashCode();
 

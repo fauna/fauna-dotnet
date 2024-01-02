@@ -19,14 +19,14 @@ public sealed class QueryExpr : Query, IQueryFragment
 
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
 
-    public override void Serialize(Utf8FaunaWriter writer)
+    public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
         writer.WriteFieldName("fql");
         writer.WriteStartArray();
         foreach (var t in Unwrap)
         {
-            t.Serialize(writer);
+            t.Serialize(ctx, writer);
         }
         writer.WriteEndArray();
         writer.WriteEndObject();
