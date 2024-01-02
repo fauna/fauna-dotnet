@@ -12,7 +12,7 @@ public static partial class Serializer
 
     public static T Deserialize<T>(string str)
     {
-        return (T)Deserialize(str, typeof(T));
+        return (T)Deserialize(str, typeof(T))!;
     }
 
     public static object? Deserialize(string str, Type? type)
@@ -32,7 +32,7 @@ public static partial class Serializer
 
     private static T DeserializeValueInternal<T>(ref Utf8FaunaReader reader, SerializationContext context)
     {
-        return (T)DeserializeValueInternal(ref reader, context, typeof(T));
+        return (T)DeserializeValueInternal(ref reader, context, typeof(T))!;
     }
 
     private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
