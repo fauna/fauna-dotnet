@@ -32,22 +32,22 @@ public class Connection : IConnection
     {
         string FormatMessage(string errorType, string message) => $"{errorType}: {message}";
 
-        HttpResponseMessage? response = null;
-        for (int attempt = 0; attempt < _maxRetries; attempt++)
+        int attempt = 0;
+        while (true)
         {
             try
             {
                 var request = CreateHttpRequest(path, body, headers);
-                response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.SendAsync(request);
 
-                if (response.IsSuccessStatusCode || response.StatusCode != HttpStatusCode.TooManyRequests)
-                {
-                    return await QueryResponse.GetFromHttpResponseAsync<T>(response);
-                }
-
-                if (attempt < _maxRetries - 1)
+                if (response.StatusCode == HttpStatusCode.TooManyRequests && attempt < _maxRetries)
                 {
                     await ApplyExponentialBackoff(attempt);
+                    attempt++;
+                }
+                else
+                {
+                    return await QueryResponse.GetFromHttpResponseAsync<T>(response);
                 }
             }
             catch (HttpRequestException ex)
@@ -90,10 +90,6 @@ public class Connection : IConnection
                 throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
             }
         }
-
-        return response is null
-            ? throw new ClientException("No response received from the server.")
-            : await QueryResponse.GetFromHttpResponseAsync<T>(response);
     }
 
     private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)
