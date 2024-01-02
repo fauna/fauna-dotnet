@@ -15,7 +15,7 @@ public sealed class QueryVal<T> : Query, IQueryFragment
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");
-        Serializer.Serialize(writer, Unwrap);
+        Serializer.Serialize(ctx, writer, Unwrap);
         writer.WriteEndObject();
     }
 

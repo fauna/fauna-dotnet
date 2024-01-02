@@ -1,4 +1,3 @@
-using System.Text;
 using Module = Fauna.Types.Module;
 
 namespace Fauna.Serialization;
@@ -11,22 +10,7 @@ public static partial class Serializer
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
 
-    public static string Serialize(object? obj)
-    {
-        using var stream = new MemoryStream();
-        using var writer = new Utf8FaunaWriter(stream);
-        Serialize(writer, obj);
-        writer.Flush();
-        return Encoding.UTF8.GetString(stream.ToArray());
-    }
-
-    public static void Serialize(Utf8FaunaWriter writer, object? obj)
-    {
-        var context = new SerializationContext();
-        SerializeValueInternal(writer, obj, context);
-    }
-
-    private static void SerializeValueInternal(Utf8FaunaWriter writer, object? obj, SerializationContext context, FaunaType? typeHint = null)
+    public static void Serialize(SerializationContext context, Utf8FaunaWriter writer, object? obj, FaunaType? typeHint = null)
     {
         if (typeHint != null)
         {
@@ -172,7 +156,7 @@ public static partial class Serializer
                 writer.WriteStartArray();
                 foreach (var o in e)
                 {
-                    SerializeValueInternal(writer, o, context);
+                    Serialize(context, writer, o);
                 }
                 writer.WriteEndArray();
                 break;
@@ -190,7 +174,7 @@ public static partial class Serializer
         foreach (var (key, value) in d)
         {
             writer.WriteFieldName(key);
-            SerializeValueInternal(writer, value, context);
+            Serialize(context, writer, value);
         }
         if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
     }
@@ -206,7 +190,7 @@ public static partial class Serializer
         {
             writer.WriteFieldName(field.Name!);
             var v = field.Info?.GetValue(obj);
-            SerializeValueInternal(writer, v, context, field.Type);
+            Serialize(context, writer, v, field.Type);
         }
         if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
     }
