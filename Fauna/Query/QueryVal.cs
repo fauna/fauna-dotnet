@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
-using Fauna.Serialization;
+﻿using Fauna.Serialization;
 
 namespace Fauna;
 

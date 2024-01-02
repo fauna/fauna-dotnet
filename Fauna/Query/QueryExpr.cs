@@ -1,6 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Text;
-using System.Text.Json;
 using Fauna.Serialization;
 
 namespace Fauna;
