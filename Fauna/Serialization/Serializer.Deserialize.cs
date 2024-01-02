@@ -64,12 +64,17 @@ public static partial class Serializer
     private static object? DeserializeRefInternal(ref Utf8FaunaReader reader, SerializationContext context,
         Type? targetType = null)
     {
-        if (targetType != null && targetType != typeof(Ref))
+        if (targetType != null && targetType != typeof(Ref) && targetType != typeof(NamedRef))
         {
             throw new ArgumentException($"Unsupported target type for ref. Must be a ref or undefined, but was {targetType}");
         }
 
-        var doc = new Ref();
+        string? id = null;
+        string? name = null;
+        Module? coll = null;
+        var allProps = new Dictionary<string, object?>();
+
+
         while (reader.Read() && reader.CurrentTokenType != TokenType.EndRef)
         {
             if (reader.CurrentTokenType == TokenType.FieldName)
@@ -79,10 +84,19 @@ public static partial class Serializer
                 switch (fieldName)
                 {
                     case "id":
-                        doc.Id = DeserializeValueInternal<string>(ref reader, context);
+                        id = DeserializeValueInternal<string>(ref reader, context);
+                        allProps["id"] = id;
+                        break;
+                    case "name":
+                        name = DeserializeValueInternal<string>(ref reader, context);
+                        allProps["name"] = name;
                         break;
                     case "coll":
-                        doc.Collection = DeserializeValueInternal<Module>(ref reader, context);
+                        coll = DeserializeValueInternal<Module>(ref reader, context);
+                        allProps["coll"] = coll;
+                        break;
+                    default:
+                        allProps[fieldName] = DeserializeValueInternal(ref reader, context);
                         break;
                 }
             }
@@ -91,18 +105,42 @@ public static partial class Serializer
                     $"Unexpected token while deserializing into Document: {reader.CurrentTokenType}");
         }
 
-        return doc;
+        if (id != null && coll != null)
+        {
+            return new Ref
+            {
+                Id = id,
+                Collection = coll
+            };
+        }
+
+        if (name != null && coll != null)
+        {
+            return new NamedRef
+            {
+                Name = name,
+                Collection = coll
+            };
+        }
+
+        // Unsupported ref type, but don't fail for forward compatibility.
+        return allProps;
     }
 
     private static object? DeserializeDocumentInternal(ref Utf8FaunaReader reader, SerializationContext context,
         Type? targetType = null)
     {
-        if (targetType != null && targetType != typeof(Document))
+        if (targetType != null && targetType != typeof(Document) && targetType != typeof(NamedDocument))
         {
             return DeserializeToClassInternal(ref reader, context, targetType, TokenType.EndDocument);
         }
 
-        var doc = new Document();
+        var data = new Dictionary<string, object?>();
+        string? id = null;
+        string? name = null;
+        DateTime? ts = null;
+        Module? coll = null;
+
         while (reader.Read() && reader.CurrentTokenType != TokenType.EndDocument)
         {
             if (reader.CurrentTokenType == TokenType.FieldName)
@@ -112,16 +150,19 @@ public static partial class Serializer
                 switch (fieldName)
                 {
                     case "id":
-                        doc.Id = DeserializeValueInternal<string>(ref reader, context);
+                        id = DeserializeValueInternal<string>(ref reader, context);
+                        break;
+                    case "name":
+                        name = DeserializeValueInternal<string>(ref reader, context);
                         break;
                     case "ts":
-                        doc.Ts = DeserializeValueInternal<DateTime>(ref reader, context);
+                        ts = DeserializeValueInternal<DateTime>(ref reader, context);
                         break;
                     case "coll":
-                        doc.Collection = DeserializeValueInternal<Module>(ref reader, context);
+                        coll = DeserializeValueInternal<Module>(ref reader, context);
                         break;
                     default:
-                        doc[fieldName] = DeserializeValueInternal(ref reader, context);
+                        data[fieldName] = DeserializeValueInternal(ref reader, context);
                         break;
                 }
             }
@@ -130,7 +171,23 @@ public static partial class Serializer
                     $"Unexpected token while deserializing into Document: {reader.CurrentTokenType}");
         }
 
-        return doc;
+        if (id != null && coll != null && ts != null)
+        {
+            if (name != null) data["name"] = name;
+            return new Document(id, coll, ts.GetValueOrDefault(), data);
+        }
+
+        if (name != null && coll != null && ts != null)
+        {
+            return new NamedDocument(name, coll, ts.GetValueOrDefault(), data);
+        }
+
+        // Unsupported document type, but don't fail for forward compatibility.
+        if (id != null) data["id"] = id;
+        if (name != null) data["name"] = name;
+        if (coll != null) data["coll"] = coll;
+        if (ts != null) data["ts"] = ts;
+        return data;
     }
 
     private static object? DeserializeArrayInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
