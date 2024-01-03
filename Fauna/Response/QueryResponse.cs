@@ -1,3 +1,4 @@
+using Fauna.Response;
 using Fauna.Serialization;
 using System;
 using System.Text.Json;
@@ -21,7 +22,14 @@ public abstract class QueryResponse : QueryInfo
         }
         else
         {
-            queryResponse = new QuerySuccess<T>(body);
+            if (typeof(T) == typeof(Page))
+            {
+                queryResponse = new QueryPageSuccess(body);
+            }
+            else
+            {
+                queryResponse = new QuerySuccess<T>(body);
+            }
         }
 
         return queryResponse;
@@ -36,11 +44,21 @@ public class QuerySuccess<T> : QueryResponse
     public QuerySuccess(string rawResponseText) : base(rawResponseText)
     {
         Data = Serializer.Deserialize<T>(_responseBody.GetProperty(DataFieldName).GetRawText());
-
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {
             StaticType = jsonElement.GetString();
         }
+    }
+}
+
+public class QueryPageSuccess : QueryResponse
+{
+    public QueryPageInfo Data { get; init; }
+
+    public QueryPageSuccess(string rawResponseText) : base(rawResponseText)
+    {
+        var dataBlock = _responseBody.GetProperty(DataFieldName);
+        Data = dataBlock.Deserialize<QueryPageInfo>();
     }
 }
 

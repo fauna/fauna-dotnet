@@ -1,4 +1,3 @@
-using Fauna.Serialization;
 using Fauna.Serialization.Attributes;
 using NUnit.Framework;
 using static Fauna.Query;
@@ -6,8 +5,11 @@ using static Fauna.Query;
 namespace Fauna.Test;
 
 [TestFixture]
+[Ignore("integ test")]
 public class IntegrationTests
 {
+    private static Client _client;
+
     [FaunaObject]
     private class Person
     {
@@ -19,8 +21,14 @@ public class IntegrationTests
         public int Age { get; set; }
     }
 
+    [OneTimeSetUp]
+    public void SetUp()
+    {
+        var connection = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
+        _client = new Client(new ClientConfig("secret"), connection);
+    }
+
     [Test]
-    [Ignore("integ test")]
     public async Task UserDefinedObjectTest()
     {
         var expected = new Person
@@ -29,15 +37,91 @@ public class IntegrationTests
             LastName = "O'Keeffe",
             Age = 136
         };
-        var conn = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
-        var client = new Client(new ClientConfig("secret"), conn);
         var query = FQL($"{expected}");
-        var result = await client.QueryAsync<Person>(query);
+        var result = await _client.QueryAsync<Person>(query);
         var actual = result.Data;
 
         Assert.AreNotEqual(expected, actual);
         Assert.AreEqual(expected.FirstName, actual.FirstName);
         Assert.AreEqual(expected.LastName, actual.LastName);
         Assert.AreEqual(expected.Age, actual.Age);
+    }
+
+    [Test]
+    public async Task Paginate_SinglePageWithSmallCollection()
+    {
+        var query = FQL($@"[1,2,3,4,5].toSet().paginate(10);");
+
+        var paginatedResult = _client.PaginateAsync(query);
+
+        int pageCount = 0;
+        await foreach (var page in paginatedResult)
+        {
+            pageCount++;
+            var data = page.GetData<int>();
+            Assert.AreEqual(5, data.Count());
+        }
+
+        Assert.AreEqual(1, pageCount);
+    }
+
+    [Test]
+    public async Task Paginate_MultiplePagesWithBigCollection()
+    {
+        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].toSet().paginate(10);");
+
+        var paginatedResult = _client.PaginateAsync(query);
+
+        int pageCount = 0;
+        await foreach (var page in paginatedResult)
+        {
+            pageCount++;
+            var data = page.GetData<int>();
+            Assert.AreEqual(10, data.Count());
+        }
+
+        Assert.AreEqual(2, pageCount);
+    }
+
+    [Test]
+    public async Task Paginate_MultiplePagesWithBigPocoCollection()
+    {
+        var items = Enumerable.Range(1, 100)
+            .Select(i => new Person { FirstName = $"FirstName{i}", LastName = $"LastName{i}", Age = i })
+            .ToList();
+
+        var query = FQL($"{items}.toSet().paginate(20);");
+
+        var paginatedResult = _client.PaginateAsync(query);
+
+        int pageCount = 0;
+        await foreach (var page in paginatedResult)
+        {
+            pageCount++;
+            var data = page.GetData<Person>();
+            Assert.AreEqual(20, data.Count());
+        }
+
+        Assert.AreEqual(5, pageCount);
+    }
+
+    [Test]
+    public async Task Paginate_IteratorCanBeFlattened()
+    {
+        var items = Enumerable.Range(1, 100)
+            .Select(i => new Person { FirstName = $"FirstName{i}", LastName = $"LastName{i}", Age = i })
+            .ToList();
+
+        var query = FQL($"{items}.toSet().paginate(20);");
+
+        var paginatedResult = _client.PaginateAsync(query);
+
+        int itemCount = 0;
+        await foreach (var item in paginatedResult.FlattenAsync<Person>())
+        {
+            itemCount++;
+        }
+
+        Assert.AreEqual(100, itemCount);
     }
 }

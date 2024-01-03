@@ -1,5 +1,6 @@
 ﻿using Fauna.Constants;
 using Fauna.Exceptions;
+using Fauna.Response;
 using Fauna.Serialization;
 
 namespace Fauna;
@@ -72,6 +73,44 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
     {
+        var queryResponse = await QueryAsyncInternal<T>(query, queryOptions);
+        return (QuerySuccess<T>)queryResponse;
+    }
+
+    public async IAsyncEnumerable<Page> PaginateAsync(Query query, QueryOptions? queryOptions = null)
+    {
+        Page? currentPage = null;
+        bool isFirstPageFetched = false;
+
+        while (!isFirstPageFetched || currentPage?.After != null)
+        {
+            Query currentQuery = isFirstPageFetched && currentPage?.After is not null
+                ? new QueryExpr(new QueryLiteral($"Set.paginate('{currentPage.After}')"))
+                : query;
+
+            var response = await QueryAsyncInternal<Page>(currentQuery, queryOptions);
+
+            if (response is QueryPageSuccess pageSuccess && pageSuccess.Data is QueryPageInfo pageInfo)
+            {
+                currentPage = new Page(pageInfo.Data, pageInfo.After);
+                isFirstPageFetched = true;
+
+                if (currentPage is not null)
+                {
+                    yield return currentPage;
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Unexpected response type received.");
+            }
+        }
+    }
+
+    private async Task<QueryResponse> QueryAsyncInternal<T>(
+        Query query,
+        QueryOptions? queryOptions = null)
+    {
         if (query == null)
         {
             throw new ClientException("Query cannot be null");
@@ -127,7 +166,7 @@ public class Client
             LastSeenTxn = queryResponse.LastSeenTxn;
         }
 
-        return (QuerySuccess<T>)queryResponse;
+        return queryResponse;
     }
 
     private static void Serialize(Stream stream, Query query)
@@ -193,3 +232,18 @@ public class Client
         return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
     }
 }
+
+public static class PaginationExtensions
+{
+    public static async IAsyncEnumerable<T> FlattenAsync<T>(this IAsyncEnumerable<Page> pages)
+    {
+        await foreach (var page in pages)
+        {
+            foreach (var item in page.GetData<T>())
+            {
+                yield return item;
+            }
+        }
+    }
+}
+
