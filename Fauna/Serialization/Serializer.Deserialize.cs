@@ -5,31 +5,6 @@ namespace Fauna.Serialization;
 
 public static partial class Serializer
 {
-    public static object? Deserialize(string str)
-    {
-        return Deserialize(str, null);
-    }
-
-    public static T Deserialize<T>(string str)
-    {
-        return (T)Deserialize(str, typeof(T))!;
-    }
-
-    public static object? Deserialize(string str, Type? type)
-    {
-        var reader = new Utf8FaunaReader(str);
-        var context = new SerializationContext();
-        reader.Read();
-        var obj = Deserialize(context, ref reader, type);
-
-        if (reader.Read())
-        {
-            throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
-        }
-
-        return obj;
-    }
-
     public static T Deserialize<T>(SerializationContext context, ref Utf8FaunaReader reader)
     {
         return (T)Deserialize(context, ref reader, typeof(T))!;

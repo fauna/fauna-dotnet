@@ -1,4 +1,5 @@
 ﻿using Fauna.Exceptions;
+using Fauna.Serialization;
 using Fauna.Test.Helpers;
 using NUnit.Framework;
 
@@ -11,8 +12,9 @@ public class AbortExceptionTests
     {
         public string Name { get; set; }
         public int Age { get; set; }
-
     }
+
+    private static SerializationContext ctx = new();
 
     [Test]
     public void Ctor_InitializesPropertiesCorrectly()
@@ -21,8 +23,8 @@ public class AbortExceptionTests
         var expectedMessage = "Test message";
         var expectedInnerException = new Exception("Inner exception");
 
-        var actual1 = new AbortException(expectedQueryFailure, expectedMessage);
-        var actual2 = new AbortException(expectedQueryFailure, expectedMessage, expectedInnerException);
+        var actual1 = new AbortException(ctx, expectedQueryFailure, expectedMessage);
+        var actual2 = new AbortException(ctx, expectedQueryFailure, expectedMessage, expectedInnerException);
 
         Assert.AreEqual(expectedQueryFailure.ErrorInfo.Abort, actual1.QueryFailure.ErrorInfo.Abort);
         Assert.AreEqual(expectedMessage, actual1.Message);
@@ -37,7 +39,7 @@ public class AbortExceptionTests
     {
         var expected = 123;
         var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@int\":\"{expected}\"}}");
-        var exception = new AbortException(queryFailure, "Test message");
+        var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var actual = exception.GetData();
 
@@ -52,7 +54,7 @@ public class AbortExceptionTests
     {
         var expected = 123;
         var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@int\":\"{expected}\"}}");
-        var exception = new AbortException(queryFailure, "Test message");
+        var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var actual = exception.GetData<int>();
 
@@ -65,7 +67,7 @@ public class AbortExceptionTests
     {
         var expected = new TestClass { Name = "John", Age = 105 };
         var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{expected.Name}\",\"Age\":{{\"@int\":\"{expected.Age}\"}}}}}}");
-        var exception = new AbortException(queryFailure, "Test message");
+        var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var actual = exception.GetData() as IDictionary<string, object>;
 
@@ -79,7 +81,7 @@ public class AbortExceptionTests
     {
         var expected = new TestClass { Name = "John", Age = 105 };
         var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{expected.Name}\",\"Age\":{{\"@int\":\"{expected.Age}\"}}}}}}");
-        var exception = new AbortException(queryFailure, "Test message");
+        var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var actual = exception.GetData<TestClass>();
 
@@ -92,7 +94,7 @@ public class AbortExceptionTests
     public void GetData_WithNullAbortData_ReturnsNull()
     {
         var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", null);
-        var exception = new AbortException(queryFailure, "Test message");
+        var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var result = exception.GetData();
 
@@ -104,7 +106,7 @@ public class AbortExceptionTests
     {
         var mockData = new TestClass { Name = "John", Age = 105 };
         var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{mockData.Name}\",\"Age\":{{\"@int\":\"{mockData.Age}\"}}}}}}");
-        var exception = new AbortException(queryFailure, "Test message");
+        var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var callResult1 = exception.GetData();
         var typedCallResult1 = exception.GetData<TestClass>();

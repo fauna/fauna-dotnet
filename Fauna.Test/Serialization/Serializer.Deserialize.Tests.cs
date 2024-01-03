@@ -7,6 +7,23 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public partial class SerializerTests
 {
+    static T Deserialize<T>(string str) => (T)Deserialize(str, typeof(T))!;
+
+    static object? Deserialize(string str, Type? type)
+    {
+        var reader = new Utf8FaunaReader(str);
+        reader.Read();
+        var context = new SerializationContext();
+        var obj = Serializer.Deserialize(context, ref reader, type);
+
+        if (reader.Read())
+        {
+            throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
+        }
+
+        return obj;
+    }
+
     [Test]
     public void DeserializeValues()
     {
@@ -25,7 +42,7 @@ public partial class SerializerTests
 
         foreach (KeyValuePair<string, object?> entry in tests)
         {
-            var result = Serializer.Deserialize(entry.Key);
+            var result = Deserialize(entry.Key, null);
             Assert.AreEqual(entry.Value, result);
         }
     }
@@ -33,21 +50,21 @@ public partial class SerializerTests
     [Test]
     public void DeserializeStringGeneric()
     {
-        var result = Serializer.Deserialize<string>("\"hello\"");
+        var result = Deserialize<string>("\"hello\"");
         Assert.AreEqual("hello", result);
     }
 
     [Test]
     public void DeserializeNullableGeneric()
     {
-        var result = Serializer.Deserialize<string?>("null");
+        var result = Deserialize<string?>("null");
         Assert.IsNull(result);
     }
 
     [Test]
     public void DeserializeIntGeneric()
     {
-        var result = Serializer.Deserialize<int>(@"{""@int"":""42""}");
+        var result = Deserialize<int>(@"{""@int"":""42""}");
         Assert.AreEqual(42, result);
     }
 
@@ -55,14 +72,14 @@ public partial class SerializerTests
     [Test]
     public void DeserializeDateGeneric()
     {
-        var result = Serializer.Deserialize<DateTime>(@"{""@date"": ""2023-12-03""}");
+        var result = Deserialize<DateTime>(@"{""@date"": ""2023-12-03""}");
         Assert.AreEqual(new DateTime(2023, 12, 3), result);
     }
 
     [Test]
     public void DeserializeTimeGeneric()
     {
-        var result = Serializer.Deserialize<DateTime>(@"{""@time"": ""2023-12-03T05:52:10.000001-09:00""}");
+        var result = Deserialize<DateTime>(@"{""@time"": ""2023-12-03T05:52:10.000001-09:00""}");
         var expected = new DateTime(2023, 12, 3, 14, 52, 10, 0, DateTimeKind.Utc).AddTicks(10).ToLocalTime();
         Assert.AreEqual(expected, result);
     }
@@ -102,7 +119,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize<Document>(given);
+        var actual = Deserialize<Document>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
@@ -122,7 +139,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize<ClassForDocument>(given);
+        var actual = Deserialize<ClassForDocument>(given);
         Assert.AreEqual("user_value", actual.UserField);
     }
 
@@ -197,7 +214,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize<Ref>(given);
+        var actual = Deserialize<Ref>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
@@ -256,7 +273,7 @@ public partial class SerializerTests
             { "null", null }
         };
 
-        var result = Serializer.Deserialize(given);
+        var result = Deserialize(given, null);
         Assert.AreEqual(expected, result);
     }
 
@@ -288,7 +305,7 @@ public partial class SerializerTests
 
         };
 
-        var result = Serializer.Deserialize(given);
+        var result = Deserialize(given, null);
         Assert.AreEqual(expected, result);
     }
 
@@ -306,7 +323,7 @@ public partial class SerializerTests
             {"k2", 2},
             {"k3", 3}
         };
-        var actual = Serializer.Deserialize<Dictionary<string, int>>(given);
+        var actual = Deserialize<Dictionary<string, int>>(given);
         Assert.AreEqual(expected, actual);
     }
 
@@ -322,7 +339,7 @@ public partial class SerializerTests
                              }
                              ";
 
-        var p = Serializer.Deserialize<Person>(given);
+        var p = Deserialize<Person>(given);
         Assert.AreEqual("Baz2", p.FirstName);
         Assert.AreEqual("Luhrmann2", p.LastName);
         Assert.AreEqual(612, p.Age);
@@ -340,7 +357,7 @@ public partial class SerializerTests
                              }
                              ";
 
-        var p = Serializer.Deserialize<PersonWithAttributes>(given);
+        var p = Deserialize<PersonWithAttributes>(given);
         Assert.AreEqual("Baz2", p.FirstName);
         Assert.AreEqual("Luhrmann2", p.LastName);
         Assert.AreEqual(612, p.Age);
@@ -352,7 +369,7 @@ public partial class SerializerTests
     {
         const string given = @"[""item1"",""item2""]";
         var expected = new List<object> { "item1", "item2" };
-        var p = Serializer.Deserialize(given);
+        var p = Deserialize(given, null);
         Assert.AreEqual(expected, p);
     }
 
@@ -361,7 +378,7 @@ public partial class SerializerTests
     {
         const string given = @"[""item1"",""item2""]";
         var expected = new List<string> { "item1", "item2" };
-        var p = Serializer.Deserialize<List<string>>(given);
+        var p = Deserialize<List<string>>(given);
         Assert.AreEqual(expected, p);
     }
 
@@ -369,18 +386,18 @@ public partial class SerializerTests
     public void DeserializeIntoGenericListWithPocoWithAttributes()
     {
         const string given = @"[
-{""first_name"":""Cleve"",""last_name"":""Stuart"",""age"":{""@int"":""100""}},
-{""first_name"":""Darren"",""last_name"":""Cunningham"",""age"":{""@int"":""101""}}
+{""first_name"":""Alice"",""last_name"":""Smith"",""age"":{""@int"":""100""}},
+{""first_name"":""Bob"",""last_name"":""Jones"",""age"":{""@int"":""101""}}
 ]";
-        var peeps = Serializer.Deserialize<List<PersonWithAttributes>>(given);
-        var cleve = peeps[0];
-        var darren = peeps[1];
-        Assert.AreEqual("Cleve", cleve.FirstName);
-        Assert.AreEqual("Stuart", cleve.LastName);
-        Assert.AreEqual(100, cleve.Age);
+        var peeps = Deserialize<List<PersonWithAttributes>>(given);
+        var alice = peeps[0];
+        var bob = peeps[1];
+        Assert.AreEqual("Alice", alice.FirstName);
+        Assert.AreEqual("Smith", alice.LastName);
+        Assert.AreEqual(100, alice.Age);
 
-        Assert.AreEqual("Darren", darren.FirstName);
-        Assert.AreEqual("Cunningham", darren.LastName);
-        Assert.AreEqual(101, darren.Age);
+        Assert.AreEqual("Bob", bob.FirstName);
+        Assert.AreEqual("Jones", bob.LastName);
+        Assert.AreEqual(101, bob.Age);
     }
 }
