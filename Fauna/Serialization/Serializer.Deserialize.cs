@@ -64,7 +64,7 @@ public static partial class Serializer
     private static object? DeserializeRefInternal(ref Utf8FaunaReader reader, SerializationContext context,
         Type? targetType = null)
     {
-        if (targetType != null && targetType != typeof(Ref) && targetType != typeof(NamedRef))
+        if (targetType != null && targetType != typeof(DocumentRef) && targetType != typeof(NamedDocumentRef) && targetType != typeof(NullDocumentRef) && targetType != typeof(NullNamedDocumentRef))
         {
             throw new ArgumentException($"Unsupported target type for ref. Must be a ref or undefined, but was {targetType}");
         }
@@ -72,6 +72,8 @@ public static partial class Serializer
         string? id = null;
         string? name = null;
         Module? coll = null;
+        var exists = true;
+        string? reason = null;
         var allProps = new Dictionary<string, object?>();
 
 
@@ -95,6 +97,14 @@ public static partial class Serializer
                         coll = DeserializeValueInternal<Module>(ref reader, context);
                         allProps["coll"] = coll;
                         break;
+                    case "exists":
+                        exists = DeserializeValueInternal<bool>(ref reader, context);
+                        allProps["exists"] = exists;
+                        break;
+                    case "reason":
+                        reason = DeserializeValueInternal<string>(ref reader, context);
+                        allProps["reason"] = reason;
+                        break;
                     default:
                         allProps[fieldName] = DeserializeValueInternal(ref reader, context);
                         break;
@@ -105,21 +115,42 @@ public static partial class Serializer
                     $"Unexpected token while deserializing into Document: {reader.CurrentTokenType}");
         }
 
+
         if (id != null && coll != null)
         {
-            return new Ref
+            if (exists)
+            {
+                return new DocumentRef
+                {
+                    Id = id,
+                    Collection = coll,
+                };
+            }
+
+            return new NullDocumentRef
             {
                 Id = id,
-                Collection = coll
+                Collection = coll,
+                Reason = reason
             };
         }
 
         if (name != null && coll != null)
         {
-            return new NamedRef
+            if (exists)
+            {
+                return new NamedDocumentRef
+                {
+                    Name = name,
+                    Collection = coll,
+                };
+            }
+
+            return new NullNamedDocumentRef
             {
                 Name = name,
-                Collection = coll
+                Collection = coll,
+                Reason = reason
             };
         }
 

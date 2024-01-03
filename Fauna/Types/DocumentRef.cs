@@ -3,7 +3,7 @@ namespace Fauna.Types;
 /// <summary>
 /// Represents a document ref.
 /// </summary>
-public class Ref
+public class DocumentRef
 {
     /// <summary>
     /// Gets the string value of the ref id.
