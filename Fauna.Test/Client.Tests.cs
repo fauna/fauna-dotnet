@@ -47,7 +47,7 @@ public class ClientTests
             : new Client(config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"));
     }
 
-    private async Task<HttpResponseMessage> MockQueryResponseAsync(string responseBody, HttpStatusCode statusCode)
+    private HttpResponseMessage MockQueryResponse(string responseBody, HttpStatusCode statusCode)
     {
         var testMessage = new HttpResponseMessage(statusCode)
         {
@@ -102,34 +102,58 @@ public class ClientTests
     }
 
     [Test]
-    [TestCase("unauthorized", typeof(AuthenticationException), "Unauthorized: ")]
-    [TestCase("forbidden", typeof(AuthorizationException), "Forbidden: ")]
-    [TestCase("invalid_query", typeof(QueryCheckException), "Invalid Query: ")]
-    [TestCase("invalid_function_definition", typeof(QueryCheckException), "Invalid Query: ")]
-    [TestCase("invalid_identifier", typeof(QueryCheckException), "Invalid Query: ")]
-    [TestCase("invalid_syntax", typeof(QueryCheckException), "Invalid Query: ")]
-    [TestCase("invalid_type", typeof(QueryCheckException), "Invalid Query: ")]
-    [TestCase("invalid_argument", typeof(QueryRuntimeException), "Invalid Argument: ")]
-    [TestCase("abort", typeof(AbortException), "Abort: ")]
-    [TestCase("invalid_request", typeof(InvalidRequestException), "Invalid Request: ")]
-    [TestCase("contended_transaction", typeof(ContendedTransactionException), "Contended Transaction: ")]
-    [TestCase("limit_exceeded", typeof(ThrottlingException), "Limit Exceeded: ")]
-    [TestCase("time_limit_exceeded", typeof(QueryTimeoutException), "Time Limit Exceeded: ")]
-    [TestCase("internal_error", typeof(ServiceException), "Internal Error: ")]
-    [TestCase("timeout", typeof(QueryTimeoutException), "Timeout: ")]
-    [TestCase("time_out", typeof(QueryTimeoutException), "Timeout: ")]
-    [TestCase("bad_gateway", typeof(NetworkException), "Bad Gateway: ")]
-    [TestCase("gateway_timeout", typeof(NetworkException), "Gateway Timeout: ")]
-    [TestCase("unexpected_error", typeof(FaunaException), "Unexpected Error: ")] // Example for default case
-    public async Task QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, Type expectedExceptionType, string expectedMessageStart)
+    [TestCase("unauthorized", 401, typeof(AuthenticationException), "Unauthorized: ")]
+    [TestCase("forbidden", 403, typeof(AuthorizationException), "Forbidden: ")]
+    [TestCase("invalid_query", 400, typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_function_definition", 400, typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_identifier", 400, typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_syntax", 400, typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_type", 400, typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_argument", 400, typeof(QueryRuntimeException), "Invalid Argument: ")]
+    [TestCase("abort", 400, typeof(AbortException), "Abort: ")]
+    [TestCase("invalid_request", 400, typeof(InvalidRequestException), "Invalid Request: ")]
+    [TestCase("contended_transaction", 409, typeof(ContendedTransactionException), "Contended Transaction: ")]
+    [TestCase("limit_exceeded", 429, typeof(ThrottlingException), "Limit Exceeded: ")]
+    [TestCase("time_limit_exceeded", 440, typeof(QueryTimeoutException), "Time Limit Exceeded: ")]
+    [TestCase("internal_error", 500, typeof(ServiceException), "Internal Error: ")]
+    [TestCase("timeout", 503, typeof(QueryTimeoutException), "Timeout: ")]
+    [TestCase("time_out", 503, typeof(QueryTimeoutException), "Timeout: ")]
+    [TestCase("bad_gateway", 502, typeof(NetworkException), "Bad Gateway: ")]
+    [TestCase("gateway_timeout", 504, typeof(NetworkException), "Gateway Timeout: ")]
+    [TestCase("unexpected_error", 400, typeof(FaunaException), "Unexpected Error: ")] // Example for default case
+    public async Task QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, int httpStatus, Type expectedExceptionType, string expectedMessageStart)
     {
         var client = CreateClientWithMockConnection();
 
-        Mock.Arrange(() => _mockConnection.DoPostAsync<object>(
+        HttpResponseMessage MockQR(string code, int status)
+        {
+            var body = $@"{{
+                ""error"": {{
+                    ""code"": ""{code}"",
+                    ""message"": ""Mock message.""
+                }},
+                ""summary"": ""error: Mock message."",
+                ""txn_ts"": 1702346199930000,
+                ""stats"": {{
+                    ""compute_ops"": 1,
+                    ""read_ops"": 0,
+                    ""write_ops"": 0,
+                    ""query_time_ms"": 105,
+                    ""contention_retries"": 0,
+                    ""storage_bytes_read"": 261,
+                    ""storage_bytes_write"": 0,
+                    ""rate_limits_hit"": []
+                }},
+                ""schema_version"": 0
+            }}";
+            return MockQueryResponse(body, (HttpStatusCode)status);
+        }
+
+        Mock.Arrange(() => _mockConnection.DoPostAsync(
                 Arg.IsAny<string>(),
                 Arg.IsAny<Stream>(),
                 Arg.IsAny<Dictionary<string, string>>()))
-            .Returns(Task.FromResult<QueryResponse>(ExceptionTestHelper.CreateQueryFailure(errorCode)));
+            .Returns(Task.FromResult(MockQR(errorCode, httpStatus)));
 
         async Task TestDelegate() => await client.QueryAsync<object>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
@@ -161,7 +185,7 @@ public class ClientTests
             }},
             ""schema_version"": 0
         }}";
-        var qr = await MockQueryResponseAsync(responseBody, HttpStatusCode.BadRequest);
+        var qr = MockQueryResponse(responseBody, HttpStatusCode.BadRequest);
         Mock.Arrange(() => _mockConnection.DoPostAsync(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
         var c = CreateClientWithMockConnection();
 
@@ -199,7 +223,7 @@ public class ClientTests
             },
             ""schema_version"": 0
         }";
-        var qr = await MockQueryResponseAsync(responseBody, HttpStatusCode.OK);
+        var qr = MockQueryResponse(responseBody, HttpStatusCode.OK);
         Mock.Arrange(() =>
                      _mockConnection.DoPostAsync(
                          Arg.IsAny<string>(),
@@ -212,7 +236,7 @@ public class ClientTests
 
         bool check = false;
 
-        var qr2 = await MockQueryResponseAsync(responseBody, HttpStatusCode.OK);
+        var qr2 = MockQueryResponse(responseBody, HttpStatusCode.OK);
         Mock.Arrange(() =>
             _mockConnection.DoPostAsync(
                 Arg.IsAny<string>(),
