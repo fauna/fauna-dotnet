@@ -163,13 +163,19 @@ public class ClientTests
             ""schema_version"": 0
         }";
         var qr = await MockQueryResponseAsync(responseBody, HttpStatusCode.OK);
-        Mock.Arrange(() => _mockConnection.DoPostAsync(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
+        Mock.Arrange(() =>
+                     _mockConnection.DoPostAsync(
+                         Arg.IsAny<string>(),
+                         Arg.IsAny<Stream>(),
+                         Arg.IsAny<Dictionary<string, string>>())
+        ).Returns(Task.FromResult(qr));
 
         var c = CreateClientWithMockConnection();
         var r = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         bool check = false;
 
+        var qr2 = await MockQueryResponseAsync(responseBody, HttpStatusCode.OK);
         Mock.Arrange(() =>
             _mockConnection.DoPostAsync(
                 Arg.IsAny<string>(),
@@ -180,7 +186,7 @@ public class ClientTests
         {
             Assert.AreEqual(1702346199930000.ToString(), headers[Headers.LastTxnTs]);
             check = true;
-        }).Returns(Task.FromResult(qr));
+        }).Returns(Task.FromResult(qr2));
 
         var r2 = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
