@@ -48,6 +48,18 @@ public class QueryTests
     }
 
     [Test]
+    public void BuildsAQueryWithGuidParam()
+    {
+        var guidParam = Guid.NewGuid();
+
+        var expected = new QueryExpr(new QueryLiteral("let x = '"), new QueryVal<Guid>(guidParam), new QueryLiteral("';"));
+
+        var actual = FQL($@"let x = '{guidParam}';");
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
     public void BuildsAQueryWithArrayParam()
     {
         var arrayParam = new object[] {
