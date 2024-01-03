@@ -50,7 +50,7 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_SinglePageWithSmallCollection()
     {
-        var query = FQL($@"[1,2,3,4,5].toSet().paginate(10);");
+        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10].toSet().paginate(10);");
 
         var paginatedResult = _client.PaginateAsync(query);
 
@@ -59,14 +59,14 @@ public class IntegrationTests
         {
             pageCount++;
             var data = page.GetData<int>();
-            Assert.AreEqual(5, data.Count());
+            Assert.AreEqual(10, data.Count());
         }
 
         Assert.AreEqual(1, pageCount);
     }
 
     [Test]
-    public async Task Paginate_MultiplePagesWithBigCollection()
+    public async Task Paginate_MultiplePagesWithCollection()
     {
         var query = FQL($@"[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].toSet().paginate(10);");
 
@@ -84,7 +84,7 @@ public class IntegrationTests
     }
 
     [Test]
-    public async Task Paginate_MultiplePagesWithBigPocoCollection()
+    public async Task Paginate_MultiplePagesWithPocoCollection()
     {
         var items = new List<object>();
         for (int i = 1; i <= 100; i++)
@@ -93,7 +93,7 @@ public class IntegrationTests
             {
                 FirstName = $"FirstName{i}",
                 LastName = $"LastName{i}",
-                Age = 20 + i
+                Age = i
             });
         }
 
@@ -122,7 +122,7 @@ public class IntegrationTests
             {
                 FirstName = $"FirstName{i}",
                 LastName = $"LastName{i}",
-                Age = 20 + i
+                Age = i
             });
         }
 
