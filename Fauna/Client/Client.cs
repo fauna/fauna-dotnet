@@ -1,4 +1,5 @@
-﻿using Fauna.Constants;
+﻿using System.Globalization;
+using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
 
@@ -11,10 +12,10 @@ public class Client
 {
     private const string QueryUriPath = "/query/1";
 
-    private readonly ClientConfig config;
-    private readonly IConnection connection;
+    private readonly ClientConfig _config;
+    private readonly IConnection _connection;
     // FIXME(matt) look at moving to a database context which wraps client, perhaps
-    private readonly SerializationContext serializationCtx;
+    private readonly SerializationContext _serializationCtx;
 
     /// <summary>
     /// Gets the timestamp of the last transaction seen by this client.
@@ -46,9 +47,9 @@ public class Client
     /// <param name="connection">The custom connection to be used by the client.</param>
     public Client(ClientConfig config, IConnection connection)
     {
-        this.config = config;
-        this.connection = connection;
-        this.serializationCtx = new SerializationContext();
+        this._config = config;
+        this._connection = connection;
+        this._serializationCtx = new SerializationContext();
     }
 
     /// <summary>
@@ -80,13 +81,13 @@ public class Client
             throw new ClientException("Query cannot be null");
         }
 
-        var finalOptions = QueryOptions.GetFinalQueryOptions(config.DefaultQueryOptions, queryOptions);
+        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 
         using var stream = new MemoryStream();
         Serialize(stream, query);
 
-        var queryResponse = await connection.DoPostAsync<T>(QueryUriPath, stream, headers);
+        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, stream, headers);
 
         if (queryResponse is QueryFailure failure)
         {
@@ -138,7 +139,7 @@ public class Client
         using var writer = new Utf8FaunaWriter(stream);
         writer.WriteStartObject();
         writer.WriteFieldName("query");
-        query.Serialize(serializationCtx, writer);
+        query.Serialize(_serializationCtx, writer);
         writer.WriteEndObject();
         writer.Flush();
     }
@@ -148,7 +149,7 @@ public class Client
         var headers = new Dictionary<string, string>
         {
 
-            { Headers.Authorization, $"Bearer {config.Secret}"},
+            { Headers.Authorization, $"Bearer {_config.Secret}"},
             { Headers.Format, "tagged" },
             { Headers.Driver, "C#" }
         };
@@ -164,7 +165,7 @@ public class Client
             {
                 headers.Add(
                     Headers.QueryTimeoutMs,
-                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString());
+                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
             }
 
             if (queryOptions.QueryTags != null)
