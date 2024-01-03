@@ -1,4 +1,5 @@
-﻿using Fauna.Constants;
+﻿using System.Globalization;
+using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
 
@@ -13,6 +14,8 @@ public class Client
 
     private readonly ClientConfig _config;
     private readonly IConnection _connection;
+    // FIXME(matt) look at moving to a database context which wraps client, perhaps
+    private readonly SerializationContext _serializationCtx;
 
     /// <summary>
     /// Gets the timestamp of the last transaction seen by this client.
@@ -44,8 +47,9 @@ public class Client
     /// <param name="connection">The custom connection to be used by the client.</param>
     public Client(ClientConfig config, IConnection connection)
     {
-        _config = config;
-        _connection = connection;
+        this._config = config;
+        this._connection = connection;
+        this._serializationCtx = new SerializationContext();
     }
 
     /// <summary>
@@ -130,12 +134,12 @@ public class Client
         return (QuerySuccess<T>)queryResponse;
     }
 
-    private static void Serialize(Stream stream, Query query)
+    private void Serialize(Stream stream, Query query)
     {
         using var writer = new Utf8FaunaWriter(stream);
         writer.WriteStartObject();
         writer.WriteFieldName("query");
-        query.Serialize(writer);
+        query.Serialize(_serializationCtx, writer);
         writer.WriteEndObject();
         writer.Flush();
     }
@@ -161,7 +165,7 @@ public class Client
             {
                 headers.Add(
                     Headers.QueryTimeoutMs,
-                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString());
+                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
             }
 
             if (queryOptions.QueryTags != null)

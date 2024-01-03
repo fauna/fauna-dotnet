@@ -11,8 +11,9 @@ public abstract class Query : IEquatable<Query>, IQueryFragment
     /// <summary>
     /// Serializes the query into the provided stream.
     /// </summary>
+    /// <param name="ctx">The context to be used during serialization.</param>
     /// <param name="writer">The writer to which the query is serialized.</param>
-    public abstract void Serialize(Utf8FaunaWriter writer);
+    public abstract void Serialize(SerializationContext ctx, Utf8FaunaWriter writer);
 
     /// <summary>
     /// Returns a hash code for the current query.

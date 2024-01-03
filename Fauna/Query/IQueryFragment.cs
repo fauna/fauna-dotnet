@@ -12,7 +12,7 @@ public interface IQueryFragment
     /// Serializes the query fragment into the provided stream.
     /// </summary>
     /// <param name="writer">The writer to which the query fragment is serialized.</param>
-    void Serialize(Utf8FaunaWriter writer);
+    void Serialize(SerializationContext ctx, Utf8FaunaWriter writer);
 }
 
 /// <summary>
@@ -30,7 +30,8 @@ public static class IQueryFragmentExtensions
     {
         using var ms = new MemoryStream();
         using var fw = new Utf8FaunaWriter(ms);
-        fragment.Serialize(fw);
+        var ctx = new SerializationContext();
+        fragment.Serialize(ctx, fw);
         fw.Flush();
         return Encoding.UTF8.GetString(ms.ToArray());
     }
