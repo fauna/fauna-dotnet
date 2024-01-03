@@ -97,7 +97,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize(given);
+        var actual = Deserialize(given, null);
         Assert.AreEqual(typeof(Document), actual?.GetType());
         var typed = (actual as Document)!;
         Assert.AreEqual("123", typed.Id);
@@ -156,7 +156,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize(given);
+        var actual = Deserialize(given, null);
         Assert.AreEqual(typeof(NamedDocument), actual?.GetType());
         var typed = (actual as NamedDocument)!;
         Assert.AreEqual("DocName", typed.Name);
@@ -178,7 +178,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize<NamedDocument>(given);
+        var actual = Deserialize<NamedDocument>(given);
         Assert.AreEqual("DocName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
@@ -198,7 +198,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize<ClassForNamedDocument>(given);
+        var actual = Deserialize<ClassForNamedDocument>(given);
         Assert.AreEqual("DocName", actual.Name);
         Assert.AreEqual("user_value", actual.UserField);
     }
@@ -230,7 +230,7 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Serializer.Deserialize<NamedRef>(given);
+        var actual = Deserialize<NamedRef>(given);
         Assert.AreEqual("RefName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
