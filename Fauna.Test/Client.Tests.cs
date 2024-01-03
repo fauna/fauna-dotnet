@@ -1,6 +1,7 @@
 using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
+using Fauna.Test.Helpers;
 using NUnit.Framework;
 using System.Buffers;
 using System.Net;
@@ -101,7 +102,43 @@ public class ClientTests
     }
 
     [Test]
-    public async Task AbortReturnsQueryFailureAndThrows()
+    [TestCase("unauthorized", typeof(AuthenticationException), "Unauthorized: ")]
+    [TestCase("forbidden", typeof(AuthorizationException), "Forbidden: ")]
+    [TestCase("invalid_query", typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_function_definition", typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_identifier", typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_syntax", typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_type", typeof(QueryCheckException), "Invalid Query: ")]
+    [TestCase("invalid_argument", typeof(QueryRuntimeException), "Invalid Argument: ")]
+    [TestCase("abort", typeof(AbortException), "Abort: ")]
+    [TestCase("invalid_request", typeof(InvalidRequestException), "Invalid Request: ")]
+    [TestCase("contended_transaction", typeof(ContendedTransactionException), "Contended Transaction: ")]
+    [TestCase("limit_exceeded", typeof(ThrottlingException), "Limit Exceeded: ")]
+    [TestCase("time_limit_exceeded", typeof(QueryTimeoutException), "Time Limit Exceeded: ")]
+    [TestCase("internal_error", typeof(ServiceException), "Internal Error: ")]
+    [TestCase("timeout", typeof(QueryTimeoutException), "Timeout: ")]
+    [TestCase("time_out", typeof(QueryTimeoutException), "Timeout: ")]
+    [TestCase("bad_gateway", typeof(NetworkException), "Bad Gateway: ")]
+    [TestCase("gateway_timeout", typeof(NetworkException), "Gateway Timeout: ")]
+    [TestCase("unexpected_error", typeof(FaunaException), "Unexpected Error: ")] // Example for default case
+    public async Task QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, Type expectedExceptionType, string expectedMessageStart)
+    {
+        var client = CreateClientWithMockConnection();
+
+        Mock.Arrange(() => _mockConnection.DoPostAsync<object>(
+                Arg.IsAny<string>(),
+                Arg.IsAny<Stream>(),
+                Arg.IsAny<Dictionary<string, string>>()))
+            .Returns(Task.FromResult<QueryResponse>(ExceptionTestHelper.CreateQueryFailure(errorCode)));
+
+        async Task TestDelegate() => await client.QueryAsync<object>(new QueryExpr(new QueryLiteral("let x = 123; x")));
+
+        var exception = Assert.ThrowsAsync(expectedExceptionType, TestDelegate);
+        Assert.That(exception?.Message, Does.StartWith(expectedMessageStart));
+    }
+
+    [Test]
+    public async Task QueryAsync_ShouldThrowAbortExceptionWithCorrectObject_OnAbortErrorCode()
     {
         var expected = 123;
         var responseBody = $@"{{

@@ -1,37 +1,77 @@
-﻿using Fauna.Constants;
+﻿using System.Globalization;
+using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
 
 namespace Fauna;
 
+/// <summary>
+/// Represents a client for interacting with a Fauna.
+/// </summary>
 public class Client
 {
     private const string QueryUriPath = "/query/1";
 
-    private readonly ClientConfig config;
-    private readonly IConnection connection;
+    private readonly ClientConfig _config;
+    private readonly IConnection _connection;
     // FIXME(matt) look at moving to a database context which wraps client, perhaps
-    private readonly SerializationContext serializationCtx;
+    private readonly SerializationContext _serializationCtx;
 
+    /// <summary>
+    /// Gets the timestamp of the last transaction seen by this client.
+    /// </summary>
     public long LastSeenTxn { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the Client class using a secret key.
+    /// </summary>
+    /// <param name="secret">The secret key for authentication.</param>
     public Client(string secret) :
         this(new ClientConfig(secret))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the Client class using client configuration.
+    /// </summary>
+    /// <param name="config">The configuration settings for the client.</param>
     public Client(ClientConfig config) :
         this(config, new Connection(config.Endpoint, config.ConnectionTimeout, config.MaxRetries, config.MaxBackoff))
     {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the Client class using client configuration and a custom connection.
+    /// </summary>
+    /// <param name="config">The configuration settings for the client.</param>
+    /// <param name="connection">The custom connection to be used by the client.</param>
     public Client(ClientConfig config, IConnection connection)
     {
-        this.config = config;
-        this.connection = connection;
-        this.serializationCtx = new SerializationContext();
+        this._config = config;
+        this._connection = connection;
+        this._serializationCtx = new SerializationContext();
     }
 
+    /// <summary>
+    /// Asynchronously executes a specified FQL query against the Fauna database and returns the typed result.
+    /// </summary>
+    /// <typeparam name="T">The type of the result expected from the query, corresponding to the structure of the FQL query's expected response.</typeparam>
+    /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
+    /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
+    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
+    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public async Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         QueryOptions? queryOptions = null)
@@ -41,13 +81,13 @@ public class Client
             throw new ClientException("Query cannot be null");
         }
 
-        var finalOptions = QueryOptions.GetFinalQueryOptions(config.DefaultQueryOptions, queryOptions);
+        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);
 
         using var stream = new MemoryStream();
         Serialize(stream, query);
 
-        using var httpResponse = await connection.DoPostAsync(QueryUriPath, stream, headers);
+        using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers);
         var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(httpResponse);
 
         if (queryResponse is QueryFailure failure)
@@ -100,7 +140,7 @@ public class Client
         using var writer = new Utf8FaunaWriter(stream);
         writer.WriteStartObject();
         writer.WriteFieldName("query");
-        query.Serialize(serializationCtx, writer);
+        query.Serialize(_serializationCtx, writer);
         writer.WriteEndObject();
         writer.Flush();
     }
@@ -110,7 +150,7 @@ public class Client
         var headers = new Dictionary<string, string>
         {
 
-            { Headers.Authorization, $"Bearer {config.Secret}"},
+            { Headers.Authorization, $"Bearer {_config.Secret}"},
             { Headers.Format, "tagged" },
             { Headers.Driver, "C#" }
         };
@@ -126,7 +166,7 @@ public class Client
             {
                 headers.Add(
                     Headers.QueryTimeoutMs,
-                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString());
+                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
             }
 
             if (queryOptions.QueryTags != null)

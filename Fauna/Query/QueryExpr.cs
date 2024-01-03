@@ -3,18 +3,32 @@ using Fauna.Serialization;
 
 namespace Fauna;
 
+/// <summary>
+/// Represents an FQL query expression. This class encapsulates a list of IQueryFragment instances, allowing for complex query constructions.
+/// </summary>
 public sealed class QueryExpr : Query, IQueryFragment
 {
+    /// <summary>
+    /// Initializes a new instance of the QueryExpr class with a collection of query fragments.
+    /// </summary>
+    /// <param name="fragments">The collection of IQueryFragment instances.</param>
     public QueryExpr(IList<IQueryFragment> fragments)
     {
         Unwrap = new ReadOnlyCollection<IQueryFragment>(fragments);
     }
 
+    /// <summary>
+    /// Initializes a new instance of the QueryExpr class with one or more query fragments.
+    /// </summary>
+    /// <param name="fragments">The array of IQueryFragment instances.</param>
     public QueryExpr(params IQueryFragment[] fragments)
         : this(fragments.ToList())
     {
     }
 
+    /// <summary>
+    /// Gets the readonly collection of query fragments.
+    /// </summary>
     public ReadOnlyCollection<IQueryFragment> Unwrap { get; }
 
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
