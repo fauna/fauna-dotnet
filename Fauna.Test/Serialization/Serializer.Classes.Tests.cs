@@ -19,6 +19,13 @@ public partial class SerializerTests
     }
 
     [FaunaObject]
+    private class ClassForNamedDocument
+    {
+        [Field("name")] public string? Name { get; set; }
+        [Field("user_field")] public string? UserField { get; set; }
+    }
+
+    [FaunaObject]
     private class PersonWithAttributes
     {
         [Field("first_name")] public string? FirstName { get; set; } = "Baz";

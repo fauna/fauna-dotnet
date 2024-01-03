@@ -1,7 +1,8 @@
 ﻿using Fauna.Exceptions;
+using Fauna.Test.Helpers;
 using NUnit.Framework;
 
-namespace Fauna.Tests;
+namespace Fauna.Test.Exceptions;
 
 [TestFixture]
 public class AbortExceptionTests
@@ -16,7 +17,7 @@ public class AbortExceptionTests
     [Test]
     public void Ctor_InitializesPropertiesCorrectly()
     {
-        var expectedQueryFailure = CreateQueryFailure(@"{{\""@int\"":\""123\""}}");
+        var expectedQueryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@int\":\"123\"}}");
         var expectedMessage = "Test message";
         var expectedInnerException = new Exception("Inner exception");
 
@@ -35,7 +36,7 @@ public class AbortExceptionTests
     public void GetData_WithIntData_ReturnsDeserializedObject()
     {
         var expected = 123;
-        var queryFailure = CreateQueryFailure(@$"{{\""@int\"":\""{expected}\""}}");
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@int\":\"{expected}\"}}");
         var exception = new AbortException(queryFailure, "Test message");
 
         var actual = exception.GetData();
@@ -50,7 +51,7 @@ public class AbortExceptionTests
     public void GetDataT_WithIntData_ReturnsDeserializedTypedObject()
     {
         var expected = 123;
-        var queryFailure = CreateQueryFailure(@$"{{\""@int\"":\""{expected}\""}}");
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@int\":\"{expected}\"}}");
         var exception = new AbortException(queryFailure, "Test message");
 
         var actual = exception.GetData<int>();
@@ -63,7 +64,7 @@ public class AbortExceptionTests
     public void GetData_WithPocoData_ReturnsDeserializedObject()
     {
         var expected = new TestClass { Name = "John", Age = 105 };
-        var queryFailure = CreateQueryFailure(@$"{{\""@object\"":{{\""Name\"":\""{expected.Name}\"",\""Age\"":{{\""@int\"":\""{expected.Age}\""}}}}}}");
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{expected.Name}\",\"Age\":{{\"@int\":\"{expected.Age}\"}}}}}}");
         var exception = new AbortException(queryFailure, "Test message");
 
         var actual = exception.GetData() as IDictionary<string, object>;
@@ -77,7 +78,7 @@ public class AbortExceptionTests
     public void GetDataT_WithPocoData_ReturnsDeserializedTypedObject()
     {
         var expected = new TestClass { Name = "John", Age = 105 };
-        var queryFailure = CreateQueryFailure(@$"{{\""@object\"":{{\""Name\"":\""{expected.Name}\"",\""Age\"":{{\""@int\"":\""{expected.Age}\""}}}}}}");
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{expected.Name}\",\"Age\":{{\"@int\":\"{expected.Age}\"}}}}}}");
         var exception = new AbortException(queryFailure, "Test message");
 
         var actual = exception.GetData<TestClass>();
@@ -90,7 +91,7 @@ public class AbortExceptionTests
     [Test]
     public void GetData_WithNullAbortData_ReturnsNull()
     {
-        var queryFailure = CreateQueryFailure(null);
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", null);
         var exception = new AbortException(queryFailure, "Test message");
 
         var result = exception.GetData();
@@ -102,7 +103,7 @@ public class AbortExceptionTests
     public void GetData_CachesDataCorrectly()
     {
         var mockData = new TestClass { Name = "John", Age = 105 };
-        var queryFailure = CreateQueryFailure(@$"{{\""@object\"":{{\""Name\"":\""{mockData.Name}\"",\""Age\"":{{\""@int\"":\""{mockData.Age}\""}}}}}}");
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{mockData.Name}\",\"Age\":{{\"@int\":\"{mockData.Age}\"}}}}}}");
         var exception = new AbortException(queryFailure, "Test message");
 
         var callResult1 = exception.GetData();
@@ -114,30 +115,5 @@ public class AbortExceptionTests
         Assert.AreSame(typedCallResult1, typedCallResult2);
         Assert.AreNotSame(callResult1, typedCallResult1);
         Assert.AreNotSame(callResult2, typedCallResult2);
-    }
-
-    private QueryFailure CreateQueryFailure(string abortData)
-    {
-        var rawResponseText = $@"{{
-            ""error"": {{
-                ""code"": ""abort"",
-                ""message"": ""Query aborted."",
-                ""abort"": ""{abortData}""
-            }},
-            ""summary"": ""error: Query aborted."",
-            ""txn_ts"": 1702346199930000,
-            ""stats"": {{
-                ""compute_ops"": 1,
-                ""read_ops"": 0,
-                ""write_ops"": 0,
-                ""query_time_ms"": 105,
-                ""contention_retries"": 0,
-                ""storage_bytes_read"": 261,
-                ""storage_bytes_write"": 0,
-                ""rate_limits_hit"": []
-            }},
-            ""schema_version"": 0
-        }}";
-        return new QueryFailure(rawResponseText);
     }
 }
