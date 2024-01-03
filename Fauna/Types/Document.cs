@@ -1,79 +1,37 @@
-using System.Collections;
-
 namespace Fauna.Types;
 
-public sealed class Document : Ref, IDictionary<string, object?>
+/// <summary>
+/// Represents a document.
+/// </summary>
+public sealed class Document : BaseDocument
 {
-    private Dictionary<string, object?> _data = new();
 
-    public DateTime Ts { get; set; }
+    /// <summary>
+    /// Gets the string value of the document id.
+    /// </summary>
+    public string Id { get; }
 
-    public ICollection<string> Keys => _data.Keys;
-    public ICollection<object?> Values => _data.Values;
-
-    public IEnumerator<KeyValuePair<string, object?>> GetEnumerator()
+    /// <summary>
+    /// Initializes a new instance of the Document class with the specified id, coll, and ts.
+    /// </summary>
+    /// <param name="id">The string value of the document id.</param>
+    /// <param name="coll">The module to which the document belongs.</param>
+    /// <param name="ts">The timestamp of the document.</param>
+    public Document(string id, Module coll, DateTime ts) : base(coll, ts)
     {
-        return _data.GetEnumerator();
+        Id = id;
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
+    /// <summary>
+    /// Initializes a new instance of the Document class with the specified id, coll, ts, and additional data stored
+    /// as key/value pairs on the instance.
+    /// </summary>
+    /// <param name="id">The string value of the document id.</param>
+    /// <param name="coll">The module to which the document belongs.</param>
+    /// <param name="ts">The timestamp of the document.</param>
+    /// <param name="data">Additional data on the document.</param>
+    public Document(string id, Module coll, DateTime ts, Dictionary<string, object?> data) : base(coll, ts, data)
     {
-        return ((IEnumerable)_data).GetEnumerator();
+        Id = id;
     }
-
-    public void Add(KeyValuePair<string, object?> item)
-    {
-        _data.Add(item.Key, item.Value);
-    }
-
-    public void Clear()
-    {
-        _data.Clear();
-    }
-
-    public bool Contains(KeyValuePair<string, object?> item)
-    {
-        return _data.Contains(item);
-    }
-
-    public void CopyTo(KeyValuePair<string, object?>[] array, int arrayIndex)
-    {
-        throw new NotImplementedException();
-    }
-
-    public bool Remove(KeyValuePair<string, object?> item)
-    {
-        throw new NotImplementedException();
-    }
-
-    public int Count => _data.Count;
-
-    public bool IsReadOnly => true;
-
-    public void Add(string key, object? value)
-    {
-        _data.Add(key, value);
-    }
-
-    public bool ContainsKey(string key)
-    {
-        return _data.ContainsKey(key);
-    }
-
-    public bool Remove(string key)
-    {
-        return _data.Remove(key);
-    }
-
-    public bool TryGetValue(string key, out object? value)
-    {
-        throw new NotImplementedException();
-    }
-
-    public object? this[string key]
-    {
-        get => _data[key];
-        set => _data[key] = value;
-    }
-
 }

@@ -76,7 +76,29 @@ public partial class SerializerTests
                                      ""id"":""123"",
                                      ""coll"":{""@mod"":""MyColl""},
                                      ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
-                                     ""user_field"":""user_value""
+                                     ""name"":""name_value""
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize(given);
+        Assert.AreEqual(typeof(Document), actual?.GetType());
+        var typed = (actual as Document)!;
+        Assert.AreEqual("123", typed.Id);
+        Assert.AreEqual(new Module("MyColl"), typed.Collection);
+        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), typed.Ts);
+        Assert.AreEqual("name_value", typed["name"]);
+    }
+
+    [Test]
+    public void DeserializeDocumentWithType()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""name"":""name_value""
                                  }
                              }";
 
@@ -84,7 +106,7 @@ public partial class SerializerTests
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
-        Assert.AreEqual("user_value", actual["user_field"]);
+        Assert.AreEqual("name_value", actual["name"]);
     }
 
     [Test]
@@ -105,6 +127,66 @@ public partial class SerializerTests
     }
 
     [Test]
+    public void DeserializeNamedDocument()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""name"":""DocName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize(given);
+        Assert.AreEqual(typeof(NamedDocument), actual?.GetType());
+        var typed = (actual as NamedDocument)!;
+        Assert.AreEqual("DocName", typed.Name);
+        Assert.AreEqual(new Module("MyColl"), typed.Collection);
+        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), typed.Ts);
+        Assert.AreEqual("user_value", typed["user_field"]);
+    }
+
+    [Test]
+    public void DeserializeNamedDocumentWithType()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""name"":""DocName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize<NamedDocument>(given);
+        Assert.AreEqual("DocName", actual.Name);
+        Assert.AreEqual(new Module("MyColl"), actual.Collection);
+        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
+        Assert.AreEqual("user_value", actual["user_field"]);
+    }
+
+    [Test]
+    public void DeserializeNamedDocumentToClass()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""name"":""DocName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize<ClassForNamedDocument>(given);
+        Assert.AreEqual("DocName", actual.Name);
+        Assert.AreEqual("user_value", actual.UserField);
+    }
+
+    [Test]
     public void DeserializeRef()
     {
         const string given = @"
@@ -119,6 +201,23 @@ public partial class SerializerTests
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
+
+    [Test]
+    public void DeserializeNamedRef()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""}
+                                 }
+                             }";
+
+        var actual = Serializer.Deserialize<NamedRef>(given);
+        Assert.AreEqual("RefName", actual.Name);
+        Assert.AreEqual(new Module("MyColl"), actual.Collection);
+    }
+
 
     [Test]
     public void DeserializeObject()

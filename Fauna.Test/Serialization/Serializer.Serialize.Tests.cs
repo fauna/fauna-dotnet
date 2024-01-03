@@ -1,13 +1,24 @@
-using System.Text.RegularExpressions;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
 public partial class SerializerTests
 {
+    public static string Serialize(object? obj)
+    {
+        using var stream = new MemoryStream();
+        using var writer = new Utf8FaunaWriter(stream);
+        var ctx = new SerializationContext();
+        Serializer.Serialize(ctx, writer, obj);
+        writer.Flush();
+        return Encoding.UTF8.GetString(stream.ToArray());
+    }
+
     [Test]
     public void SerializeValues()
     {
@@ -33,7 +44,7 @@ public partial class SerializerTests
 
         foreach (var (expected, test) in tests)
         {
-            var result = Serializer.Serialize(test);
+            var result = Serialize(test);
             Assert.AreEqual(expected, result);
         }
     }
@@ -50,7 +61,7 @@ public partial class SerializerTests
 
         };
 
-        var actual = Serializer.Serialize(test);
+        var actual = Serialize(test);
         Assert.AreEqual(@"{""answer"":{""@int"":""42""},""foo"":""bar"",""list"":[],""obj"":{}}", actual);
     }
 
@@ -73,7 +84,7 @@ public partial class SerializerTests
 
         foreach (var (test, expected) in tests)
         {
-            var actual = Serializer.Serialize(test);
+            var actual = Serialize(test);
             Assert.AreEqual(expected, actual);
         }
     }
@@ -89,7 +100,7 @@ public partial class SerializerTests
             new Dictionary<string, object>()
         };
 
-        var actual = Serializer.Serialize(test);
+        var actual = Serialize(test);
         Assert.AreEqual(@"[{""@int"":""42""},""foo bar"",[],{}]", actual);
     }
 
@@ -97,7 +108,7 @@ public partial class SerializerTests
     public void SerializeClass()
     {
         var test = new Person();
-        var actual = Serializer.Serialize(test);
+        var actual = Serialize(test);
         Assert.AreEqual(@"{""FirstName"":""Baz"",""LastName"":""Luhrmann"",""Age"":{""@int"":""61""}}", actual);
     }
 
@@ -105,7 +116,7 @@ public partial class SerializerTests
     public void SerializeClassWithAttributes()
     {
         var test = new PersonWithAttributes();
-        var actual = Serializer.Serialize(test);
+        var actual = Serialize(test);
         Assert.AreEqual(@"{""first_name"":""Baz"",""last_name"":""Luhrmann"",""age"":{""@long"":""61""}}", actual);
     }
 
@@ -128,7 +139,7 @@ public partial class SerializerTests
 
         foreach (var (test, expected) in tests)
         {
-            var actual = Serializer.Serialize(test);
+            var actual = Serialize(test);
             Assert.AreEqual(expected, actual);
         }
     }
@@ -161,7 +172,7 @@ public partial class SerializerTests
                        }
                        ";
         var expected = Regex.Replace(expectedWithWhitespace, @"\s", string.Empty);
-        var actual = Serializer.Serialize(test);
+        var actual = Serialize(test);
         Assert.AreEqual(expected, actual);
     }
 
@@ -169,7 +180,7 @@ public partial class SerializerTests
     public void SerializeObjectWithInvalidTypeHint()
     {
         var obj = new ClassWithInvalidPropertyTypeHint();
-        Assert.Throws<SerializationException>(() => Serializer.Serialize(obj));
+        Assert.Throws<SerializationException>(() => Serialize(obj));
     }
 
     [Test]
@@ -177,7 +188,7 @@ public partial class SerializerTests
     {
         var obj = new ClassWithFieldAttributeAndWithoutFaunaObjectAttribute();
         var expected = "{\"FirstName\":\"Baz\"}";
-        var actual = Serializer.Serialize(obj);
+        var actual = Serialize(obj);
         Assert.AreEqual(expected, actual);
     }
 
@@ -186,7 +197,7 @@ public partial class SerializerTests
     {
         var obj = new ClassWithPropertyWithoutFieldAttribute();
         var expected = "{}";
-        var actual = Serializer.Serialize(obj);
+        var actual = Serialize(obj);
         Assert.AreEqual(expected, actual);
     }
 
@@ -195,7 +206,7 @@ public partial class SerializerTests
     {
         var obj = new { FirstName = "John", LastName = "Doe" };
         var expected = "{\"FirstName\":\"John\",\"LastName\":\"Doe\"}";
-        var actual = Serializer.Serialize(obj);
+        var actual = Serialize(obj);
         Assert.AreEqual(expected, actual);
     }
 
@@ -211,7 +222,7 @@ public partial class SerializerTests
 
         foreach (var (value, expected) in tests)
         {
-            var actual = Serializer.Serialize(value);
+            var actual = Serialize(value);
             Assert.AreEqual(expected, actual);
         }
     }
@@ -233,7 +244,7 @@ public partial class SerializerTests
 
         foreach (var (value, expected) in tests)
         {
-            var actual = Serializer.Serialize(value);
+            var actual = Serialize(value);
             Assert.AreEqual(expected, actual);
         }
     }
@@ -250,7 +261,7 @@ public partial class SerializerTests
 
         foreach (var (value, expected) in tests)
         {
-            var actual = Serializer.Serialize(value);
+            var actual = Serialize(value);
             Assert.AreEqual(expected, actual);
         }
     }
