@@ -2,27 +2,35 @@
 
 public class Page
 {
-    public List<object> Data { get; init; }
+    private readonly object _data;
+    private readonly string? _after;
+    private readonly Dictionary<Type, object?> _cache = new();
 
-    public string? After { get; init; }
+    public string? After => _after;
 
-    private readonly Dictionary<Type, List<object>> cache = new();
-
-    public Page(List<object> rawJsonData, string? after)
+    public Page(object data, string? after)
     {
-        Data = rawJsonData;
-        After = after;
+        _data = data;
+        _after = after;
     }
 
-    public List<T> GetData<T>()
+    public IEnumerable<object> GetData()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IEnumerable<T> GetData<T>()
     {
         var typeKey = typeof(T);
-        if (!cache.TryGetValue(typeKey, out var cachedData))
+        if (!_cache.TryGetValue(typeKey, out var cachedData))
         {
-            var deserializedData = Data.Select(item => Serializer.Deserialize<T>(item.ToString())).ToList();
-            cache[typeKey] = deserializedData.Cast<object>().ToList();
-            return deserializedData;
+            var dataString = _data.ToString();
+            if (!string.IsNullOrEmpty(dataString))
+            {
+                cachedData = Serializer.Deserialize<List<T>>(dataString);
+                _cache[typeKey] = cachedData;
+            }
         }
-        return cachedData.Cast<T>().ToList();
+        return cachedData as IEnumerable<T> ?? Enumerable.Empty<T>();
     }
 }

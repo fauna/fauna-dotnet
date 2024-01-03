@@ -86,9 +86,16 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_MultiplePagesWithBigPocoCollection()
     {
-        var items = Enumerable.Range(1, 100)
-            .Select(i => new Person { FirstName = $"FirstName{i}", LastName = $"LastName{i}", Age = i })
-            .ToList();
+        var items = new List<object>();
+        for (int i = 1; i <= 100; i++)
+        {
+            items.Add(new Person
+            {
+                FirstName = $"FirstName{i}",
+                LastName = $"LastName{i}",
+                Age = 20 + i
+            });
+        }
 
         var query = FQL($"{items}.toSet().paginate(20);");
 
@@ -108,9 +115,16 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_IteratorCanBeFlattened()
     {
-        var items = Enumerable.Range(1, 100)
-            .Select(i => new Person { FirstName = $"FirstName{i}", LastName = $"LastName{i}", Age = i })
-            .ToList();
+        var items = new List<object>();
+        for (int i = 1; i <= 100; i++)
+        {
+            items.Add(new Person
+            {
+                FirstName = $"FirstName{i}",
+                LastName = $"LastName{i}",
+                Age = 20 + i
+            });
+        }
 
         var query = FQL($"{items}.toSet().paginate(20);");
 
