@@ -17,18 +17,5 @@ namespace Fauna.Test.Exceptions
             Assert.AreEqual(exception.QueryFailure, queryFailure);
             Assert.AreEqual(exception.Message, message);
         }
-
-        [Test]
-        public void CtorWithQueryFailureMessageAndInnerException_ShouldSetProperties()
-        {
-            var queryFailure = ExceptionTestHelper.CreateQueryFailure("unauthorized");
-            var message = "Authentication error";
-            var innerException = new Exception("Inner exception");
-            var exception = new AuthenticationException(queryFailure, message, innerException);
-
-            Assert.AreEqual(exception.QueryFailure, queryFailure);
-            Assert.AreEqual(exception.Message, message);
-            Assert.AreEqual(exception.InnerException, innerException);
-        }
     }
 }

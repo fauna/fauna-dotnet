@@ -8,7 +8,4 @@ public class ThrottlingException : ServiceException, IRetryableException
 {
     public ThrottlingException(QueryFailure queryFailure, string message)
         : base(queryFailure, message) { }
-
-    public ThrottlingException(QueryFailure queryFailure, string message, Exception innerException)
-        : base(queryFailure, message, innerException) { }
 }

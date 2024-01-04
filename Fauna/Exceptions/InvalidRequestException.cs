@@ -7,7 +7,4 @@ public class InvalidRequestException : ServiceException
 {
     public InvalidRequestException(QueryFailure queryFailure, string message)
         : base(queryFailure, message) { }
-
-    public InvalidRequestException(QueryFailure queryFailure, string message, Exception innerException)
-        : base(queryFailure, message, innerException) { }
 }
