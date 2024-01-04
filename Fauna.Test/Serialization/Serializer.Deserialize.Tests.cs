@@ -214,9 +214,28 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Deserialize<Ref>(given);
+        var actual = Deserialize<DocumentRef>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
+    }
+
+    [Test]
+    public void DeserializeNullRef()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""reason"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullDocumentRef>(given);
+        Assert.AreEqual("123", actual.Id);
+        Assert.AreEqual(new Module("MyColl"), actual.Collection);
+        Assert.AreEqual("not found", actual.Reason);
     }
 
     [Test]
@@ -230,11 +249,29 @@ public partial class SerializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NamedRef>(given);
+        var actual = Deserialize<NamedDocumentRef>(given);
         Assert.AreEqual("RefName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
 
+    [Test]
+    public void DeserializeNullNamedRef()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""reason"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullNamedDocumentRef>(given);
+        Assert.AreEqual("RefName", actual.Name);
+        Assert.AreEqual(new Module("MyColl"), actual.Collection);
+        Assert.AreEqual("not found", actual.Reason);
+    }
 
     [Test]
     public void DeserializeObject()

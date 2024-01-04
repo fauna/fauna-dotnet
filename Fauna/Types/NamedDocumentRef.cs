@@ -2,9 +2,9 @@ namespace Fauna.Types;
 
 /// <summary>
 /// Represents a document ref that has a "name" instead of an "id". For example, a Role document reference is
-/// represented as a NamedRef.
+/// represented as a NamedDocumentRef.
 /// </summary>
-public class NamedRef
+public class NamedDocumentRef
 {
     /// <summary>
     /// Gets the string value of the ref name.
