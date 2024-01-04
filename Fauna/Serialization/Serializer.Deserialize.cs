@@ -73,11 +73,11 @@ public static partial class Serializer
                         allProps["coll"] = coll;
                         break;
                     case "exists":
-                        exists = DeserializeValueInternal<bool>(ref reader, context);
+                        exists = Deserialize<bool>(context, ref reader);
                         allProps["exists"] = exists;
                         break;
                     case "reason":
-                        reason = DeserializeValueInternal<string>(ref reader, context);
+                        reason = Deserialize<string>(context, ref reader);
                         allProps["reason"] = reason;
                         break;
                     default:
