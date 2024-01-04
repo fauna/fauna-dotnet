@@ -87,7 +87,8 @@ public class Client
         using var stream = new MemoryStream();
         Serialize(stream, query);
 
-        var queryResponse = await _connection.DoPostAsync<T>(QueryUriPath, stream, headers);
+        using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers);
+        var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(_serializationCtx, httpResponse);
 
         if (queryResponse is QueryFailure failure)
         {
@@ -106,7 +107,7 @@ public class Client
                 "invalid_syntax" or
                 "invalid_type" => new QueryCheckException(failure, FormatMessage("Invalid Query")),
                 "invalid_argument" => new QueryRuntimeException(failure, FormatMessage("Invalid Argument")),
-                "abort" => new AbortException(failure, FormatMessage("Abort")),
+                "abort" => new AbortException(_serializationCtx, failure, FormatMessage("Abort")),
 
                 // Request/Transaction Errors
                 "invalid_request" => new InvalidRequestException(failure, FormatMessage("Invalid Request")),
