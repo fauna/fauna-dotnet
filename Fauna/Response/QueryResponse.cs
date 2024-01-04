@@ -1,6 +1,4 @@
-using Fauna.Response;
 using Fauna.Serialization;
-using System;
 using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
 
@@ -10,7 +8,7 @@ public abstract class QueryResponse : QueryInfo
 {
     internal QueryResponse(string rawResponseText) : base(rawResponseText) { }
 
-    public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(HttpResponseMessage message)
+    public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(SerializationContext ctx, HttpResponseMessage message)
     {
         QueryResponse queryResponse;
 
@@ -22,14 +20,7 @@ public abstract class QueryResponse : QueryInfo
         }
         else
         {
-            if (typeof(T) == typeof(Page))
-            {
-                queryResponse = new QueryPageSuccess(body);
-            }
-            else
-            {
-                queryResponse = new QuerySuccess<T>(body);
-            }
+            queryResponse = new QuerySuccess<T>(ctx, body);
         }
 
         return queryResponse;
@@ -41,24 +32,17 @@ public class QuerySuccess<T> : QueryResponse
     public T Data { get; init; }
     public string? StaticType { get; init; }
 
-    public QuerySuccess(string rawResponseText) : base(rawResponseText)
+    public QuerySuccess(SerializationContext ctx, string rawResponseText) : base(rawResponseText)
     {
-        Data = Serializer.Deserialize<T>(_responseBody.GetProperty(DataFieldName).GetRawText());
+        var dataText = _responseBody.GetProperty(DataFieldName).GetRawText();
+        var reader = new Utf8FaunaReader(dataText);
+        reader.Read();
+        Data = Serializer.Deserialize<T>(ctx, ref reader);
+
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {
             StaticType = jsonElement.GetString();
         }
-    }
-}
-
-public class QueryPageSuccess : QueryResponse
-{
-    public QueryPageInfo Data { get; init; }
-
-    public QueryPageSuccess(string rawResponseText) : base(rawResponseText)
-    {
-        var dataBlock = _responseBody.GetProperty(DataFieldName);
-        Data = dataBlock.Deserialize<QueryPageInfo>();
     }
 }
 

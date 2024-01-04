@@ -5,37 +5,12 @@ namespace Fauna.Serialization;
 
 public static partial class Serializer
 {
-    public static object? Deserialize(string str)
+    public static T Deserialize<T>(SerializationContext context, ref Utf8FaunaReader reader)
     {
-        return Deserialize(str, null);
+        return (T)Deserialize(context, ref reader, typeof(T))!;
     }
 
-    public static T Deserialize<T>(string str)
-    {
-        return (T)Deserialize(str, typeof(T));
-    }
-
-    public static object? Deserialize(string str, Type? type)
-    {
-        var reader = new Utf8FaunaReader(str);
-        var context = new SerializationContext();
-        reader.Read();
-        var obj = DeserializeValueInternal(ref reader, context, type);
-
-        if (reader.Read())
-        {
-            throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
-        }
-
-        return obj;
-    }
-
-    private static T DeserializeValueInternal<T>(ref Utf8FaunaReader reader, SerializationContext context)
-    {
-        return (T)DeserializeValueInternal(ref reader, context, typeof(T));
-    }
-
-    private static object? DeserializeValueInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
+    public static object? Deserialize(SerializationContext context, ref Utf8FaunaReader reader, Type? targetType = null)
     {
         var value = reader.CurrentTokenType switch
         {
@@ -64,7 +39,7 @@ public static partial class Serializer
     private static object? DeserializeRefInternal(ref Utf8FaunaReader reader, SerializationContext context,
         Type? targetType = null)
     {
-        if (targetType != null && targetType != typeof(Ref) && targetType != typeof(NamedRef))
+        if (targetType != null && targetType != typeof(DocumentRef) && targetType != typeof(NamedDocumentRef) && targetType != typeof(NullDocumentRef) && targetType != typeof(NullNamedDocumentRef))
         {
             throw new ArgumentException($"Unsupported target type for ref. Must be a ref or undefined, but was {targetType}");
         }
@@ -72,6 +47,8 @@ public static partial class Serializer
         string? id = null;
         string? name = null;
         Module? coll = null;
+        var exists = true;
+        string? reason = null;
         var allProps = new Dictionary<string, object?>();
 
 
@@ -84,19 +61,27 @@ public static partial class Serializer
                 switch (fieldName)
                 {
                     case "id":
-                        id = DeserializeValueInternal<string>(ref reader, context);
+                        id = Deserialize<string>(context, ref reader);
                         allProps["id"] = id;
                         break;
                     case "name":
-                        name = DeserializeValueInternal<string>(ref reader, context);
+                        name = Deserialize<string>(context, ref reader);
                         allProps["name"] = name;
                         break;
                     case "coll":
-                        coll = DeserializeValueInternal<Module>(ref reader, context);
+                        coll = Deserialize<Module>(context, ref reader);
                         allProps["coll"] = coll;
                         break;
+                    case "exists":
+                        exists = Deserialize<bool>(context, ref reader);
+                        allProps["exists"] = exists;
+                        break;
+                    case "reason":
+                        reason = Deserialize<string>(context, ref reader);
+                        allProps["reason"] = reason;
+                        break;
                     default:
-                        allProps[fieldName] = DeserializeValueInternal(ref reader, context);
+                        allProps[fieldName] = Deserialize(context, ref reader);
                         break;
                 }
             }
@@ -105,21 +90,42 @@ public static partial class Serializer
                     $"Unexpected token while deserializing into Document: {reader.CurrentTokenType}");
         }
 
+
         if (id != null && coll != null)
         {
-            return new Ref
+            if (exists)
+            {
+                return new DocumentRef
+                {
+                    Id = id,
+                    Collection = coll,
+                };
+            }
+
+            return new NullDocumentRef
             {
                 Id = id,
-                Collection = coll
+                Collection = coll,
+                Reason = reason
             };
         }
 
         if (name != null && coll != null)
         {
-            return new NamedRef
+            if (exists)
+            {
+                return new NamedDocumentRef
+                {
+                    Name = name,
+                    Collection = coll,
+                };
+            }
+
+            return new NullNamedDocumentRef
             {
                 Name = name,
-                Collection = coll
+                Collection = coll,
+                Reason = reason
             };
         }
 
@@ -150,19 +156,19 @@ public static partial class Serializer
                 switch (fieldName)
                 {
                     case "id":
-                        id = DeserializeValueInternal<string>(ref reader, context);
+                        id = Deserialize<string>(context, ref reader);
                         break;
                     case "name":
-                        name = DeserializeValueInternal<string>(ref reader, context);
+                        name = Deserialize<string>(context, ref reader);
                         break;
                     case "ts":
-                        ts = DeserializeValueInternal<DateTime>(ref reader, context);
+                        ts = Deserialize<DateTime>(context, ref reader);
                         break;
                     case "coll":
-                        coll = DeserializeValueInternal<Module>(ref reader, context);
+                        coll = Deserialize<Module>(context, ref reader);
                         break;
                     default:
-                        data[fieldName] = DeserializeValueInternal(ref reader, context);
+                        data[fieldName] = Deserialize(context, ref reader);
                         break;
                 }
             }
@@ -211,7 +217,7 @@ public static partial class Serializer
             var lst = new List<object?>();
             while (reader.Read() && reader.CurrentTokenType != TokenType.EndArray)
             {
-                lst.Add(DeserializeValueInternal(ref reader, context));
+                lst.Add(Deserialize(context, ref reader));
             }
             return lst;
         }
@@ -225,7 +231,7 @@ public static partial class Serializer
             {
                 var parameters = new[]
                 {
-                    DeserializeValueInternal(ref reader, context, elementType)
+                    Deserialize(context, ref reader, elementType)
                 };
                 add.Invoke(lst, parameters);
             }
@@ -260,7 +266,7 @@ public static partial class Serializer
 
                 if (fieldMap.ContainsKey(fieldName))
                 {
-                    fieldMap[fieldName].Info!.SetValue(instance, DeserializeValueInternal(ref reader, context)!);
+                    fieldMap[fieldName].Info!.SetValue(instance, Deserialize(context, ref reader)!);
                 }
                 else
                 {
@@ -289,7 +295,7 @@ public static partial class Serializer
                 {
                     var fieldName = reader.GetString()!;
                     reader.Read();
-                    obj[fieldName] = DeserializeValueInternal(ref reader, context)!;
+                    obj[fieldName] = Deserialize(context, ref reader)!;
                 }
                 else
                     throw new SerializationException(
@@ -327,7 +333,7 @@ public static partial class Serializer
                     var parameters = new[]
                     {
                         fieldName,
-                        DeserializeValueInternal(ref reader, context, valueType)
+                        Deserialize(context, ref reader, valueType)
                     };
                     add.Invoke(obj, parameters);
                 }
