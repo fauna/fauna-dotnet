@@ -43,35 +43,35 @@ public class Connection : IConnection
     /// <param name="path">The path of the resource to send the request to.</param>
     /// <param name="body">The stream containing the request body.</param>
     /// <param name="headers">A dictionary of headers to be included in the request.</param>
-    /// <returns>A Task representing the asynchronous operation, which upon completion contains the response from the server as <see cref="QueryResponse"/>.</returns>
+    /// <returns>A Task representing the asynchronous operation, which upon completion contains the response from the server as <see cref="HttpResponseMessage"/>.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
     /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
     /// <exception cref="ProtocolException">Thrown when response parsing fails.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
-    public async Task<QueryResponse> DoPostAsync<T>(
+    public async Task<HttpResponseMessage> DoPostAsync(
         string path,
         Stream body,
         Dictionary<string, string> headers)
     {
         string FormatMessage(string errorType, string message) => $"{errorType}: {message}";
 
-        HttpResponseMessage? response = null;
-        for (int attempt = 0; attempt < _maxRetries; attempt++)
+        int attempt = 0;
+        while (true)
         {
             try
             {
                 var request = CreateHttpRequest(path, body, headers);
-                response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.SendAsync(request);
 
-                if (response.IsSuccessStatusCode || response.StatusCode != HttpStatusCode.TooManyRequests)
-                {
-                    return await QueryResponse.GetFromHttpResponseAsync<T>(response);
-                }
-
-                if (attempt < _maxRetries - 1)
+                if (response.StatusCode == HttpStatusCode.TooManyRequests && attempt < _maxRetries)
                 {
                     await ApplyExponentialBackoff(attempt);
+                    attempt++;
+                }
+                else
+                {
+                    return response;
                 }
             }
             catch (HttpRequestException ex)
@@ -114,10 +114,6 @@ public class Connection : IConnection
                 throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
             }
         }
-
-        return response is null
-            ? throw new ClientException("No response received from the server.")
-            : await QueryResponse.GetFromHttpResponseAsync<T>(response);
     }
 
     private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)
