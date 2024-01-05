@@ -71,20 +71,27 @@ public partial class SerializerTests
     private class PersonWithTypeOverrides
     {
         // Long Conversions
-        [Field("short_to_long", FaunaType.Long)] public short? ShortToLong { get; set; } = 1;
-        [Field("int_to_long", FaunaType.Long)] public int? IntToLong { get; set; } = 2;
-        [Field("long_to_long", FaunaType.Long)] public long? LongToLong { get; set; } = 3L;
+        [Field("short_to_long", FaunaType.Long)] public short? ShortToLong { get; set; } = 10;
+        [Field("ushort_to_long", FaunaType.Long)] public ushort? UShortToLong { get; set; } = 11;
+        [Field("byte_to_long", FaunaType.Long)] public byte? ByteToLong { get; set; } = 12;
+        [Field("sbyte_to_long", FaunaType.Long)] public sbyte? SByteToLong { get; set; } = 13;
+        [Field("int_to_long", FaunaType.Long)] public int? IntToLong { get; set; } = 20;
+        [Field("uint_to_long", FaunaType.Long)] public uint? UIntToLong { get; set; } = 21;
+        [Field("long_to_long", FaunaType.Long)] public long? LongToLong { get; set; } = 30L;
 
         // Int Conversions
-        [Field("short_to_int", FaunaType.Int)] public short? ShortToInt { get; set; } = 4;
-        [Field("int_to_int", FaunaType.Int)] public int? IntToInt { get; set; } = 5;
+        [Field("short_to_int", FaunaType.Int)] public short? ShortToInt { get; set; } = 40;
+        [Field("ushort_to_int", FaunaType.Int)] public short? UShortToInt { get; set; } = 41;
+        [Field("byte_to_int", FaunaType.Int)] public byte? ByteToInt { get; set; } = 42;
+        [Field("sbyte_to_int", FaunaType.Int)] public sbyte? SByteToInt { get; set; } = 43;
+        [Field("int_to_int", FaunaType.Int)] public int? IntToInt { get; set; } = 50;
 
         // Double Conversions
-        [Field("short_to_double", FaunaType.Double)] public short? ShortToDouble { get; set; } = 6;
-        [Field("int_to_double", FaunaType.Double)] public int? IntToDouble { get; set; } = 7;
-        [Field("long_to_double", FaunaType.Double)] public long? LongToDouble { get; set; } = 8L;
-        [Field("decimal_to_double", FaunaType.Double)] public decimal? DecimalToDouble { get; set; } = 9.2M;
+        [Field("short_to_double", FaunaType.Double)] public short? ShortToDouble { get; set; } = 60;
+        [Field("int_to_double", FaunaType.Double)] public int? IntToDouble { get; set; } = 70;
+        [Field("long_to_double", FaunaType.Double)] public long? LongToDouble { get; set; } = 80L;
         [Field("double_to_double", FaunaType.Double)] public double? DoubleToDouble { get; set; } = 10.1d;
+        [Field("float_to_double", FaunaType.Double)] public float? FloatToDouble { get; set; } = 1.3445f;
 
         // Bool conversions
         [Field("true_to_true", FaunaType.Boolean)] public bool? TrueToTrue { get; set; } = true;

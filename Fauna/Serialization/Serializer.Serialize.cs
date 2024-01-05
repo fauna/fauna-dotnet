@@ -1,3 +1,4 @@
+using System.Globalization;
 using Module = Fauna.Types.Module;
 
 namespace Fauna.Serialization;
@@ -19,37 +20,38 @@ public static partial class Serializer
             switch (typeHint)
             {
                 case FaunaType.Int:
-                    if (obj is short or int)
+                    if (obj is byte or sbyte or short or ushort or int)
                     {
                         var int32 = Convert.ToInt32(obj);
                         writer.WriteIntValue(int32);
                     }
                     else
                     {
-                        throw new SerializationException($"Unsupported Int conversion. Provided value must be a short or int but was a {obj.GetType()}");
+                        throw new SerializationException($"Unsupported Int conversion. Provided value must be a byte, sbyte, short, ushort, or int but was a {obj.GetType()}");
                     }
                     break;
                 case FaunaType.Long:
-                    if (obj is short or int or long)
+                    if (obj is byte or sbyte or short or ushort or int or uint or long)
                     {
                         var int64 = Convert.ToInt64(obj);
                         writer.WriteLongValue(int64);
                     }
                     else
                     {
-                        throw new SerializationException($"Unsupported Long conversion. Provided value must be a short, int, or long but was a {obj.GetType()}");
+                        throw new SerializationException($"Unsupported Long conversion. Provided value must be a byte, sbyte, short, ushort, int, uint, or long but was a {obj.GetType()}");
                     }
                     break;
                 case FaunaType.Double:
-                    if (obj is double or decimal or short or int or long)
+                    switch (obj)
                     {
-                        var dec = Convert.ToDecimal(obj);
-                        writer.WriteDoubleValue(dec);
-                    }
-                    else
-                    {
-                        throw new SerializationException($"Unsupported Double conversion. Provided value must be a short, int, long, double, or decimal, but was a {obj.GetType()}");
-
+                        case float or double or short or int or long:
+                            {
+                                var dub = Convert.ToDouble(obj);
+                                writer.WriteDoubleValue(dub);
+                                break;
+                            }
+                        default:
+                            throw new SerializationException($"Unsupported Double conversion. Provided value must be a short, int, long, float, or double, but was a {obj.GetType()}");
                     }
                     break;
                 case FaunaType.String:
@@ -105,21 +107,35 @@ public static partial class Serializer
                 case null:
                     writer.WriteNullValue();
                     break;
+                case byte v:
+                    writer.WriteIntValue(v);
+                    break;
+                case sbyte v:
+                    writer.WriteIntValue(v);
+                    break;
+                case ushort v:
+                    writer.WriteIntValue(v);
+                    break;
                 case short v:
                     writer.WriteIntValue(v);
                     break;
                 case int v:
                     writer.WriteIntValue(v);
                     break;
+                case uint v:
+                    writer.WriteLongValue(v);
+                    break;
                 case long v:
                     writer.WriteLongValue(v);
+                    break;
+                case float v:
+                    writer.WriteDoubleValue(v);
                     break;
                 case double v:
                     writer.WriteDoubleValue(v);
                     break;
-                case decimal v:
-                    writer.WriteDoubleValue(v);
-                    break;
+                case decimal:
+                    throw new SerializationException("Decimals are unsupported due to potential loss of precision.");
                 case bool v:
                     writer.WriteBooleanValue(v);
                     break;
