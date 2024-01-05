@@ -81,6 +81,29 @@ public class Client
         return (QuerySuccess<T>)queryResponse;
     }
 
+    /// <summary>
+    /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
+    /// </summary>
+    /// <typeparam name="T">The type of the data expected in each page.</typeparam>
+    /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
+    /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <returns>An asynchronous enumerable of pages, each containing a list of items of type <typeparamref name="T"/>.</returns>
+    /// <remarks>
+    /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
+    /// </remarks>
+    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
+    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public async IAsyncEnumerable<Page<T>> PaginateAsync<T>(Query query, QueryOptions? queryOptions = null)
     {
         Page<T>? currentPage = null;
@@ -100,7 +123,7 @@ public class Client
             }
             else
             {
-                throw new InvalidOperationException("Unexpected response received.");
+                throw new FaunaException("Unexpected response received.");
             }
         } while (currentPage?.After is not null);
     }
