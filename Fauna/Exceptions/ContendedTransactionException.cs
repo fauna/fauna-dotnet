@@ -8,7 +8,4 @@ public class ContendedTransactionException : ServiceException, IRetryableExcepti
 {
     public ContendedTransactionException(QueryFailure queryFailure, string message)
         : base(queryFailure, message) { }
-
-    public ContendedTransactionException(QueryFailure queryFailure, string message, Exception innerException)
-        : base(queryFailure, message, innerException) { }
 }

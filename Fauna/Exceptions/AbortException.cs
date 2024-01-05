@@ -8,31 +8,20 @@ namespace Fauna.Exceptions;
 /// </summary>
 public class AbortException : QueryRuntimeException
 {
-    private readonly SerializationContext serializationCtx;
-    private readonly Dictionary<Type, object?> cache = new();
+    private readonly SerializationContext _serializationCtx;
+    private readonly Dictionary<Type, object?> _cache = new();
     private static readonly Type NonTypedKey = typeof(object);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AbortException"/> class with a specified error message and query failure details.
     /// </summary>
+    /// <param name="ctx">The <see cref="SerializationContext"/></param>
     /// <param name="queryFailure">The <see cref="QueryFailure"/> object containing details about the query failure.</param>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     public AbortException(SerializationContext ctx, QueryFailure queryFailure, string message)
         : base(queryFailure, message)
     {
-        this.serializationCtx = ctx;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AbortException"/> class with a specified error message, a reference to the inner exception, and query failure details.
-    /// </summary>
-    /// <param name="queryFailure">The <see cref="QueryFailure"/> object containing details about the query failure.</param>
-    /// <param name="message">The error message that explains the reason for the exception.</param>
-    /// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-    public AbortException(SerializationContext ctx, QueryFailure queryFailure, string message, Exception innerException)
-        : base(queryFailure, message, innerException)
-    {
-        this.serializationCtx = ctx;
+        _serializationCtx = ctx;
     }
 
     /// <summary>
@@ -41,15 +30,15 @@ public class AbortException : QueryRuntimeException
     /// <returns>The deserialized data as an object, or null if no data is available.</returns>
     public object? GetData()
     {
-        if (!cache.TryGetValue(NonTypedKey, out var cachedData))
+        if (!_cache.TryGetValue(NonTypedKey, out var cachedData))
         {
             var abortDataString = QueryFailure.ErrorInfo.Abort?.ToString();
             if (!string.IsNullOrEmpty(abortDataString))
             {
                 var reader = new Utf8FaunaReader(abortDataString);
                 reader.Read();
-                cachedData = Serializer.Deserialize(serializationCtx, ref reader);
-                cache[NonTypedKey] = cachedData;
+                cachedData = Serializer.Deserialize(_serializationCtx, ref reader);
+                _cache[NonTypedKey] = cachedData;
             }
         }
         return cachedData;
@@ -63,15 +52,15 @@ public class AbortException : QueryRuntimeException
     public T? GetData<T>()
     {
         var typeKey = typeof(T);
-        if (!cache.TryGetValue(typeKey, out var cachedData))
+        if (!_cache.TryGetValue(typeKey, out var cachedData))
         {
             var abortDataString = QueryFailure.ErrorInfo.Abort.ToString();
             if (!string.IsNullOrEmpty(abortDataString))
             {
                 var reader = new Utf8FaunaReader(abortDataString);
                 reader.Read();
-                T? deserializedResult = Serializer.Deserialize<T>(serializationCtx, ref reader);
-                cache[typeKey] = deserializedResult;
+                T? deserializedResult = Serializer.Deserialize<T>(_serializationCtx, ref reader);
+                _cache[typeKey] = deserializedResult;
                 return deserializedResult;
             }
         }

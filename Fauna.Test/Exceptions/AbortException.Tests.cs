@@ -24,14 +24,9 @@ public class AbortExceptionTests
         var expectedInnerException = new Exception("Inner exception");
 
         var actual1 = new AbortException(ctx, expectedQueryFailure, expectedMessage);
-        var actual2 = new AbortException(ctx, expectedQueryFailure, expectedMessage, expectedInnerException);
 
         Assert.AreEqual(expectedQueryFailure.ErrorInfo.Abort, actual1.QueryFailure.ErrorInfo.Abort);
         Assert.AreEqual(expectedMessage, actual1.Message);
-
-        Assert.AreEqual(expectedQueryFailure.ErrorInfo.Abort, actual2.QueryFailure.ErrorInfo.Abort);
-        Assert.AreEqual(expectedMessage, actual2.Message);
-        Assert.AreEqual(expectedInnerException, actual2.InnerException);
     }
 
     [Test]
