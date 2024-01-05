@@ -8,7 +8,9 @@ namespace Fauna.Test;
 [Ignore("integ test")]
 public class IntegrationTests
 {
+#pragma warning disable CS8618
     private static Client _client;
+#pragma warning restore CS8618
 
     [FaunaObject]
     private class Person
@@ -52,13 +54,13 @@ public class IntegrationTests
     {
         var query = FQL($@"[1,2,3,4,5,6,7,8,9,10].toSet().paginate(10);");
 
-        var paginatedResult = _client.PaginateAsync(query);
+        var paginatedResult = _client.PaginateAsync<int>(query);
 
         int pageCount = 0;
         await foreach (var page in paginatedResult)
         {
             pageCount++;
-            var data = page.GetData<int>();
+            var data = page.Data;
             Assert.AreEqual(10, data.Count());
         }
 
@@ -70,13 +72,13 @@ public class IntegrationTests
     {
         var query = FQL($@"[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].toSet().paginate(10);");
 
-        var paginatedResult = _client.PaginateAsync(query);
+        var paginatedResult = _client.PaginateAsync<int>(query);
 
         int pageCount = 0;
         await foreach (var page in paginatedResult)
         {
             pageCount++;
-            var data = page.GetData<int>();
+            var data = page.Data;
             Assert.AreEqual(10, data.Count());
         }
 
@@ -99,13 +101,13 @@ public class IntegrationTests
 
         var query = FQL($"{items}.toSet().paginate(20);");
 
-        var paginatedResult = _client.PaginateAsync(query);
+        var paginatedResult = _client.PaginateAsync<Person>(query);
 
         int pageCount = 0;
         await foreach (var page in paginatedResult)
         {
             pageCount++;
-            var data = page.GetData<Person>();
+            var data = page.Data;
             Assert.AreEqual(20, data.Count());
         }
 
@@ -128,7 +130,7 @@ public class IntegrationTests
 
         var query = FQL($"{items}.toSet().paginate(20);");
 
-        var paginatedResult = _client.PaginateAsync(query);
+        var paginatedResult = _client.PaginateAsync<Person>(query);
 
         int itemCount = 0;
         await foreach (var item in paginatedResult.FlattenAsync<Person>())

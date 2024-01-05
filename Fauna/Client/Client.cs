@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using Fauna.Constants;
+﻿using Fauna.Constants;
 using Fauna.Exceptions;
-using Fauna.Response;
 using Fauna.Serialization;
+using System.Data;
+using System.Globalization;
 
 namespace Fauna;
 
@@ -81,34 +81,28 @@ public class Client
         return (QuerySuccess<T>)queryResponse;
     }
 
-    public async IAsyncEnumerable<Page> PaginateAsync(Query query, QueryOptions? queryOptions = null)
+    public async IAsyncEnumerable<Page<T>> PaginateAsync<T>(Query query, QueryOptions? queryOptions = null)
     {
-        Page? currentPage = null;
-        bool isFirstPageFetched = false;
+        Page<T>? currentPage = null;
 
-        while (!isFirstPageFetched || currentPage?.After != null)
+        do
         {
-            Query currentQuery = isFirstPageFetched && currentPage?.After is not null
+            var currentQuery = currentPage?.After is not null
                 ? new QueryExpr(new QueryLiteral($"Set.paginate('{currentPage.After}')"))
                 : query;
 
-            var response = await QueryAsyncInternal<Page>(currentQuery, queryOptions);
+            var response = await QueryAsyncInternal<Page<T>>(currentQuery, queryOptions);
 
-            if (response is QueryPageSuccess pageSuccess && pageSuccess.Data is QueryPageInfo pageInfo)
+            if (response is QuerySuccess<Page<T>> success && success.Data is not null)
             {
-                currentPage = new Page(pageInfo.Data, pageInfo.After);
-                isFirstPageFetched = true;
-
-                if (currentPage is not null)
-                {
-                    yield return currentPage;
-                }
+                currentPage = success.Data;
+                yield return currentPage;
             }
             else
             {
-                throw new InvalidOperationException("Unexpected response type received.");
+                throw new InvalidOperationException("Unexpected response received.");
             }
-        }
+        } while (currentPage?.After is not null);
     }
 
     private async Task<QueryResponse> QueryAsyncInternal<T>(
