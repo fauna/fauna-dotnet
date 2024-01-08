@@ -8,7 +8,7 @@ namespace Fauna;
 /// <summary>
 /// Represents a client for interacting with a Fauna.
 /// </summary>
-public class Client
+public class Client : IDisposable
 {
     private const string QueryUriPath = "/query/1";
 
@@ -16,6 +16,7 @@ public class Client
     private readonly IConnection _connection;
     // FIXME(matt) look at moving to a database context which wraps client, perhaps
     private readonly SerializationContext _serializationCtx;
+    private bool _disposed = false;
 
     /// <summary>
     /// Gets the timestamp of the last transaction seen by this client.
@@ -29,6 +30,18 @@ public class Client
     public Client(string secret) :
         this(new ClientConfig(secret))
     {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Client"/> class using an HttpClient and a secret key.
+    /// </summary>
+    /// <param name="httpClient">The HttpClient to be used for HTTP requests.</param>
+    /// <param name="secret">The secret key for authentication.</param>
+    public Client(HttpClient httpClient, string secret)
+    {
+        _config = new ClientConfig(secret);
+        _connection = new Connection(httpClient, _config.MaxRetries, _config.MaxBackoff);
+        _serializationCtx = new SerializationContext();
     }
 
     /// <summary>
@@ -47,8 +60,8 @@ public class Client
     /// <param name="connection">The custom connection to be used by the client.</param>
     public Client(ClientConfig config, IConnection connection)
     {
-        this._config = config;
-        this._connection = connection;
+        this._config = config ?? throw new ArgumentNullException(nameof(config));
+        this._connection = connection ?? throw new ArgumentNullException(nameof(connection));
         this._serializationCtx = new SerializationContext();
     }
 
@@ -133,6 +146,19 @@ public class Client
         }
 
         return (QuerySuccess<T>)queryResponse;
+    }
+
+    /// <summary>
+    /// Disposes the resources used by the <see cref="Client"/> class.
+    /// </summary>
+    public void Dispose()
+    {
+        if (!_disposed)
+        {
+            _connection?.Dispose();
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
     }
 
     private void Serialize(Stream stream, Query query)

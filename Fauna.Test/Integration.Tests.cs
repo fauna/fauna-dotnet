@@ -1,4 +1,3 @@
-using Fauna.Serialization;
 using Fauna.Serialization.Attributes;
 using NUnit.Framework;
 using static Fauna.Query;
@@ -29,8 +28,8 @@ public class IntegrationTests
             LastName = "O'Keeffe",
             Age = 136
         };
-        var conn = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
-        var client = new Client(new ClientConfig("secret"), conn);
+        using var conn = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
+        using var client = new Client(new ClientConfig("secret"), conn);
         var query = FQL($"{expected}");
         var result = await client.QueryAsync<Person>(query);
         var actual = result.Data;
@@ -40,4 +39,32 @@ public class IntegrationTests
         Assert.AreEqual(expected.LastName, actual.LastName);
         Assert.AreEqual(expected.Age, actual.Age);
     }
+
+    [Test]
+    public async Task UserDefinedObjectTest_WithExternalHttpClient()
+    {
+        var expected = new Person
+        {
+            FirstName = "Georgia",
+            LastName = "O'Keeffe",
+            Age = 136
+        };
+
+        using var httpClient = new HttpClient()
+        {
+            BaseAddress = new Uri("http://localhost:8443"),
+            Timeout = TimeSpan.FromSeconds(30)
+        };
+        using var conn = new Connection(httpClient, 3, TimeSpan.FromSeconds(10));
+        using var client = new Client(new ClientConfig("secret"), conn);
+        var query = FQL($"{expected}");
+        var result = await client.QueryAsync<Person>(query);
+        var actual = result.Data;
+
+        Assert.AreNotEqual(expected, actual);
+        Assert.AreEqual(expected.FirstName, actual.FirstName);
+        Assert.AreEqual(expected.LastName, actual.LastName);
+        Assert.AreEqual(expected.Age, actual.Age);
+    }
+
 }

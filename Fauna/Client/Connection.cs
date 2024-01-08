@@ -9,15 +9,16 @@ namespace Fauna;
 /// <summary>
 /// Represents a connection to a Fauna database.
 /// </summary>
-public class Connection : IConnection
+public class Connection : IConnection, IDisposable
 {
-    private readonly Uri _endpoint;
     private readonly HttpClient _httpClient;
+    private readonly bool _disposeHttpClient;
     private readonly int _maxRetries;
     private readonly TimeSpan _maxBackoff;
+    private bool _disposed;
 
     /// <summary>
-    /// Initializes a new instance of the Connection class.
+    /// Initializes a new instance of the Connection class with specific endpoint and configurations.
     /// </summary>
     /// <param name="endpoint">The URI of the Fauna database endpoint.</param>
     /// <param name="connectionTimeout">The timeout duration for HTTP connections.</param>
@@ -25,14 +26,28 @@ public class Connection : IConnection
     /// <param name="maxBackoff">The maximum duration to wait before retrying a request.</param>
     public Connection(Uri endpoint, TimeSpan connectionTimeout, int maxRetries, TimeSpan maxBackoff)
     {
-        _endpoint = endpoint;
-        _maxRetries = maxRetries;
-        _maxBackoff = maxBackoff;
         _httpClient = new HttpClient()
         {
             BaseAddress = endpoint,
             Timeout = connectionTimeout
         };
+        _maxRetries = maxRetries;
+        _maxBackoff = maxBackoff;
+        _disposeHttpClient = true;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the Connection class using an external HttpClient.
+    /// </summary>
+    /// <param name="httpClient">The HttpClient to be used for HTTP requests.</param>
+    /// <param name="maxRetries">The maximum number of retry attempts for a request.</param>
+    /// <param name="maxBackoff">The maximum duration to wait before retrying a request.</param>
+    public Connection(HttpClient httpClient, int maxRetries, TimeSpan maxBackoff)
+    {
+        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _maxRetries = maxRetries;
+        _maxBackoff = maxBackoff;
+        _disposeHttpClient = false;
     }
 
     /// <summary>
@@ -116,14 +131,36 @@ public class Connection : IConnection
         }
     }
 
+    /// <summary>
+    /// Disposes the resources used by the <see cref="Connection"/> class.
+    /// </summary>
+    public void Dispose()
+    {
+        if (!_disposed)
+        {
+            if (_disposeHttpClient && _httpClient is not null)
+            {
+                _httpClient.Dispose();
+            }
+
+            _disposed = true;
+            GC.SuppressFinalize(this);
+        }
+    }
+
     private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)
     {
+        if (_httpClient.BaseAddress is null)
+        {
+            throw new InvalidOperationException("HttpClient's BaseAddress is null. A valid BaseAddress is required.");
+        }
+
         body.Position = 0;
         var request = new HttpRequestMessage
         {
             Content = new StreamContent(body),
             Method = HttpMethod.Post,
-            RequestUri = new Uri(_endpoint, path)
+            RequestUri = new Uri(_httpClient.BaseAddress, path)
         };
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

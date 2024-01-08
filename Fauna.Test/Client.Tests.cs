@@ -1,7 +1,6 @@
 using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
-using Fauna.Test.Helpers;
 using NUnit.Framework;
 using System.Buffers;
 using System.Net;
@@ -70,7 +69,7 @@ public class ClientTests
     [Ignore("connected test")]
     public async Task CreateClientTest()
     {
-        var c = CreateClient();
+        using var c = CreateClient();
         var r = await c.QueryAsync<int>(
             new QueryExpr(new QueryLiteral("let x = 123; x")),
             new QueryOptions { QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } } });
@@ -83,7 +82,7 @@ public class ClientTests
     public async Task CreateClientError()
     {
         var expected = 123;
-        var c = CreateClient();
+        using var c = CreateClient();
 
         try
         {
@@ -123,7 +122,7 @@ public class ClientTests
     [TestCase("unexpected_error", 400, typeof(FaunaException), "Unexpected Error: ")] // Example for default case
     public async Task QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, int httpStatus, Type expectedExceptionType, string expectedMessageStart)
     {
-        var client = CreateClientWithMockConnection();
+        using var client = CreateClientWithMockConnection();
 
         HttpResponseMessage MockQR(string code, int status)
         {
@@ -185,9 +184,9 @@ public class ClientTests
             }},
             ""schema_version"": 0
         }}";
-        var qr = MockQueryResponse(responseBody, HttpStatusCode.BadRequest);
+        using var qr = MockQueryResponse(responseBody, HttpStatusCode.BadRequest);
         Mock.Arrange(() => _mockConnection.DoPostAsync(Arg.IsAny<string>(), Arg.IsAny<Stream>(), Arg.IsAny<Dictionary<string, string>>())).Returns(Task.FromResult(qr));
-        var c = CreateClientWithMockConnection();
+        using var c = CreateClientWithMockConnection();
 
         try
         {
@@ -223,7 +222,7 @@ public class ClientTests
             },
             ""schema_version"": 0
         }";
-        var qr = MockQueryResponse(responseBody, HttpStatusCode.OK);
+        using var qr = MockQueryResponse(responseBody, HttpStatusCode.OK);
         Mock.Arrange(() =>
                      _mockConnection.DoPostAsync(
                          Arg.IsAny<string>(),
@@ -231,12 +230,12 @@ public class ClientTests
                          Arg.IsAny<Dictionary<string, string>>())
         ).Returns(Task.FromResult(qr));
 
-        var c = CreateClientWithMockConnection();
+        using var c = CreateClientWithMockConnection();
         var r = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         bool check = false;
 
-        var qr2 = MockQueryResponse(responseBody, HttpStatusCode.OK);
+        using var qr2 = MockQueryResponse(responseBody, HttpStatusCode.OK);
         Mock.Arrange(() =>
             _mockConnection.DoPostAsync(
                 Arg.IsAny<string>(),
@@ -252,5 +251,23 @@ public class ClientTests
         var r2 = await c.QueryAsync<string>(new QueryExpr(new QueryLiteral("let x = 123; x")));
 
         Assert.IsTrue(check);
+    }
+
+    [Test]
+    public void Dispose_ShouldDisposeConnection()
+    {
+        var config = new ClientConfig("secret")
+        {
+            Endpoint = Endpoints.Local,
+            DefaultQueryOptions = new QueryOptions
+            {
+                QueryTags = new Dictionary<string, string> { { "lorem", "ipsum" } }
+            },
+            ConnectionTimeout = TimeSpan.FromSeconds(10)
+        };
+        var mockConnection = Mock.Create<IConnection>();
+        var client = new Client(config, mockConnection);
+        client.Dispose();
+        Mock.Assert(() => mockConnection.Dispose(), Occurs.Once());
     }
 }
