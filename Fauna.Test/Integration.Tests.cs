@@ -41,6 +41,7 @@ public class IntegrationTests
     }
 
     [Test]
+    [Ignore("integ test")]
     public async Task UserDefinedObjectTest_WithExternalHttpClient()
     {
         var expected = new Person
