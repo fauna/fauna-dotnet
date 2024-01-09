@@ -14,7 +14,7 @@ public class DeserializerTests
         var reader = new Utf8FaunaReader(str);
         reader.Read();
         var context = new SerializationContext();
-        var obj = Serializer.Deserialize(context, ref reader, type);
+        var obj = Deserializer.Deserialize(context, ref reader, type);
 
         if (reader.Read())
         {

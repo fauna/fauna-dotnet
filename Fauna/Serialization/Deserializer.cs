@@ -3,7 +3,7 @@ using Type = System.Type;
 
 namespace Fauna.Serialization;
 
-public static partial class Serializer
+public static class Deserializer
 {
     public static T Deserialize<T>(SerializationContext context, ref Utf8FaunaReader reader)
     {

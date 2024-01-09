@@ -37,7 +37,7 @@ public class AbortException : QueryRuntimeException
             {
                 var reader = new Utf8FaunaReader(abortDataString);
                 reader.Read();
-                cachedData = Serializer.Deserialize(_serializationCtx, ref reader);
+                cachedData = Deserializer.Deserialize(_serializationCtx, ref reader);
                 _cache[NonTypedKey] = cachedData;
             }
         }
@@ -59,7 +59,7 @@ public class AbortException : QueryRuntimeException
             {
                 var reader = new Utf8FaunaReader(abortDataString);
                 reader.Read();
-                T? deserializedResult = Serializer.Deserialize<T>(_serializationCtx, ref reader);
+                T? deserializedResult = Deserializer.Deserialize<T>(_serializationCtx, ref reader);
                 _cache[typeKey] = deserializedResult;
                 return deserializedResult;
             }

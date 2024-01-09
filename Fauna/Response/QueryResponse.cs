@@ -37,7 +37,7 @@ public class QuerySuccess<T> : QueryResponse
         var dataText = _responseBody.GetProperty(DataFieldName).GetRawText();
         var reader = new Utf8FaunaReader(dataText);
         reader.Read();
-        Data = Serializer.Deserialize<T>(ctx, ref reader);
+        Data = Deserializer.Deserialize<T>(ctx, ref reader);
 
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {
