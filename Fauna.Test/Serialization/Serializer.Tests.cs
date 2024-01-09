@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
-public partial class SerializerTests
+public class SerializerTests
 {
     public static string Serialize(object? obj)
     {

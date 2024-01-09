@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
-public partial class SerializerTests
+public class DeserializerTests
 {
     static T Deserialize<T>(string str) => (T)Deserialize(str, typeof(T))!;
 
