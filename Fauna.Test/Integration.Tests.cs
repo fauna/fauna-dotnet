@@ -52,7 +52,7 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_SinglePageWithSmallCollection()
     {
-        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10].toSet().paginate(10);");
+        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10].toSet();");
 
         var paginatedResult = _client.PaginateAsync<int>(query);
 
@@ -70,7 +70,7 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_MultiplePagesWithCollection()
     {
-        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].toSet().paginate(10);");
+        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].toSet()");
 
         var paginatedResult = _client.PaginateAsync<int>(query);
 
@@ -99,7 +99,7 @@ public class IntegrationTests
             });
         }
 
-        var query = FQL($"{items}.toSet().paginate(20);");
+        var query = FQL($"{items}.toSet()");
 
         var paginatedResult = _client.PaginateAsync<Person>(query);
 
@@ -128,7 +128,7 @@ public class IntegrationTests
             });
         }
 
-        var query = FQL($"{items}.toSet().paginate(20);");
+        var query = FQL($"{items}.toSet()");
 
         var paginatedResult = _client.PaginateAsync<Person>(query);
 

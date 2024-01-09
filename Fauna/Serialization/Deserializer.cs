@@ -16,7 +16,7 @@ public static class Deserializer
         {
             TokenType.StartObject => DeserializeObjectInternal(ref reader, context, targetType),
             TokenType.StartArray => DeserializeArrayInternal(ref reader, context, targetType),
-            TokenType.StartPage => throw new NotImplementedException(),
+            TokenType.StartPage => DeserializePageInternal(ref reader, context, targetType),
             TokenType.StartRef => DeserializeRefInternal(ref reader, context, targetType),
             TokenType.StartDocument => DeserializeDocumentInternal(ref reader, context, targetType),
             TokenType.String => reader.GetValue(),
@@ -240,22 +240,22 @@ public static class Deserializer
         }
     }
 
-    private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType = null)
+    private static object? DeserializeObjectInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType)
     {
         switch (targetType)
         {
             case null:
             case { IsGenericType: true } when targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>):
                 return DeserializeObjectToDictionaryInternal(ref reader, context, targetType);
-            case { IsGenericType: true } when targetType.GetGenericTypeDefinition() == typeof(Page<>):
-                return DeserializeToPageInternal(ref reader, context, targetType, TokenType.EndObject);
             default:
                 return DeserializeToClassInternal(ref reader, context, targetType, TokenType.EndObject);
         }
     }
 
-    private static object? DeserializeToPageInternal(ref Utf8FaunaReader reader, SerializationContext context, Type pageType, TokenType endToken)
+    private static object? DeserializePageInternal(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType)
     {
+        var pageType = targetType ?? typeof(Page<object?>);
+
         if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(Page<>))
         {
             throw new ArgumentException("The type must be a generic Page<> type.", nameof(pageType));
@@ -266,7 +266,7 @@ public static class Deserializer
         string? after = null;
         object? data = null;
 
-        while (reader.Read() && reader.CurrentTokenType != endToken)
+        while (reader.Read() && reader.CurrentTokenType != TokenType.EndPage)
         {
             if (reader.CurrentTokenType == TokenType.FieldName)
             {
