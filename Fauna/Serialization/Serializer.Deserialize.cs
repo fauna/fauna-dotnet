@@ -247,9 +247,52 @@ public static partial class Serializer
             case null:
             case { IsGenericType: true } when targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>):
                 return DeserializeObjectToDictionaryInternal(ref reader, context, targetType);
+            case { IsGenericType: true } when targetType.GetGenericTypeDefinition() == typeof(Page<>):
+                return DeserializeToPageInternal(ref reader, context, targetType, TokenType.EndObject);
             default:
                 return DeserializeToClassInternal(ref reader, context, targetType, TokenType.EndObject);
         }
+    }
+
+    private static object? DeserializeToPageInternal(ref Utf8FaunaReader reader, SerializationContext context, Type pageType, TokenType endToken)
+    {
+        if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(Page<>))
+        {
+            throw new ArgumentException("The type must be a generic Page<> type.", nameof(pageType));
+        }
+
+        Type pageDataType = pageType.GetGenericArguments()[0];
+        Type listType = typeof(List<>).MakeGenericType(pageDataType);
+        string? after = null;
+        object? data = null;
+
+        while (reader.Read() && reader.CurrentTokenType != endToken)
+        {
+            if (reader.CurrentTokenType == TokenType.FieldName)
+            {
+                var fieldName = reader.GetString()!;
+                reader.Read();
+
+                switch (fieldName)
+                {
+                    case "data":
+                        data = DeserializeArrayInternal(ref reader, context, listType);
+                        break;
+                    case "after":
+                        after = Deserialize<string>(context, ref reader);
+                        break;
+                    default:
+                        throw new SerializationException($"Unexpected token while deserializing {pageType.Name}: {fieldName}");
+                }
+            }
+            else
+            {
+                throw new SerializationException($"Unexpected token while deserializing {pageType.Name}: {reader.CurrentTokenType}");
+            }
+        }
+
+        var pageInstance = Activator.CreateInstance(pageType, data, after);
+        return pageInstance;
     }
 
     private static object? DeserializeToClassInternal(ref Utf8FaunaReader reader, SerializationContext context, Type t, TokenType endToken)

@@ -437,4 +437,47 @@ public partial class SerializerTests
         Assert.AreEqual("Jones", bob.LastName);
         Assert.AreEqual(101, bob.Age);
     }
+
+    [Test]
+    public void DeserializeIntoPageWithPrimitive()
+    {
+        const string given = @"
+        {
+            ""after"": ""next_page_cursor"",
+            ""data"": [
+                {""@int"":""1""},
+                {""@int"":""2""},
+                {""@int"":""3""}
+            ]
+        }";
+
+        var result = Deserialize<Page<int>>(given);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(new List<int> { 1, 2, 3 }, result.Data);
+        Assert.AreEqual("next_page_cursor", result.After);
+    }
+
+    [Test]
+    public void DeserializeIntoPageWithUserDefinedClass()
+    {
+        const string given = @"
+        {
+            ""after"": ""next_page_cursor"",
+            ""data"": [
+                {""first_name"":""Alice"",""last_name"":""Smith"",""age"":{""@int"":""30""}},
+                {""first_name"":""Bob"",""last_name"":""Jones"",""age"":{""@int"":""40""}}
+            ]
+        }";
+
+        var result = Deserialize<Page<PersonWithAttributes>>(given);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(2, result.Data.Count);
+        Assert.AreEqual("Alice", result.Data[0].FirstName);
+        Assert.AreEqual("Smith", result.Data[0].LastName);
+        Assert.AreEqual(30, result.Data[0].Age);
+        Assert.AreEqual("Bob", result.Data[1].FirstName);
+        Assert.AreEqual("Jones", result.Data[1].LastName);
+        Assert.AreEqual(40, result.Data[1].Age);
+        Assert.AreEqual("next_page_cursor", result.After);
+    }
 }

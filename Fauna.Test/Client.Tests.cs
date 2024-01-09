@@ -1,7 +1,6 @@
 using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Serialization;
-using Fauna.Test.Helpers;
 using NUnit.Framework;
 using System.Buffers;
 using System.Net;
@@ -121,7 +120,7 @@ public class ClientTests
     [TestCase("bad_gateway", 502, typeof(NetworkException), "Bad Gateway: ")]
     [TestCase("gateway_timeout", 504, typeof(NetworkException), "Gateway Timeout: ")]
     [TestCase("unexpected_error", 400, typeof(FaunaException), "Unexpected Error: ")] // Example for default case
-    public async Task QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, int httpStatus, Type expectedExceptionType, string expectedMessageStart)
+    public void QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, int httpStatus, Type expectedExceptionType, string expectedMessageStart)
     {
         var client = CreateClientWithMockConnection();
 
