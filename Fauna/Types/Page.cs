@@ -1,4 +1,6 @@
-﻿/// <summary>
+﻿namespace Fauna.Types;
+
+/// <summary>
 /// Represents a page in a dataset for pagination.
 /// </summary>
 /// <typeparam name="T">The type of data contained in the page.</typeparam>
