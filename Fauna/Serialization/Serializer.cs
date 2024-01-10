@@ -1,8 +1,10 @@
-using System.Globalization;
 using Module = Fauna.Types.Module;
 
 namespace Fauna.Serialization;
 
+/// <summary>
+/// Represents methods for serializing and deserializing objects to and from Fauna format.
+/// </summary>
 public static partial class Serializer
 {
 
@@ -11,6 +13,14 @@ public static partial class Serializer
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
 
+    /// <summary>
+    /// Serializes an object to a Fauna compatible format.
+    /// </summary>
+    /// <param name="context">The context for serialization.</param>
+    /// <param name="writer">The writer to serialize the object to.</param>
+    /// <param name="obj">The object to serialize.</param>
+    /// <param name="typeHint">Optional type hint for the object.</param>
+    /// <exception cref="SerializationException">Thrown when serialization fails.</exception>
     public static void Serialize(SerializationContext context, Utf8FaunaWriter writer, object? obj, FaunaType? typeHint = null)
     {
         if (typeHint != null)

@@ -1,5 +1,9 @@
 namespace Fauna.Types;
 
+/// <summary>
+/// Represents a reference to a named document that is null, including a reason for its null state.
+/// This class extends NamedDocumentRef to provide additional context for null references in the database.
+/// </summary>
 public class NullNamedDocumentRef : NamedDocumentRef
 {
     /// <summary>

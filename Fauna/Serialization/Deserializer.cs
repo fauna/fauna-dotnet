@@ -2,10 +2,22 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
+/// <summary>
+/// Represents methods for deserializing objects to and from Fauna's value format.
+/// </summary>
 public static class Deserializer
 {
+    /// <summary>
+    /// The dynamic data deserializer.
+    /// </summary>
     public static IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
 
+    /// <summary>
+    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
+    /// <param name="context">The serialization context.</param>
+    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
     public static IDeserializer<T> Generate<T>(SerializationContext context) where T : notnull
     {
         var targetType = typeof(T);
@@ -13,6 +25,12 @@ public static class Deserializer
         return deser;
     }
 
+    /// <summary>
+    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
+    /// <param name="context">The serialization context.</param>
+    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
     public static IDeserializer<T?> GenerateNullable<T>(SerializationContext context)
     {
         var targetType = typeof(T);

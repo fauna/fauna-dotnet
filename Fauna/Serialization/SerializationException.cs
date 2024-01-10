@@ -1,7 +1,8 @@
-using System.Transactions;
-
 namespace Fauna.Serialization;
 
+/// <summary>
+/// Represents error that occur during serialization and deserialization of Fauna data.
+/// </summary>
 public class SerializationException : Exception
 {
     public SerializationException(string? message) : base(message)

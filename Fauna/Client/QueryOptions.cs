@@ -1,13 +1,42 @@
 namespace Fauna;
 
+/// <summary>
+/// Represents the options for customizing Fauna queries.
+/// </summary>
 public class QueryOptions
 {
+    /// <summary>
+    /// Gets or sets a value indicating whether the query runs as strictly serialized, affecting read-only transactions.
+    /// </summary>
     public bool? Linearized { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether type checking of the query is enabled or disabled before evaluation.
+    /// </summary>
     public bool? TypeCheck { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the query timeout. It defines how long the client waits for a query to complete.
+    /// </summary>
     public TimeSpan? QueryTimeout { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets a string-encoded set of caller-defined tags for identifying the request in logs and response bodies. 
+    /// Format is a list of key:value pairs, each key and value limited to [a-zA-Z0-9_].
+    /// </summary>
     public Dictionary<string, string>? QueryTags { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the trace parent identifier for distributed tracing systems.
+    /// </summary>
     public string? TraceParent { get; set; } = null;
 
+    /// <summary>
+    /// Combines default query options with overrides from the client configuration.
+    /// </summary>
+    /// <param name="defaultQueryOptions">The default query options.</param>
+    /// <param name="queryOptionOverrides">The query options provided for a specific query, overriding the defaults.</param>
+    /// <returns>A <see cref="QueryOptions"/> object representing the final combined set of query options.</returns>
     internal static QueryOptions? GetFinalQueryOptions(QueryOptions? defaultQueryOptions, QueryOptions? queryOptionOverrides)
     {
 

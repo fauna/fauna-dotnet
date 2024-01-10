@@ -2,6 +2,9 @@ using System.Collections;
 
 namespace Fauna.Types;
 
+/// <summary>
+/// Represents the base structure of a document.
+/// </summary>
 public class BaseDocument : IReadOnlyDictionary<string, object?>
 {
     private readonly Dictionary<string, object?> _data;
@@ -16,6 +19,11 @@ public class BaseDocument : IReadOnlyDictionary<string, object?>
     /// </summary>
     public Module Collection { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseDocument"/> class with specified collection and timestamp.
+    /// </summary>
+    /// <param name="coll">The collection to which the document belongs.</param>
+    /// <param name="ts">The timestamp of the document.</param>
     public BaseDocument(Module coll, DateTime ts)
     {
         Ts = ts;
@@ -23,6 +31,12 @@ public class BaseDocument : IReadOnlyDictionary<string, object?>
         _data = new Dictionary<string, object?>();
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BaseDocument"/> class with specified collection, timestamp, and initial data.
+    /// </summary>
+    /// <param name="coll">The collection to which the document belongs.</param>
+    /// <param name="ts">The timestamp of the document.</param>
+    /// <param name="data">Initial data for the document in key-value pairs.</param>
     public BaseDocument(Module coll, DateTime ts, Dictionary<string, object?> data)
     {
         Ts = ts;
@@ -44,6 +58,10 @@ public class BaseDocument : IReadOnlyDictionary<string, object?>
         return GetEnumerator();
     }
 
+    /// <summary>
+    /// Gets the count of key-value pairs contained in the document.
+    /// </summary>
+    /// <value>The number of key-value pairs.</value>
     public int Count => _data.Count;
 
 
@@ -70,6 +88,11 @@ public class BaseDocument : IReadOnlyDictionary<string, object?>
         return _data.TryGetValue(key, out value);
     }
 
+    /// <summary>
+    /// Gets the value associated with the specified key in the document.
+    /// </summary>
+    /// <param name="key">The key of the value to get.</param>
+    /// <value>The value associated with the specified key.</value>
     public object? this[string key] => _data[key];
 
     /// <summary>Gets a collection containing the keys of the data in the document.</summary>

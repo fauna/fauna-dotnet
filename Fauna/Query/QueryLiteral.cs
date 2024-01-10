@@ -27,16 +27,30 @@ public sealed class QueryLiteral : IQueryFragment
     /// </summary>
     public string Unwrap { get; }
 
+    /// <summary>
+    /// Returns a string that represents the current QueryLiteral.
+    /// </summary>
+    /// <returns>A string that represents the current QueryLiteral.</returns>
     public override string ToString()
     {
         return $"QueryLiteral({Unwrap})";
     }
 
+    /// <summary>
+    /// Serializes the query literal.
+    /// </summary>
+    /// <param name="ctx">The serialization context.</param>
+    /// <param name="writer">The writer to serialize the query literal to.</param>
     public void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStringValue(Unwrap);
     }
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current QueryLiteral.
+    /// </summary>
+    /// <param name="other">The object to compare with the current QueryLiteral.</param>
+    /// <returns>true if the specified object is equal to the current QueryLiteral; otherwise, false.</returns>
     public override bool Equals(object? other)
     {
         var otherQuery = other as IQueryFragment;
@@ -59,16 +73,32 @@ public sealed class QueryLiteral : IQueryFragment
         return false;
     }
 
+    /// <summary>
+    /// The default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current QueryLiteral.</returns>
     public override int GetHashCode()
     {
         return Unwrap.GetHashCode();
     }
 
+    /// <summary>
+    /// Determines whether two specified instances of QueryLiteral are equal.
+    /// </summary>
+    /// <param name="left">The first QueryLiteral to compare.</param>
+    /// <param name="right">The second QueryLiteral to compare.</param>
+    /// <returns>true if left and right are equal; otherwise, false.</returns>
     public static bool operator ==(QueryLiteral left, QueryLiteral right)
     {
         return Equals(left, right);
     }
 
+    /// <summary>
+    /// Determines whether two specified instances of QueryLiteral are not equal.
+    /// </summary>
+    /// <param name="left">The first QueryLiteral to compare.</param>
+    /// <param name="right">The second QueryLiteral to compare.</param>
+    /// <returns>true if left and right are not equal; otherwise, false.</returns>
     public static bool operator !=(QueryLiteral left, QueryLiteral right)
     {
         return !Equals(left, right);
