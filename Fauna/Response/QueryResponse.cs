@@ -34,10 +34,13 @@ public class QuerySuccess<T> : QueryResponse
 
     public QuerySuccess(SerializationContext ctx, string rawResponseText) : base(rawResponseText)
     {
+        // TODO(matt) pull from context
+        var deser = Deserializer.Generate<T>(ctx);
+
         var dataText = _responseBody.GetProperty(DataFieldName).GetRawText();
         var reader = new Utf8FaunaReader(dataText);
         reader.Read();
-        Data = Deserializer.Deserialize<T>(ctx, ref reader);
+        Data = deser.Deserialize(ctx, ref reader);
 
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {

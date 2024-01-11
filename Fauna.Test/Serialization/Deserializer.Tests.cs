@@ -7,14 +7,15 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class DeserializerTests
 {
-    static T Deserialize<T>(string str) => (T)Deserialize(str, typeof(T))!;
+    static object? Deserialize(string str) => Deserialize<object?>(str);
 
-    static object? Deserialize(string str, Type? type)
+    static T Deserialize<T>(string str)
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
         var context = new SerializationContext();
-        var obj = Deserializer.Deserialize(context, ref reader, type);
+        var deser = Deserializer.Generate<T>(context);
+        var obj = deser.Deserialize(context, ref reader);
 
         if (reader.Read())
         {
@@ -42,7 +43,7 @@ public class DeserializerTests
 
         foreach (KeyValuePair<string, object?> entry in tests)
         {
-            var result = Deserialize(entry.Key, null);
+            var result = Deserialize(entry.Key);
             Assert.AreEqual(entry.Value, result);
         }
     }
@@ -97,7 +98,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize(given, null);
+        var actual = Deserialize(given);
         Assert.AreEqual(typeof(Document), actual?.GetType());
         var typed = (actual as Document)!;
         Assert.AreEqual("123", typed.Id);
@@ -156,7 +157,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize(given, null);
+        var actual = Deserialize(given);
         Assert.AreEqual(typeof(NamedDocument), actual?.GetType());
         var typed = (actual as NamedDocument)!;
         Assert.AreEqual("DocName", typed.Name);
@@ -310,7 +311,7 @@ public class DeserializerTests
             { "null", null }
         };
 
-        var result = Deserialize(given, null);
+        var result = Deserialize(given);
         Assert.AreEqual(expected, result);
     }
 
@@ -342,7 +343,7 @@ public class DeserializerTests
 
         };
 
-        var result = Deserialize(given, null);
+        var result = Deserialize(given);
         Assert.AreEqual(expected, result);
     }
 
@@ -406,7 +407,7 @@ public class DeserializerTests
     {
         const string given = @"[""item1"",""item2""]";
         var expected = new List<object> { "item1", "item2" };
-        var p = Deserialize(given, null);
+        var p = Deserialize(given);
         Assert.AreEqual(expected, p);
     }
 
