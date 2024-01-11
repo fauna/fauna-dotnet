@@ -48,7 +48,7 @@ public static class Deserializer
         string? name = null;
         Module? coll = null;
         var exists = true;
-        string? reason = null;
+        string? cause = null;
         var allProps = new Dictionary<string, object?>();
 
 
@@ -76,9 +76,9 @@ public static class Deserializer
                         exists = Deserialize<bool>(context, ref reader);
                         allProps["exists"] = exists;
                         break;
-                    case "reason":
-                        reason = Deserialize<string>(context, ref reader);
-                        allProps["reason"] = reason;
+                    case "cause":
+                        cause = Deserialize<string>(context, ref reader);
+                        allProps["cause"] = cause;
                         break;
                     default:
                         allProps[fieldName] = Deserialize(context, ref reader);
@@ -106,7 +106,7 @@ public static class Deserializer
             {
                 Id = id,
                 Collection = coll,
-                Reason = reason
+                Cause = cause
             };
         }
 
@@ -125,7 +125,7 @@ public static class Deserializer
             {
                 Name = name,
                 Collection = coll,
-                Reason = reason
+                Cause = cause
             };
         }
 

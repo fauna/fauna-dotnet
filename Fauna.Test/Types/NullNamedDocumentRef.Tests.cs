@@ -8,9 +8,9 @@ public class NullNamedDocumentRefTests
 {
 
     [Test]
-    public void ExistsAndReasonDefaultTest()
+    public void ExistsAndCauseDefaultTest()
     {
         var doc = new NullNamedDocumentRef();
-        Assert.IsNull(doc.Reason);
+        Assert.IsNull(doc.Cause);
     }
 }
