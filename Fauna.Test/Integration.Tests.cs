@@ -6,7 +6,7 @@ using static Fauna.Query;
 namespace Fauna.Test;
 
 [TestFixture]
-//[Ignore("integ test")]
+[Ignore("integ test")]
 public class IntegrationTests
 {
 #pragma warning disable CS8618
