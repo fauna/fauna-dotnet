@@ -128,6 +128,28 @@ public class Client
         } while (currentPage?.After is not null);
     }
 
+    public async IAsyncEnumerable<Page<T>> PaginateAsync<T>(Page<T> page, QueryOptions? queryOptions = null)
+    {
+        Page<T>? currentPage = page;
+
+        while (currentPage?.After is not null)
+        {
+            var query = new QueryExpr(new QueryLiteral($"Set.paginate('{currentPage.After}')"));
+
+            var response = await QueryAsyncInternal<Page<T>>(query, queryOptions);
+
+            if (response is QuerySuccess<Page<T>> success && success.Data is not null)
+            {
+                currentPage = success.Data;
+                yield return currentPage;
+            }
+            else
+            {
+                throw new FaunaException("Unexpected response received.");
+            }
+        }
+    }
+
     private async Task<QueryResponse> QueryAsyncInternal<T>(
         Query query,
         QueryOptions? queryOptions = null)

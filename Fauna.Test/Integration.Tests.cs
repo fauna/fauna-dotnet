@@ -1,3 +1,4 @@
+using Fauna.Constants;
 using Fauna.Serialization.Attributes;
 using NUnit.Framework;
 using static Fauna.Query;
@@ -5,12 +6,14 @@ using static Fauna.Query;
 namespace Fauna.Test;
 
 [TestFixture]
-[Ignore("integ test")]
+//[Ignore("integ test")]
 public class IntegrationTests
 {
 #pragma warning disable CS8618
     private static Client _client;
 #pragma warning restore CS8618
+
+    private const int DefaultSetSize = 16;
 
     [FaunaObject]
     private class Person
@@ -26,7 +29,7 @@ public class IntegrationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        var connection = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
+        var connection = new Connection(Endpoints.Local, TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
         _client = new Client(new ClientConfig("secret"), connection);
     }
 
@@ -83,6 +86,63 @@ public class IntegrationTests
         }
 
         Assert.AreEqual(2, pageCount);
+    }
+
+    [Test]
+    public async Task Paginate_Set()
+    {
+        int expectedTotalItemsCount = 18;
+        var expectedPageCounts = new[] { DefaultSetSize, expectedTotalItemsCount - DefaultSetSize };
+
+        var query = FQL($@"[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18].toSet();");
+        var paginatedResult = _client.PaginateAsync<int>(query);
+
+        int pageNumber = 0;
+        await foreach (var page in paginatedResult)
+        {
+            var expectedCount = expectedPageCounts[pageNumber++];
+            Assert.AreEqual(expectedCount, page.Data.Count);
+        }
+
+        Assert.AreEqual(expectedPageCounts.Length, pageNumber);
+    }
+
+    [Test]
+    public async Task Paginate_EmbeddedSet()
+    {
+        int expectedTotalItemsCount = 20;
+        int expectedFirstPageItemsCount = DefaultSetSize;
+        int expectedSecondPageItemsCount = expectedTotalItemsCount - expectedFirstPageItemsCount;
+
+        var query = FQL($@"[[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].toSet(),2,3].toSet();");
+
+        var paginatedResult = _client.PaginateAsync<object>(query);
+
+        int pageCount = 0;
+        await foreach (Page<object> page in paginatedResult)
+        {
+            pageCount++;
+            Assert.IsNotNull(page.Data);
+            Assert.AreEqual(3, page.Data.Count);
+
+            var embeddedPage = page.Data[0] as Page<object>;
+            Assert.IsNotNull(embeddedPage);
+            int totalItemsCount = embeddedPage!.Data.Count;
+            Assert.AreEqual(expectedFirstPageItemsCount, totalItemsCount);
+
+            var embeddedPageResult = _client.PaginateAsync(embeddedPage);
+
+            await foreach (Page<object> subpage in embeddedPageResult)
+            {
+
+                Assert.IsNotNull(subpage.Data);
+                Assert.AreEqual(expectedSecondPageItemsCount, subpage.Data.Count);
+
+                totalItemsCount += subpage.Data.Count;
+            }
+
+            Assert.AreEqual(expectedTotalItemsCount, totalItemsCount);
+        }
     }
 
     [Test]

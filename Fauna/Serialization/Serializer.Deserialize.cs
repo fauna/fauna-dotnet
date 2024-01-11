@@ -16,7 +16,7 @@ public static partial class Serializer
         {
             TokenType.StartObject => DeserializeObjectInternal(ref reader, context, targetType),
             TokenType.StartArray => DeserializeArrayInternal(ref reader, context, targetType),
-            TokenType.StartPage => throw new NotImplementedException(),
+            TokenType.StartPage => HandleStartPage(ref reader, context, targetType),
             TokenType.StartRef => DeserializeRefInternal(ref reader, context, targetType),
             TokenType.StartDocument => DeserializeDocumentInternal(ref reader, context, targetType),
             TokenType.String => reader.GetValue(),
@@ -32,6 +32,20 @@ public static partial class Serializer
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}")
         };
+
+        static object? HandleStartPage(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType)
+        {
+            if (targetType == null)
+            {
+                throw new SerializationException("Target type is null for TokenType.StartPage.");
+            }
+
+            Type pageType = targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>)
+                ? targetType.GetGenericArguments()[0]
+                : targetType;
+
+            return DeserializePageInternal(ref reader, context, pageType);
+        }
 
         return value;
     }
@@ -248,21 +262,16 @@ public static partial class Serializer
             case { IsGenericType: true } when targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>):
                 return DeserializeObjectToDictionaryInternal(ref reader, context, targetType);
             case { IsGenericType: true } when targetType.GetGenericTypeDefinition() == typeof(Page<>):
-                return DeserializeToPageInternal(ref reader, context, targetType, TokenType.EndObject);
+                Type pageType = targetType.GetGenericArguments()[0];
+                return DeserializePageInternal(ref reader, context, pageType, TokenType.EndObject);
             default:
                 return DeserializeToClassInternal(ref reader, context, targetType, TokenType.EndObject);
         }
     }
 
-    private static object? DeserializeToPageInternal(ref Utf8FaunaReader reader, SerializationContext context, Type pageType, TokenType endToken)
+    private static object? DeserializePageInternal(ref Utf8FaunaReader reader, SerializationContext context, Type pageType, TokenType endToken = TokenType.EndPage)
     {
-        if (!pageType.IsGenericType || pageType.GetGenericTypeDefinition() != typeof(Page<>))
-        {
-            throw new ArgumentException("The type must be a generic Page<> type.", nameof(pageType));
-        }
-
-        Type pageDataType = pageType.GetGenericArguments()[0];
-        Type listType = typeof(List<>).MakeGenericType(pageDataType);
+        Type listType = typeof(List<>).MakeGenericType(pageType);
         string? after = null;
         object? data = null;
 
@@ -282,7 +291,7 @@ public static partial class Serializer
                         after = Deserialize<string>(context, ref reader);
                         break;
                     default:
-                        throw new SerializationException($"Unexpected token while deserializing {pageType.Name}: {fieldName}");
+                        throw new SerializationException($"Unexpected field name while deserializing {pageType.Name}: {fieldName}");
                 }
             }
             else
@@ -291,7 +300,8 @@ public static partial class Serializer
             }
         }
 
-        var pageInstance = Activator.CreateInstance(pageType, data, after);
+        Type resultType = typeof(Page<>).MakeGenericType(pageType);
+        var pageInstance = Activator.CreateInstance(resultType, data, after);
         return pageInstance;
     }
 
