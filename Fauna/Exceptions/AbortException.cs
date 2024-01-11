@@ -54,7 +54,7 @@ public class AbortException : QueryRuntimeException
         var typeKey = typeof(T);
         if (!_cache.TryGetValue(typeKey, out var cachedData))
         {
-            var abortDataString = QueryFailure.ErrorInfo.Abort.ToString();
+            var abortDataString = QueryFailure.ErrorInfo.Abort?.ToString();
             if (!string.IsNullOrEmpty(abortDataString))
             {
                 var reader = new Utf8FaunaReader(abortDataString);
