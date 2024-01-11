@@ -12,6 +12,11 @@ public static class Deserializer
 
     public static object? Deserialize(SerializationContext context, ref Utf8FaunaReader reader, Type? targetType = null)
     {
+        if (targetType is null)
+        {
+            return DynamicDeserializer.Singleton.Deserialize(context, ref reader);
+        }
+
         var value = reader.CurrentTokenType switch
         {
             TokenType.StartObject => DeserializeObjectInternal(ref reader, context, targetType),
