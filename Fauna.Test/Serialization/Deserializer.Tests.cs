@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
-public partial class SerializerTests
+public class DeserializerTests
 {
     static T Deserialize<T>(string str) => (T)Deserialize(str, typeof(T))!;
 
@@ -14,7 +14,7 @@ public partial class SerializerTests
         var reader = new Utf8FaunaReader(str);
         reader.Read();
         var context = new SerializationContext();
-        var obj = Serializer.Deserialize(context, ref reader, type);
+        var obj = Deserializer.Deserialize(context, ref reader, type);
 
         if (reader.Read())
         {
