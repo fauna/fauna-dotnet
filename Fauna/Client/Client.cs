@@ -15,7 +15,7 @@ public class Client : IDisposable
     private readonly ClientConfig _config;
     private readonly IConnection _connection;
     // FIXME(matt) look at moving to a database context which wraps client, perhaps
-    private readonly SerializationContext _serializationCtx;
+    private readonly SerializationContext _serializationCtx = new();
     private bool _disposed = false;
 
     /// <summary>
@@ -27,8 +27,8 @@ public class Client : IDisposable
     /// Initializes a new instance of the Client class using a secret key.
     /// </summary>
     /// <param name="secret">The secret key for authentication.</param>
-    public Client(string secret) :
-        this(new ClientConfig(secret))
+    public Client(string secret)
+        : this(new ClientConfig(secret))
     {
     }
 
@@ -36,21 +36,22 @@ public class Client : IDisposable
     /// Initializes a new instance of the <see cref="Client"/> class using an HttpClient and a secret key.
     /// </summary>
     /// <param name="httpClient">The HttpClient to be used for HTTP requests.</param>
-    /// <param name="secret">The secret key for authentication.</param>
-    public Client(HttpClient httpClient, string secret)
+    /// <param name="config">The configuration settings for the client.</param>
+    public Client(HttpClient httpClient, ClientConfig config)
+        : this(config, new Connection(httpClient, config.Endpoint, config.ConnectionTimeout, config.MaxRetries, config.MaxBackoff))
     {
-        _config = new ClientConfig(secret);
-        _connection = new Connection(httpClient, _config.MaxRetries, _config.MaxBackoff);
-        _serializationCtx = new SerializationContext();
+        ArgumentNullException.ThrowIfNull(httpClient, nameof(httpClient));
+        ArgumentNullException.ThrowIfNull(config, nameof(config));
     }
 
     /// <summary>
     /// Initializes a new instance of the Client class using client configuration.
     /// </summary>
     /// <param name="config">The configuration settings for the client.</param>
-    public Client(ClientConfig config) :
-        this(config, new Connection(config.Endpoint, config.ConnectionTimeout, config.MaxRetries, config.MaxBackoff))
+    public Client(ClientConfig config)
+        : this(config, new Connection(config.Endpoint, config.ConnectionTimeout, config.MaxRetries, config.MaxBackoff))
     {
+        ArgumentNullException.ThrowIfNull(config, nameof(config));
     }
 
     /// <summary>
@@ -62,7 +63,6 @@ public class Client : IDisposable
     {
         this._config = config ?? throw new ArgumentNullException(nameof(config));
         this._connection = connection ?? throw new ArgumentNullException(nameof(connection));
-        this._serializationCtx = new SerializationContext();
     }
 
     /// <summary>
@@ -89,10 +89,7 @@ public class Client : IDisposable
         Query query,
         QueryOptions? queryOptions = null)
     {
-        if (query == null)
-        {
-            throw new ClientException("Query cannot be null");
-        }
+        ArgumentNullException.ThrowIfNull(query, nameof(query));
 
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
         var headers = GetRequestHeaders(finalOptions);

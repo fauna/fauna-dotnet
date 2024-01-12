@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Fauna.Constants;
+using NUnit.Framework;
 using Telerik.JustMock;
 
 namespace Fauna.Tests;
@@ -9,7 +10,7 @@ public class ConnectionTests
     [Test]
     public void Ctor_WithEndpoint()
     {
-        var endpoint = new Uri("http://localhost:8443");
+        var endpoint = Endpoints.Local;
         var connectionTimeout = TimeSpan.FromSeconds(30);
         var maxRetries = 3;
         var maxBackoff = TimeSpan.FromSeconds(10);
@@ -20,20 +21,24 @@ public class ConnectionTests
     [Test]
     public void Ctor_WithHttpClient()
     {
+        var endpoint = Endpoints.Local;
+        var connectionTimeout = TimeSpan.FromSeconds(30);
         var maxRetries = 3;
         var maxBackoff = TimeSpan.FromSeconds(10);
         var mockHttpClient = Mock.Create<HttpClient>();
-        var connection = new Connection(mockHttpClient, maxRetries, maxBackoff);
+        var connection = new Connection(mockHttpClient, endpoint, connectionTimeout, maxRetries, maxBackoff);
         Assert.NotNull(connection);
     }
 
     [Test]
     public void Dispose_ShouldNotDisposeExternalHttpClient()
     {
+        var endpoint = Endpoints.Local;
+        var connectionTimeout = TimeSpan.FromSeconds(30);
         var maxRetries = 3;
         var maxBackoff = TimeSpan.FromSeconds(10);
         var mockHttpClient = Mock.Create<HttpClient>();
-        var connection = new Connection(mockHttpClient, maxRetries, maxBackoff);
+        var connection = new Connection(mockHttpClient, endpoint, connectionTimeout, maxRetries, maxBackoff);
         connection.Dispose();
         Mock.Assert(() => mockHttpClient.Dispose(), Occurs.Never());
     }

@@ -1,3 +1,4 @@
+using Fauna.Constants;
 using Fauna.Serialization.Attributes;
 using NUnit.Framework;
 using static Fauna.Query;
@@ -28,8 +29,8 @@ public class IntegrationTests
             LastName = "O'Keeffe",
             Age = 136
         };
-        using var conn = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
-        using var client = new Client(new ClientConfig("secret"), conn);
+        var config = new ClientConfig("secret") { Endpoint = Endpoints.Local, ConnectionTimeout = TimeSpan.FromSeconds(30) };
+        using var client = new Client(config);
         var query = FQL($"{expected}");
         var result = await client.QueryAsync<Person>(query);
         var actual = result.Data;
@@ -51,13 +52,9 @@ public class IntegrationTests
             Age = 136
         };
 
-        using var httpClient = new HttpClient()
-        {
-            BaseAddress = new Uri("http://localhost:8443"),
-            Timeout = TimeSpan.FromSeconds(30)
-        };
-        using var conn = new Connection(httpClient, 3, TimeSpan.FromSeconds(10));
-        using var client = new Client(new ClientConfig("secret"), conn);
+        var config = new ClientConfig("secret") { Endpoint = Endpoints.Local, ConnectionTimeout = TimeSpan.FromSeconds(30) };
+        using var httpClient = new HttpClient();
+        using var client = new Client(httpClient, config);
         var query = FQL($"{expected}");
         var result = await client.QueryAsync<Person>(query);
         var actual = result.Data;

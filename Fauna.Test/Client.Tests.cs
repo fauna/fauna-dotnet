@@ -39,10 +39,10 @@ public class ClientTests
         );
     }
 
-    private Client CreateClient(ClientConfig? config = null, IConnection? connection = null)
+    private Client CreateClient(ClientConfig? config = null, HttpClient? httpClient = null)
     {
-        return connection != null
-            ? new Client(config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"), connection)
+        return httpClient != null
+            ? new Client(httpClient, config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"))
             : new Client(config ?? _defaultConfig ?? throw new InvalidOperationException("Default config is not set"));
     }
 
@@ -119,7 +119,7 @@ public class ClientTests
     [TestCase("time_out", 503, typeof(QueryTimeoutException), "Timeout: ")]
     [TestCase("bad_gateway", 502, typeof(NetworkException), "Bad Gateway: ")]
     [TestCase("gateway_timeout", 504, typeof(NetworkException), "Gateway Timeout: ")]
-    [TestCase("unexpected_error", 400, typeof(FaunaException), "Unexpected Error: ")] // Example for default case
+    [TestCase("unexpected_error", 400, typeof(FaunaException), "Unexpected Error: ")]
     public async Task QueryAsync_ShouldThrowCorrectException_ForErrorCode(string errorCode, int httpStatus, Type expectedExceptionType, string expectedMessageStart)
     {
         using var client = CreateClientWithMockConnection();
