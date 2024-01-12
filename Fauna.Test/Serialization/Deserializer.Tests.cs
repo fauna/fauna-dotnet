@@ -228,14 +228,14 @@ public class DeserializerTests
                                      ""id"":""123"",
                                      ""coll"":{""@mod"":""MyColl""},
                                      ""exists"":false,
-                                     ""reason"":""not found""
+                                     ""cause"":""not found""
                                  }
                              }";
 
         var actual = Deserialize<NullDocumentRef>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Reason);
+        Assert.AreEqual("not found", actual.Cause);
     }
 
     [Test]
@@ -263,14 +263,14 @@ public class DeserializerTests
                                      ""name"":""RefName"",
                                      ""coll"":{""@mod"":""MyColl""},
                                      ""exists"":false,
-                                     ""reason"":""not found""
+                                     ""cause"":""not found""
                                  }
                              }";
 
         var actual = Deserialize<NullNamedDocumentRef>(given);
         Assert.AreEqual("RefName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Reason);
+        Assert.AreEqual("not found", actual.Cause);
     }
 
     [Test]

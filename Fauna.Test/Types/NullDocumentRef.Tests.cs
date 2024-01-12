@@ -8,9 +8,9 @@ public class NullDocumentRefTests
 {
 
     [Test]
-    public void ReasonDefaultTest()
+    public void CauseDefaultTest()
     {
         var doc = new NullDocumentRef();
-        Assert.IsNull(doc.Reason);
+        Assert.IsNull(doc.Cause);
     }
 }
