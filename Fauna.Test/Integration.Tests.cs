@@ -29,8 +29,8 @@ public class IntegrationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        var connection = new Connection(Endpoints.Default, TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
-        _client = new Client(new ClientConfig("fnAFXbBvA8AAyjXFFuxEBPVU34dlA1CPbYfBAZRQ"), connection);
+        var connection = new Connection(Endpoints.Local, TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
+        _client = new Client(new ClientConfig("secret"), connection);
     }
 
     [Test]
