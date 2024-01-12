@@ -1,4 +1,5 @@
 using Fauna.Types;
+using System.Collections;
 using Type = System.Type;
 
 namespace Fauna.Serialization;
@@ -12,13 +13,17 @@ public static partial class Serializer
 
     public static object? Deserialize(SerializationContext context, ref Utf8FaunaReader reader, Type? targetType = null)
     {
+        Type? resolvedType = targetType != null && targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>)
+            ? targetType.GetGenericArguments()[0]
+            : targetType;
+
         var value = reader.CurrentTokenType switch
         {
-            TokenType.StartObject => DeserializeObjectInternal(ref reader, context, targetType),
-            TokenType.StartArray => DeserializeArrayInternal(ref reader, context, targetType),
-            TokenType.StartPage => HandleStartPage(ref reader, context, targetType),
-            TokenType.StartRef => DeserializeRefInternal(ref reader, context, targetType),
-            TokenType.StartDocument => DeserializeDocumentInternal(ref reader, context, targetType),
+            TokenType.StartObject => DeserializeObjectInternal(ref reader, context, resolvedType),
+            TokenType.StartArray => DeserializeArrayInternal(ref reader, context, resolvedType),
+            TokenType.StartPage => DeserializePageInternal(ref reader, context, resolvedType),
+            TokenType.StartRef => DeserializeRefInternal(ref reader, context, resolvedType),
+            TokenType.StartDocument => DeserializeDocumentInternal(ref reader, context, resolvedType),
             TokenType.String => reader.GetValue(),
             TokenType.Int => reader.GetValue(),
             TokenType.Long => reader.GetValue(),
@@ -33,18 +38,15 @@ public static partial class Serializer
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}")
         };
 
-        static object? HandleStartPage(ref Utf8FaunaReader reader, SerializationContext context, Type? targetType)
+        if (resolvedType != null && resolvedType != targetType)
         {
-            if (targetType == null)
-            {
-                throw new SerializationException("Target type is null for TokenType.StartPage.");
-            }
+            Type listType = typeof(List<>).MakeGenericType(resolvedType);
+            var listInstance = (IList)Activator.CreateInstance(listType);
+            listInstance.Add(value);
 
-            Type pageType = targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>)
-                ? targetType.GetGenericArguments()[0]
-                : targetType;
-
-            return DeserializePageInternal(ref reader, context, pageType);
+            Type resultType = typeof(Page<>).MakeGenericType(resolvedType);
+            var pageInstance = Activator.CreateInstance(resultType, listInstance, null);
+            return pageInstance;
         }
 
         return value;
