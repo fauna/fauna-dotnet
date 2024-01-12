@@ -6,7 +6,7 @@ using static Fauna.Query;
 namespace Fauna.Test;
 
 [TestFixture]
-[Ignore("integ test")]
+//[Ignore("integ test")]
 public class IntegrationTests
 {
 #pragma warning disable CS8618
@@ -29,8 +29,8 @@ public class IntegrationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        var connection = new Connection(Endpoints.Local, TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
-        _client = new Client(new ClientConfig("secret"), connection);
+        var connection = new Connection(Endpoints.Default, TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
+        _client = new Client(new ClientConfig("fnAFXbBvA8AAyjXFFuxEBPVU34dlA1CPbYfBAZRQ"), connection);
     }
 
     [Test]
@@ -172,6 +172,94 @@ public class IntegrationTests
         }
 
         Assert.AreEqual(5, pageCount);
+    }
+
+    [Test]
+    public async Task PaginateAsync_NonPageResultYieldsOnePocoItem()
+    {
+        var expected = new Person
+        {
+            FirstName = "Georgia",
+            LastName = "O'Keeffe",
+            Age = 136
+        };
+        var query = FQL($"{expected}");
+
+        var paginatedResult = _client.PaginateAsync<Person>(query);
+
+        var pageCount = 0;
+
+        await foreach (var page in paginatedResult)
+        {
+            pageCount++;
+
+            Assert.IsNotNull(page);
+            Assert.IsNull(page.After);
+            Assert.That(page.Data, Has.Count.EqualTo(1));
+
+            var actual = page.Data[0];
+
+            Assert.That(actual, Is.Not.EqualTo(expected));
+            Assert.AreEqual(expected.FirstName, actual.FirstName);
+            Assert.AreEqual(expected.LastName, actual.LastName);
+            Assert.AreEqual(expected.Age, actual.Age);
+        }
+
+        Assert.AreEqual(1, pageCount);
+    }
+
+    [Test]
+    public async Task PaginateAsync_NonPageResultYieldsOneIntItem()
+    {
+        var expected = 125;
+        var query = FQL($"{expected}");
+
+        var paginatedResult = _client.PaginateAsync<int>(query);
+
+        var pageCount = 0;
+
+        await foreach (var page in paginatedResult)
+        {
+            pageCount++;
+
+            Assert.IsNotNull(page);
+            Assert.IsNull(page.After);
+            Assert.That(page.Data, Has.Count.EqualTo(1));
+
+            var actual = page.Data[0];
+
+            Assert.AreEqual(actual, expected);
+            Assert.AreEqual(expected, actual);
+        }
+
+        Assert.AreEqual(1, pageCount);
+    }
+
+    [Test]
+    public async Task PaginateAsync_NonPageResultYieldsOneCollectionItem()
+    {
+        var query = FQL($"[1,2,3]");
+
+        var paginatedResult = _client.PaginateAsync<List<int>>(query);
+
+        var pageCount = 0;
+
+        await foreach (var page in paginatedResult)
+        {
+            pageCount++;
+
+            Assert.IsNotNull(page);
+            Assert.IsNull(page.After);
+            Assert.That(page.Data, Has.Count.EqualTo(1));
+
+            var actual = page.Data[0];
+            Assert.That(actual, Has.Count.EqualTo(3));
+            Assert.AreEqual(1, actual[0]);
+            Assert.AreEqual(2, actual[1]);
+            Assert.AreEqual(3, actual[2]);
+        }
+
+        Assert.AreEqual(1, pageCount);
     }
 
     [Test]
