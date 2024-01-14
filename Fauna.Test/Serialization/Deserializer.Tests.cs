@@ -228,14 +228,14 @@ public class DeserializerTests
                                      ""id"":""123"",
                                      ""coll"":{""@mod"":""MyColl""},
                                      ""exists"":false,
-                                     ""reason"":""not found""
+                                     ""cause"":""not found""
                                  }
                              }";
 
         var actual = Deserialize<NullDocumentRef>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Reason);
+        Assert.AreEqual("not found", actual.Cause);
     }
 
     [Test]
@@ -263,14 +263,14 @@ public class DeserializerTests
                                      ""name"":""RefName"",
                                      ""coll"":{""@mod"":""MyColl""},
                                      ""exists"":false,
-                                     ""reason"":""not found""
+                                     ""cause"":""not found""
                                  }
                              }";
 
         var actual = Deserialize<NullNamedDocumentRef>(given);
         Assert.AreEqual("RefName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Reason);
+        Assert.AreEqual("not found", actual.Cause);
     }
 
     [Test]
@@ -441,14 +441,15 @@ public class DeserializerTests
     [Test]
     public void DeserializeIntoPageWithPrimitive()
     {
-        const string given = @"
-        {
-            ""after"": ""next_page_cursor"",
-            ""data"": [
-                {""@int"":""1""},
-                {""@int"":""2""},
-                {""@int"":""3""}
-            ]
+        const string given = @"{
+            ""@set"": {
+                ""after"": ""next_page_cursor"",
+                ""data"": [
+                    {""@int"":""1""},
+                    {""@int"":""2""},
+                    {""@int"":""3""}
+                ]
+            }
         }";
 
         var result = Deserialize<Page<int>>(given);
@@ -460,13 +461,14 @@ public class DeserializerTests
     [Test]
     public void DeserializeIntoPageWithUserDefinedClass()
     {
-        const string given = @"
-        {
-            ""after"": ""next_page_cursor"",
-            ""data"": [
-                {""first_name"":""Alice"",""last_name"":""Smith"",""age"":{""@int"":""30""}},
-                {""first_name"":""Bob"",""last_name"":""Jones"",""age"":{""@int"":""40""}}
-            ]
+        const string given = @"{
+            ""@set"": {
+                ""after"": ""next_page_cursor"",
+                ""data"": [
+                    {""first_name"":""Alice"",""last_name"":""Smith"",""age"":{""@int"":""30""}},
+                    {""first_name"":""Bob"",""last_name"":""Jones"",""age"":{""@int"":""40""}}
+                ]
+            }
         }";
 
         var result = Deserialize<Page<PersonWithAttributes>>(given);

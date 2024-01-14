@@ -3,6 +3,7 @@ using Fauna.Exceptions;
 using Fauna.Serialization;
 using System.Data;
 using System.Globalization;
+using Fauna.Types;
 
 namespace Fauna;
 
