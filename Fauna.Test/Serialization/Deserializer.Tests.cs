@@ -7,14 +7,21 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class DeserializerTests
 {
-    static object? Deserialize(string str) => Deserialize<object?>(str);
+    static object? Deserialize(string str) =>
+        DeserializeImpl(str, ctx => Deserializer.Dynamic);
 
-    static T Deserialize<T>(string str)
+    static T Deserialize<T>(string str) where T : notnull =>
+        DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx));
+
+    static T? DeserializeNullable<T>(string str) =>
+        DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx));
+
+    static T DeserializeImpl<T>(string str, Func<SerializationContext, IDeserializer<T>> deserFunc)
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
         var context = new SerializationContext();
-        var deser = Deserializer.Generate<T>(context);
+        var deser = deserFunc(context);
         var obj = deser.Deserialize(context, ref reader);
 
         if (reader.Read())
@@ -58,7 +65,7 @@ public class DeserializerTests
     [Test]
     public void DeserializeNullableGeneric()
     {
-        var result = Deserialize<string?>("null");
+        var result = DeserializeNullable<string>("null");
         Assert.IsNull(result);
     }
 
