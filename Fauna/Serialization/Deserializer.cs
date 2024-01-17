@@ -10,7 +10,7 @@ public static class Deserializer
     /// <summary>
     /// The dynamic data deserializer.
     /// </summary>
-    public static IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
+    public static readonly IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
 
     /// <summary>
     /// Generates a deserializer for the specified non-nullable .NET type.
