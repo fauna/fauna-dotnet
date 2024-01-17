@@ -1,5 +1,8 @@
 namespace Fauna.Types;
 
+/// <summary>
+/// Represents a null reference to a document, including a reason for its null state.
+/// </summary>
 public class NullDocumentRef : DocumentRef
 {
     /// <summary>

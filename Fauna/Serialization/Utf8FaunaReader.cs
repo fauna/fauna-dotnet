@@ -6,6 +6,9 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
+/// <summary>
+/// Represents a reader that provides fast, non-cached, forward-only access to serialized data.
+/// </summary>
 public ref struct Utf8FaunaReader
 {
     private Utf8JsonReader _json;
@@ -22,6 +25,10 @@ public ref struct Utf8FaunaReader
     };
 
     private string? _taggedTokenValue = null;
+
+    /// <summary>
+    /// Gets the type of the current token.
+    /// </summary>
     public TokenType CurrentTokenType { get; private set; }
 
     private enum TokenTypeInternal
@@ -30,12 +37,20 @@ public ref struct Utf8FaunaReader
         StartEscapedObject,
     }
 
+    /// <summary>
+    /// Initializes a new Utf8FaunaReader to read from a ReadOnlySequence of bytes.
+    /// </summary>
+    /// <param name="bytes">The sequence of bytes to read from.</param>
     public Utf8FaunaReader(ReadOnlySequence<byte> bytes)
     {
         _json = new Utf8JsonReader(bytes);
         CurrentTokenType = TokenType.None;
     }
 
+    /// <summary>
+    /// Initializes a new Utf8FaunaReader to read from a string.
+    /// </summary>
+    /// <param name="str">The string to read from.</param>
     public Utf8FaunaReader(string str)
     {
         var bytes = Encoding.UTF8.GetBytes(str);
@@ -44,6 +59,9 @@ public ref struct Utf8FaunaReader
         CurrentTokenType = TokenType.None;
     }
 
+    /// <summary>
+    /// Skips the value of the current token.
+    /// </summary>
     public void Skip()
     {
         switch (CurrentTokenType)
@@ -67,6 +85,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Reads the next token from the source.
+    /// </summary>
+    /// <returns>true if the token was read successfully; otherwise, false.</returns>
     public bool Read()
     {
         _taggedTokenValue = null;
@@ -129,6 +151,11 @@ public ref struct Utf8FaunaReader
         return true;
     }
 
+    /// <summary>
+    /// Gets the value of the current token.
+    /// </summary>
+    /// <returns>The value of the current token, or null if no value is associated with the token.</returns>
+    /// <exception cref="SerializationException">Thrown when an error occurs during token value retrieval.</exception>
     public object? GetValue()
     {
         return CurrentTokenType switch
@@ -145,7 +172,10 @@ public ref struct Utf8FaunaReader
         };
     }
 
-
+    /// <summary>
+    /// Retrieves a string value from the current token.
+    /// </summary>
+    /// <returns>A string representation of the current token's value.</returns>
     public string? GetString()
     {
         if (CurrentTokenType != TokenType.String && CurrentTokenType != TokenType.FieldName)
@@ -163,6 +193,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Retrieves a boolean value from the current JSON token.
+    /// </summary>
+    /// <returns>A boolean representation of the current token's value.</returns>
     public bool GetBoolean()
     {
         try
@@ -175,6 +209,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Retrieves a DateTime value from the current token.
+    /// </summary>
+    /// <returns>A DateTime representation of the current token's value.</returns>
     public DateTime GetDate()
     {
         ValidateTaggedType(TokenType.Date);
@@ -189,6 +227,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Retrieves a double value from the current token.
+    /// </summary>
+    /// <returns>A double representation of the current token's value.</returns>
     public double GetDouble()
     {
         ValidateTaggedType(TokenType.Double);
@@ -203,6 +245,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Retrieves a decimal value from the current token.
+    /// </summary>
+    /// <returns>A decimal representation of the current token's value.</returns>
     public decimal GetDoubleAsDecimal()
     {
         ValidateTaggedType(TokenType.Double);
@@ -217,6 +263,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Retrieves an integer value from the current token.
+    /// </summary>
+    /// <returns>An integer representation of the current token's value.</returns>
     public int GetInt()
     {
         ValidateTaggedType(TokenType.Int);
@@ -231,6 +281,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Retrieves a long value from the current token.
+    /// </summary>
+    /// <returns>A long representation of the current token's value.</returns>
     public long GetLong()
     {
         ValidateTaggedType(TokenType.Long);
@@ -245,7 +299,10 @@ public ref struct Utf8FaunaReader
         }
     }
 
-
+    /// <summary>
+    /// Retrieves a Module object from the current token.
+    /// </summary>
+    /// <returns>A Module representation of the current token's value.</returns>
     public Module GetModule()
     {
         ValidateTaggedType(TokenType.Module);
@@ -253,6 +310,10 @@ public ref struct Utf8FaunaReader
         return new Module(_taggedTokenValue!);
     }
 
+    /// <summary>
+    /// Retrieves a DateTime value from the current token.
+    /// </summary>
+    /// <returns>A DateTime representation of the current token's value.</returns>
     public DateTime GetTime()
     {
         ValidateTaggedType(TokenType.Time);
@@ -267,36 +328,71 @@ public ref struct Utf8FaunaReader
         }
     }
 
+    /// <summary>
+    /// Tries to retrieve a string value from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the string value, if the conversion succeeded, or null if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to a string; otherwise, false.</returns>
     public string TryGetString(out string value)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Tries to retrieve a boolean value from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the boolean value, if the conversion succeeded, or false if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to a boolean; otherwise, false.</returns>
     public bool TryGetBoolean(out bool value)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Tries to retrieve a DateTime value from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the DateTime value, if the conversion succeeded, or the default DateTime value if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to a DateTime; otherwise, false.</returns>
     public DateTime TryGetDateTime(out DateTime value)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Tries to retrieve a double value from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the double value, if the conversion succeeded, or 0.0 if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to a double; otherwise, false.</returns>
     public double TryGetDouble(out double value)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Tries to retrieve an integer value from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the integer value, if the conversion succeeded, or 0 if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to an integer; otherwise, false.</returns>
     public int TryGetInt(out int value)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Tries to retrieve a long value from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the long value, if the conversion succeeded, or 0 if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to a long; otherwise, false.</returns>
     public long TryGetLong(out long value)
     {
         throw new NotImplementedException();
     }
 
+    /// <summary>
+    /// Tries to retrieve a Module object from the current token.
+    /// </summary>
+    /// <param name="value">When this method returns, contains the Module object, if the conversion succeeded, or null if the conversion failed.</param>
+    /// <returns>true if the token's value could be converted to a Module; otherwise, false.</returns>
     public Module TryGetModule(out Module value)
     {
         throw new NotImplementedException();

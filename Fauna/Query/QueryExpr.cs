@@ -31,8 +31,16 @@ public sealed class QueryExpr : Query, IQueryFragment
     /// </summary>
     public ReadOnlyCollection<IQueryFragment> Unwrap { get; }
 
+    /// <summary>
+    /// Gets the readonly collection of query fragments.
+    /// </summary>
     public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
 
+    /// <summary>
+    /// Serializes the query expression.
+    /// </summary>
+    /// <param name="ctx">The serialization context.</param>
+    /// <param name="writer">The writer to serialize the query expression to.</param>
     public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
@@ -46,8 +54,18 @@ public sealed class QueryExpr : Query, IQueryFragment
         writer.WriteEndObject();
     }
 
+    /// <summary>
+    /// Determines whether the specified QueryExpr is equal to the current QueryExpr.
+    /// </summary>
+    /// <param name="o">The QueryExpr to compare with the current QueryExpr.</param>
+    /// <returns>true if the specified QueryExpr is equal to the current QueryExpr; otherwise, false.</returns>
     public override bool Equals(Query? o) => IsEqual(o as QueryExpr);
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current QueryExpr.
+    /// </summary>
+    /// <param name="o">The object to compare with the current QueryExpr.</param>
+    /// <returns>true if the specified object is equal to the current QueryExpr; otherwise, false.</returns>
     public override bool Equals(object? o)
     {
         if (ReferenceEquals(this, o))
@@ -58,8 +76,16 @@ public sealed class QueryExpr : Query, IQueryFragment
         return o is QueryExpr expr && IsEqual(expr);
     }
 
+    /// <summary>
+    /// The default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current QueryExpr.</returns>
     public override int GetHashCode() => Fragments.GetHashCode();
 
+    /// <summary>
+    /// Returns a string that represents the current QueryExpr.
+    /// </summary>
+    /// <returns>A string that represents the current QueryExpr.</returns>
     public override string ToString() => $"QueryExpr({string.Join(",", Fragments)})";
 
     private bool IsEqual(QueryExpr? o)
@@ -77,6 +103,12 @@ public sealed class QueryExpr : Query, IQueryFragment
         return Fragments.SequenceEqual(o.Fragments);
     }
 
+    /// <summary>
+    /// Determines whether two specified instances of QueryExpr are equal.
+    /// </summary>
+    /// <param name="left">The first QueryExpr to compare.</param>
+    /// <param name="right">The second QueryExpr to compare.</param>
+    /// <returns>true if left and right are equal; otherwise, false.</returns>
     public static bool operator ==(QueryExpr left, QueryExpr right)
     {
         if (ReferenceEquals(left, right))
@@ -92,6 +124,12 @@ public sealed class QueryExpr : Query, IQueryFragment
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Determines whether two specified instances of QueryExpr are not equal.
+    /// </summary>
+    /// <param name="left">The first QueryExpr to compare.</param>
+    /// <param name="right">The second QueryExpr to compare.</param>
+    /// <returns>true if left and right are not equal; otherwise, false.</returns>
     public static bool operator !=(QueryExpr left, QueryExpr right)
     {
         return !(left == right);

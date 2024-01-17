@@ -22,6 +22,11 @@ public sealed class QueryVal<T> : Query, IQueryFragment
     /// </summary>
     public T Unwrap { get; }
 
+    /// <summary>
+    /// Serializes the query value.
+    /// </summary>
+    /// <param name="ctx">The serialization context.</param>
+    /// <param name="writer">The writer to serialize the query value to.</param>
     public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
@@ -30,8 +35,18 @@ public sealed class QueryVal<T> : Query, IQueryFragment
         writer.WriteEndObject();
     }
 
+    /// <summary>
+    /// Determines whether the specified QueryVal is equal to the current QueryVal.
+    /// </summary>
+    /// <param name="o">The QueryVal to compare with the current QueryVal.</param>
+    /// <returns>true if the specified QueryVal is equal to the current QueryVal; otherwise, false.</returns>
     public override bool Equals(Query? o) => IsEqual(o as QueryVal<T>);
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current QueryVal.
+    /// </summary>
+    /// <param name="o">The object to compare with the current QueryVal.</param>
+    /// <returns>true if the specified object is equal to the current QueryVal; otherwise, false.</returns>
     public override bool Equals(object? o)
     {
         if (ReferenceEquals(this, o))
@@ -52,10 +67,24 @@ public sealed class QueryVal<T> : Query, IQueryFragment
         return IsEqual(o as QueryVal<T>);
     }
 
+    /// <summary>
+    /// The default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current QueryVal.</returns>
     public override int GetHashCode() => Unwrap != null ? EqualityComparer<T>.Default.GetHashCode(Unwrap) : 0;
 
+    /// <summary>
+    /// Returns a string that represents the current QueryVal.
+    /// </summary>
+    /// <returns>A string that represents the current QueryVal.</returns>
     public override string ToString() => $"QueryVal({Unwrap})";
 
+    /// <summary>
+    /// Determines whether two specified instances of QueryVal are equal.
+    /// </summary>
+    /// <param name="left">The first QueryVal to compare.</param>
+    /// <param name="right">The second QueryVal to compare.</param>
+    /// <returns>true if left and right are equal; otherwise, false.</returns>
     public static bool operator ==(QueryVal<T> left, QueryVal<T> right)
     {
         if (ReferenceEquals(left, right))
@@ -71,6 +100,12 @@ public sealed class QueryVal<T> : Query, IQueryFragment
         return left.Equals(right);
     }
 
+    /// <summary>
+    /// Determines whether two specified instances of QueryVal are not equal.
+    /// </summary>
+    /// <param name="left">The first QueryVal to compare.</param>
+    /// <param name="right">The second QueryVal to compare.</param>
+    /// <returns>true if left and right are not equal; otherwise, false.</returns>
     public static bool operator !=(QueryVal<T> left, QueryVal<T> right)
     {
         return !(left == right);

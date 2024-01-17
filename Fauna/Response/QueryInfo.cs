@@ -3,16 +3,42 @@ using static Fauna.Constants.ResponseFields;
 
 namespace Fauna;
 
+/// <summary>
+/// Provides basic information about a query response, including transaction and schema details.
+/// </summary>
 public class QueryInfo
 {
     protected JsonElement _responseBody;
 
+    /// <summary>
+    /// Gets the last transaction seen by this query.
+    /// </summary>
     public long LastSeenTxn { get; init; }
+
+    /// <summary>
+    /// Gets the schema version.
+    /// </summary>
     public long SchemaVersion { get; init; }
+
+    /// <summary>
+    /// Gets a summary of the query execution.
+    /// </summary>
     public string Summary { get; init; }
+
+    /// <summary>
+    /// Gets a dictionary of query tags, providing additional context about the query.
+    /// </summary>
     public Dictionary<string, string>? QueryTags { get; init; }
+
+    /// <summary>
+    /// Gets the statistics related to the query execution.
+    /// </summary>
     public QueryStats Stats { get; init; }
 
+    /// <summary>
+    /// Initializes a new instance of the QueryInfo class, parsing the provided raw response text to extract common query information.
+    /// </summary>
+    /// <param name="rawResponseText">The raw JSON response text from the Fauna.</param>
     internal QueryInfo(string rawResponseText)
     {
         _responseBody = JsonSerializer.Deserialize<JsonElement>(rawResponseText);

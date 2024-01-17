@@ -1,6 +1,8 @@
 namespace Fauna.Serialization;
 
-
+/// <summary>
+/// Enumerates the types of tokens used in Fauna serialization.
+/// </summary>
 public enum TokenType
 {
 
