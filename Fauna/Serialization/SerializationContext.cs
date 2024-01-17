@@ -7,6 +7,12 @@ public class SerializationContext
 {
     private readonly Dictionary<Type, Dictionary<string, FieldAttribute>> _registry = new();
 
+    public IDeserializer<T> GetDeserializer<T>() where T : notnull
+    {
+        // FIXME(matt) cache this
+        return Deserializer.Generate<T>(this);
+    }
+
     public Dictionary<string, FieldAttribute> GetFieldMap(Type t)
     {
         if (_registry.TryGetValue(t, out var fieldMap))
