@@ -4,14 +4,24 @@ namespace Fauna.Serialization;
 
 public static class Deserializer
 {
-    public static IDeserializer<T> Generate<T>(SerializationContext context)
+    public static IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
+
+    public static IDeserializer<T> Generate<T>(SerializationContext context) where T : notnull
     {
         var targetType = typeof(T);
         var deser = (IDeserializer<T>)Generate(context, targetType);
-
         return deser;
     }
 
+    public static IDeserializer<T?> GenerateNullable<T>(SerializationContext context)
+    {
+        var targetType = typeof(T);
+        var deser = (IDeserializer<T>)Generate(context, targetType);
+        var nullable = new NullableDeserializer<T>(deser);
+        return nullable;
+    }
+
+    private static readonly CheckedDeserializer<object> _object = new();
     private static readonly CheckedDeserializer<string> _string = new();
     private static readonly CheckedDeserializer<int> _int = new();
     private static readonly CheckedDeserializer<long> _long = new();
@@ -28,7 +38,7 @@ public static class Deserializer
 
     private static object Generate(SerializationContext context, Type targetType)
     {
-        if (targetType == typeof(object)) return DynamicDeserializer.Singleton;
+        if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
         if (targetType == typeof(int)) return _int;
         if (targetType == typeof(long)) return _long;
