@@ -28,38 +28,34 @@ public class AbortException : QueryRuntimeException
     /// Retrieves the deserialized data associated with the abort operation as an object.
     /// </summary>
     /// <returns>The deserialized data as an object, or null if no data is available.</returns>
-    public object? GetData()
-    {
-        if (!_cache.TryGetValue(NonTypedKey, out var cachedData))
-        {
-            var abortDataString = QueryFailure.ErrorInfo.Abort?.ToString();
-            if (!string.IsNullOrEmpty(abortDataString))
-            {
-                var reader = new Utf8FaunaReader(abortDataString);
-                reader.Read();
-                cachedData = Deserializer.Deserialize(_serializationCtx, ref reader);
-                _cache[NonTypedKey] = cachedData;
-            }
-        }
-        return cachedData;
-    }
+    public object? GetData() => GetData(Deserializer.Dynamic);
 
     /// <summary>
     /// Retrieves the deserialized data associated with the abort operation as a specific type.
     /// </summary>
     /// <typeparam name="T">The type to which the data should be deserialized.</typeparam>
+    /// <param name="deserializer">A deserializer for the abort data.</param>
     /// <returns>The deserialized data as the specified type, or null if no data is available.</returns>
-    public T? GetData<T>()
+    public T? GetData<T>() where T : notnull => GetData(_serializationCtx.GetDeserializer<T>());
+
+    /// <summary>
+    /// Retrieves the deserialized data associated with the abort operation as a specific type.
+    /// </summary>
+    /// <typeparam name="T">The type to which the data should be deserialized.</typeparam>
+    /// <param name="deserializer">A deserializer for the abort data.</param>
+    /// <returns>The deserialized data as the specified type, or null if no data is available.</returns>
+    public T? GetData<T>(IDeserializer<T> deserializer)
     {
         var typeKey = typeof(T);
         if (!_cache.TryGetValue(typeKey, out var cachedData))
         {
-            var abortDataString = QueryFailure.ErrorInfo.Abort.ToString();
+            var abortDataString = QueryFailure.ErrorInfo.Abort?.ToString();
             if (!string.IsNullOrEmpty(abortDataString))
             {
+                // TODO(matt) pull from context
                 var reader = new Utf8FaunaReader(abortDataString);
                 reader.Read();
-                T? deserializedResult = Deserializer.Deserialize<T>(_serializationCtx, ref reader);
+                T? deserializedResult = deserializer.Deserialize(_serializationCtx, ref reader);
                 _cache[typeKey] = deserializedResult;
                 return deserializedResult;
             }

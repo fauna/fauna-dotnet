@@ -8,7 +8,10 @@ public abstract class QueryResponse : QueryInfo
 {
     internal QueryResponse(string rawResponseText) : base(rawResponseText) { }
 
-    public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(SerializationContext ctx, HttpResponseMessage message)
+    public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(
+        SerializationContext ctx,
+        IDeserializer<T> deserializer,
+        HttpResponseMessage message)
     {
         QueryResponse queryResponse;
 
@@ -20,7 +23,7 @@ public abstract class QueryResponse : QueryInfo
         }
         else
         {
-            queryResponse = new QuerySuccess<T>(ctx, body);
+            queryResponse = new QuerySuccess<T>(ctx, deserializer, body);
         }
 
         return queryResponse;
@@ -32,12 +35,16 @@ public class QuerySuccess<T> : QueryResponse
     public T Data { get; init; }
     public string? StaticType { get; init; }
 
-    public QuerySuccess(SerializationContext ctx, string rawResponseText) : base(rawResponseText)
+    public QuerySuccess(
+        SerializationContext ctx,
+        IDeserializer<T> deserializer,
+        string rawResponseText)
+        : base(rawResponseText)
     {
         var dataText = _responseBody.GetProperty(DataFieldName).GetRawText();
         var reader = new Utf8FaunaReader(dataText);
         reader.Read();
-        Data = Deserializer.Deserialize<T>(ctx, ref reader);
+        Data = deserializer.Deserialize(ctx, ref reader);
 
         if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
         {
