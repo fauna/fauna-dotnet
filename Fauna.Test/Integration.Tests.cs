@@ -1,4 +1,4 @@
-using Fauna.Serialization.Attributes;
+using Fauna.Mapping.Attributes;
 using NUnit.Framework;
 using static Fauna.Query;
 
@@ -12,7 +12,7 @@ public class IntegrationTests
     private static Client _client;
 #pragma warning restore CS8618
 
-    [FaunaObject]
+    [Object]
     private class Person
     {
         [Field("first_name")]

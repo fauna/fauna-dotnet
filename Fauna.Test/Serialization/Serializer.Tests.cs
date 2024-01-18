@@ -198,9 +198,9 @@ public class SerializerTests
     }
 
     [Test]
-    public void SerializeObjectWithFieldAttributeAndWithoutFaunaObjectAttribute()
+    public void SerializeObjectWithFieldAttributeAndWithoutObjectAttribute()
     {
-        var obj = new ClassWithFieldAttributeAndWithoutFaunaObjectAttribute();
+        var obj = new ClassWithFieldAttributeAndWithoutObjectAttribute();
         var expected = "{\"FirstName\":\"Baz\"}";
         var actual = Serialize(obj);
         Assert.AreEqual(expected, actual);

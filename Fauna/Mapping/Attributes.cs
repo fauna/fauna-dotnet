@@ -1,6 +1,18 @@
-using Fauna.Serialization;
-
 namespace Fauna.Mapping.Attributes;
+
+/// <summary>
+/// Enumerates the different types of data that can be stored in Fauna.
+/// </summary>
+public enum FaunaType
+{
+    Int,
+    Long,
+    Double,
+    String,
+    Date,
+    Time,
+    Boolean,
+}
 
 /// <summary>
 /// Attribute used to indicate that a class represents a Fauna collection.
