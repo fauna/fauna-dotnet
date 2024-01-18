@@ -79,7 +79,7 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
         where T : notnull =>
-        QueryAsync<T>(query, Deserializer.Generate<T>(_ctx._serCtx), queryOptions);
+        QueryAsync<T>(query, Deserializer.Generate<T>(_ctx), queryOptions);
 
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database.
@@ -162,7 +162,7 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
         where T : notnull =>
-        PaginateAsync(query, Deserializer.Generate<T>(_ctx._serCtx), queryOptions);
+        PaginateAsync(query, Deserializer.Generate<T>(_ctx), queryOptions);
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.

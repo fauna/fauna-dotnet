@@ -1,17 +1,16 @@
 using Fauna.Mapping;
-using SA = Fauna.Serialization.Attributes;
+using System.Diagnostics;
 
 namespace Fauna.Serialization;
 
 internal class ClassDeserializer<T> : BaseDeserializer<T>
 {
-    private Dictionary<string, SA.FieldAttribute> _fieldMap;
-    private Type _targetType;
+    private readonly MappingInfo _info;
 
-    public ClassDeserializer(Dictionary<string, SA.FieldAttribute> fieldMap)
+    public ClassDeserializer(MappingInfo info)
     {
-        _fieldMap = fieldMap;
-        _targetType = typeof(T);
+        Debug.Assert(info.Type == typeof(T));
+        _info = info;
     }
 
     public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -23,35 +22,35 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>
             var other => throw UnexpectedToken(other),
         };
 
-        var instance = Activator.CreateInstance(_targetType);
+        var instance = Activator.CreateInstance(_info.Type)!;
 
         while (reader.Read() && reader.CurrentTokenType != endToken)
         {
-            if (reader.CurrentTokenType == TokenType.FieldName)
-            {
-                var fieldName = reader.GetString()!;
-                reader.Read();
+            if (reader.CurrentTokenType != TokenType.FieldName)
+                throw UnexpectedToken(reader.CurrentTokenType);
 
-                if (_fieldMap.ContainsKey(fieldName))
+            var fieldName = reader.GetString()!;
+            reader.Read();
+
+            if (_info.FieldsByName.TryGetValue(fieldName, out var field))
+            {
+                var deser = Deserializer.Generate(context, field.Type);
+                if (field.IsNullable)
                 {
-                    _fieldMap[fieldName].Info!.SetValue(
-                        instance,
-                        DynamicDeserializer.Singleton.Deserialize(context, ref reader)!);
+                    deser = new NullableDeserializer(deser);
                 }
-                else
-                {
-                    reader.Skip();
-                }
+                field.Property.SetValue(instance, deser.Deserialize(context, ref reader));
             }
             else
             {
-                throw UnexpectedToken(reader.CurrentTokenType);
+                reader.Skip();
             }
         }
 
-        return (T)instance!;
+        return (T)instance;
     }
 
     private SerializationException UnexpectedToken(TokenType tokenType) =>
-            new SerializationException($"Unexpected token while deserializing into class {_targetType.Name}: {tokenType}");
+        new SerializationException(
+            $"Unexpected token while deserializing into class {_info.Type.Name}: {tokenType}");
 }

@@ -37,7 +37,7 @@ public class AbortException : QueryRuntimeException
     /// <typeparam name="T">The type to which the data should be deserialized.</typeparam>
     /// <param name="deserializer">A deserializer for the abort data.</param>
     /// <returns>The deserialized data as the specified type, or null if no data is available.</returns>
-    public T? GetData<T>() where T : notnull => GetData(Deserializer.Generate<T>(_ctx._serCtx));
+    public T? GetData<T>() where T : notnull => GetData(Deserializer.Generate<T>(_ctx));
 
     /// <summary>
     /// Retrieves the deserialized data associated with the abort operation as a specific type.

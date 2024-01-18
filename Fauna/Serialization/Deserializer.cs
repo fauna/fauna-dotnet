@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Types;
 
 namespace Fauna.Serialization;
@@ -33,7 +34,7 @@ public static class Deserializer
     /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
     /// <param name="context">The serialization context.</param>
     /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T> Generate<T>(SerializationContext context) where T : notnull
+    public static IDeserializer<T> Generate<T>(MappingContext context) where T : notnull
     {
         var targetType = typeof(T);
         var deser = (IDeserializer<T>)Generate(context, targetType);
@@ -46,7 +47,7 @@ public static class Deserializer
     /// <param name="context">The serialization context.</param>
     /// <param name="targetType">The type of the object to deserialize to.</typeparam>
     /// <returns>An <see cref="IDeserializer"/>.</returns>
-    public static IDeserializer Generate(SerializationContext context, Type targetType)
+    public static IDeserializer Generate(MappingContext context, Type targetType)
     {
         if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
@@ -105,12 +106,8 @@ public static class Deserializer
 
         if (targetType.IsClass && !targetType.IsGenericType)
         {
-            var fieldMap = context.GetFieldMap(targetType);
-
-            var deserType = typeof(ClassDeserializer<>).MakeGenericType(new[] { targetType });
-            var deser = Activator.CreateInstance(deserType, new object[] { fieldMap });
-
-            return (IDeserializer)deser!;
+            var info = context.Get(targetType);
+            return info.Deserializer;
         }
 
         throw new ArgumentException($"Unsupported deserialization target type {targetType}");
@@ -122,7 +119,7 @@ public static class Deserializer
     /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
     /// <param name="context">The serialization context.</param>
     /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T?> GenerateNullable<T>(SerializationContext context)
+    public static IDeserializer<T?> GenerateNullable<T>(MappingContext context)
     {
         var targetType = typeof(T);
         var deser = (IDeserializer<T>)Generate(context, targetType);
@@ -135,7 +132,7 @@ public static class Deserializer
     /// <param name="context">The serialization context.</param>
     /// <param name="targetType">The type of the object to deserialize to.</typeparam>
     /// <returns>An <see cref="IDeserializer"/>.</returns>
-    public static IDeserializer GenerateNullable(SerializationContext context, Type targetType)
+    public static IDeserializer GenerateNullable(MappingContext context, Type targetType)
     {
         var deser = (IDeserializer)Generate(context, targetType);
         return new NullableDeserializer(deser);

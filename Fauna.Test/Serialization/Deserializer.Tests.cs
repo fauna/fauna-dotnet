@@ -12,10 +12,10 @@ public class DeserializerTests
         DeserializeImpl(str, ctx => Deserializer.Dynamic);
 
     static T Deserialize<T>(string str) where T : notnull =>
-        DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx._serCtx));
+        DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx));
 
     static T? DeserializeNullable<T>(string str) =>
-        DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx._serCtx));
+        DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx));
 
     static T DeserializeImpl<T>(string str, Func<MappingContext, IDeserializer<T>> deserFunc)
     {
