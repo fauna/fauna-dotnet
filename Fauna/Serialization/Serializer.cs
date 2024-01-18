@@ -8,7 +8,7 @@ namespace Fauna.Serialization;
 public static partial class Serializer
 {
 
-    private static readonly HashSet<string> Tags = new()
+    internal static readonly HashSet<string> Tags = new()
     {
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
