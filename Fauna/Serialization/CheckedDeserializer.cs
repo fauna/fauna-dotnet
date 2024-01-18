@@ -1,8 +1,10 @@
+using Fauna.Mapping;
+
 namespace Fauna.Serialization;
 
 internal class CheckedDeserializer<T> : BaseDeserializer<T>
 {
-    public override T Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         var tokenType = reader.CurrentTokenType;
         var obj = DynamicDeserializer.Singleton.Deserialize(context, ref reader);

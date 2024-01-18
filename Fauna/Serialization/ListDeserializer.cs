@@ -1,3 +1,5 @@
+using Fauna.Mapping;
+
 namespace Fauna.Serialization;
 
 internal class ListDeserializer<T> : BaseDeserializer<List<T>>
@@ -9,7 +11,7 @@ internal class ListDeserializer<T> : BaseDeserializer<List<T>>
         _elemDeserializer = elemDeserializer;
     }
 
-    public override List<T> Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override List<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType != TokenType.StartArray)
             throw new SerializationException(

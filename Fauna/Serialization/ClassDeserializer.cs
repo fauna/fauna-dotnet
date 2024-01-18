@@ -1,19 +1,20 @@
-using Fauna.Serialization.Attributes;
+using Fauna.Mapping;
+using SA = Fauna.Serialization.Attributes;
 
 namespace Fauna.Serialization;
 
 internal class ClassDeserializer<T> : BaseDeserializer<T>
 {
-    private Dictionary<string, FieldAttribute> _fieldMap;
+    private Dictionary<string, SA.FieldAttribute> _fieldMap;
     private Type _targetType;
 
-    public ClassDeserializer(Dictionary<string, FieldAttribute> fieldMap)
+    public ClassDeserializer(Dictionary<string, SA.FieldAttribute> fieldMap)
     {
         _fieldMap = fieldMap;
         _targetType = typeof(T);
     }
 
-    public override T Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         var endToken = reader.CurrentTokenType switch
         {

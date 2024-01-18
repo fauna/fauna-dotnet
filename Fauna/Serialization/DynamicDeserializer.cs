@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Types;
 
 namespace Fauna.Serialization;
@@ -17,7 +18,7 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
         _dict = new DictionaryDeserializer<object?>(this);
     }
 
-    public override object? Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         var value = reader.CurrentTokenType switch
         {
@@ -42,7 +43,7 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
         return value;
     }
 
-    private object DeserializeRef(SerializationContext context, ref Utf8FaunaReader reader)
+    private object DeserializeRef(MappingContext context, ref Utf8FaunaReader reader)
     {
         string? id = null;
         string? name = null;
@@ -129,7 +130,7 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
         return allProps;
     }
 
-    private object DeserializeDocument(SerializationContext context, ref Utf8FaunaReader reader)
+    private object DeserializeDocument(MappingContext context, ref Utf8FaunaReader reader)
     {
         var data = new Dictionary<string, object?>();
         string? id = null;

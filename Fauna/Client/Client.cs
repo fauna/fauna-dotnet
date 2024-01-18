@@ -1,5 +1,6 @@
 ﻿using Fauna.Constants;
 using Fauna.Exceptions;
+using Fauna.Mapping;
 using Fauna.Serialization;
 using System.Data;
 using System.Globalization;
@@ -17,7 +18,7 @@ public class Client
     private readonly ClientConfig _config;
     private readonly IConnection _connection;
     // FIXME(matt) look at moving to a database context which wraps client, perhaps
-    private readonly SerializationContext _serializationCtx;
+    private readonly MappingContext _ctx;
 
     /// <summary>
     /// Gets the timestamp of the last transaction seen by this client.
@@ -51,7 +52,7 @@ public class Client
     {
         this._config = config;
         this._connection = connection;
-        this._serializationCtx = new SerializationContext();
+        this._ctx = new MappingContext();
     }
 
     /// <summary>
@@ -78,7 +79,7 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
         where T : notnull =>
-        QueryAsync<T>(query, Deserializer.Generate<T>(_serializationCtx), queryOptions);
+        QueryAsync<T>(query, Deserializer.Generate<T>(_ctx._serCtx), queryOptions);
 
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database.
@@ -161,7 +162,7 @@ public class Client
         Query query,
         QueryOptions? queryOptions = null)
         where T : notnull =>
-        PaginateAsync(query, Deserializer.Generate<T>(_serializationCtx), queryOptions);
+        PaginateAsync(query, Deserializer.Generate<T>(_ctx._serCtx), queryOptions);
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
@@ -260,7 +261,7 @@ public class Client
         Serialize(stream, query);
 
         using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers);
-        var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(_serializationCtx,
+        var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(_ctx,
                                                                             deserializer,
                                                                             httpResponse);
 
@@ -281,7 +282,7 @@ public class Client
                 "invalid_syntax" or
                 "invalid_type" => new QueryCheckException(failure, FormatMessage("Invalid Query")),
                 "invalid_argument" => new QueryRuntimeException(failure, FormatMessage("Invalid Argument")),
-                "abort" => new AbortException(_serializationCtx, failure, FormatMessage("Abort")),
+                "abort" => new AbortException(_ctx, failure, FormatMessage("Abort")),
 
                 // Request/Transaction Errors
                 "invalid_request" => new InvalidRequestException(failure, FormatMessage("Invalid Request")),
@@ -314,7 +315,7 @@ public class Client
         using var writer = new Utf8FaunaWriter(stream);
         writer.WriteStartObject();
         writer.WriteFieldName("query");
-        query.Serialize(_serializationCtx, writer);
+        query.Serialize(_ctx._serCtx, writer);
         writer.WriteEndObject();
         writer.Flush();
     }

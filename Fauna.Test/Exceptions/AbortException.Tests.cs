@@ -1,4 +1,5 @@
 ﻿using Fauna.Exceptions;
+using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Test.Helpers;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ public class AbortExceptionTests
         public int Age { get; set; }
     }
 
-    private static SerializationContext ctx = new();
+    private static MappingContext ctx = new();
 
     [Test]
     public void Ctor_InitializesPropertiesCorrectly()

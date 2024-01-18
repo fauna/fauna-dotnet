@@ -1,3 +1,5 @@
+using Fauna.Mapping;
+
 namespace Fauna.Serialization;
 
 internal class NullableDeserializer<T> : BaseDeserializer<T?>
@@ -9,7 +11,7 @@ internal class NullableDeserializer<T> : BaseDeserializer<T?>
         _inner = inner;
     }
 
-    public override T? Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override T? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType == TokenType.Null)
         {
@@ -29,7 +31,7 @@ internal class NullableDeserializer : BaseDeserializer<object?>
         _inner = inner;
     }
 
-    public override object? Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType == TokenType.Null)
         {
