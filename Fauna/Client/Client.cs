@@ -315,7 +315,7 @@ public class Client
         using var writer = new Utf8FaunaWriter(stream);
         writer.WriteStartObject();
         writer.WriteFieldName("query");
-        query.Serialize(_ctx._serCtx, writer);
+        query.Serialize(_ctx, writer);
         writer.WriteEndObject();
         writer.Flush();
     }

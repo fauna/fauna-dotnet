@@ -1,5 +1,6 @@
-﻿using System.Text;
+﻿using Fauna.Mapping;
 using Fauna.Serialization;
+using System.Text;
 
 namespace Fauna;
 
@@ -12,7 +13,7 @@ public interface IQueryFragment
     /// Serializes the query fragment into the provided stream.
     /// </summary>
     /// <param name="writer">The writer to which the query fragment is serialized.</param>
-    void Serialize(SerializationContext ctx, Utf8FaunaWriter writer);
+    void Serialize(MappingContext ctx, Utf8FaunaWriter writer);
 }
 
 /// <summary>
@@ -26,11 +27,10 @@ public static class IQueryFragmentExtensions
     /// </summary>
     /// <param name="fragment">The query fragment to serialize.</param>
     /// <returns>A string representation of the serialized query fragment.</returns>
-    public static string Serialize(this IQueryFragment fragment)
+    public static string Serialize(this IQueryFragment fragment, MappingContext ctx)
     {
         using var ms = new MemoryStream();
         using var fw = new Utf8FaunaWriter(ms);
-        var ctx = new SerializationContext();
         fragment.Serialize(ctx, fw);
         fw.Flush();
         return Encoding.UTF8.GetString(ms.ToArray());

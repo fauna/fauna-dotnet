@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
@@ -9,11 +10,12 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class SerializerTests
 {
+    private static readonly MappingContext ctx = new();
+
     public static string Serialize(object? obj)
     {
         using var stream = new MemoryStream();
         using var writer = new Utf8FaunaWriter(stream);
-        var ctx = new SerializationContext();
         Serializer.Serialize(ctx, writer, obj);
         writer.Flush();
         return Encoding.UTF8.GetString(stream.ToArray());

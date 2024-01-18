@@ -8,6 +8,8 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class DeserializerTests
 {
+    private static readonly MappingContext ctx = new();
+
     static object? Deserialize(string str) =>
         DeserializeImpl(str, ctx => Deserializer.Dynamic);
 
@@ -21,9 +23,8 @@ public class DeserializerTests
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
-        var context = new MappingContext();
-        var deser = deserFunc(context);
-        var obj = deser.Deserialize(context, ref reader);
+        var deser = deserFunc(ctx);
+        var obj = deser.Deserialize(ctx, ref reader);
 
         if (reader.Read())
         {

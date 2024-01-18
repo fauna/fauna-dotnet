@@ -1,5 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Fauna.Mapping;
 using Fauna.Serialization;
+using System.Collections.ObjectModel;
 
 namespace Fauna;
 
@@ -41,7 +42,7 @@ public sealed class QueryExpr : Query, IQueryFragment
     /// </summary>
     /// <param name="ctx">The serialization context.</param>
     /// <param name="writer">The writer to serialize the query expression to.</param>
-    public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
+    public override void Serialize(MappingContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
         writer.WriteFieldName("fql");

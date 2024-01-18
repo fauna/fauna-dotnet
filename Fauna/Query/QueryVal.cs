@@ -1,4 +1,5 @@
-﻿using Fauna.Serialization;
+﻿using Fauna.Mapping;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -27,7 +28,7 @@ public sealed class QueryVal<T> : Query, IQueryFragment
     /// </summary>
     /// <param name="ctx">The serialization context.</param>
     /// <param name="writer">The writer to serialize the query value to.</param>
-    public override void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
+    public override void Serialize(MappingContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");
