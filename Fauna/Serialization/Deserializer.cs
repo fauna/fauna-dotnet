@@ -10,34 +10,7 @@ public static class Deserializer
     /// <summary>
     /// The dynamic data deserializer.
     /// </summary>
-    public static IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
-
-    /// <summary>
-    /// Generates a deserializer for the specified non-nullable .NET type.
-    /// </summary>
-    /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
-    /// <param name="context">The serialization context.</param>
-    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T> Generate<T>(SerializationContext context) where T : notnull
-    {
-        var targetType = typeof(T);
-        var deser = (IDeserializer<T>)Generate(context, targetType);
-        return deser;
-    }
-
-    /// <summary>
-    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
-    /// </summary>
-    /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
-    /// <param name="context">The serialization context.</param>
-    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T?> GenerateNullable<T>(SerializationContext context)
-    {
-        var targetType = typeof(T);
-        var deser = (IDeserializer<T>)Generate(context, targetType);
-        var nullable = new NullableDeserializer<T>(deser);
-        return nullable;
-    }
+    public static readonly IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
 
     private static readonly CheckedDeserializer<object> _object = new();
     private static readonly CheckedDeserializer<string> _string = new();
@@ -54,7 +27,26 @@ public static class Deserializer
     private static readonly CheckedDeserializer<NamedDocumentRef> _namedDocRef = new();
     private static readonly CheckedDeserializer<NullNamedDocumentRef> _nullNamedDocRef = new();
 
-    private static object Generate(SerializationContext context, Type targetType)
+    /// <summary>
+    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
+    /// <param name="context">The serialization context.</param>
+    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
+    public static IDeserializer<T> Generate<T>(SerializationContext context) where T : notnull
+    {
+        var targetType = typeof(T);
+        var deser = (IDeserializer<T>)Generate(context, targetType);
+        return deser;
+    }
+
+    /// <summary>
+    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// </summary>
+    /// <param name="context">The serialization context.</param>
+    /// <param name="targetType">The type of the object to deserialize to.</typeparam>
+    /// <returns>An <see cref="IDeserializer"/>.</returns>
+    public static IDeserializer Generate(SerializationContext context, Type targetType)
     {
         if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
@@ -86,7 +78,7 @@ public static class Deserializer
             var deserType = typeof(DictionaryDeserializer<>).MakeGenericType(new[] { valueType });
             var deser = Activator.CreateInstance(deserType, new[] { valueDeserializer });
 
-            return deser!;
+            return (IDeserializer)deser!;
         }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
@@ -97,7 +89,7 @@ public static class Deserializer
             var deserType = typeof(ListDeserializer<>).MakeGenericType(new[] { elemType });
             var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
 
-            return deser!;
+            return (IDeserializer)deser!;
         }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>))
@@ -108,7 +100,7 @@ public static class Deserializer
             var deserType = typeof(PageDeserializer<>).MakeGenericType(new[] { elemType });
             var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
 
-            return deser!;
+            return (IDeserializer)deser!;
         }
 
         if (targetType.IsClass && !targetType.IsGenericType)
@@ -118,9 +110,34 @@ public static class Deserializer
             var deserType = typeof(ClassDeserializer<>).MakeGenericType(new[] { targetType });
             var deser = Activator.CreateInstance(deserType, new object[] { fieldMap });
 
-            return deser!;
+            return (IDeserializer)deser!;
         }
 
         throw new ArgumentException($"Unsupported deserialization target type {targetType}");
+    }
+
+    /// <summary>
+    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
+    /// <param name="context">The serialization context.</param>
+    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
+    public static IDeserializer<T?> GenerateNullable<T>(SerializationContext context)
+    {
+        var targetType = typeof(T);
+        var deser = (IDeserializer<T>)Generate(context, targetType);
+        return new NullableDeserializer<T>(deser);
+    }
+
+    /// <summary>
+    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// </summary>
+    /// <param name="context">The serialization context.</param>
+    /// <param name="targetType">The type of the object to deserialize to.</typeparam>
+    /// <returns>An <see cref="IDeserializer"/>.</returns>
+    public static IDeserializer GenerateNullable(SerializationContext context, Type targetType)
+    {
+        var deser = (IDeserializer)Generate(context, targetType);
+        return new NullableDeserializer(deser);
     }
 }

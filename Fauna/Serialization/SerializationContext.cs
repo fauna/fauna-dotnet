@@ -22,6 +22,17 @@ public class SerializationContext
     }
 
     /// <summary>
+    /// Get a deserializer for values of type ty.
+    /// </summary>
+    /// <param name="ty">The result type of the returned deserializer.</typeparam>
+    /// <returns>An <see cref="IDeserializer"/> which deserializes values of type `ty` from their corresponding query results.</returns>
+    public IDeserializer GetDeserializer(Type ty)
+    {
+        // FIXME(matt) cache this
+        return Deserializer.Generate(this, ty);
+    }
+
+    /// <summary>
     /// Retrieves the mapping of property names to their corresponding <see cref="FieldAttribute"/> for a given .NET type.
     /// </summary>
     /// <param name="t">The type for which the field map is requested.</param>

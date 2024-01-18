@@ -19,3 +19,23 @@ internal class NullableDeserializer<T> : BaseDeserializer<T?>
         return _inner.Deserialize(context, ref reader);
     }
 }
+
+internal class NullableDeserializer : BaseDeserializer<object?>
+{
+    private readonly IDeserializer _inner;
+
+    public NullableDeserializer(IDeserializer inner)
+    {
+        _inner = inner;
+    }
+
+    public override object? Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    {
+        if (reader.CurrentTokenType == TokenType.Null)
+        {
+            return null;
+        }
+
+        return _inner.Deserialize(context, ref reader);
+    }
+}
