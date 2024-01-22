@@ -11,17 +11,6 @@ public class SerializationContext
     private readonly Dictionary<Type, Dictionary<string, FieldAttribute>> _registry = new();
 
     /// <summary>
-    /// Get a deserializer for values of type T.
-    /// </summary>
-    /// <typeparam name="T">The result type of the returned deserializer.</typeparam>
-    /// <returns>An <see cref="IDeserializer{T}"/> which deserializes values of type T from their corresponding query results.</returns>
-    public IDeserializer<T> GetDeserializer<T>() where T : notnull
-    {
-        // FIXME(matt) cache this
-        return Deserializer.Generate<T>(this);
-    }
-
-    /// <summary>
     /// Retrieves the mapping of property names to their corresponding <see cref="FieldAttribute"/> for a given .NET type.
     /// </summary>
     /// <param name="t">The type for which the field map is requested.</param>
