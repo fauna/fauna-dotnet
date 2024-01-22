@@ -18,6 +18,7 @@ public class Client : BaseClient
     private readonly IConnection _connection;
 
     private readonly MappingContext _defaultCtx = new();
+    private readonly Dictionary<Type, DatabaseContext> _dbCtxs = new();
 
     protected override MappingContext MappingCtx { get => _defaultCtx; }
 
@@ -56,6 +57,28 @@ public class Client : BaseClient
     {
         this._config = config;
         this._connection = connection;
+    }
+
+    /// <summary>
+    /// Create and return a new database context which uses this client.
+    /// </summary>
+    /// <typeparam name="DB">The DatabaseContext subtype to instantiate.</typeparam>
+    /// <returns>An instance of <typeparamref name="DB"/>.</returns>
+    public DB DatabaseContext<DB>() where DB : DatabaseContext
+    {
+        var dbCtxType = typeof(DB);
+        DatabaseContext? ctx;
+        lock (_dbCtxs)
+        {
+            if (!_dbCtxs.TryGetValue(dbCtxType, out ctx))
+            {
+                ctx = (DB)Activator.CreateInstance(dbCtxType)!;
+                ctx.SetClient(this);
+                _dbCtxs[dbCtxType] = ctx;
+            }
+        }
+
+        return (DB)ctx;
     }
 
     internal override async Task<QuerySuccess<T>> QueryAsyncInternal<T>(
