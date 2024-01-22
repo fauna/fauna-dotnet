@@ -46,7 +46,7 @@ public abstract class QueryResponse : QueryInfo
 /// Represents a successful query response.
 /// </summary>
 /// <typeparam name="T">The type of data expected in the query result.</typeparam>
-public class QuerySuccess<T> : QueryResponse
+sealed public class QuerySuccess<T> : QueryResponse
 {
     /// <summary>
     /// Gets the deserialized data from the query response.
@@ -85,7 +85,7 @@ public class QuerySuccess<T> : QueryResponse
 /// <summary>
 /// Represents a failed query response.
 /// </summary>
-public class QueryFailure : QueryResponse
+sealed public class QueryFailure : QueryResponse
 {
     /// <summary>
     /// Gets the error information associated with the failed query.
