@@ -1,3 +1,5 @@
+using Fauna.Mapping;
+
 namespace Fauna.Serialization;
 
 internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T>>
@@ -9,7 +11,7 @@ internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T
         _elemDeserializer = elemDeserializer;
     }
 
-    public override Dictionary<string, T> Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override Dictionary<string, T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType != TokenType.StartObject)
             throw new SerializationException(

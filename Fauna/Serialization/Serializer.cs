@@ -1,3 +1,5 @@
+using Fauna.Mapping;
+using Fauna.Mapping.Attributes;
 using Module = Fauna.Types.Module;
 
 namespace Fauna.Serialization;
@@ -8,7 +10,7 @@ namespace Fauna.Serialization;
 public static partial class Serializer
 {
 
-    private static readonly HashSet<string> Tags = new()
+    internal static readonly HashSet<string> Tags = new()
     {
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
@@ -21,7 +23,7 @@ public static partial class Serializer
     /// <param name="obj">The object to serialize.</param>
     /// <param name="typeHint">Optional type hint for the object.</param>
     /// <exception cref="SerializationException">Thrown when serialization fails.</exception>
-    public static void Serialize(SerializationContext context, Utf8FaunaWriter writer, object? obj, FaunaType? typeHint = null)
+    public static void Serialize(MappingContext context, Utf8FaunaWriter writer, object? obj, FaunaType? typeHint = null)
     {
         if (typeHint != null)
         {
@@ -171,7 +173,7 @@ public static partial class Serializer
         }
     }
 
-    private static void SerializeObjectInternal(Utf8FaunaWriter writer, object obj, SerializationContext context)
+    private static void SerializeObjectInternal(Utf8FaunaWriter writer, object obj, MappingContext context)
     {
         switch (obj)
         {
@@ -193,7 +195,7 @@ public static partial class Serializer
     }
 
     private static void SerializeIDictionaryInternal<T>(Utf8FaunaWriter writer, IDictionary<string, T> d,
-        SerializationContext context)
+        MappingContext context)
     {
         var shouldEscape = Tags.Overlaps(d.Keys);
         if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
@@ -205,18 +207,18 @@ public static partial class Serializer
         if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
     }
 
-    private static void SerializeClassInternal(Utf8FaunaWriter writer, object obj, SerializationContext context)
+    private static void SerializeClassInternal(Utf8FaunaWriter writer, object obj, MappingContext context)
     {
         var t = obj.GetType();
-        var fieldMap = context.GetFieldMap(t);
-        var shouldEscape = Tags.Overlaps(fieldMap.Values.Select(x => x.Name));
+        var mapping = context.Get(t);
+        var shouldEscape = mapping.ShouldEscapeObject;
 
         if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
-        foreach (var field in fieldMap.Values)
+        foreach (var field in mapping.Fields)
         {
             writer.WriteFieldName(field.Name!);
-            var v = field.Info?.GetValue(obj);
-            Serialize(context, writer, v, field.Type);
+            var v = field.Property.GetValue(obj);
+            Serialize(context, writer, v, field.FaunaTypeHint);
         }
         if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
     }

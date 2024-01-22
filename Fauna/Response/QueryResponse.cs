@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Serialization;
 using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
@@ -20,7 +21,7 @@ public abstract class QueryResponse : QueryInfo
     /// <param name="message">The HTTP response message received from the Fauna database.</param>
     /// <returns>A Task that resolves to a QueryResponse instance.</returns>
     public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(
-        SerializationContext ctx,
+        MappingContext ctx,
         IDeserializer<T> deserializer,
         HttpResponseMessage message)
     {
@@ -64,7 +65,7 @@ public class QuerySuccess<T> : QueryResponse
     /// <param name="deserializer">A deserializer for the response data type.</param>
     /// <param name="rawResponseText">The raw JSON response text from the Fauna database.</param>
     public QuerySuccess(
-        SerializationContext ctx,
+        MappingContext ctx,
         IDeserializer<T> deserializer,
         string rawResponseText)
         : base(rawResponseText)

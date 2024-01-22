@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
@@ -7,6 +8,8 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class DeserializerTests
 {
+    private static readonly MappingContext ctx = new();
+
     static object? Deserialize(string str) =>
         DeserializeImpl(str, ctx => Deserializer.Dynamic);
 
@@ -16,13 +19,12 @@ public class DeserializerTests
     static T? DeserializeNullable<T>(string str) =>
         DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx));
 
-    static T DeserializeImpl<T>(string str, Func<SerializationContext, IDeserializer<T>> deserFunc)
+    static T DeserializeImpl<T>(string str, Func<MappingContext, IDeserializer<T>> deserFunc)
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
-        var context = new SerializationContext();
-        var deser = deserFunc(context);
-        var obj = deser.Deserialize(context, ref reader);
+        var deser = deserFunc(ctx);
+        var obj = deser.Deserialize(ctx, ref reader);
 
         if (reader.Read())
         {

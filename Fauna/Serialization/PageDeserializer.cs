@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Types;
 
 namespace Fauna.Serialization;
@@ -11,7 +12,7 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
         _dataDeserializer = new ListDeserializer<T>(elemDeserializer);
     }
 
-    public override Page<T> Deserialize(SerializationContext context, ref Utf8FaunaReader reader)
+    public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType != TokenType.StartPage)
             throw new SerializationException(

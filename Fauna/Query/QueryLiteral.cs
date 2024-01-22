@@ -1,4 +1,5 @@
-﻿using Fauna.Serialization;
+﻿using Fauna.Mapping;
+using Fauna.Serialization;
 
 namespace Fauna;
 
@@ -41,7 +42,7 @@ public sealed class QueryLiteral : IQueryFragment
     /// </summary>
     /// <param name="ctx">The serialization context.</param>
     /// <param name="writer">The writer to serialize the query literal to.</param>
-    public void Serialize(SerializationContext ctx, Utf8FaunaWriter writer)
+    public void Serialize(MappingContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStringValue(Unwrap);
     }

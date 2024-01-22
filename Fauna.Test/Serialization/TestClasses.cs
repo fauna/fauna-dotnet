@@ -1,5 +1,4 @@
-using Fauna.Serialization;
-using Fauna.Serialization.Attributes;
+using Fauna.Mapping.Attributes;
 
 namespace Fauna.Test.Serialization;
 
@@ -10,20 +9,20 @@ class Person
     public int Age { get; set; } = 61;
 }
 
-[FaunaObject]
+[Object]
 class ClassForDocument
 {
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[FaunaObject]
+[Object]
 class ClassForNamedDocument
 {
     [Field("name")] public string? Name { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[FaunaObject]
+[Object]
 class PersonWithAttributes
 {
     [Field("first_name")] public string? FirstName { get; set; } = "Baz";
@@ -33,18 +32,18 @@ class PersonWithAttributes
 }
 
 
-[FaunaObject]
+[Object]
 class ClassWithInvalidPropertyTypeHint
 {
     [Field("first_name", FaunaType.Int)] public string FirstName { get; set; } = "NotANumber";
 }
 
-class ClassWithFieldAttributeAndWithoutFaunaObjectAttribute
+class ClassWithFieldAttributeAndWithoutObjectAttribute
 {
     [Field("first_name")] public string? FirstName { get; set; } = "Baz";
 }
 
-[FaunaObject]
+[Object]
 class ClassWithPropertyWithoutFieldAttribute
 {
     public string FirstName { get; set; } = "NotANumber";
@@ -65,7 +64,7 @@ class ThingWithStringOverride
     }
 }
 
-[FaunaObject]
+[Object]
 class PersonWithTypeOverrides
 {
     // Long Conversions
@@ -116,61 +115,61 @@ class PersonWithTypeOverrides
 }
 
 
-[FaunaObject]
+[Object]
 class PersonWithIntConflict
 {
     [Field("@int")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithLongConflict
 {
     [Field("@long")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithDoubleConflict
 {
     [Field("@double")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithModConflict
 {
     [Field("@mod")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithRefConflict
 {
     [Field("@ref")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithDocConflict
 {
     [Field("@doc")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithObjectConflict
 {
     [Field("@object")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithSetConflict
 {
     [Field("@set")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithTimeConflict
 {
     [Field("@time")] public string? Field { get; set; } = "not";
 }
 
-[FaunaObject]
+[Object]
 class PersonWithDateConflict
 {
     [Field("@date")] public string? Field { get; set; } = "not";
