@@ -5,11 +5,15 @@ namespace Fauna.Types;
 /// </summary>
 public class NullDocumentRef : DocumentRef
 {
+    public NullDocumentRef(string id, Module collection, string cause) : base(id, collection)
+    {
+        Cause = cause;
+    }
     /// <summary>
     /// Gets or sets the cause that the document is null.
     /// </summary>
     /// <value>
     /// A string representing the cause that the document is null.
     /// </value>
-    public string? Cause { get; set; } = null;
+    public string Cause { get; set; }
 }
