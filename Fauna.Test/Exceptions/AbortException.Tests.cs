@@ -76,7 +76,7 @@ public class AbortExceptionTests
     public void GetDataT_WithPocoData_ReturnsDeserializedTypedObject()
     {
         var expected = new TestClass { Name = "John", Age = 105 };
-        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"Name\":\"{expected.Name}\",\"Age\":{{\"@int\":\"{expected.Age}\"}}}}}}");
+        var queryFailure = ExceptionTestHelper.CreateQueryFailure("abort", "Query aborted.", $"{{\"@object\":{{\"name\":\"{expected.Name}\",\"age\":{{\"@int\":\"{expected.Age}\"}}}}}}");
         var exception = new AbortException(ctx, queryFailure, "Test message");
 
         var actual = exception.GetData<TestClass>();
