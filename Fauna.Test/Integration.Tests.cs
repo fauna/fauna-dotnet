@@ -1,5 +1,6 @@
 using Fauna.Mapping.Attributes;
 using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
 using static Fauna.Query;
 
 namespace Fauna.Test;
@@ -8,9 +9,8 @@ namespace Fauna.Test;
 [Ignore("integ test")]
 public class IntegrationTests
 {
-#pragma warning disable CS8618
+    [AllowNull]
     private static Client _client;
-#pragma warning restore CS8618
 
     [Object]
     private class Person

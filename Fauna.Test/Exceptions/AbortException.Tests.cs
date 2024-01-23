@@ -3,6 +3,7 @@ using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Test.Helpers;
 using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fauna.Test.Exceptions;
 
@@ -11,8 +12,8 @@ public class AbortExceptionTests
 {
     private class TestClass
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
+        [AllowNull] public string Name { get; set; }
+        [AllowNull] public int Age { get; set; }
     }
 
     private static MappingContext ctx = new();
@@ -68,8 +69,8 @@ public class AbortExceptionTests
         var actual = exception.GetData() as IDictionary<string, object>;
 
         Assert.IsNotNull(actual);
-        Assert.AreEqual(expected.Name, actual["Name"]);
-        Assert.AreEqual(expected.Age, actual["Age"]);
+        Assert.AreEqual(expected.Name, actual!["Name"]);
+        Assert.AreEqual(expected.Age, actual!["Age"]);
     }
 
     [Test]
@@ -82,8 +83,8 @@ public class AbortExceptionTests
         var actual = exception.GetData<TestClass>();
 
         Assert.IsNotNull(actual);
-        Assert.AreEqual(expected.Name, actual.Name);
-        Assert.AreEqual(expected.Age, actual.Age);
+        Assert.AreEqual(expected.Name, actual!.Name);
+        Assert.AreEqual(expected.Age, actual!.Age);
     }
 
     [Test]
