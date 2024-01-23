@@ -27,4 +27,23 @@ public abstract class DatabaseContext : BaseClient
         }
         return _client!.QueryAsyncInternal(query, deserializer, ctx, queryOptions);
     }
+
+    // Schema DSL
+
+    // TODO(matt) inherit from LINQ query base
+    public interface Collection { }
+
+    // TODO(matt) inherit from LINQ query base
+    public interface Collection<Doc> : Collection
+    {
+        public Index<Doc> All();
+    }
+
+    // TODO(matt) inherit from LINQ query base
+    public interface Index<Doc> { }
+
+    protected Col GetCollection<Col>() where Col : Collection
+    {
+        throw new NotImplementedException();
+    }
 }
