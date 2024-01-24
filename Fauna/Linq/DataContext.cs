@@ -11,14 +11,16 @@ public abstract class DataContext : BaseClient
     private IReadOnlyDictionary<Type, Collection> _collections;
     [AllowNull]
     private Client _client;
-    private readonly MappingContext _ctx = new();
+    [AllowNull]
+    private MappingContext _ctx;
 
     protected override MappingContext MappingCtx { get => _ctx; }
 
-    internal void Init(Client client, Dictionary<Type, Collection> collections)
+    internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
     {
         _client = client;
         _collections = collections.ToImmutableDictionary();
+        _ctx = ctx;
         _initialized = true;
     }
 
@@ -33,6 +35,17 @@ public abstract class DataContext : BaseClient
     }
 
     // Schema DSL
+
+    [AttributeUsage(AttributeTargets.Interface)]
+    public class NameAttribute : Attribute
+    {
+        internal readonly string Name;
+
+        public NameAttribute(string name)
+        {
+            Name = name;
+        }
+    }
 
     // TODO(matt) inherit from LINQ query base
     public interface Collection { }

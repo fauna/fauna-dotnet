@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -22,11 +23,19 @@ internal class DataContextBuilder<DB> where DB : DataContext
             ValidateColProp(colTypes, p);
         }
 
-        var cols = new Dictionary<Type, DataContext.Collection>();
-        foreach (var ty in colTypes) cols[ty] = BuildColImpl(ty);
+        var colImpls = new Dictionary<Type, DataContext.Collection>();
+        var colsByName = new Dictionary<string, Type>();
+        foreach (var ty in colTypes)
+        {
+            colImpls[ty] = BuildColImpl(ty);
+
+            var nameAttr = ty.GetCustomAttribute<DataContext.NameAttribute>();
+            var colName = nameAttr?.Name ?? ty.Name;
+            colsByName[colName] = ty;
+        }
 
         var db = (DB)Activator.CreateInstance(dbType)!;
-        db.Init(client, cols);
+        db.Init(client, colImpls, new MappingContext(colsByName));
         return db;
     }
 
