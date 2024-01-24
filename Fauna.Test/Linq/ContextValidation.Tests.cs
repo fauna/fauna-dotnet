@@ -20,7 +20,7 @@ public class ContextValidationTests
         [Field] public string? Id { get; set; }
     }
 
-    class FooDb : DatabaseContext
+    class FooDb : DataContext
     {
         public interface FooCol : Collection<Foo>
         {
@@ -40,7 +40,7 @@ public class ContextValidationTests
         _client = NewTestClient();
     }
 
-    class InvalidPrivateDb : DatabaseContext
+    class InvalidPrivateDb : DataContext
     {
         private interface FooCol : Collection<Foo> { }
     }
@@ -50,7 +50,7 @@ public class ContextValidationTests
     {
         try
         {
-            _client.DatabaseContext<InvalidPrivateDb>();
+            _client.DataContext<InvalidPrivateDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -59,7 +59,7 @@ public class ContextValidationTests
         }
     }
 
-    class InvalidGenericDb : DatabaseContext
+    class InvalidGenericDb : DataContext
     {
         public interface FooCol<D> : Collection<D> { }
     }
@@ -69,7 +69,7 @@ public class ContextValidationTests
     {
         try
         {
-            _client.DatabaseContext<InvalidGenericDb>();
+            _client.DataContext<InvalidGenericDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -78,7 +78,7 @@ public class ContextValidationTests
         }
     }
 
-    class InvalidDoubleDb : DatabaseContext
+    class InvalidDoubleDb : DataContext
     {
         public interface FooCol : Collection<Foo>, Collection<Bar> { }
     }
@@ -88,7 +88,7 @@ public class ContextValidationTests
     {
         try
         {
-            _client.DatabaseContext<InvalidDoubleDb>();
+            _client.DataContext<InvalidDoubleDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -97,7 +97,7 @@ public class ContextValidationTests
         }
     }
 
-    class InvalidCollInheritanceDb : DatabaseContext
+    class InvalidCollInheritanceDb : DataContext
     {
         public interface FooCol : Collection { }
     }
@@ -107,7 +107,7 @@ public class ContextValidationTests
     {
         try
         {
-            _client.DatabaseContext<InvalidCollInheritanceDb>();
+            _client.DataContext<InvalidCollInheritanceDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -116,7 +116,7 @@ public class ContextValidationTests
         }
     }
 
-    class InvalidCrossedDb : DatabaseContext
+    class InvalidCrossedDb : DataContext
     {
         public FooDb.FooCol Foo { get => GetCollection<FooDb.FooCol>(); }
     }
@@ -126,7 +126,7 @@ public class ContextValidationTests
     {
         try
         {
-            var db = _client.DatabaseContext<InvalidCrossedDb>();
+            var db = _client.DataContext<InvalidCrossedDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -135,7 +135,7 @@ public class ContextValidationTests
         }
     }
 
-    class InvalidNullableDb : DatabaseContext
+    class InvalidNullableDb : DataContext
     {
         public interface FooCol : Collection<Foo> { }
 
@@ -147,7 +147,7 @@ public class ContextValidationTests
     {
         try
         {
-            var db = _client.DatabaseContext<InvalidNullableDb>();
+            var db = _client.DataContext<InvalidNullableDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Fauna.Linq;
 
-internal class DatabaseContextBuilder<DB> where DB : DatabaseContext
+internal class DataContextBuilder<DB> where DB : DataContext
 {
     public DB Build(Client client)
     {
@@ -22,13 +22,16 @@ internal class DatabaseContextBuilder<DB> where DB : DatabaseContext
             ValidateColProp(colTypes, p);
         }
 
+        var cols = new Dictionary<Type, DataContext.Collection>();
+        foreach (var ty in colTypes) cols[ty] = BuildColImpl(ty);
+
         var db = (DB)Activator.CreateInstance(dbType)!;
-        db.SetClient(client);
+        db.Init(client, cols);
         return db;
     }
 
     private static bool IsColType(Type ty) =>
-        ty.GetInterfaces().Where(iface => iface == typeof(DatabaseContext.Collection)).Count() > 0;
+        ty.GetInterfaces().Where(iface => iface == typeof(DataContext.Collection)).Count() > 0;
 
     private static void ValidateColType(Type ty)
     {
@@ -89,8 +92,15 @@ internal class DatabaseContextBuilder<DB> where DB : DatabaseContext
         }
     }
 
+    private static DataContext.Collection BuildColImpl(Type ty)
+    {
+        throw new NotImplementedException();
+    }
+
+    // helpers
+
     private static bool IsColTypeDef(Type ty) =>
-        ty.IsGenericType && ty.GetGenericTypeDefinition() == typeof(DatabaseContext.Collection<>);
+        ty.IsGenericType && ty.GetGenericTypeDefinition() == typeof(DataContext.Collection<>);
 
     private static Type GetDocType(Type ty)
     {
