@@ -1,5 +1,6 @@
 ﻿using Fauna.Constants;
 using Fauna.Exceptions;
+using Fauna.Linq;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using System.Data;
@@ -72,8 +73,8 @@ public class Client : BaseClient
         {
             if (!_dbCtxs.TryGetValue(dbCtxType, out ctx))
             {
-                ctx = (DB)Activator.CreateInstance(dbCtxType)!;
-                ctx.SetClient(this);
+                var builder = new DatabaseContextBuilder<DB>();
+                ctx = builder.Build(this);
                 _dbCtxs[dbCtxType] = ctx;
             }
         }
