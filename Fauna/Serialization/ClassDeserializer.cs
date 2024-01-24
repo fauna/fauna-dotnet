@@ -34,12 +34,7 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>
 
             if (_info.FieldsByName.TryGetValue(fieldName, out var field))
             {
-                var deser = Deserializer.Generate(context, field.Type);
-                if (field.IsNullable)
-                {
-                    deser = new NullableDeserializer(deser);
-                }
-                field.Property.SetValue(instance, deser.Deserialize(context, ref reader));
+                field.Property.SetValue(instance, field.Deserializer.Deserialize(context, ref reader));
             }
             else
             {

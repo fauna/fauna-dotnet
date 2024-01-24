@@ -27,7 +27,7 @@ public sealed class MappingContext
 
     public MappingInfo GetInfo(Type ty)
     {
-        lock (_cache)
+        lock (this)
         {
             if (_cache.TryGetValue(ty, out var ret))
             {
@@ -42,7 +42,7 @@ public sealed class MappingContext
 
     internal void Add(Type ty, MappingInfo info)
     {
-        lock (_cache)
+        lock (this)
         {
             _cache[ty] = info;
         }
