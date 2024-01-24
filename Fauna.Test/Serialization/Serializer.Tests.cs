@@ -116,7 +116,7 @@ public class SerializerTests
     {
         var test = new Person();
         var actual = Serialize(test);
-        Assert.AreEqual(@"{""FirstName"":""Baz"",""LastName"":""Luhrmann"",""Age"":{""@int"":""61""}}", actual);
+        Assert.AreEqual(@"{""firstName"":""Baz"",""lastName"":""Luhrmann"",""age"":{""@int"":""61""}}", actual);
     }
 
     [Test]
@@ -201,7 +201,7 @@ public class SerializerTests
     public void SerializeObjectWithFieldAttributeAndWithoutObjectAttribute()
     {
         var obj = new ClassWithFieldAttributeAndWithoutObjectAttribute();
-        var expected = "{\"FirstName\":\"Baz\"}";
+        var expected = "{\"firstName\":\"Baz\"}";
         var actual = Serialize(obj);
         Assert.AreEqual(expected, actual);
     }
@@ -219,7 +219,7 @@ public class SerializerTests
     public void SerializeAnonymousClassObject()
     {
         var obj = new { FirstName = "John", LastName = "Doe" };
-        var expected = "{\"FirstName\":\"John\",\"LastName\":\"Doe\"}";
+        var expected = "{\"firstName\":\"John\",\"lastName\":\"Doe\"}";
         var actual = Serialize(obj);
         Assert.AreEqual(expected, actual);
     }

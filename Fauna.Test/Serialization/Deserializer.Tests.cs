@@ -380,9 +380,9 @@ public class DeserializerTests
 
         const string given = @"
                              {
-                                ""FirstName"": ""Baz2"",
-                                ""LastName"": ""Luhrmann2"",
-                                ""Age"": { ""@int"": ""612"" }
+                                ""firstName"": ""Baz2"",
+                                ""lastName"": ""Luhrmann2"",
+                                ""age"": { ""@int"": ""612"" }
                              }
                              ";
 
@@ -400,7 +400,7 @@ public class DeserializerTests
                                 ""first_name"": ""Baz2"",
                                 ""last_name"": ""Luhrmann2"",
                                 ""age"": { ""@int"": ""612"" },
-                                ""Ignored"": ""should be null""
+                                ""ignored"": ""should be null""
                              }
                              ";
 
