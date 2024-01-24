@@ -3,7 +3,12 @@ using System.Diagnostics;
 
 namespace Fauna.Serialization;
 
-internal class ClassDeserializer<T> : BaseDeserializer<T>
+internal interface IClassDeserializer : IDeserializer
+{
+    public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader);
+}
+
+internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
 {
     private static readonly string _idField = "id";
     private static readonly string _nameField = "name";
@@ -14,6 +19,15 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>
     {
         Debug.Assert(info.Type == typeof(T));
         _info = info;
+    }
+
+    public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader)
+    {
+        var instance = CreateInstance();
+        if (id is not null) TrySetId(instance, id);
+        if (name is not null) TrySetName(instance, name);
+        SetFields(instance, context, ref reader, TokenType.EndDocument);
+        return instance;
     }
 
     public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)

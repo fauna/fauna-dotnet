@@ -136,11 +136,20 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
                 case "name":
                     name = reader.GetString();
                     break;
-                case "ts":
-                    ts = reader.GetTime();
-                    break;
                 case "coll":
                     coll = reader.GetModule();
+
+                    // if we encounter a mapped collection, jump to the class deserializer.
+                    // NB this relies on the fact that docs on the wire always
+                    // start with id and coll.
+                    if (context.TryGetCollection(coll.Name, out var collInfo))
+                    {
+                        return collInfo.Deserializer.DeserializeDocument(context, id, name, ref reader);
+                    }
+
+                    break;
+                case "ts":
+                    ts = reader.GetTime();
                     break;
                 default:
                     data[fieldName] = DynamicDeserializer.Singleton.Deserialize(context, ref reader);

@@ -14,7 +14,7 @@ public sealed class MappingInfo
     public readonly IReadOnlyDictionary<string, FieldInfo> FieldsByName;
 
     internal readonly bool ShouldEscapeObject;
-    internal readonly IDeserializer Deserializer;
+    internal readonly IClassDeserializer Deserializer;
 
     internal MappingInfo(MappingContext ctx, Type ty)
     {
@@ -53,6 +53,6 @@ public sealed class MappingInfo
         FieldsByName = byName.ToImmutableDictionary();
 
         var deserType = typeof(ClassDeserializer<>).MakeGenericType(new[] { ty });
-        Deserializer = (IDeserializer)Activator.CreateInstance(deserType, new[] { this })!;
+        Deserializer = (IClassDeserializer)Activator.CreateInstance(deserType, new[] { this })!;
     }
 }
