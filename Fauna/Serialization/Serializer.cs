@@ -210,7 +210,7 @@ public static partial class Serializer
     private static void SerializeClassInternal(Utf8FaunaWriter writer, object obj, MappingContext context)
     {
         var t = obj.GetType();
-        var mapping = context.Get(t);
+        var mapping = context.GetInfo(t);
         var shouldEscape = mapping.ShouldEscapeObject;
 
         if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
