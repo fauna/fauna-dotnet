@@ -8,13 +8,13 @@ namespace Fauna.Test.Linq;
 [TestFixture]
 public class ContextValidationTests
 {
-    [Collection]
+    [Object]
     class Foo
     {
         [Field] public string? Id { get; set; }
     }
 
-    [Collection]
+    [Object]
     class Bar
     {
         [Field] public string? Id { get; set; }

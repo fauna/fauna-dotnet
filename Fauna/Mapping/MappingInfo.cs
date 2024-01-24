@@ -8,8 +8,6 @@ namespace Fauna.Mapping;
 public sealed class MappingInfo
 {
     public readonly Type Type;
-    public readonly string? Collection;
-    public readonly bool IsCollection;
     public readonly IReadOnlyList<FieldInfo> Fields;
     public readonly IReadOnlyDictionary<string, FieldInfo> FieldsByName;
 
@@ -21,13 +19,8 @@ public sealed class MappingInfo
         ctx.Add(ty, this);
         Type = ty;
 
-        var collAttr = ty.GetCustomAttribute<CollectionAttribute>();
         var objAttr = ty.GetCustomAttribute<ObjectAttribute>();
-        var hasAttributes = collAttr != null || objAttr != null;
-
-        Collection = collAttr?.Name;
-        IsCollection = Collection is not null;
-
+        var hasAttributes = objAttr != null;
         var fields = new List<FieldInfo>();
         var byName = new Dictionary<string, FieldInfo>();
 
