@@ -1,3 +1,4 @@
+using Fauna.Linq;
 using Fauna.Mapping;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -47,17 +48,14 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    // TODO(matt) inherit from LINQ query base
-    public interface Collection { }
+    public interface Collection : IQuerySource { }
 
-    // TODO(matt) inherit from LINQ query base
-    public interface Collection<Doc> : Collection
+    public interface Collection<Doc> : Collection, IQuerySource<Doc>
     {
         public Index<Doc> All();
     }
 
-    // TODO(matt) inherit from LINQ query base
-    public interface Index<Doc> { }
+    public interface Index<Doc> : IQuerySource<Doc> { }
 
     protected Col GetCollection<Col>() where Col : Collection
     {
