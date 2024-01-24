@@ -3,6 +3,7 @@ using Fauna.Exceptions;
 using Fauna.Serialization;
 using NUnit.Framework;
 using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
 using Telerik.JustMock;
@@ -12,8 +13,10 @@ namespace Fauna.Test;
 [TestFixture]
 public class ClientTests
 {
-    private IConnection? _mockConnection;
-    private ClientConfig? _defaultConfig;
+    [AllowNull]
+    private IConnection _mockConnection;
+    [AllowNull]
+    private ClientConfig _defaultConfig;
 
 
     [SetUp]

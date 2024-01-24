@@ -6,6 +6,12 @@ namespace Fauna.Types;
 /// </summary>
 public class NamedDocumentRef
 {
+    public NamedDocumentRef(string name, Module collection)
+    {
+        Name = name;
+        Collection = collection;
+    }
+
     /// <summary>
     /// Gets the string value of the ref name.
     /// </summary>

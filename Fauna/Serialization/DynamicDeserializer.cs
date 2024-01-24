@@ -92,38 +92,20 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
         {
             if (exists)
             {
-                return new DocumentRef
-                {
-                    Id = id,
-                    Collection = coll,
-                };
+                return new DocumentRef(id, coll);
             }
 
-            return new NullDocumentRef
-            {
-                Id = id,
-                Collection = coll,
-                Cause = cause
-            };
+            return new NullDocumentRef(id, coll, cause!);
         }
 
         if (name != null && coll != null)
         {
             if (exists)
             {
-                return new NamedDocumentRef
-                {
-                    Name = name,
-                    Collection = coll,
-                };
+                return new NamedDocumentRef(name, coll);
             }
 
-            return new NullNamedDocumentRef
-            {
-                Name = name,
-                Collection = coll,
-                Cause = cause
-            };
+            return new NullNamedDocumentRef(name, coll, cause!);
         }
 
         // Unsupported ref type, but don't fail for forward compatibility.

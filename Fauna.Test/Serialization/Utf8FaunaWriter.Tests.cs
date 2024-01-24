@@ -1,14 +1,17 @@
-using System.Text;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
 public class Utf8FaunaWriterTests
 {
+    [AllowNull]
     private Utf8FaunaWriter _writer;
+    [AllowNull]
     private MemoryStream _stream;
 
     [SetUp]
