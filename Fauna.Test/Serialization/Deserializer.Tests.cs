@@ -149,8 +149,13 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<ClassForDocument>(given);
-        Assert.AreEqual("user_value", actual.UserField);
+        var actual1 = Deserialize<ClassForDocument>(given);
+        Assert.AreEqual("user_value", actual1.UserField);
+        Assert.AreEqual(123, actual1.Id);
+
+        var actual2 = Deserialize<ClassForDocumentWithIdString>(given);
+        Assert.AreEqual("user_value", actual2.UserField);
+        Assert.AreEqual("123", actual2.Id);
     }
 
     [Test]

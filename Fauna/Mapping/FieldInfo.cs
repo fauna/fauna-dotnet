@@ -24,7 +24,6 @@ public sealed class FieldInfo
         Property = prop;
         Type = prop.PropertyType;
         IsNullable = nullInfo.WriteState is NullabilityState.Nullable;
-
         _ctx = ctx;
     }
 
