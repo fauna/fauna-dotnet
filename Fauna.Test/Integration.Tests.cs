@@ -2,6 +2,7 @@ using Fauna.Mapping.Attributes;
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
 using static Fauna.Query;
+using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test;
 
@@ -26,8 +27,7 @@ public class IntegrationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        var connection = new Connection(new Uri("http://localhost:8443"), TimeSpan.FromSeconds(5), 3, TimeSpan.FromSeconds(10));
-        _client = new Client(new ClientConfig("secret"), connection);
+        _client = NewTestClient();
     }
 
     [Test]
