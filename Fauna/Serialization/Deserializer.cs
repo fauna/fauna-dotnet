@@ -106,7 +106,7 @@ public static class Deserializer
 
         if (targetType.IsClass && !targetType.IsGenericType)
         {
-            var info = context.Get(targetType);
+            var info = context.GetInfo(targetType);
             return info.Deserializer;
         }
 

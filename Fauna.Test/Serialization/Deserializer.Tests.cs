@@ -8,18 +8,26 @@ namespace Fauna.Test.Serialization;
 [TestFixture]
 public class DeserializerTests
 {
-    private static readonly MappingContext ctx = new();
+    private readonly MappingContext ctx;
 
-    static object? Deserialize(string str) =>
-        DeserializeImpl(str, ctx => Deserializer.Dynamic);
+    public DeserializerTests()
+    {
+        var colls = new Dictionary<string, Type> {
+            { "MappedColl", typeof(ClassForDocument) }
+        };
+        ctx = new(colls);
+    }
 
-    static T Deserialize<T>(string str) where T : notnull =>
-        DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx));
+    public object? Deserialize(string str) =>
+       DeserializeImpl(str, ctx => Deserializer.Dynamic);
 
-    static T? DeserializeNullable<T>(string str) =>
+    public T Deserialize<T>(string str) where T : notnull =>
+       DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx));
+
+    public T? DeserializeNullable<T>(string str) =>
         DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx));
 
-    static T DeserializeImpl<T>(string str, Func<MappingContext, IDeserializer<T>> deserFunc)
+    public T DeserializeImpl<T>(string str, Func<MappingContext, IDeserializer<T>> deserFunc)
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
@@ -149,8 +157,37 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<ClassForDocument>(given);
-        Assert.AreEqual("user_value", actual.UserField);
+        var actual1 = Deserialize<ClassForDocument>(given);
+        Assert.AreEqual("user_value", actual1.UserField);
+        Assert.AreEqual(123, actual1.Id);
+
+        var actual2 = Deserialize<ClassForDocumentWithIdString>(given);
+        Assert.AreEqual("user_value", actual2.UserField);
+        Assert.AreEqual("123", actual2.Id);
+    }
+
+    [Test]
+    public void DeserializeDocumentToRegisteredClass()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MappedColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        if (Deserialize(given) is ClassForDocument actual)
+        {
+            Assert.AreEqual("user_value", actual.UserField);
+            Assert.AreEqual(123, actual.Id);
+        }
+        else
+        {
+            Assert.Fail();
+        }
     }
 
     [Test]

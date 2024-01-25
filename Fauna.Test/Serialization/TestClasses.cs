@@ -9,13 +9,27 @@ class Person
     public int Age { get; set; } = 61;
 }
 
-[Object]
+[Collection]
 class ClassForDocument
 {
+    [Field] public long Id { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[Object]
+[Collection]
+class ClassForDocumentWithIdString
+{
+    [Field] public string? Id { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+}
+
+[Collection]
+class ClassForDocumentWithInvalidId
+{
+    [Field] public bool Id { get; set; }
+}
+
+[Collection]
 class ClassForNamedDocument
 {
     [Field("name")] public string? Name { get; set; }

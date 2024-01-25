@@ -1,13 +1,33 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Fauna.Mapping;
 
 public sealed class MappingContext
 {
     // FIXME(matt) possibly replace with more efficient cache impl
     private readonly Dictionary<Type, MappingInfo> _cache = new();
+    private readonly Dictionary<string, MappingInfo> _collections = new();
 
-    public MappingInfo Get(Type ty)
+    public MappingContext()
     {
-        lock (_cache)
+    }
+
+    public MappingContext(Dictionary<string, Type> collections)
+    {
+        foreach (var (name, ty) in collections)
+        {
+            _collections[name] = GetInfo(ty);
+        }
+    }
+
+    public bool TryGetCollection(string col, [NotNullWhen(true)] out MappingInfo? ret)
+    {
+        return _collections.TryGetValue(col, out ret);
+    }
+
+    public MappingInfo GetInfo(Type ty)
+    {
+        lock (this)
         {
             if (_cache.TryGetValue(ty, out var ret))
             {
@@ -22,7 +42,7 @@ public sealed class MappingContext
 
     internal void Add(Type ty, MappingInfo info)
     {
-        lock (_cache)
+        lock (this)
         {
             _cache[ty] = info;
         }
