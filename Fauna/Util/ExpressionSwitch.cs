@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Fauna;
+namespace Fauna.Util;
 
 internal abstract class ExpressionSwitch<TResult>
 {
