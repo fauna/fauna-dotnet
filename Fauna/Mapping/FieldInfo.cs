@@ -19,7 +19,7 @@ public sealed class FieldInfo
         var nullCtx = new NullabilityInfoContext();
         var nullInfo = nullCtx.Create(prop);
 
-        Name = attr.Name ?? CanonicalFieldName(prop);
+        Name = attr.Name ?? FieldName.Canonical(prop.Name);
         FaunaTypeHint = attr.Type;
         Property = prop;
         Type = prop.PropertyType;
@@ -46,12 +46,4 @@ public sealed class FieldInfo
             }
         }
     }
-
-    // C# properties are capitalized whereas Fauna fields are not by convention.
-    private static string CanonicalFieldName(PropertyInfo prop) =>
-        prop.Name switch
-        {
-            var name when string.IsNullOrEmpty(name) || char.IsLower(name[0]) => name,
-            var name => string.Concat(name[0].ToString().ToLower(), name.AsSpan(1))
-        };
 }
