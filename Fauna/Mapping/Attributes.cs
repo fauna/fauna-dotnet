@@ -15,23 +15,7 @@ public enum FaunaType
 }
 
 /// <summary>
-/// Attribute used to indicate that a class represents a Fauna collection.
-/// </summary>
-[AttributeUsage(AttributeTargets.Class)]
-public class CollectionAttribute : Attribute
-{
-    internal readonly string? Name;
-
-    public CollectionAttribute() { }
-
-    public CollectionAttribute(string name)
-    {
-        Name = name;
-    }
-}
-
-/// <summary>
-/// Attribute used to indicate that a class represents a Fauna object.
+/// Attribute used to indicate that a class represents a Fauna document or struct.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public class ObjectAttribute : Attribute
