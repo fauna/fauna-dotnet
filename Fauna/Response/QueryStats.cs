@@ -61,7 +61,7 @@ public readonly struct QueryStats
     /// Returns a string representation of the query statistics.
     /// </summary>
     /// <returns>A string detailing the query execution statistics.</returns>
-    public override readonly string ToString()
+    public override string ToString()
     {
         return $"compute: {ComputeOps}, read: {ReadOps}, write: {WriteOps}, " +
                $"queryTime: {QueryTimeMs}, retries: {ContentionRetries}, " +

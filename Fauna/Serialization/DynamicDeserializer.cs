@@ -5,7 +5,7 @@ namespace Fauna.Serialization;
 
 internal class DynamicDeserializer : BaseDeserializer<object?>
 {
-    public static readonly DynamicDeserializer Singleton = new();
+    public static DynamicDeserializer Singleton { get; } = new();
 
     private readonly ListDeserializer<object?> _list;
     private readonly PageDeserializer<object?> _page;
