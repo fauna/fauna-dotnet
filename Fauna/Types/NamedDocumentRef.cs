@@ -15,10 +15,10 @@ public class NamedDocumentRef
     /// <summary>
     /// Gets the string value of the ref name.
     /// </summary>
-    public string Name { get; set; }
+    public string Name { get; }
 
     /// <summary>
     /// Gets the collection to which the ref belongs.
     /// </summary>
-    public Module Collection { get; set; }
+    public Module Collection { get; }
 }
