@@ -24,40 +24,30 @@ internal class DataContextBuilder<DB> where DB : DataContext
         }
 
         var colImpls = new Dictionary<Type, DataContext.Collection>();
-        var colsByName = new Dictionary<string, Type>();
         foreach (var ty in colTypes)
         {
-            colImpls[ty] = BuildColImpl(ty);
-
+            colImpls[ty] = (DataContext.Collection)Activator.CreateInstance(ty)!;
             var nameAttr = ty.GetCustomAttribute<DataContext.NameAttribute>();
             var colName = nameAttr?.Name ?? ty.Name;
-            colsByName[colName] = ty;
         }
 
         var db = (DB)Activator.CreateInstance(dbType)!;
-        db.Init(client, colImpls, new MappingContext(colsByName));
+        db.Init(client, colImpls, new MappingContext(colImpls.Values));
         return db;
     }
 
     private static bool IsColType(Type ty) =>
-        ty.GetInterfaces().Where(iface => iface == typeof(DataContext.Collection)).Count() > 0;
+        ty.GetInterfaces().Where(iface => iface == typeof(DataContext.Collection)).Any();
 
     private static void ValidateColType(Type ty)
     {
-        var isInterface = ty.IsInterface;
         var isGeneric = ty.IsGenericType;
-        var isPublic = ty.IsNestedPublic;
-        var colDefs = ty.GetInterfaces().Where(IsColTypeDef).ToList();
-        var implementsCol = colDefs.Any();
-        var implementsMultipleCols = colDefs.Count() > 1;
+        var colDef = GetColBase(ty);
 
         var errors = new List<string>();
 
-        if (!isInterface) errors.Add("Must be an interface.");
         if (isGeneric) errors.Add("Cannot be generic.");
-        if (!isPublic) errors.Add("Must be public.");
-        if (!implementsCol) errors.Add("Must implement Collection<>.");
-        if (implementsMultipleCols) errors.Add("Cannot implement Collection<> multiple times.");
+        if (colDef is null) errors.Add("Must inherit Collection<>.");
 
         if (errors.Any())
         {
@@ -101,19 +91,30 @@ internal class DataContextBuilder<DB> where DB : DataContext
         }
     }
 
-    private static DataContext.Collection BuildColImpl(Type ty)
-    {
-        throw new NotImplementedException();
-    }
-
     // helpers
 
-    private static bool IsColTypeDef(Type ty) =>
-        ty.IsGenericType && ty.GetGenericTypeDefinition() == typeof(DataContext.Collection<>);
+    private static Type? GetColBase(Type ty)
+    {
+        var colType = typeof(DataContext.Collection<>);
+        Type? curr = ty;
+
+        while (curr is not null)
+        {
+            if (curr.IsGenericType && curr.GetGenericTypeDefinition() == colType)
+            {
+                return curr;
+            }
+
+            curr = curr.BaseType;
+        }
+
+        return null;
+    }
 
     private static Type GetDocType(Type ty)
     {
-        Debug.Assert(IsColTypeDef(ty));
-        return ty.GetGenericArguments()[0];
+        var col = GetColBase(ty);
+        Debug.Assert(col is not null);
+        return col.GetGenericArguments()[0];
     }
 }
