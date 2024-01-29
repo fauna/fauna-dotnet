@@ -20,17 +20,6 @@ public class ContextValidationTests
         [Field] public string? Id { get; set; }
     }
 
-    class FooDb : DatabaseContext
-    {
-        public interface FooCol : Collection<Foo>
-        {
-            public Index<Foo> ByName(string name);
-        }
-
-        public FooCol Foo { get => GetCollection<FooCol>(); }
-    }
-
-
     [AllowNull]
     private static Client _client;
 
@@ -40,28 +29,9 @@ public class ContextValidationTests
         _client = NewTestClient();
     }
 
-    class InvalidPrivateDb : DatabaseContext
+    class InvalidGenericDb : DataContext
     {
-        private interface FooCol : Collection<Foo> { }
-    }
-
-    [Test]
-    public void DisallowsPrivateCollections()
-    {
-        try
-        {
-            _client.DatabaseContext<InvalidPrivateDb>();
-            Assert.Fail();
-        }
-        catch (InvalidOperationException ex)
-        {
-            Assert.AreEqual(ex.Message, "Invalid collection type: Must be public.");
-        }
-    }
-
-    class InvalidGenericDb : DatabaseContext
-    {
-        public interface FooCol<D> : Collection<D> { }
+        public class FooCol<D> : Collection<D> { }
     }
 
     [Test]
@@ -69,7 +39,7 @@ public class ContextValidationTests
     {
         try
         {
-            _client.DatabaseContext<InvalidGenericDb>();
+            _client.DataContext<InvalidGenericDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -78,45 +48,12 @@ public class ContextValidationTests
         }
     }
 
-    class InvalidDoubleDb : DatabaseContext
+    class FooDb : DataContext
     {
-        public interface FooCol : Collection<Foo>, Collection<Bar> { }
+        public class FooCol : Collection<Foo> { }
     }
 
-    [Test]
-    public void DisallowsMultipleCollInheritance()
-    {
-        try
-        {
-            _client.DatabaseContext<InvalidDoubleDb>();
-            Assert.Fail();
-        }
-        catch (InvalidOperationException ex)
-        {
-            Assert.AreEqual(ex.Message, "Invalid collection type: Cannot implement Collection<> multiple times.");
-        }
-    }
-
-    class InvalidCollInheritanceDb : DatabaseContext
-    {
-        public interface FooCol : Collection { }
-    }
-
-    [Test]
-    public void MustInheritGenericColl()
-    {
-        try
-        {
-            _client.DatabaseContext<InvalidCollInheritanceDb>();
-            Assert.Fail();
-        }
-        catch (InvalidOperationException ex)
-        {
-            Assert.AreEqual(ex.Message, "Invalid collection type: Must implement Collection<>.");
-        }
-    }
-
-    class InvalidCrossedDb : DatabaseContext
+    class InvalidCrossedDb : DataContext
     {
         public FooDb.FooCol Foo { get => GetCollection<FooDb.FooCol>(); }
     }
@@ -126,33 +63,12 @@ public class ContextValidationTests
     {
         try
         {
-            var db = _client.DatabaseContext<InvalidCrossedDb>();
+            var db = _client.DataContext<InvalidCrossedDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
         {
             Assert.AreEqual(ex.Message, "Invalid collection property: Must return a nested collection type.");
-        }
-    }
-
-    class InvalidNullableDb : DatabaseContext
-    {
-        public interface FooCol : Collection<Foo> { }
-
-        public FooCol? Foo { get; }
-    }
-
-    [Test]
-    public void MemberCannotBeNullable()
-    {
-        try
-        {
-            var db = _client.DatabaseContext<InvalidNullableDb>();
-            Assert.Fail();
-        }
-        catch (InvalidOperationException ex)
-        {
-            Assert.AreEqual(ex.Message, "Invalid collection property: Cannot be nullable.");
         }
     }
 }

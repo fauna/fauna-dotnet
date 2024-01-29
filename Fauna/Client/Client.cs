@@ -19,7 +19,7 @@ public class Client : BaseClient
     private readonly IConnection _connection;
 
     private readonly MappingContext _defaultCtx = new();
-    private readonly Dictionary<Type, DatabaseContext> _dbCtxs = new();
+    private readonly Dictionary<Type, DataContext> _dbCtxs = new();
 
     protected override MappingContext MappingCtx { get => _defaultCtx; }
 
@@ -63,17 +63,17 @@ public class Client : BaseClient
     /// <summary>
     /// Create and return a new database context which uses this client.
     /// </summary>
-    /// <typeparam name="DB">The DatabaseContext subtype to instantiate.</typeparam>
+    /// <typeparam name="DB">The DataContext subtype to instantiate.</typeparam>
     /// <returns>An instance of <typeparamref name="DB"/>.</returns>
-    public DB DatabaseContext<DB>() where DB : DatabaseContext
+    public DB DataContext<DB>() where DB : DataContext
     {
         var dbCtxType = typeof(DB);
-        DatabaseContext? ctx;
+        DataContext? ctx;
         lock (_dbCtxs)
         {
             if (!_dbCtxs.TryGetValue(dbCtxType, out ctx))
             {
-                var builder = new DatabaseContextBuilder<DB>();
+                var builder = new DataContextBuilder<DB>();
                 ctx = builder.Build(this);
                 _dbCtxs[dbCtxType] = ctx;
             }

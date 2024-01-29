@@ -170,7 +170,7 @@ interface IClient
 }
 
 /// <summary>
-/// The base class for Client and DatabaseContext.
+/// The base class for Client and DataContext.
 /// </summary>
 public abstract class BaseClient : IClient
 {
