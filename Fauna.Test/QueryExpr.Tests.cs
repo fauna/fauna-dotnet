@@ -12,7 +12,7 @@ public class QueryExprTests
     {
         var fragment1 = new QueryLiteral("fragment1");
         var fragment2 = new QueryExpr(new QueryLiteral("fragment2"));
-        var fragment3 = new QueryVal<int>(123);
+        var fragment3 = new QueryVal(123);
         var expected = new List<IQueryFragment> { fragment1, fragment2, fragment3 };
 
         var actual1 = new QueryExpr(expected);
@@ -29,7 +29,7 @@ public class QueryExprTests
         {
         new QueryLiteral("fragment1"),
         new QueryExpr(new QueryLiteral("fragment2")),
-        new QueryVal<int>(123)
+        new QueryVal(123)
         };
 
         Assert.DoesNotThrow(() => new QueryExpr(validFragments));
@@ -126,7 +126,7 @@ public class QueryExprTests
     {
         var mixedExpr = new QueryExpr(
             new QueryLiteral("literal"),
-            new QueryVal<int>(123),
+            new QueryVal(123),
             new QueryExpr(new QueryLiteral("nested"))
         );
         var query = mixedExpr.Serialize();
@@ -145,8 +145,8 @@ public class QueryExprTests
             return random.Next(3) switch
             {
                 0 => new QueryLiteral($"literal{i}"),
-                1 => new QueryVal<string>($"value{i}"),
-                2 => new QueryExpr(new QueryLiteral($"nestedLiteral{i}"), new QueryVal<int>(i)),
+                1 => new QueryVal($"value{i}"),
+                2 => new QueryExpr(new QueryLiteral($"nestedLiteral{i}"), new QueryVal(i)),
                 _ => throw new InvalidOperationException()
             };
         }

@@ -15,9 +15,9 @@ public class QueryTests
 
         var expected = new QueryExpr(
             new QueryLiteral("Book.where(.title == "),
-            new QueryVal<string>("foo"),
+            new QueryVal("foo"),
             new QueryLiteral(" && .genre == "),
-            new QueryVal<string>("bar"),
+            new QueryVal("bar"),
             new QueryLiteral(")")
         );
 
@@ -36,9 +36,9 @@ public class QueryTests
         var expected = new QueryExpr(new QueryLiteral("Product.where(.quantity == "),
             new QueryExpr(
                 new QueryLiteral("let product = Product.firstWhere(.backorderLimit == "),
-                new QueryVal<int>(backorderLimit),
+                new QueryVal(backorderLimit),
                 new QueryLiteral(" && .backordered == "),
-                new QueryVal<bool>(isBackordered),
+                new QueryVal(isBackordered),
                 new QueryLiteral(")!; product.quantity;")
             ),
             new QueryLiteral(").order(.title) { name, description }")
@@ -52,7 +52,7 @@ public class QueryTests
     {
         var guidParam = Guid.NewGuid();
 
-        var expected = new QueryExpr(new QueryLiteral("let x = '"), new QueryVal<Guid>(guidParam), new QueryLiteral("';"));
+        var expected = new QueryExpr(new QueryLiteral("let x = '"), new QueryVal(guidParam), new QueryLiteral("';"));
 
         var actual = FQL($@"let x = '{guidParam}';");
 
@@ -69,7 +69,7 @@ public class QueryTests
             new[] { "item21", "item22" }
         };
 
-        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal<object[]>(arrayParam));
+        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal(arrayParam));
 
         var actual = FQL($@"let x = {arrayParam}");
 
@@ -86,7 +86,7 @@ public class QueryTests
             new[] { "item21", "item22" }
         };
 
-        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal<List<object>>(listParam));
+        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal(listParam));
 
         var actual = FQL($@"let x = {listParam}");
 
@@ -102,7 +102,7 @@ public class QueryTests
             { "key3", new[] { "item21", "item22" } }
         };
 
-        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal<IDictionary<string, object>>(dictionaryParam));
+        var expected = new QueryExpr(new QueryLiteral("let x = "), new QueryVal(dictionaryParam));
 
 
         var actual = FQL($@"let x = {dictionaryParam}");
