@@ -6,12 +6,13 @@ namespace Fauna.Mapping;
 
 public sealed class FieldInfo
 {
-    public readonly string Name;
-    public readonly PropertyInfo Property;
-    public readonly FaunaType? FaunaTypeHint;
-    public readonly Type Type;
-    public readonly bool IsNullable;
-    private readonly MappingContext _ctx;
+    public string Name { get; }
+    public PropertyInfo Property { get; }
+    public FaunaType? FaunaTypeHint { get; }
+    public Type Type { get; }
+    public bool IsNullable { get; }
+
+    private MappingContext _ctx;
     private IDeserializer? _deserializer;
 
     internal FieldInfo(MappingContext ctx, FieldAttribute attr, PropertyInfo prop)

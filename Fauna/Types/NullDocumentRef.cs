@@ -15,5 +15,5 @@ public class NullDocumentRef : DocumentRef
     /// <value>
     /// A string representing the cause that the document is null.
     /// </value>
-    public string Cause { get; set; }
+    public string Cause { get; }
 }

@@ -14,10 +14,10 @@ public class DocumentRef
     /// <summary>
     /// Gets the string value of the ref id.
     /// </summary>
-    public string Id { get; set; }
+    public string Id { get; }
 
     /// <summary>
     /// Gets the collection to which the ref belongs.
     /// </summary>
-    public Module Collection { get; set; }
+    public Module Collection { get; }
 }

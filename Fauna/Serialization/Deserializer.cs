@@ -11,7 +11,7 @@ public static class Deserializer
     /// <summary>
     /// The dynamic data deserializer.
     /// </summary>
-    public static readonly IDeserializer<object?> Dynamic = DynamicDeserializer.Singleton;
+    public static IDeserializer<object?> Dynamic { get; } = DynamicDeserializer.Singleton;
 
     private static readonly CheckedDeserializer<object> _object = new();
     private static readonly CheckedDeserializer<string> _string = new();

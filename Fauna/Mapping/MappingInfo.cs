@@ -7,12 +7,12 @@ namespace Fauna.Mapping;
 
 public sealed class MappingInfo
 {
-    public readonly Type Type;
-    public readonly IReadOnlyList<FieldInfo> Fields;
-    public readonly IReadOnlyDictionary<string, FieldInfo> FieldsByName;
+    public Type Type { get; }
+    public IReadOnlyList<FieldInfo> Fields { get; }
+    public IReadOnlyDictionary<string, FieldInfo> FieldsByName { get; }
 
-    internal readonly bool ShouldEscapeObject;
-    internal readonly IClassDeserializer Deserializer;
+    internal bool ShouldEscapeObject { get; }
+    internal IClassDeserializer Deserializer { get; }
 
     internal MappingInfo(MappingContext ctx, Type ty)
     {
