@@ -2,7 +2,7 @@ using Fauna.Mapping;
 
 namespace Fauna.Serialization;
 
-public interface IDeserializer<T> : IDeserializer
+public interface IDeserializer<out T> : IDeserializer
 {
     new T Deserialize(MappingContext context, ref Utf8FaunaReader reader);
 }
