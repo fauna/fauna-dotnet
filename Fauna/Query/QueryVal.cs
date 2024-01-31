@@ -6,22 +6,21 @@ namespace Fauna;
 /// <summary>
 /// Represents a generic value holder for FQL queries. This class allows embedding values of various types into the query, with support for primitives, POCOs, and other types.
 /// </summary>
-/// <typeparam name="T">The type of the value to be embedded in the query.</typeparam>
-public sealed class QueryVal<T> : Query, IQueryFragment
+public sealed class QueryVal : Query, IQueryFragment
 {
+    /// <summary>
+    /// Gets the value of the specified type represented in the query.
+    /// </summary>
+    public object? Unwrap { get; }
+
     /// <summary>
     /// Initializes a new instance of the QueryVal class with the specified value.
     /// </summary>
     /// <param name="v">The value of the specified type to be represented in the query.</param>
-    public QueryVal(T v)
+    public QueryVal(object? v)
     {
         Unwrap = v;
     }
-
-    /// <summary>
-    /// Gets the value of the specified type represented in the query.
-    /// </summary>
-    public T Unwrap { get; }
 
     /// <summary>
     /// Serializes the query value.
@@ -41,7 +40,7 @@ public sealed class QueryVal<T> : Query, IQueryFragment
     /// </summary>
     /// <param name="o">The QueryVal to compare with the current QueryVal.</param>
     /// <returns>true if the specified QueryVal is equal to the current QueryVal; otherwise, false.</returns>
-    public override bool Equals(Query? o) => IsEqual(o as QueryVal<T>);
+    public override bool Equals(Query? o) => IsEqual(o as QueryVal);
 
     /// <summary>
     /// Determines whether the specified object is equal to the current QueryVal.
@@ -55,24 +54,24 @@ public sealed class QueryVal<T> : Query, IQueryFragment
             return true;
         }
 
-        if (o is null)
-        {
-            return false;
-        }
-
-        if (GetType() != o.GetType())
-        {
-            return false;
-        }
-
-        return IsEqual(o as QueryVal<T>);
+        return IsEqual(o as QueryVal);
     }
 
     /// <summary>
     /// The default hash function.
     /// </summary>
     /// <returns>A hash code for the current QueryVal.</returns>
-    public override int GetHashCode() => Unwrap != null ? EqualityComparer<T>.Default.GetHashCode(Unwrap) : 0;
+    public override int GetHashCode()
+    {
+        var hash = 31;
+
+        if (Unwrap is not null)
+        {
+            hash *= Unwrap.GetHashCode();
+        }
+
+        return hash;
+    }
 
     /// <summary>
     /// Returns a string that represents the current QueryVal.
@@ -86,7 +85,7 @@ public sealed class QueryVal<T> : Query, IQueryFragment
     /// <param name="left">The first QueryVal to compare.</param>
     /// <param name="right">The second QueryVal to compare.</param>
     /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(QueryVal<T> left, QueryVal<T> right)
+    public static bool operator ==(QueryVal left, QueryVal right)
     {
         if (ReferenceEquals(left, right))
         {
@@ -107,18 +106,23 @@ public sealed class QueryVal<T> : Query, IQueryFragment
     /// <param name="left">The first QueryVal to compare.</param>
     /// <param name="right">The second QueryVal to compare.</param>
     /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(QueryVal<T> left, QueryVal<T> right)
+    public static bool operator !=(QueryVal left, QueryVal right)
     {
         return !(left == right);
     }
 
-    private bool IsEqual(QueryVal<T>? o)
+    private bool IsEqual(QueryVal? o)
     {
         if (o is null)
         {
             return false;
         }
 
-        return EqualityComparer<T>.Default.Equals(Unwrap, o.Unwrap);
+        if (Unwrap is null)
+        {
+            return (o.Unwrap is null) ? true : false;
+        }
+
+        return Unwrap.Equals(o.Unwrap);
     }
 }

@@ -30,11 +30,10 @@ public ref struct QueryStringHandler
     }
 
     /// <summary>
-    /// Appends a formatted value to the query. The value is wrapped as a <see cref="QueryVal{T}"/> or <see cref="QueryExpr"/> depending on its type.
+    /// Appends a formatted value to the query. The value is wrapped as a <see cref="QueryVal"/> or <see cref="QueryExpr"/> depending on its type.
     /// </summary>
-    /// <typeparam name="T">The type of the value to append.</typeparam>
     /// <param name="value">The value to append.</param>
-    public void AppendFormatted<T>(T value)
+    public void AppendFormatted(object? value)
     {
         if (value is QueryExpr expr)
         {
@@ -42,17 +41,8 @@ public ref struct QueryStringHandler
         }
         else
         {
-            fragments.Add(new QueryVal<T>(value));
+            fragments.Add(new QueryVal(value));
         }
-    }
-
-    /// <summary>
-    /// Appends a formatted object to the query. The object is wrapped as a <see cref="QueryVal{Object}"/>.
-    /// </summary>
-    /// <param name="value">The object to append.</param>
-    public void AppendFormatted(object value)
-    {
-        fragments.Add(new QueryVal<object>(value));
     }
 
     /// <summary>
