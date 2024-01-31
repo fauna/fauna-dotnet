@@ -18,7 +18,7 @@ public abstract class DataContext : BaseClient
     [AllowNull]
     private MappingContext _ctx;
 
-    protected override MappingContext MappingCtx { get => _ctx; }
+    internal override MappingContext MappingCtx { get => _ctx; }
 
     internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
     {

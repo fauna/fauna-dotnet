@@ -21,7 +21,7 @@ public class Client : BaseClient
     private readonly MappingContext _defaultCtx = new();
     private readonly Dictionary<Type, DataContext> _dbCtxs = new();
 
-    protected override MappingContext MappingCtx { get => _defaultCtx; }
+    internal override MappingContext MappingCtx { get => _defaultCtx; }
 
     /// <summary>
     /// Gets the timestamp of the last transaction seen by this client.
