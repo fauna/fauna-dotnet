@@ -43,6 +43,16 @@ public class DeserializerTests
     }
 
     [Test]
+    public void CastDeserializer()
+    {
+        var deser = Deserializer.Generate<string>(ctx);
+        // should cast w/o failing due to covariance.
+        var obj = (IDeserializer<object?>)deser;
+
+        Assert.AreEqual(deser, obj);
+    }
+
+    [Test]
     public void DeserializeValues()
     {
         var tests = new Dictionary<string, object?>
