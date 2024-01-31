@@ -3,10 +3,10 @@ using Fauna.Mapping.Attributes;
 using System.Diagnostics.CodeAnalysis;
 using static Fauna.Test.Helpers.TestClientHelper;
 
-namespace Fauna.Test;
+namespace Fauna.Test.Linq;
 
 [TestFixture]
-public class LinqTests
+public class ContextTests
 {
     [Object]
     class Author
@@ -37,18 +37,18 @@ public class LinqTests
     }
 
     [AllowNull]
-    private static Client _client;
+    private static Client client;
 
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
+        client = NewTestClient();
     }
 
     [Test]
     public void ReturnsADataContext()
     {
-        var db = _client.DataContext<AuthorDb>();
+        var db = client.DataContext<AuthorDb>();
 
         Assert.AreEqual(db.Author.Name, "Author");
         Assert.AreEqual(db.Author.DocType, typeof(Author));

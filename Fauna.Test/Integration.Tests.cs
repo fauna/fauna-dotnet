@@ -133,7 +133,7 @@ public class IntegrationTests
         var paginatedResult = _client.PaginateAsync<Person>(query);
 
         int itemCount = 0;
-        await foreach (var item in paginatedResult.FlattenAsync<Person>())
+        await foreach (var item in paginatedResult.FlattenAsync())
         {
             itemCount++;
         }
