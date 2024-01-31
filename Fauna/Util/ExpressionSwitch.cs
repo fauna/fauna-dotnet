@@ -1,43 +1,17 @@
-namespace Fauna;
-
 using System.Linq.Expressions;
 
-internal class ExpressionSwitch<TResult>
+namespace Fauna.Util;
+
+internal abstract class ExpressionSwitch<TResult>
 {
+    // if true, will transparently handle certain node types (Quote, Convert, etc.)
+    protected virtual bool Simplified { get => true; }
+
     // Apply this switch to an expression
-    public TResult Apply(Expression expr) => ApplyImpl(expr);
-
-    protected virtual TResult ApplyDefault(Expression expr)
-        => throw new NotSupportedException($"Unsupported expression: {expr}");
-
-    protected virtual TResult BinaryExpr(BinaryExpression expr) => ApplyDefault(expr);
-    protected virtual TResult BlockExpr(BlockExpression expr) => ApplyDefault(expr);
-    protected virtual TResult ConditionalExpr(ConditionalExpression expr) => ApplyDefault(expr);
-    protected virtual TResult CallExpr(MethodCallExpression expr) => ApplyDefault(expr);
-    protected virtual TResult ConstantExpr(ConstantExpression expr) => ApplyDefault(expr);
-    protected virtual TResult DebugInfoExpr(DebugInfoExpression expr) => ApplyDefault(expr);
-    protected virtual TResult DefaultExpr(DefaultExpression expr) => ApplyDefault(expr);
-    protected virtual TResult DynamicExpr(DynamicExpression expr) => ApplyDefault(expr);
-    protected virtual TResult GotoExpr(GotoExpression expr) => ApplyDefault(expr);
-    protected virtual TResult IndexExpr(IndexExpression expr) => ApplyDefault(expr);
-    protected virtual TResult InvokeExpr(InvocationExpression expr) => ApplyDefault(expr);
-    protected virtual TResult LabelExpr(LabelExpression expr) => ApplyDefault(expr);
-    protected virtual TResult LambdaExpr(LambdaExpression expr) => ApplyDefault(expr);
-    protected virtual TResult LoopExpr(LoopExpression expr) => ApplyDefault(expr);
-    protected virtual TResult ListInitExpr(ListInitExpression expr) => ApplyDefault(expr);
-    protected virtual TResult MemberAccessExpr(MemberExpression expr) => ApplyDefault(expr);
-    protected virtual TResult MemberInitExpr(MemberInitExpression expr) => ApplyDefault(expr);
-    protected virtual TResult NewExpr(NewExpression expr) => ApplyDefault(expr);
-    protected virtual TResult NewArrayExpr(NewArrayExpression expr) => ApplyDefault(expr);
-    protected virtual TResult ParameterExpr(ParameterExpression expr) => ApplyDefault(expr);
-    protected virtual TResult RuntimeVariablesExpr(RuntimeVariablesExpression expr) => ApplyDefault(expr);
-    protected virtual TResult SwitchExpr(SwitchExpression expr) => ApplyDefault(expr);
-    protected virtual TResult TryExpr(TryExpression expr) => ApplyDefault(expr);
-    protected virtual TResult TypeBinaryExpr(TypeBinaryExpression expr) => ApplyDefault(expr);
-    protected virtual TResult UnaryExpr(UnaryExpression expr) => ApplyDefault(expr);
-
-    public TResult ApplyImpl(Expression expr)
+    public TResult Apply(Expression? expr)
     {
+        if (expr is null) return NullExpr();
+
         return expr.NodeType switch
         {
             ExpressionType.Add or
@@ -133,6 +107,12 @@ internal class ExpressionSwitch<TResult>
             ExpressionType.TypeIs =>
                 TypeBinaryExpr((TypeBinaryExpression)expr),
 
+            ExpressionType.Convert or
+            ExpressionType.ConvertChecked or
+            ExpressionType.Quote
+            when Simplified =>
+                Apply(((UnaryExpression)expr).Operand),
+
             ExpressionType.ArrayLength or
             ExpressionType.Convert or
             ExpressionType.ConvertChecked or
@@ -157,7 +137,71 @@ internal class ExpressionSwitch<TResult>
 
             // not sure what to do with this one
 
-            ExpressionType.Extension => ApplyDefault(expr)
+            ExpressionType.Extension => UnknownExpr(expr)
         };
     }
+
+    protected abstract TResult NullExpr();
+
+    protected abstract TResult BinaryExpr(BinaryExpression expr);
+    protected abstract TResult BlockExpr(BlockExpression expr);
+    protected abstract TResult ConditionalExpr(ConditionalExpression expr);
+    protected abstract TResult CallExpr(MethodCallExpression expr);
+    protected abstract TResult ConstantExpr(ConstantExpression expr);
+    protected abstract TResult DebugInfoExpr(DebugInfoExpression expr);
+    protected abstract TResult DefaultExpr(DefaultExpression expr);
+    protected abstract TResult DynamicExpr(DynamicExpression expr);
+    protected abstract TResult GotoExpr(GotoExpression expr);
+    protected abstract TResult IndexExpr(IndexExpression expr);
+    protected abstract TResult InvokeExpr(InvocationExpression expr);
+    protected abstract TResult LabelExpr(LabelExpression expr);
+    protected abstract TResult LambdaExpr(LambdaExpression expr);
+    protected abstract TResult ListInitExpr(ListInitExpression expr);
+    protected abstract TResult LoopExpr(LoopExpression expr);
+    protected abstract TResult MemberAccessExpr(MemberExpression expr);
+    protected abstract TResult MemberInitExpr(MemberInitExpression expr);
+    protected abstract TResult NewArrayExpr(NewArrayExpression expr);
+    protected abstract TResult NewExpr(NewExpression expr);
+    protected abstract TResult ParameterExpr(ParameterExpression expr);
+    protected abstract TResult RuntimeVariablesExpr(RuntimeVariablesExpression expr);
+    protected abstract TResult SwitchExpr(SwitchExpression expr);
+    protected abstract TResult TryExpr(TryExpression expr);
+    protected abstract TResult TypeBinaryExpr(TypeBinaryExpression expr);
+    protected abstract TResult UnaryExpr(UnaryExpression expr);
+    protected abstract TResult UnknownExpr(Expression expr);
+}
+
+internal class DefaultExpressionSwitch<TResult> : ExpressionSwitch<TResult>
+{
+    protected virtual TResult ApplyDefault(Expression? expr)
+        => throw new NotSupportedException($"Unsupported expression: {expr}");
+
+    protected override TResult NullExpr() => ApplyDefault(null);
+
+    protected override TResult BinaryExpr(BinaryExpression expr) => ApplyDefault(expr);
+    protected override TResult BlockExpr(BlockExpression expr) => ApplyDefault(expr);
+    protected override TResult ConditionalExpr(ConditionalExpression expr) => ApplyDefault(expr);
+    protected override TResult CallExpr(MethodCallExpression expr) => ApplyDefault(expr);
+    protected override TResult ConstantExpr(ConstantExpression expr) => ApplyDefault(expr);
+    protected override TResult DebugInfoExpr(DebugInfoExpression expr) => ApplyDefault(expr);
+    protected override TResult DefaultExpr(DefaultExpression expr) => ApplyDefault(expr);
+    protected override TResult DynamicExpr(DynamicExpression expr) => ApplyDefault(expr);
+    protected override TResult GotoExpr(GotoExpression expr) => ApplyDefault(expr);
+    protected override TResult IndexExpr(IndexExpression expr) => ApplyDefault(expr);
+    protected override TResult InvokeExpr(InvocationExpression expr) => ApplyDefault(expr);
+    protected override TResult LabelExpr(LabelExpression expr) => ApplyDefault(expr);
+    protected override TResult LambdaExpr(LambdaExpression expr) => ApplyDefault(expr);
+    protected override TResult ListInitExpr(ListInitExpression expr) => ApplyDefault(expr);
+    protected override TResult LoopExpr(LoopExpression expr) => ApplyDefault(expr);
+    protected override TResult MemberAccessExpr(MemberExpression expr) => ApplyDefault(expr);
+    protected override TResult MemberInitExpr(MemberInitExpression expr) => ApplyDefault(expr);
+    protected override TResult NewArrayExpr(NewArrayExpression expr) => ApplyDefault(expr);
+    protected override TResult NewExpr(NewExpression expr) => ApplyDefault(expr);
+    protected override TResult ParameterExpr(ParameterExpression expr) => ApplyDefault(expr);
+    protected override TResult RuntimeVariablesExpr(RuntimeVariablesExpression expr) => ApplyDefault(expr);
+    protected override TResult SwitchExpr(SwitchExpression expr) => ApplyDefault(expr);
+    protected override TResult TryExpr(TryExpression expr) => ApplyDefault(expr);
+    protected override TResult TypeBinaryExpr(TypeBinaryExpression expr) => ApplyDefault(expr);
+    protected override TResult UnaryExpr(UnaryExpression expr) => ApplyDefault(expr);
+    protected override TResult UnknownExpr(Expression expr) => ApplyDefault(expr);
 }
