@@ -1,3 +1,5 @@
+using static Fauna.Query;
+
 namespace Fauna.Test.Helpers;
 
 public static class TestClientHelper
