@@ -3,13 +3,23 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
+internal interface PageDeserializer
 {
-    private IDeserializer<List<T>> _dataDeserializer;
+    public ListDeserializer Data { get; }
+    public IDeserializer Elem { get; }
 
-    public PageDeserializer(IDeserializer<T> elemDeserializer)
+}
+
+internal class PageDeserializer<T> : BaseDeserializer<Page<T>>, PageDeserializer
+{
+    public ListDeserializer<T> Data { get; }
+    public IDeserializer<T> Elem { get => Data.Elem; }
+    ListDeserializer PageDeserializer.Data { get => Data; }
+    IDeserializer PageDeserializer.Elem { get => Elem; }
+
+    public PageDeserializer(IDeserializer<T> elem)
     {
-        _dataDeserializer = new ListDeserializer<T>(elemDeserializer);
+        Data = new ListDeserializer<T>(elem);
     }
 
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -29,7 +39,7 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
             switch (fieldName)
             {
                 case "data":
-                    data = _dataDeserializer.Deserialize(context, ref reader);
+                    data = Data.Deserialize(context, ref reader);
                     break;
                 case "after":
                     after = reader.GetString()!;
