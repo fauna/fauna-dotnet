@@ -50,22 +50,22 @@ internal static class PipelineClosureExtensions
 {
     public static async Task<T> ResultAsync<T>(
         this PipelineClosure cls,
-        QueryOptions? queryOpts)
+        QueryOptions? queryOptions)
     {
         var query = cls.Query;
         var deser = (IDeserializer<T>)cls.Deserializer;
-        var qres = await cls.Ctx.QueryAsync(query, deser, queryOpts);
+        var qres = await cls.Ctx.QueryAsync(query, deser, queryOptions);
 
         return qres.Data;
     }
 
     public static async IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         this PipelineClosure cls,
-        QueryOptions? queryOpts)
+        QueryOptions? queryOptions)
     {
         var query = cls.Query;
         var deser = (PageDeserializer<T>)cls.Deserializer;
-        var qres = cls.Ctx.PaginateAsyncInternal(query, deser, queryOpts);
+        var qres = cls.Ctx.PaginateAsyncInternal(query, deser, queryOptions);
 
         await foreach (var page in qres)
         {

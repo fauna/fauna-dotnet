@@ -1,3 +1,4 @@
+using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
 using Fauna.Util;
@@ -10,6 +11,7 @@ namespace Fauna.Linq;
 internal class PipelineBuilder
 {
     protected DataContext DataCtx { get; }
+    protected MappingContext MappingCtx { get => DataCtx.MappingCtx; }
     protected Expression QueryExpr { get; }
     protected ParameterExpression CParam { get; }
     protected Dictionary<Type, Expression> CExprs { get; } = new();
@@ -54,7 +56,7 @@ internal class PipelineBuilder
         private IDeserializer DocPageDeserializer(Type docType)
         {
             var pageType = typeof(Page<>).MakeGenericType(docType);
-            return Serialization.Deserializer.Generate(_builder.DataCtx.MappingCtx, pageType);
+            return Serialization.Deserializer.Generate(_builder.MappingCtx, pageType);
         }
 
         protected override IE ConstantExpr(ConstantExpression expr)

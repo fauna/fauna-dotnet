@@ -89,7 +89,7 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
     object? IQueryProvider.Execute(Expression expression)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, expression);
-        var res = pl.ResultAsync<T>(null);
+        var res = pl.ResultAsync<object>(queryOptions: null);
         res.Wait();
         return res.Result;
     }
