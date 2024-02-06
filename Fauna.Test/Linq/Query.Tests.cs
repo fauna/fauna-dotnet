@@ -62,4 +62,90 @@ public class QueryTests
         }
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
+
+    [Test]
+    public async Task Query_Where()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.Where(a => a.Name == "Alice").AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Alice" }, names);
+    }
+
+    [Test]
+    public void Query_Count()
+    {
+        var count = db.Author.Count();
+        Assert.AreEqual(2, count);
+    }
+
+    [Test]
+    public void Query_LongCount()
+    {
+        var count = db.Author.LongCount();
+        Assert.AreEqual(2, count);
+    }
+
+    [Test]
+    public void Query_First()
+    {
+        var fst = db.Author.First();
+        Assert.AreEqual("Alice", fst.Name);
+    }
+
+    [Test]
+    public void Query_FirstWithPred()
+    {
+        var fst = db.Author.First(a => a.Name == "Bob");
+        Assert.AreEqual("Bob", fst.Name);
+    }
+
+    [Test]
+    public void Query_Last()
+    {
+        var fst = db.Author.First();
+        Assert.AreEqual("Alice", fst.Name);
+    }
+
+    [Test]
+    public void Query_AnyIsEmpty()
+    {
+        var any = db.Author.Any();
+        Assert.AreEqual(true, any);
+    }
+
+    [Test]
+    public void Query_AnyWithPred()
+    {
+        var any = db.Author.Any(a => a.Name == "Bob");
+        Assert.AreEqual(true, any);
+    }
+
+    [Test]
+    public void Query_All()
+    {
+        var all = db.Author.All(a => a.Name == "Bob");
+        Assert.AreEqual(false, all);
+    }
+
+    [Test]
+    public async Task Query_Reverse()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.Reverse().AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
+    public void Query_ToHashSet()
+    {
+        var hset = db.Author.ToHashSet();
+        var names = hset.Select(a => a.Name);
+        Assert.AreEqual(new string[] { "Alice", "Bob" }.ToHashSet(), names);
+    }
 }

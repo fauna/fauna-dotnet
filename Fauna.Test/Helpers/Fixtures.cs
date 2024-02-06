@@ -8,6 +8,7 @@ public class Author
 {
     [Field] public string? Id { get; set; }
     [Field] public string Name { get; set; } = "Alice";
+    [Field] public int Age { get; set; }
 }
 
 public class AuthorDb : DataContext
@@ -35,8 +36,8 @@ public static class Fixtures
                 }
             })"))
             .Wait();
-        client.QueryAsync(FQL("Author.create({name: 'Alice'})")).Wait();
-        client.QueryAsync(FQL("Author.create({name: 'Bob'})")).Wait();
+        client.QueryAsync(FQL("Author.create({name: 'Alice', age: 32 })")).Wait();
+        client.QueryAsync(FQL("Author.create({name: 'Bob', age: 26 })")).Wait();
 
         return client.DataContext<AuthorDb>();
     }
