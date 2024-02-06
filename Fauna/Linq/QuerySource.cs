@@ -70,11 +70,12 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
 
         // TODO(matt) widen acceptable types here and/or validate
         var exprTy = expression.Type;
+        var genArgs = exprTy.GenericTypeArguments;
 
-        if (exprTy.GenericTypeArguments.Length != 1)
+        if (genArgs.Length != 1)
             throw new ArgumentException($"{nameof(expression)} type is invalid: {exprTy}");
 
-        var elemTy = exprTy.GenericTypeArguments[0];
+        var elemTy = genArgs[0];
         var qTy = typeof(QuerySource<>).MakeGenericType(elemTy);
 
         return (IQueryable)Activator.CreateInstance(qTy, expression)!;

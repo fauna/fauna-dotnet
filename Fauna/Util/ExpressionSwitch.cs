@@ -7,6 +7,9 @@ internal abstract class ExpressionSwitch<TResult>
     // if true, will transparently handle certain node types (Quote, Convert, etc.)
     protected virtual bool Simplified { get => true; }
 
+    public IEnumerable<TResult> ApplyAll(IEnumerable<Expression> exprs) =>
+        exprs.Select(e => Apply(e));
+
     // Apply this switch to an expression
     public TResult Apply(Expression? expr)
     {
