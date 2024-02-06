@@ -13,7 +13,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    
   </PropertyGroup>
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="dotnet format --severity warn --verbosity diagnostic"/>
