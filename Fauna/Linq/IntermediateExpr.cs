@@ -2,10 +2,49 @@ using System.Linq.Expressions;
 
 namespace Fauna.Linq;
 
+using IE = IntermediateExpr;
+
 internal abstract class IntermediateExpr
 {
-    public static IntermediateExpr Join(IntermediateExpr a, string op, IntermediateExpr b) =>
+    public static IE Exp(string fql) => new Expr(fql);
+    public static IE Const(object? v) => new Constant(v);
+
+    public static IE Field(IE callee, string f) => callee.Access(f);
+
+    private static readonly IE _lp = new Expr("(");
+    private static readonly IE _rp = new Expr(")");
+    public static IE Parens(IE inner) => _lp.Concat(inner).Concat(_rp);
+    public static IE Parens(IEnumerable<IE> inners) => Join(inners, _lp, ",", _rp);
+
+    private static readonly IE _lb = new Expr("{");
+    private static readonly IE _rb = new Expr("}");
+    public static IE Block(IE inner) => _lb.Concat(inner).Concat("}");
+    public static IE Block(IEnumerable<IE> inners) => Join(inners, _lb, ";", _rb);
+
+    public static IE Op(IE a, string op, IE b) =>
         a.Concat(new Expr(op)).Concat(b);
+
+    public static IE MethodCall(IE callee, string m) =>
+        MethodCall(callee, m, new IE[] { });
+
+    public static IE MethodCall(IE callee, string m, IE arg) =>
+        MethodCall(callee, m, new IE[] { arg });
+
+    public static IE MethodCall(IE callee, string m, IEnumerable<IE> args) =>
+        Join(args, callee.Concat($".{m}("), ",", _rp);
+
+    public static IE Join(IEnumerable<IE> ies, IE l, string sep, IE r)
+    {
+        IE ret = l;
+        var init = true;
+        foreach (var ie in ies)
+        {
+            if (init) init = false; else ret = ret.Concat(sep);
+            ret = ret.Concat(ie);
+        }
+        ret = ret.Concat(r);
+        return ret;
+    }
 
     // return a subexpression that when executed returns a Query value
     public abstract Expression Build();
