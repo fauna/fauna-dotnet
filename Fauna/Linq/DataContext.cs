@@ -80,8 +80,6 @@ public abstract class DataContext : BaseClient
             _expr = Expression.Constant(this);
         }
 
-        public Index<Doc> All() => Index().Call();
-
         // index call DSL
 
         protected IndexCall Index(string? name = null, [CallerMemberName] string? auto = null)

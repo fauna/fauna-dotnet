@@ -55,13 +55,9 @@ public class ContextTests
         Assert.AreEqual(db.Post.Name, "posts");
         Assert.AreEqual(db.Post.DocType, typeof(Post));
 
-        var all = db.Author.All();
         var byName = db.Author.ByName("Alice");
         var byName2 = db.Author.ByName2("Alice");
 
-        Assert.AreEqual(all.Name, "all");
-        Assert.AreEqual(all.DocType, typeof(Author));
-        Assert.AreEqual(all.Args, new object[] { });
         Assert.AreEqual(byName.Name, "byName");
         Assert.AreEqual(byName.DocType, typeof(Author));
         Assert.AreEqual(byName.Args, new object[] { "Alice" });
