@@ -131,6 +131,34 @@ public class QueryTests
     }
 
     [Test]
+    public void Query_Average()
+    {
+        var avg = db.Author.Select(a => a.Age).Average();
+        Assert.AreEqual(29, avg);
+    }
+
+    [Test]
+    public void Query_Max()
+    {
+        var max = db.Author.Select(a => a.Age).Max();
+        Assert.AreEqual(32, max);
+    }
+
+    [Test]
+    public void Query_Min()
+    {
+        var min = db.Author.Select(a => a.Age).Min();
+        Assert.AreEqual(26, min);
+    }
+
+    [Test]
+    public void Query_Sum()
+    {
+        var sum = db.Author.Select(a => a.Age).Sum();
+        Assert.AreEqual(58, sum);
+    }
+
+    [Test]
     public async Task Query_Reverse()
     {
         var names = new List<string>();

@@ -3,11 +3,16 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal interface PageDeserializer
+internal interface PageDeserializer : IDeserializer
 {
     public ListDeserializer Data { get; }
     public IDeserializer Elem { get; }
 
+    public static PageDeserializer Create(Type ety, IDeserializer edeser)
+    {
+        var pty = typeof(PageDeserializer<>).MakeGenericType(new Type[] { ety });
+        return (PageDeserializer)Activator.CreateInstance(pty, new[] { edeser })!;
+    }
 }
 
 internal class PageDeserializer<T> : BaseDeserializer<Page<T>>, PageDeserializer
