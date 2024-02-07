@@ -2,6 +2,7 @@ using Fauna.Serialization;
 using Fauna.Types;
 using Fauna.Util;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Fauna.Linq;
 
@@ -44,28 +45,33 @@ internal readonly record struct Pipeline(
 internal readonly record struct PipelineClosure(
     DataContext Ctx,
     Query Query,
-    IDeserializer Deserializer);
-
-internal static class PipelineClosureExtensions
+    IDeserializer Deserializer)
 {
-    public static async Task<T> ResultAsync<T>(
-        this PipelineClosure cls,
-        QueryOptions? queryOptions)
-    {
-        var query = cls.Query;
-        var deser = (IDeserializer<T>)cls.Deserializer;
-        var qres = await cls.Ctx.QueryAsync(query, deser, queryOptions);
+    private static readonly MethodInfo _resultAsyncMethod =
+        typeof(PipelineClosure).GetMethod(nameof(ResultAsync), 1, new Type[] { typeof(QueryOptions) })!;
 
+    public async Task<TResult> ResultAsync<TResult>(QueryOptions? queryOptions)
+    {
+        var deser = (IDeserializer<TResult>)Deserializer;
+        var qres = await Ctx.QueryAsync<TResult>(Query, deser, queryOptions);
         return qres.Data;
     }
 
-    public static async IAsyncEnumerable<Page<T>> PaginateAsync<T>(
-        this PipelineClosure cls,
-        QueryOptions? queryOptions)
+    public async Task<object?> ResultAsync(Type tresult, QueryOptions? queryOptions)
     {
-        var query = cls.Query;
-        var deser = (PageDeserializer<T>)cls.Deserializer;
-        var qres = cls.Ctx.PaginateAsyncInternal(query, deser, queryOptions);
+        var ram = _resultAsyncMethod.MakeGenericMethod(new Type[] { tresult });
+        var qtask = ram.Invoke(this, new[] { queryOptions });
+        await (Task)qtask!;
+
+        var field = qtask.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)!;
+        return field.GetValue(qtask);
+    }
+
+    public async IAsyncEnumerable<Page<TResult>> PaginateAsync<TResult>(QueryOptions? queryOptions)
+    {
+        var deser = (PageDeserializer)Deserializer;
+        var deser2 = new PageDeserializer<TResult>((IDeserializer<TResult>)deser.Elem);
+        var qres = Ctx.PaginateAsyncInternal(Query, deser2, queryOptions);
 
         await foreach (var page in qres)
         {

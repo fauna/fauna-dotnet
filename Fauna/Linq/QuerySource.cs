@@ -37,7 +37,7 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
     {
         var pl = _ctx.PipelineCache.Get(_ctx, _expr);
 
-        if (pl.Deserializer is PageDeserializer<T> pdeser)
+        if (pl.Deserializer is PageDeserializer pdeser)
         {
             return pl.PaginateAsync<T>(queryOptions);
         }
@@ -83,14 +83,16 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
 
     TResult IQueryProvider.Execute<TResult>(Expression expression)
     {
-        var ret = ((IQueryProvider)this).Execute(expression);
-        return (TResult)ret!;
+        var pl = _ctx.PipelineCache.Get(_ctx, expression);
+        var res = pl.ResultAsync<TResult>(queryOptions: null);
+        res.Wait();
+        return res.Result;
     }
 
     object? IQueryProvider.Execute(Expression expression)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, expression);
-        var res = pl.ResultAsync<object>(queryOptions: null);
+        var res = pl.ResultAsync(expression.Type, queryOptions: null);
         res.Wait();
         return res.Result;
     }
