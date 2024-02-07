@@ -7,6 +7,7 @@ public sealed class MappingContext
     // FIXME(matt) possibly replace with more efficient cache impl
     private readonly Dictionary<Type, MappingInfo> _cache = new();
     private readonly Dictionary<string, MappingInfo> _collections = new();
+    private readonly Dictionary<Type, MappingInfo> _baseTypes = new();
 
     public MappingContext() { }
 
@@ -14,7 +15,9 @@ public sealed class MappingContext
     {
         foreach (var col in collections)
         {
-            _collections[col.Name] = GetInfo(col.DocType);
+            var info = GetInfo(col.DocType);
+            _collections[col.Name] = info;
+            _baseTypes[col.DocType] = info;
         }
     }
 
@@ -29,6 +32,11 @@ public sealed class MappingContext
     public bool TryGetCollection(string col, [NotNullWhen(true)] out MappingInfo? ret)
     {
         return _collections.TryGetValue(col, out ret);
+    }
+
+    public bool TryGetBaseType(Type ty, [NotNullWhen(true)] out MappingInfo? ret)
+    {
+        return _baseTypes.TryGetValue(ty, out ret);
     }
 
     public MappingInfo GetInfo(Type ty)

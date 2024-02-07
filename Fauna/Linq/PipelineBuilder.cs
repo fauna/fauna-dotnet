@@ -1,6 +1,5 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
-using Fauna.Types;
 using Fauna.Util;
 using System.Diagnostics;
 using System.Linq.Expressions;
@@ -21,6 +20,7 @@ internal class PipelineBuilder
 
     protected DataContext DataCtx { get; }
     protected MappingContext MappingCtx { get => DataCtx.MappingCtx; }
+    protected LookupTable Lookup { get; }
     protected Expression QueryExpr { get; }
     protected ParameterExpression CParam { get; }
     protected Dictionary<Type, Expression> CExprs { get; } = new();
@@ -35,6 +35,7 @@ internal class PipelineBuilder
     public PipelineBuilder(DataContext ctx, object[] closures, Expression expr)
     {
         DataCtx = ctx;
+        Lookup = new LookupTable(ctx.MappingCtx);
         QueryExpr = expr;
         CParam = Expression.Parameter(typeof(object[]));
 
@@ -117,21 +118,22 @@ internal class PipelineBuilder
             Debug.Assert(_builder.Stage == BuildStage.Query);
 
             var lparam = lambda.Parameters.First()!;
-            var info = _builder.MappingCtx.GetInfo(lparam.Type);
-            var analysis = new ProjectAnalysisVisitor(lparam, info);
+            var analysis = new ProjectAnalysisVisitor(_builder.MappingCtx, lparam);
             analysis.Visit(lambda.Body);
 
             // select is a simple field access which we can translate directly to FQL.
             // TODO(matt) translate more cases to pure FQL
-            // FIXME(matt) needs to use more general lookup mechanism to handle native types (string etc.)
             if (lambda.Body is MemberExpression mexpr && mexpr.Expression == lparam)
             {
                 Debug.Assert(!analysis.Escapes);
-                var field = analysis.Accesses.First();
+                var info = _builder.MappingCtx.GetInfo(lparam.Type);
+                var access = analysis.Accesses.First();
+                var field = _builder.Lookup.FieldLookup(access, lparam);
+                Debug.Assert(field is not null);
 
                 SetElemType(field.Type, field.Deserializer);
 
-                var pquery = IE.Exp("x => ").Concat(IE.Exp("x").Access(field.Name));
+                var pquery = IE.Exp("x => ").Concat(IE.Field(IE.Exp("x"), field.Name));
                 return IE.MethodCall(callee, "map", pquery);
             }
 
@@ -335,7 +337,8 @@ internal class PipelineBuilder
         protected override IE CallExpr(MethodCallExpression expr)
         {
             var (callee, args, ext) = GetCalleeAndArgs(expr);
-            return Lookup(expr.Method.Name, callee, args, expr) ?? throw fail(expr);
+            var name = _builder.Lookup.MethodLookup(expr.Method, callee)?.Name;
+            return BuildAccess(name, callee, args) ?? throw fail(expr);
         }
 
         protected override IE MemberAccessExpr(MemberExpression expr)
@@ -347,74 +350,54 @@ internal class PipelineBuilder
             }
             else
             {
-                var ty = expr.Expression.Type;
-                IE? ret = null;
+                var name = expr.Member is PropertyInfo prop ?
+                    _builder.Lookup.FieldLookup(prop, expr.Expression)?.Name :
+                    null;
 
-                ret = Lookup(expr.Member.Name, expr.Expression, expr);
-
-                // no static lookup, do POCO field lookup
-                if (ret is null)
-                {
-                    var info = _builder.MappingCtx.GetInfo(ty);
-                    var field = info.Fields.FirstOrDefault(f => f.Property == expr.Member);
-
-                    if (field is not null)
-                    {
-                        ret = IE.Field(Apply(expr.Expression), field.Name);
-                    }
-                }
-
-                return ret ?? throw fail(expr);
+                return BuildAccess(name, expr.Expression, null) ?? throw fail(expr);
             }
         }
 
-        private IE? Lookup(string field, Expression callee, Expression orig) =>
-            Lookup(field, callee, new Expression[] { }, orig);
-
-        private IE? Lookup(string field, Expression callee, Expression[] args, Expression orig) =>
-            callee.Type.Name switch
-            {
-                "string" => StringLookup(field, callee, args) ?? throw fail(orig),
-                _ => null,
-            };
-
-        // method translation tables
-
-        private IE? StringLookup(string method, Expression callee, Expression[] args) =>
-            method switch
-            {
-                "Length" => IE.Field(Apply(callee), "length"),
-                "EndsWith" => IE.MethodCall(Apply(callee), "endsWith", ApplyAll(args)),
-                "StartsWith" => IE.MethodCall(Apply(callee), "startsWith", ApplyAll(args)),
-                _ => null,
-            };
+        private IE? BuildAccess(string? name, Expression callee, Expression[]? args)
+        {
+            if (name is null) return null;
+            if (args is null) return IE.Field(Apply(callee), name);
+            return IE.MethodCall(Apply(callee), name, ApplyAll(args));
+        }
     }
 
     private class ProjectAnalysisVisitor : ExpressionVisitor
     {
+        private readonly LookupTable _l;
         private readonly ParameterExpression _param;
-        private readonly MappingInfo _info;
 
-        public HashSet<Mapping.FieldInfo> Accesses { get; } = new();
+        public HashSet<PropertyInfo> Accesses { get; } = new();
         public bool Escapes { get; private set; } = false;
 
-        public ProjectAnalysisVisitor(ParameterExpression param, MappingInfo info)
+        public ProjectAnalysisVisitor(MappingContext ctx, ParameterExpression param)
         {
+            _l = new LookupTable(ctx);
             _param = param;
-            _info = info;
         }
 
         protected override Expression VisitMember(MemberExpression node)
         {
+            // FIXME handle chaining
             if (node.Expression == _param &&
                 node.Member is PropertyInfo prop &&
-                _info.Fields.FirstOrDefault(i => i.Property == prop) is Mapping.FieldInfo field)
+                _l.HasField(prop, node.Expression))
             {
-                Accesses.Add(field);
+                Accesses.Add(prop);
                 return node;
             }
 
             return base.VisitMember(node);
+        }
+
+        protected override Expression VisitMethodCall(MethodCallExpression node)
+        {
+            // FIXME(matt) handle these by checking arg FQL purity
+            return base.VisitMethodCall(node);
         }
 
         protected override Expression VisitParameter(ParameterExpression node)
