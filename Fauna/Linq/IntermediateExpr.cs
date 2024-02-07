@@ -11,15 +11,22 @@ internal abstract class IntermediateExpr
 
     public static IE Field(IE callee, string f) => callee.Access(f);
 
-    private static readonly IE _lp = new Expr("(");
-    private static readonly IE _rp = new Expr(")");
-    public static IE Parens(IE inner) => _lp.Concat(inner).Concat(_rp);
-    public static IE Parens(IEnumerable<IE> inners) => Join(inners, _lp, ",", _rp);
+    private static readonly IE _larr = new Expr("[");
+    private static readonly IE _rarr = new Expr("]");
+    public static IE Array(IE inner) => _larr.Concat(inner).Concat(_rarr);
+    public static IE Array(IEnumerable<IE> inners) => Join(inners, _larr, ",", _rarr);
 
-    private static readonly IE _lb = new Expr("{");
-    private static readonly IE _rb = new Expr("}");
-    public static IE Block(IE inner) => _lb.Concat(inner).Concat("}");
-    public static IE Block(IEnumerable<IE> inners) => Join(inners, _lb, ";", _rb);
+    private static readonly IE _lparen = new Expr("(");
+    private static readonly IE _rparen = new Expr(")");
+    public static IE Parens(IE inner) => _lparen.Concat(inner).Concat(_rparen);
+    public static IE Parens(IEnumerable<IE> inners) => Join(inners, _lparen, ",", _rparen);
+
+    private static readonly IE _lbrace = new Expr("{");
+    private static readonly IE _rbrace = new Expr("}");
+    public static IE Block(IE inner) => _lbrace.Concat(inner).Concat("}");
+    public static IE Block(IEnumerable<IE> inners) => Join(inners, _lbrace, ";", _rbrace);
+    public static IE Obj(IE inner) => _lbrace.Concat(inner).Concat("}");
+    public static IE Obj(IEnumerable<IE> inners) => Join(inners, _lbrace, ",", _rbrace);
 
     public static IE Op(IE a, string op, IE b) =>
         a.Concat(new Expr(op)).Concat(b);
@@ -31,7 +38,7 @@ internal abstract class IntermediateExpr
         MethodCall(callee, m, new IE[] { arg });
 
     public static IE MethodCall(IE callee, string m, IEnumerable<IE> args) =>
-        Join(args, callee.Concat($".{m}("), ",", _rp);
+        Join(args, callee.Concat($".{m}("), ",", _rparen);
 
     public static IE Join(IEnumerable<IE> ies, IE l, string sep, IE r)
     {
