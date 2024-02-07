@@ -1,7 +1,20 @@
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
 namespace Fauna.Util;
 
 internal static class TypeExtensions
 {
+    public static bool IsClosureType(this Type ty)
+    {
+        var compilerGen = ty.GetCustomAttribute<CompilerGeneratedAttribute>() != null;
+        // check for the closure class name pattern. see
+        // https://stackoverflow.com/questions/2508828/where-to-learn-about-vs-debugger-magic-names/2509524#2509524
+        var dcName = ty.Name.StartsWith("<>c__DisplayClass");
+
+        return compilerGen && dcName;
+    }
+
     public static Type? GetGenInst(this Type ty, Type genTy)
     {
         if (!genTy.IsGenericTypeDefinition)

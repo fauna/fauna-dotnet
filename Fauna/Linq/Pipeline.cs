@@ -16,7 +16,7 @@ internal readonly struct PipelineCache
 
     public PipelineClosure Get(DataContext ctx, Expression expr)
     {
-        var closures = ExpressionClosures.FindAll(expr);
+        var closures = Expressions.FindAllClosures(expr);
 
         Pipeline pl;
         lock (_cache)

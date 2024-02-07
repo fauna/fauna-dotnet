@@ -296,24 +296,6 @@ internal class PipelineBuilder
             };
     }
 
-    private class ClosureSubVisitor : ExpressionVisitor
-    {
-        private readonly PipelineBuilder _builder;
-        public ClosureSubVisitor(PipelineBuilder builder)
-        {
-            _builder = builder;
-        }
-
-        protected override Expression VisitConstant(ConstantExpression expr)
-        {
-            if (_builder.CExprs.TryGetValue(expr.Type, out var cexpr))
-            {
-                return cexpr;
-            }
-            return expr;
-        }
-    }
-
     private abstract class IEBaseSwitch : BaseSwitch<IE>
     {
         public IEBaseSwitch(PipelineBuilder builder) : base(builder) { }
