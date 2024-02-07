@@ -19,7 +19,7 @@ public record ClientConfig
     /// <summary>
     /// The timeout for the connection.
     /// </summary>
-    public TimeSpan ConnectionTimeout { get; init; } = new(60);
+    public TimeSpan ConnectionTimeout { get; init; } = TimeSpan.FromSeconds(5);
 
     /// <summary>
     /// The maximum number of retry attempts for a request in case of failures.
@@ -29,7 +29,7 @@ public record ClientConfig
     /// <summary>
     /// The maximum duration to wait between retry attempts.
     /// </summary>
-    public TimeSpan MaxBackoff { get; init; } = new(20);
+    public TimeSpan MaxBackoff { get; init; } = TimeSpan.FromSeconds(20);
 
     /// <summary>
     /// Default options for queries sent to Fauna.
