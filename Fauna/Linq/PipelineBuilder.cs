@@ -58,7 +58,7 @@ internal class PipelineBuilder
     }
 
     // QuerySwitch handles the top-level method chain, but not lambdas in predicates/projections.
-    private class QuerySwitch : BaseSwitch<IE>
+    private class QuerySwitch : BuilderSwitch<IE>
     {
         public QuerySwitch(PipelineBuilder builder) : base(builder) { }
 
@@ -211,11 +211,11 @@ internal class PipelineBuilder
         }
     }
 
-    private abstract class BaseSwitch<T> : DefaultExpressionSwitch<T>
+    private abstract class BuilderSwitch<T> : DefaultExpressionSwitch<T>
     {
         protected readonly PipelineBuilder _builder;
 
-        public BaseSwitch(PipelineBuilder builder)
+        public BuilderSwitch(PipelineBuilder builder)
         {
             _builder = builder;
         }
