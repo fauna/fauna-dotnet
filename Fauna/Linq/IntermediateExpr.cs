@@ -2,10 +2,56 @@ using System.Linq.Expressions;
 
 namespace Fauna.Linq;
 
+using IE = IntermediateExpr;
+
 internal abstract class IntermediateExpr
 {
-    public static IntermediateExpr Join(IntermediateExpr a, string op, IntermediateExpr b) =>
+    public static IE Exp(string fql) => new Expr(fql);
+    public static IE Const(object? v) => new Constant(v);
+
+    public static IE Field(IE callee, string f) => callee.Access(f);
+
+    private static readonly IE _larr = new Expr("[");
+    private static readonly IE _rarr = new Expr("]");
+    public static IE Array(IE inner) => _larr.Concat(inner).Concat(_rarr);
+    public static IE Array(IEnumerable<IE> inners) => Join(inners, _larr, ",", _rarr);
+
+    private static readonly IE _lparen = new Expr("(");
+    private static readonly IE _rparen = new Expr(")");
+    public static IE Parens(IE inner) => _lparen.Concat(inner).Concat(_rparen);
+    public static IE Parens(IEnumerable<IE> inners) => Join(inners, _lparen, ",", _rparen);
+
+    private static readonly IE _lbrace = new Expr("{");
+    private static readonly IE _rbrace = new Expr("}");
+    public static IE Block(IE inner) => _lbrace.Concat(inner).Concat("}");
+    public static IE Block(IEnumerable<IE> inners) => Join(inners, _lbrace, ";", _rbrace);
+    public static IE Obj(IE inner) => _lbrace.Concat(inner).Concat("}");
+    public static IE Obj(IEnumerable<IE> inners) => Join(inners, _lbrace, ",", _rbrace);
+
+    public static IE Op(IE a, string op, IE b) =>
         a.Concat(new Expr(op)).Concat(b);
+
+    public static IE MethodCall(IE callee, string m) =>
+        MethodCall(callee, m, new IE[] { });
+
+    public static IE MethodCall(IE callee, string m, IE arg) =>
+        MethodCall(callee, m, new IE[] { arg });
+
+    public static IE MethodCall(IE callee, string m, IEnumerable<IE> args) =>
+        Join(args, callee.Concat($".{m}("), ",", _rparen);
+
+    public static IE Join(IEnumerable<IE> ies, IE l, string sep, IE r)
+    {
+        IE ret = l;
+        var init = true;
+        foreach (var ie in ies)
+        {
+            if (init) init = false; else ret = ret.Concat(sep);
+            ret = ret.Concat(ie);
+        }
+        ret = ret.Concat(r);
+        return ret;
+    }
 
     // return a subexpression that when executed returns a Query value
     public abstract Expression Build();
