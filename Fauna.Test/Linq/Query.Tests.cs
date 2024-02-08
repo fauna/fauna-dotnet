@@ -62,4 +62,23 @@ public class QueryTests
         }
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
+
+    [Test]
+    public async Task Query_Reverse()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.Reverse().AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
+    public void Query_ToHashSet()
+    {
+        var hset = db.Author.ToHashSet();
+        var names = hset.Select(a => a.Name);
+        Assert.AreEqual(new string[] { "Alice", "Bob" }.ToHashSet(), names);
+    }
 }

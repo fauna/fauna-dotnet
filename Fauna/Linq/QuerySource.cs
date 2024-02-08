@@ -36,13 +36,7 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
     public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, _expr);
-
-        if (pl.Deserializer is PageDeserializer<T> pdeser)
-        {
-            return pl.PaginateAsync<T>(queryOptions);
-        }
-
-        throw new ArgumentException("Query does not result in an enumerable set");
+        return pl.PagedResult<T>(queryOptions);
     }
 
     public IAsyncEnumerable<T> AsAsyncEnumerable() => PaginateAsync().FlattenAsync();
@@ -70,11 +64,12 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
 
         // TODO(matt) widen acceptable types here and/or validate
         var exprTy = expression.Type;
+        var genArgs = exprTy.GenericTypeArguments;
 
-        if (exprTy.GenericTypeArguments.Length != 1)
+        if (genArgs.Length != 1)
             throw new ArgumentException($"{nameof(expression)} type is invalid: {exprTy}");
 
-        var elemTy = exprTy.GenericTypeArguments[0];
+        var elemTy = genArgs[0];
         var qTy = typeof(QuerySource<>).MakeGenericType(elemTy);
 
         return (IQueryable)Activator.CreateInstance(qTy, expression)!;
@@ -82,14 +77,16 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
 
     TResult IQueryProvider.Execute<TResult>(Expression expression)
     {
-        var ret = ((IQueryProvider)this).Execute(expression);
-        return (TResult)ret!;
+        var pl = _ctx.PipelineCache.Get(_ctx, expression);
+        var res = pl.Result<TResult>(queryOptions: null);
+        res.Wait();
+        return res.Result;
     }
 
     object? IQueryProvider.Execute(Expression expression)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, expression);
-        var res = pl.ResultAsync<object>(queryOptions: null);
+        var res = pl.Result(queryOptions: null);
         res.Wait();
         return res.Result;
     }

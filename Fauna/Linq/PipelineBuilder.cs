@@ -1,9 +1,9 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
-using Fauna.Types;
 using Fauna.Util;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Reflection;
 using IE = Fauna.Linq.IntermediateExpr;
 
 namespace Fauna.Linq;
@@ -12,103 +12,108 @@ internal class PipelineBuilder
 {
     protected DataContext DataCtx { get; }
     protected MappingContext MappingCtx { get => DataCtx.MappingCtx; }
+    protected LookupTable Lookup { get; }
     protected Expression QueryExpr { get; }
     protected ParameterExpression CParam { get; }
     protected Dictionary<Type, Expression> CExprs { get; } = new();
 
     // outputs
-    protected IDeserializer? Deserializer { get; set; }
+
+    protected PipelineMode Mode { get; set; }
+    protected Type? ElemType { get; set; }
+    protected IDeserializer? ElemDeserializer { get; set; }
+    protected LambdaExpression? ProjectExpr { get; set; }
 
     public PipelineBuilder(DataContext ctx, object[] closures, Expression expr)
     {
         DataCtx = ctx;
+        Lookup = new LookupTable(ctx.MappingCtx);
         QueryExpr = expr;
         CParam = Expression.Parameter(typeof(object[]));
 
         for (var i = 0; i < closures.Length; i++)
         {
             var ctype = closures[i].GetType();
-            var cexpr = Expression.Convert(
+            CExprs[ctype] = Expression.Convert(
                 Expression.ArrayIndex(CParam, Expression.Constant(i)),
                 ctype);
-
-            CExprs[ctype] = cexpr;
         }
     }
-
 
     public Pipeline Build()
     {
         var ie = (new QuerySwitch(this)).Apply(QueryExpr);
 
-        Debug.Assert(Deserializer is not null);
+        Debug.Assert(ElemDeserializer is not null);
+        Debug.Assert(ElemType is not null);
 
-        var body = ie.Build();
-        var func = Expression.Lambda<Func<object[], Query>>(body, CParam).Compile();
+        Func<object[], T> FromClosure<T>(Expression expr, ParameterExpression cp) =>
+            Expression.Lambda<Func<object[], T>>(expr, CParam).Compile();
 
-        return new Pipeline(func, Deserializer);
+        var qfunc = FromClosure<Query>(ie.Build(), CParam);
+        var deser = ElemDeserializer;
+        var pfunc = ProjectExpr is null ? null : FromClosure<Delegate>(ProjectExpr, CParam);
+
+        return new Pipeline(qfunc, deser, pfunc, Mode);
     }
 
+    // QuerySwitch handles the top-level method chain, but not lambdas in predicates/projections.
     private class QuerySwitch : BaseSwitch<IE>
     {
         public QuerySwitch(PipelineBuilder builder) : base(builder) { }
 
-        private IDeserializer DocPageDeserializer(Type docType)
+        private IDeserializer TypeDeserializer(Type ty) =>
+            Serialization.Deserializer.Generate(_builder.MappingCtx, ty);
+
+        private void SetElemType(Type ty, IDeserializer? deser = null)
         {
-            var pageType = typeof(Page<>).MakeGenericType(docType);
-            return Serialization.Deserializer.Generate(_builder.MappingCtx, pageType);
+            _builder.ElemType = ty;
+            _builder.ElemDeserializer = deser ?? TypeDeserializer(ty);
         }
+
+        // ExpressionSwitch
 
         protected override IE ConstantExpr(ConstantExpression expr)
         {
+            Debug.Assert(_builder.Mode == PipelineMode.Query);
+
             if (expr.Value is DataContext.Collection col)
             {
-                _builder.Deserializer = DocPageDeserializer(col.DocType);
-
-                return new IE.Expr($"{col.Name}.all()");
+                SetElemType(col.DocType);
+                return CollectionAll(col);
             }
             else if (expr.Value is DataContext.Index idx)
             {
-                _builder.Deserializer = DocPageDeserializer(idx.DocType);
-
-                var prefix = $"{idx.Collection.Name}.{idx.Name}";
-
-                if (idx.Args.Length == 0)
-                {
-                    return new IE.Expr($"{prefix}()");
-                }
-
-                IntermediateExpr ret = new IE.Expr($"{prefix}(");
-
-                for (var i = 0; i < idx.Args.Length; i++)
-                {
-                    if (i > 0) ret = ret.Concat(", ");
-                    var arg = idx.Args[i];
-                    ret = ret.Concat(new IE.Constant(arg));
-                }
-                ret = ret.Concat(")");
-
-                return ret;
-            }
-            else if (_builder.CExprs.TryGetValue(expr.Type, out var cexpr))
-            {
-                return new IE.Closure(cexpr);
+                SetElemType(idx.DocType);
+                return CollectionIndex(idx);
             }
             else
             {
-                return new IE.Constant(expr.Value);
+                // Queries must start with an expected query source.
+                throw fail(expr);
             }
         }
-    }
 
-    private class PredicateSwitch : BaseSwitch<IE>
-    {
-        public PredicateSwitch(PipelineBuilder builder) : base(builder) { }
-    }
+        protected override IE CallExpr(MethodCallExpression expr)
+        {
+            IE ret;
 
-    private class ProjectSwitch : BaseSwitch<IE>
-    {
-        public ProjectSwitch(PipelineBuilder builder) : base(builder) { }
+            var (callee, args, ext) = GetCalleeAndArgs(expr);
+
+            Debug.Assert(callee.Type.IsAssignableTo(typeof(IQueryable)));
+            Debug.Assert(_builder.Mode != PipelineMode.Scalar);
+
+            switch (expr.Method.Name)
+            {
+                case "Reverse" when args.Length == 0:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "reverse");
+                    return ret;
+
+                default:
+                    throw fail(expr);
+            }
+        }
     }
 
     private abstract class BaseSwitch<T> : DefaultExpressionSwitch<T>
@@ -123,8 +128,23 @@ internal class PipelineBuilder
         protected override T ApplyDefault(Expression? expr) => throw fail(expr);
     }
 
+    // Helpers
+
     // TODO(matt) use an API-specific exception in-line with what other LINQ
     // libraries do.
     private static Exception fail(Expression? expr) =>
         new NotSupportedException($"Unsupported {expr?.NodeType} expression: {expr}");
+
+    private static IE CollectionAll(DataContext.Collection col) =>
+        IE.MethodCall(IE.Exp(col.Name), "all");
+
+    private static IE CollectionIndex(DataContext.Index idx) =>
+        IE.MethodCall(IE.Exp(idx.Collection.Name), idx.Name, idx.Args.Select(a => IE.Const(a)));
+
+    private static (Expression, Expression[], bool) GetCalleeAndArgs(MethodCallExpression expr) =>
+         expr.Object switch
+         {
+             null => (expr.Arguments.First(), expr.Arguments.Skip(1).ToArray(), true),
+             var c => (c, expr.Arguments.ToArray(), false),
+         };
 }

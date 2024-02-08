@@ -1,9 +1,16 @@
 using Fauna.Serialization;
-using Fauna.Types;
 using Fauna.Util;
 using System.Linq.Expressions;
 
 namespace Fauna.Linq;
+
+public enum PipelineMode
+{
+    Query, // "pure" query. no local processing required (except deserialization)
+    Project, // elements have local projection.
+    SetLoad, // post-processing on loaded set required
+    Scalar, // final, non-enum result: no more transformations allowed
+}
 
 internal readonly struct PipelineCache
 {
@@ -14,7 +21,7 @@ internal readonly struct PipelineCache
         _cache = new(new ExpressionComparer());
     }
 
-    public PipelineClosure Get(DataContext ctx, Expression expr)
+    public PipelineExecutor Get(DataContext ctx, Expression expr)
     {
         var closures = Expressions.FindAllClosures(expr);
 
@@ -29,47 +36,18 @@ internal readonly struct PipelineCache
             }
         }
 
-        return pl.GetClosure(ctx, closures);
+        return pl.GetExec(ctx, closures);
     }
 }
 
 internal readonly record struct Pipeline(
     Func<object[], Query> GetQuery,
-    IDeserializer Deserializer)
+    IDeserializer Deserializer,
+    Func<object[], Delegate>? GetProjector,
+    PipelineMode Mode)
 {
-    public PipelineClosure GetClosure(DataContext ctx, object[] vars) =>
-        new PipelineClosure(ctx, GetQuery(vars), Deserializer);
-}
+    public PipelineExecutor GetExec(DataContext ctx, object[] vars) =>
+        PipelineExecutor.Create(ctx, GetQuery(vars), Deserializer, Proj(vars), Mode);
 
-internal readonly record struct PipelineClosure(
-    DataContext Ctx,
-    Query Query,
-    IDeserializer Deserializer);
-
-internal static class PipelineClosureExtensions
-{
-    public static async Task<T> ResultAsync<T>(
-        this PipelineClosure cls,
-        QueryOptions? queryOptions)
-    {
-        var query = cls.Query;
-        var deser = (IDeserializer<T>)cls.Deserializer;
-        var qres = await cls.Ctx.QueryAsync(query, deser, queryOptions);
-
-        return qres.Data;
-    }
-
-    public static async IAsyncEnumerable<Page<T>> PaginateAsync<T>(
-        this PipelineClosure cls,
-        QueryOptions? queryOptions)
-    {
-        var query = cls.Query;
-        var deser = (PageDeserializer<T>)cls.Deserializer;
-        var qres = cls.Ctx.PaginateAsyncInternal(query, deser, queryOptions);
-
-        await foreach (var page in qres)
-        {
-            yield return page;
-        }
-    }
+    private Delegate? Proj(object[] vars) => GetProjector is null ? null : GetProjector(vars);
 }
