@@ -65,10 +65,100 @@ internal class PipelineBuilder
         private IDeserializer TypeDeserializer(Type ty) =>
             Serialization.Deserializer.Generate(_builder.MappingCtx, ty);
 
+        private Expression SubstClosures(Expression expr) =>
+            Expressions.SubstituteByType(expr, _builder.CExprs);
+
+        private void ResetProjection()
+        {
+            // reset the first two, so that state blow up if used incorrectly.
+            _builder.ElemType = null;
+            _builder.ElemDeserializer = null;
+            _builder.ProjectExpr = null;
+        }
+
         private void SetElemType(Type ty, IDeserializer? deser = null)
         {
             _builder.ElemType = ty;
             _builder.ElemDeserializer = deser ?? TypeDeserializer(ty);
+        }
+
+        private IE SelectCall(IE callee, Expression proj)
+        {
+            // TODO(matt) allow Select on later stages by moving to loaded set
+            // transforms.
+            Debug.Assert(_builder.Mode <= PipelineMode.Project);
+
+            var lambda = Expressions.UnwrapLambda(proj);
+            Debug.Assert(lambda is not null, $"lambda is {proj.NodeType}");
+            Debug.Assert(lambda.Parameters.Count() == 1);
+
+            // need to rewrite closures so the lambda is reusable across invocations
+            lambda = (LambdaExpression)SubstClosures(lambda);
+
+            // there is already a projection wired up, so tack on to its mapping lambda
+            if (_builder.Mode == PipelineMode.Project)
+            {
+                Debug.Assert(_builder.ProjectExpr is not null);
+                var prev = _builder.ProjectExpr;
+                var pbody = Expression.Invoke(lambda, new Expression[] { prev.Body });
+                var plambda = Expression.Lambda(pbody, prev.Parameters);
+                _builder.ProjectExpr = plambda;
+
+                return callee;
+            }
+
+            Debug.Assert(_builder.Mode == PipelineMode.Query);
+
+            var lparam = lambda.Parameters.First()!;
+            var analysis = new ProjectionAnalysisVisitor(_builder.MappingCtx, lparam);
+            analysis.Visit(lambda.Body);
+
+            // select is a simple field access which we can translate directly to FQL.
+            // TODO(matt) translate more cases to pure FQL
+            if (lambda.Body is MemberExpression mexpr && mexpr.Expression == lparam)
+            {
+                Debug.Assert(!analysis.Escapes);
+                var info = _builder.MappingCtx.GetInfo(lparam.Type);
+                var access = analysis.Accesses.First();
+                var field = _builder.Lookup.FieldLookup(access, lparam);
+                Debug.Assert(field is not null);
+
+                SetElemType(field.Type, field.Deserializer);
+
+                var pquery = IE.Exp("x => ").Concat(IE.Field(IE.Exp("x"), field.Name));
+                return IE.MethodCall(callee, "map", pquery);
+            }
+
+            // handle the case where some value mapping must occur locally
+
+            _builder.Mode = PipelineMode.Project;
+
+            if (analysis.Escapes)
+            {
+                _builder.ProjectExpr = lambda;
+                return callee;
+            }
+            else
+            {
+                var accesses = analysis.Accesses.OrderBy(f => f.Name).ToArray();
+                var fields = accesses.Select(a => _builder.Lookup.FieldLookup(a, lparam)!);
+
+                // projected field deserializer
+                var deserializer = new ProjectionDeserializer(fields.Select(f => f.Deserializer));
+                SetElemType(typeof(object?[]), deserializer);
+
+                // build mapping lambda expression
+                var pparam = Expression.Parameter(typeof(object?[]), "x");
+                var rewriter = new ProjectionRewriteVisitor(lparam, accesses, pparam);
+                var pbody = rewriter.Visit(lambda.Body);
+                var plambda = Expression.Lambda(pbody, pparam);
+                _builder.ProjectExpr = plambda;
+
+                // projection query fragment
+                var accs = fields.Select(f => IE.Field(IE.Exp("x"), f.Name));
+                var pquery = IE.Exp("x => ").Concat(IE.Array(accs));
+                return IE.MethodCall(callee, "map", pquery);
+            }
         }
 
         // ExpressionSwitch
@@ -108,6 +198,11 @@ internal class PipelineBuilder
                 case "Reverse" when args.Length == 0:
                     ret = Apply(callee);
                     ret = IE.MethodCall(ret, "reverse");
+                    return ret;
+
+                case "Select" when args.Length == 1:
+                    ret = Apply(callee);
+                    ret = SelectCall(ret, args[0]);
                     return ret;
 
                 default:

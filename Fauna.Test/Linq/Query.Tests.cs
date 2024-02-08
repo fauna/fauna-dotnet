@@ -64,6 +64,43 @@ public class QueryTests
     }
 
     [Test]
+    public async Task Query_Select_Field()
+    {
+        var names = new List<string>();
+        await foreach (var n in db.Author.Select(a => a.Name).AsAsyncEnumerable())
+        {
+            names.Add(n);
+        }
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    private (string, string) Escaper(Author a) =>
+        (a.Name, new String(a.Name.Reverse().ToArray()));
+
+    [Test]
+    public async Task Query_Select_Projected()
+    {
+        var names = new List<string>();
+        await foreach (var obj in db.Author.Select(a => new { a.Name }).AsAsyncEnumerable())
+        {
+            names.Add(obj.Name);
+        }
+        Assert.AreEqual(new List<string> { "Alice", "Bob", }, names);
+    }
+
+    [Test]
+    public async Task Query_Select_Escaped()
+    {
+        var names = new List<string>();
+        await foreach (var (n, rn) in db.Author.Select(a => Escaper(a)).AsAsyncEnumerable())
+        {
+            names.Add(n);
+            names.Add(rn);
+        }
+        Assert.AreEqual(new List<string> { "Alice", "ecilA", "Bob", "boB" }, names);
+    }
+
+    [Test]
     public async Task Query_Reverse()
     {
         var names = new List<string>();
