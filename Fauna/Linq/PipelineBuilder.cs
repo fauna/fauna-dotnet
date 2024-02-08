@@ -274,6 +274,14 @@ internal class PipelineBuilder
                     ret = SelectCall(ret, args[0]);
                     return ret;
 
+                case "Sum" when args.Length == 0 && _builder.Stage == BuildStage.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => a + b"));
+                    ResetProjection();
+                    SetElemType(expr.Type);
+                    _builder.Stage = BuildStage.Scalar;
+                    return ret;
+
                 default:
                     throw fail(expr);
 
