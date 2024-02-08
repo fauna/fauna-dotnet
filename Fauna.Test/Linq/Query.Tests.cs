@@ -64,6 +64,17 @@ public class QueryTests
     }
 
     [Test]
+    public async Task Query_Where()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.Where(a => a.Name == "Alice").AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Alice" }, names);
+    }
+
+    [Test]
     public async Task Query_Select_Field()
     {
         var names = new List<string>();

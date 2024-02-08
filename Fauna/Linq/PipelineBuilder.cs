@@ -65,6 +65,9 @@ internal class PipelineBuilder
         private IDeserializer TypeDeserializer(Type ty) =>
             Serialization.Deserializer.Generate(_builder.MappingCtx, ty);
 
+        private IE SubQuery(Expression expr) =>
+            new SubquerySwitch(_builder).Apply(expr);
+
         private Expression SubstClosures(Expression expr) =>
             Expressions.SubstituteByType(expr, _builder.CExprs);
 
@@ -80,6 +83,14 @@ internal class PipelineBuilder
         {
             _builder.ElemType = ty;
             _builder.ElemDeserializer = deser ?? TypeDeserializer(ty);
+        }
+
+        private IE WhereCall(IE callee, Expression pred)
+        {
+            // TODO(matt) allow Where on later stages by moving to loaded set
+            // transforms.
+            Debug.Assert(_builder.Mode <= PipelineMode.Query);
+            return IE.MethodCall(callee, "where", SubQuery(pred));
         }
 
         private IE SelectCall(IE callee, Expression proj)
@@ -200,6 +211,12 @@ internal class PipelineBuilder
                     ret = IE.MethodCall(ret, "reverse");
                     return ret;
 
+                // TODO(matt) reject variant which takes predicate with a second i32 parameter.
+                case "Where" when args.Length == 1:
+                    ret = Apply(callee);
+                    ret = WhereCall(ret, args[0]);
+                    return ret;
+
                 case "Select" when args.Length == 1:
                     ret = Apply(callee);
                     ret = SelectCall(ret, args[0]);
@@ -207,6 +224,107 @@ internal class PipelineBuilder
 
                 default:
                     throw fail(expr);
+            }
+        }
+    }
+
+    private class SubquerySwitch : BuilderSwitch<IE>
+    {
+        public SubquerySwitch(PipelineBuilder builder) : base(builder) { }
+
+        protected override IE ConstantExpr(ConstantExpression expr)
+        {
+            if (expr.Value is DataContext.Collection col)
+            {
+                return CollectionAll(col);
+            }
+            else if (expr.Value is DataContext.Index idx)
+            {
+                return CollectionIndex(idx);
+            }
+            else if (_builder.CExprs.TryGetValue(expr.Type, out var cexpr))
+            {
+                return new IE.Closure(cexpr);
+            }
+            else
+            {
+                return new IE.Constant(expr.Value);
+            }
+        }
+
+        protected override IE LambdaExpr(LambdaExpression expr)
+        {
+            var ps = expr.Parameters;
+            var pinner = string.Join(", ", ps.Select(p => p.Name));
+            var param = ps.Count() == 1 ? pinner : $"({pinner})";
+            var arrow = IE.Exp($"{param} =>");
+
+            return arrow.Concat(IE.Parens(Apply(expr.Body)));
+        }
+
+        protected override IE ParameterExpr(ParameterExpression expr) => IE.Exp(expr.Name!);
+
+        protected override IE BinaryExpr(BinaryExpression expr)
+        {
+            var op = expr.NodeType switch
+            {
+                ExpressionType.Add => "+",
+                ExpressionType.AddChecked => "+",
+                ExpressionType.And => "&", // bitwise
+                ExpressionType.AndAlso => "&&", // boolean
+                // ExpressionType.ArrayIndex => ,
+                ExpressionType.Coalesce => "??",
+                ExpressionType.Divide => "/",
+                ExpressionType.Equal => "==",
+                ExpressionType.ExclusiveOr => "^",
+                ExpressionType.GreaterThan => ">",
+                ExpressionType.GreaterThanOrEqual => ">=",
+                ExpressionType.LeftShift => "<<",
+                ExpressionType.LessThan => "<",
+                ExpressionType.LessThanOrEqual => "<=",
+                ExpressionType.Modulo => "%",
+                ExpressionType.Multiply => "*",
+                ExpressionType.MultiplyChecked => "*",
+                ExpressionType.NotEqual => "!=",
+                ExpressionType.Or => "|", // bitwise
+                ExpressionType.OrElse => "||", // boolean
+                ExpressionType.Power => "**",
+                ExpressionType.RightShift => ">>",
+                ExpressionType.Subtract => "-",
+                ExpressionType.SubtractChecked => "-",
+                _ => throw fail(expr)
+            };
+
+            var lhs = Apply(expr.Left);
+            var rhs = Apply(expr.Right);
+
+            return IE.Parens(IE.Op(lhs, op, rhs));
+        }
+
+        protected override IE CallExpr(MethodCallExpression expr)
+        {
+            var (callee, args, ext) = GetCalleeAndArgs(expr);
+            var name = _builder.Lookup.MethodLookup(expr.Method, callee)?.Name;
+            if (name is null) throw fail(expr);
+            return IE.MethodCall(Apply(callee), name, ApplyAll(args));
+        }
+
+        protected override IE MemberAccessExpr(MemberExpression expr)
+        {
+            if (expr.Expression is null)
+            {
+                var val = Expression.Lambda(expr).Compile().DynamicInvoke();
+                return IE.Const(val);
+            }
+            else
+            {
+                var callee = expr.Expression;
+                var name = expr.Member is PropertyInfo prop ?
+                    _builder.Lookup.FieldLookup(prop, callee)?.Name :
+                    null;
+
+                if (name is null) throw fail(expr);
+                return IE.Field(Apply(callee), name);
             }
         }
     }
