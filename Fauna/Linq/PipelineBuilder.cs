@@ -71,16 +71,9 @@ internal class PipelineBuilder
         private Expression SubstClosures(Expression expr) =>
             Expressions.SubstituteByType(expr, _builder.CExprs);
 
-        private void ResetProjection()
-        {
-            // reset the first two, so that state blow up if used incorrectly.
-            _builder.ElemType = null;
-            _builder.ElemDeserializer = null;
-            _builder.ProjectExpr = null;
-        }
-
         private void SetElemType(Type ty, IDeserializer? deser = null)
         {
+            _builder.ProjectExpr = null;
             _builder.ElemType = ty;
             _builder.ElemDeserializer = deser ?? TypeDeserializer(ty);
         }
@@ -206,20 +199,116 @@ internal class PipelineBuilder
 
             switch (expr.Method.Name)
             {
+                case "All" when args.Length == 1:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "every", SubQuery(args[0]));
+                    SetElemType(typeof(bool));
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "Any" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "nonEmpty");
+                    SetElemType(typeof(bool));
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "Count" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "count");
+                    SetElemType(typeof(int));
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "Distinct" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "distinct");
+                    return ret;
+
+                // TODO(matt) throw on empty
+                case "First" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "first");
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "FirstOrDefault" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "first");
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                // FIXME(matt) have throw on empty (tack on to ProjectExpr)
+                case "Last" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "last");
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                // FIXME(matt) have return default on empty (tack on to ProjectExpr?)
+                case "LastOrDefault" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "last");
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "LongCount" when args.Length <= 1:
+                    ret = Apply(callee);
+                    if (args.Length == 1) ret = WhereCall(ret, args[0]);
+                    ret = IE.MethodCall(ret, "count");
+                    SetElemType(typeof(long));
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "Max" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => if (a >= b) a else b"));
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "Min" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => if (a <= b) a else b"));
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
                 case "Reverse" when args.Length == 0:
                     ret = Apply(callee);
                     ret = IE.MethodCall(ret, "reverse");
+                    return ret;
+
+                case "Select" when args.Length == 1:
+                    ret = Apply(callee);
+                    ret = SelectCall(ret, args[0]);
+                    return ret;
+
+                case "Skip" when args.Length == 1 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "drop", SubQuery(args[0]));
+                    return ret;
+
+                case "Sum" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => a + b"));
+                    SetElemType(expr.Type);
+                    _builder.Mode = PipelineMode.Scalar;
+                    return ret;
+
+                case "Take" when args.Length == 1 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "take", SubQuery(args[0]));
                     return ret;
 
                 // TODO(matt) reject variant which takes predicate with a second i32 parameter.
                 case "Where" when args.Length == 1:
                     ret = Apply(callee);
                     ret = WhereCall(ret, args[0]);
-                    return ret;
-
-                case "Select" when args.Length == 1:
-                    ret = Apply(callee);
-                    ret = SelectCall(ret, args[0]);
                     return ret;
 
                 default:
