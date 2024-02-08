@@ -10,14 +10,6 @@ namespace Fauna.Linq;
 
 internal class PipelineBuilder
 {
-    internal enum BuildStage
-    {
-        Query, // "pure" query state. no local processing required (except deserialization)
-        Project, // elements have been projected
-        SetLoad, // post-processing on loaded set required
-        Scalar, // final, non-enum result: no more transformations allowed
-    }
-
     protected DataContext DataCtx { get; }
     protected MappingContext MappingCtx { get => DataCtx.MappingCtx; }
     protected LookupTable Lookup { get; }
@@ -27,7 +19,7 @@ internal class PipelineBuilder
 
     // outputs
 
-    protected BuildStage Stage { get; set; }
+    protected PipelineMode Mode { get; set; }
     protected Type? ElemType { get; set; }
     protected IDeserializer? ElemDeserializer { get; set; }
     protected LambdaExpression? ProjectExpr { get; set; }
@@ -42,11 +34,9 @@ internal class PipelineBuilder
         for (var i = 0; i < closures.Length; i++)
         {
             var ctype = closures[i].GetType();
-            var cexpr = Expression.Convert(
+            CExprs[ctype] = Expression.Convert(
                 Expression.ArrayIndex(CParam, Expression.Constant(i)),
                 ctype);
-
-            CExprs[ctype] = cexpr;
         }
     }
 
@@ -57,13 +47,14 @@ internal class PipelineBuilder
         Debug.Assert(ElemDeserializer is not null);
         Debug.Assert(ElemType is not null);
 
-        var qfunc = Expression.Lambda<Func<object[], Query>>(ie.Build(), CParam).Compile();
-        var deser = Stage == BuildStage.Scalar ?
-            ElemDeserializer :
-            PageDeserializer.Create(ElemType, ElemDeserializer);
-        // var pfunc = ProjectExpr is null ? null : Expression.Lambda(body, CParam).Compile();
+        Func<object[], T> FromClosure<T>(Expression expr, ParameterExpression cp) =>
+            Expression.Lambda<Func<object[], T>>(expr, CParam).Compile();
 
-        return new Pipeline(qfunc, deser);
+        var qfunc = FromClosure<Query>(ie.Build(), CParam);
+        var deser = ElemDeserializer;
+        var pfunc = ProjectExpr is null ? null : FromClosure<Delegate>(ProjectExpr, CParam);
+
+        return new Pipeline(qfunc, deser, pfunc, Mode);
     }
 
     // QuerySwitch handles the top-level method chain, but not lambdas in predicates/projections.
@@ -98,7 +89,7 @@ internal class PipelineBuilder
         {
             // TODO(matt) allow Where on later stages by moving to loaded set
             // transforms.
-            Debug.Assert(_builder.Stage <= BuildStage.Query);
+            Debug.Assert(_builder.Mode <= PipelineMode.Query);
             return IE.MethodCall(callee, "where", SubQuery(pred));
         }
 
@@ -106,7 +97,7 @@ internal class PipelineBuilder
         {
             // TODO(matt) allow Select on later stages by moving to loaded set
             // transforms.
-            Debug.Assert(_builder.Stage <= BuildStage.Project);
+            Debug.Assert(_builder.Mode <= PipelineMode.Project);
 
             var lambda = Expressions.UnwrapLambda(proj);
             Debug.Assert(lambda is not null, $"lambda is {proj.NodeType}");
@@ -115,7 +106,19 @@ internal class PipelineBuilder
             // need to rewrite closures so the lambda is reusable across invocations
             lambda = (LambdaExpression)SubstClosures(lambda);
 
-            Debug.Assert(_builder.Stage == BuildStage.Query);
+            // there is already a projection wired up, so tack on to its mapping lambda
+            if (_builder.Mode == PipelineMode.Project)
+            {
+                Debug.Assert(_builder.ProjectExpr is not null);
+                var prev = _builder.ProjectExpr;
+                var pbody = Expression.Invoke(lambda, new Expression[] { prev.Body });
+                var plambda = Expression.Lambda(pbody, prev.Parameters);
+                _builder.ProjectExpr = plambda;
+
+                return callee;
+            }
+
+            Debug.Assert(_builder.Mode == PipelineMode.Query);
 
             var lparam = lambda.Parameters.First()!;
             var analysis = new ProjectAnalysisVisitor(_builder.MappingCtx, lparam);
@@ -138,14 +141,42 @@ internal class PipelineBuilder
             }
 
             // handle the case where some value mapping must occur locally
-            throw fail(proj);
+
+            _builder.Mode = PipelineMode.Project;
+
+            if (analysis.Escapes)
+            {
+                _builder.ProjectExpr = lambda;
+                return callee;
+            }
+            else
+            {
+                var accesses = analysis.Accesses.OrderBy(f => f.Name).ToArray();
+                var fields = accesses.Select(a => _builder.Lookup.FieldLookup(a, lparam)!);
+
+                // projected field deserializer
+                var deserializer = new ProjectionDeserializer(fields.Select(f => f.Deserializer));
+                SetElemType(typeof(object?[]), deserializer);
+
+                // build mapping lambda expression
+                var pparam = Expression.Parameter(typeof(object?[]), "x");
+                var rewriter = new ProjectRewriteVisitor(lparam, accesses, pparam);
+                var pbody = rewriter.Visit(lambda.Body);
+                var plambda = Expression.Lambda(pbody, pparam);
+                _builder.ProjectExpr = plambda;
+
+                // projection query fragment
+                var accs = fields.Select(f => IE.Field(IE.Exp("x"), f.Name));
+                var pquery = IE.Exp("x => ").Concat(IE.Array(accs));
+                return IE.MethodCall(callee, "map", pquery);
+            }
         }
 
         // ExpressionSwitch
 
         protected override IE ConstantExpr(ConstantExpression expr)
         {
-            Debug.Assert(_builder.Stage == BuildStage.Query);
+            Debug.Assert(_builder.Mode == PipelineMode.Query);
 
             if (expr.Value is DataContext.Collection col)
             {
@@ -171,7 +202,7 @@ internal class PipelineBuilder
             var (callee, args, ext) = GetCalleeAndArgs(expr);
 
             Debug.Assert(callee.Type.IsAssignableTo(typeof(IQueryable)));
-            Debug.Assert(_builder.Stage != BuildStage.Scalar);
+            Debug.Assert(_builder.Mode != PipelineMode.Scalar);
 
             switch (expr.Method.Name)
             {
@@ -181,7 +212,7 @@ internal class PipelineBuilder
                     ret = IE.MethodCall(ret, "nonEmpty");
                     ResetProjection();
                     SetElemType(typeof(bool));
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 case "All" when args.Length == 1:
@@ -189,7 +220,7 @@ internal class PipelineBuilder
                     ret = IE.MethodCall(ret, "every", SubQuery(args[0]));
                     ResetProjection();
                     SetElemType(typeof(bool));
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 case "Count" when args.Length <= 1:
@@ -198,7 +229,7 @@ internal class PipelineBuilder
                     ret = IE.MethodCall(ret, "count");
                     ResetProjection();
                     SetElemType(typeof(int));
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 case "Distinct" when args.Length == 0:
@@ -211,14 +242,14 @@ internal class PipelineBuilder
                     ret = Apply(callee);
                     if (args.Length == 1) ret = WhereCall(ret, args[0]);
                     ret = IE.MethodCall(ret, "first");
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 case "FirstOrDefault" when args.Length <= 1:
                     ret = Apply(callee);
                     if (args.Length == 1) ret = WhereCall(ret, args[0]);
                     ret = IE.MethodCall(ret, "first");
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 // FIXME(matt) have throw on empty (tack on to ProjectExpr)
@@ -226,7 +257,7 @@ internal class PipelineBuilder
                     ret = Apply(callee);
                     if (args.Length == 1) ret = WhereCall(ret, args[0]);
                     ret = IE.MethodCall(ret, "last");
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 // FIXME(matt) have return default on empty (tack on to ProjectExpr?)
@@ -234,7 +265,7 @@ internal class PipelineBuilder
                     ret = Apply(callee);
                     if (args.Length == 1) ret = WhereCall(ret, args[0]);
                     ret = IE.MethodCall(ret, "last");
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 case "LongCount" when args.Length <= 1:
@@ -243,19 +274,19 @@ internal class PipelineBuilder
                     ret = IE.MethodCall(ret, "count");
                     ResetProjection();
                     SetElemType(typeof(long));
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
-                case "Max" when args.Length == 0 && _builder.Stage == BuildStage.Query:
+                case "Max" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
                     ret = Apply(callee);
                     ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => if (a >= b) a else b"));
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
-                case "Min" when args.Length == 0 && _builder.Stage == BuildStage.Query:
+                case "Min" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
                     ret = Apply(callee);
                     ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => if (a <= b) a else b"));
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 case "Reverse" when args.Length == 0:
@@ -274,12 +305,12 @@ internal class PipelineBuilder
                     ret = SelectCall(ret, args[0]);
                     return ret;
 
-                case "Sum" when args.Length == 0 && _builder.Stage == BuildStage.Query:
+                case "Sum" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
                     ret = Apply(callee);
                     ret = IE.MethodCall(ret, "reduce", IE.Exp("(a, b) => a + b"));
                     ResetProjection();
                     SetElemType(expr.Type);
-                    _builder.Stage = BuildStage.Scalar;
+                    _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
                 default:
@@ -423,24 +454,25 @@ internal class PipelineBuilder
     private class ProjectRewriteVisitor : ExpressionVisitor
     {
         private readonly ParameterExpression _param;
-        private readonly Mapping.FieldInfo[] _fields;
+        private readonly PropertyInfo[] _props;
         private readonly Expression[] _fieldAccesses;
 
         public ProjectRewriteVisitor(
             ParameterExpression doc,
-            Mapping.FieldInfo[] fields,
+            PropertyInfo[] props,
             ParameterExpression projected)
         {
-            var accesses = new Expression[fields.Length];
+            var accesses = new Expression[props.Length];
 
-            for (var i = 0; i < fields.Length; i++)
+            for (var i = 0; i < props.Length; i++)
             {
-                var idx = Expression.Constant(i);
-                accesses[i] = Expression.ArrayIndex(projected, new Expression[] { idx });
+                accesses[i] = Expression.Convert(
+                    Expression.ArrayIndex(projected, Expression.Constant(i)),
+                    props[i].PropertyType);
             }
 
             _param = doc;
-            _fields = fields;
+            _props = props;
             _fieldAccesses = accesses;
         }
 
@@ -452,9 +484,9 @@ internal class PipelineBuilder
                 var idx = -1;
                 Debug.Assert(prop is not null);
 
-                for (var i = 0; idx < 0 && i < _fields.Length; i++)
+                for (var i = 0; idx < 0 && i < _props.Length; i++)
                 {
-                    if (_fields[i].Property == prop)
+                    if (_props[i] == prop)
                     {
                         idx = i;
                     }

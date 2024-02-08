@@ -36,13 +36,7 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
     public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, _expr);
-
-        if (pl.Deserializer is PageDeserializer pdeser)
-        {
-            return pl.PaginateAsync<T>(queryOptions);
-        }
-
-        throw new ArgumentException("Query does not result in an enumerable set");
+        return pl.PagedResult<T>(queryOptions);
     }
 
     public IAsyncEnumerable<T> AsAsyncEnumerable() => PaginateAsync().FlattenAsync();
@@ -84,7 +78,7 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
     TResult IQueryProvider.Execute<TResult>(Expression expression)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, expression);
-        var res = pl.ResultAsync<TResult>(queryOptions: null);
+        var res = pl.Result<TResult>(queryOptions: null);
         res.Wait();
         return res.Result;
     }
@@ -92,7 +86,7 @@ public class QuerySource<T> : QuerySource, IQueryable<T>, IQueryProvider
     object? IQueryProvider.Execute(Expression expression)
     {
         var pl = _ctx.PipelineCache.Get(_ctx, expression);
-        var res = pl.ResultAsync(expression.Type, queryOptions: null);
+        var res = pl.Result(queryOptions: null);
         res.Wait();
         return res.Result;
     }

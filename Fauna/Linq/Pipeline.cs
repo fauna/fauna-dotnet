@@ -1,10 +1,16 @@
 using Fauna.Serialization;
-using Fauna.Types;
 using Fauna.Util;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace Fauna.Linq;
+
+public enum PipelineMode
+{
+    Query, // "pure" query. no local processing required (except deserialization)
+    Project, // elements have local projection.
+    SetLoad, // post-processing on loaded set required
+    Scalar, // final, non-enum result: no more transformations allowed
+}
 
 internal readonly struct PipelineCache
 {
@@ -15,7 +21,7 @@ internal readonly struct PipelineCache
         _cache = new(new ExpressionComparer());
     }
 
-    public PipelineClosure Get(DataContext ctx, Expression expr)
+    public PipelineExecutor Get(DataContext ctx, Expression expr)
     {
         var closures = Expressions.FindAllClosures(expr);
 
@@ -30,52 +36,18 @@ internal readonly struct PipelineCache
             }
         }
 
-        return pl.GetClosure(ctx, closures);
+        return pl.GetExec(ctx, closures);
     }
 }
 
 internal readonly record struct Pipeline(
     Func<object[], Query> GetQuery,
-    IDeserializer Deserializer)
+    IDeserializer Deserializer,
+    Func<object[], Delegate>? GetProjector,
+    PipelineMode Mode)
 {
-    public PipelineClosure GetClosure(DataContext ctx, object[] vars) =>
-        new PipelineClosure(ctx, GetQuery(vars), Deserializer);
-}
+    public PipelineExecutor GetExec(DataContext ctx, object[] vars) =>
+        PipelineExecutor.Create(ctx, GetQuery(vars), Deserializer, Proj(vars), Mode);
 
-internal readonly record struct PipelineClosure(
-    DataContext Ctx,
-    Query Query,
-    IDeserializer Deserializer)
-{
-    private static readonly MethodInfo _resultAsyncMethod =
-        typeof(PipelineClosure).GetMethod(nameof(ResultAsync), 1, new Type[] { typeof(QueryOptions) })!;
-
-    public async Task<TResult> ResultAsync<TResult>(QueryOptions? queryOptions)
-    {
-        var deser = (IDeserializer<TResult>)Deserializer;
-        var qres = await Ctx.QueryAsync<TResult>(Query, deser, queryOptions);
-        return qres.Data;
-    }
-
-    public async Task<object?> ResultAsync(Type tresult, QueryOptions? queryOptions)
-    {
-        var ram = _resultAsyncMethod.MakeGenericMethod(new Type[] { tresult });
-        var qtask = ram.Invoke(this, new[] { queryOptions });
-        await (Task)qtask!;
-
-        var field = qtask.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)!;
-        return field.GetValue(qtask);
-    }
-
-    public async IAsyncEnumerable<Page<TResult>> PaginateAsync<TResult>(QueryOptions? queryOptions)
-    {
-        var deser = (PageDeserializer)Deserializer;
-        var deser2 = new PageDeserializer<TResult>((IDeserializer<TResult>)deser.Elem);
-        var qres = Ctx.PaginateAsyncInternal(Query, deser2, queryOptions);
-
-        await foreach (var page in qres)
-        {
-            yield return page;
-        }
-    }
+    private Delegate? Proj(object[] vars) => GetProjector is null ? null : GetProjector(vars);
 }
