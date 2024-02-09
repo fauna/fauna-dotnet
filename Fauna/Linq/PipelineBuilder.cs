@@ -278,6 +278,26 @@ internal class PipelineBuilder
                     _builder.Mode = PipelineMode.Scalar;
                     return ret;
 
+                case "Order" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "order");
+                    return ret;
+
+                case "OrderBy" when args.Length == 1 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "order", SubQuery(args[0]));
+                    return ret;
+
+                case "OrderDescending" when args.Length == 0 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "order", IE.Exp("desc(x => x)"));
+                    return ret;
+
+                case "OrderByDescending" when args.Length == 1 && _builder.Mode == PipelineMode.Query:
+                    ret = Apply(callee);
+                    ret = IE.MethodCall(ret, "order", IE.FnCall("desc", SubQuery(args[0])));
+                    return ret;
+
                 case "Reverse" when args.Length == 0:
                     ret = Apply(callee);
                     ret = IE.MethodCall(ret, "reverse");

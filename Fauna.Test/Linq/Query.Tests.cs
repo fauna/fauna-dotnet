@@ -194,13 +194,13 @@ public class QueryTests
         Assert.AreEqual(null, lstNull);
     }
 
-    [Test]
-    [Ignore("broken deserialization")]
-    public void Query_LongCount()
-    {
-        var count = db.Author.LongCount();
-        Assert.AreEqual(2, count);
-    }
+    // [Test]
+    // [Ignore("broken deserialization")]
+    // public void Query_LongCount()
+    // {
+    //     var count = db.Author.LongCount();
+    //     Assert.AreEqual(2L, count);
+    // }
 
     [Test]
     public void Query_Max()
@@ -214,6 +214,50 @@ public class QueryTests
     {
         var min = db.Author.Select(a => a.Age).Min();
         Assert.AreEqual(26, min);
+    }
+
+    [Test]
+    public async Task Query_Order()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.Reverse().Order().AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_OrderBy()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.OrderBy(a => a.Age).AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
+    public async Task Query_OrderDescending()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.OrderDescending().AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
+    public async Task Query_OrderByDescending()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.OrderByDescending(a => a.Name).AsAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
     }
 
     [Test]
