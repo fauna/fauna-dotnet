@@ -51,6 +51,16 @@ public static class QuerySourceExt
 
     // Terminal result methods
 
+    public static Dictionary<K, V> ToDictionary<K, V>(this IQuerySource<ValueTuple<K, V>> src) where K : notnull =>
+        src.ToDictionary(t => t.Item1, t => t.Item2);
+    public static Task<Dictionary<K, V>> ToDictionaryAsync<K, V>(this IQuerySource<ValueTuple<K, V>> src) where K : notnull =>
+        src.ToDictionaryAsync(t => t.Item1, t => t.Item2);
+
+    public static Dictionary<K, V> ToDictionary<K, V>(this IQuerySource<ValueTuple<K, V>> src, IEqualityComparer<K>? comparer) where K : notnull =>
+        src.ToDictionary(t => t.Item1, t => t.Item2, comparer);
+    public static Task<Dictionary<K, V>> ToDictionaryAsync<K, V>(this IQuerySource<ValueTuple<K, V>> src, IEqualityComparer<K>? comparer) where K : notnull =>
+        src.ToDictionaryAsync(t => t.Item1, t => t.Item2, comparer);
+
     // public static R Aggregate<T, A, R>(this IQuerySource<T> src, A seed, Expression<Func<A, T, A>> acc, Expression<Func<A, R>> selector) =>
     //     src.Call<R>(new Func<IQuerySource<T>, A, Expression<Func<A, T, A>>, Expression<Func<A, R>>, R>(Aggregate).Method,
     //                 Expression.Constant(seed), acc, selector);

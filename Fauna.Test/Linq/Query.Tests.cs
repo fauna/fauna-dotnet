@@ -23,15 +23,28 @@ public class QueryTests
     [Test]
     public async Task Collection_PaginateAsync()
     {
+        var names = new List<string>();
         await foreach (var p in db.Author.PaginateAsync())
         {
-            var names = p.Data.Select(a => a.Name);
-            Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+            names.AddRange(p.Data.Select(a => a.Name));
         }
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+
+    [Test]
+    public async Task Index_PaginateAsync()
+    {
+        var names = new List<string>();
+        await foreach (var p in db.Author.ByName("Alice").PaginateAsync())
+        {
+            names.AddRange(p.Data.Select(a => a.Name));
+        }
+        Assert.AreEqual(new List<string> { "Alice" }, names);
     }
 
     [Test]
-    public async Task Collection_AsyncEnumerable()
+    public async Task Query_ToAsyncEnumerable()
     {
         var names = new List<string>();
         await foreach (var a in db.Author.ToAsyncEnumerable())
@@ -42,24 +55,84 @@ public class QueryTests
     }
 
     [Test]
-    public async Task Index_PaginateAsync()
-    {
-        await foreach (var p in db.Author.ByName("Alice").PaginateAsync())
-        {
-            var names = p.Data.Select(a => a.Name);
-            Assert.AreEqual(new List<string> { "Alice" }, names);
-        }
-    }
-
-    [Test]
-    public async Task Index_AsyncEnumerable()
+    public void Query_ToEnumerable()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.ByName("Alice").ToAsyncEnumerable())
+        foreach (var a in db.Author.ToEnumerable())
         {
             names.Add(a.Name);
         }
-        Assert.AreEqual(new List<string> { "Alice" }, names);
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToListAsync()
+    {
+        var names = await db.Author.Select(a => a.Name).ToListAsync();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public void Query_ToList()
+    {
+        var names = db.Author.Select(a => a.Name).ToList();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToArrayAsync()
+    {
+        var names = await db.Author.Select(a => a.Name).ToArrayAsync();
+        Assert.AreEqual(new string[] { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public void Query_ToArray()
+    {
+        var names = db.Author.Select(a => a.Name).ToArray();
+        Assert.AreEqual(new string[] { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToHashSetAsync()
+    {
+        var names = await db.Author.Select(a => a.Name).ToHashSetAsync();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public void Query_ToHashSet()
+    {
+        var names = db.Author.Select(a => a.Name).ToHashSet();
+        Assert.AreEqual(new HashSet<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToDictionaryAsyncSelector()
+    {
+        var dict = await db.Author.ToDictionaryAsync(a => a.Name, a => a.Age);
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public void Query_ToDictionarySelector()
+    {
+        var dict = db.Author.ToDictionary(a => a.Name, a => a.Age);
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public async Task Query_ToDictionaryAsync()
+    {
+        var dict = await db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionaryAsync();
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public void Query_ToDictionary()
+    {
+        var dict = db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionary();
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
     }
 
     [Test]
