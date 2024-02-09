@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
-using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test.Linq;
@@ -35,7 +34,7 @@ public class QueryTests
     public async Task Collection_AsyncEnumerable()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.AsAsyncEnumerable())
+        await foreach (var a in db.Author.ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -56,7 +55,7 @@ public class QueryTests
     public async Task Index_AsyncEnumerable()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.ByName("Alice").AsAsyncEnumerable())
+        await foreach (var a in db.Author.ByName("Alice").ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -67,7 +66,7 @@ public class QueryTests
     public async Task Query_Where()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Where(a => a.Name == "Alice").AsAsyncEnumerable())
+        await foreach (var a in db.Author.Where(a => a.Name == "Alice").ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -78,7 +77,7 @@ public class QueryTests
     public async Task Query_Select_Field()
     {
         var names = new List<string>();
-        await foreach (var n in db.Author.Select(a => a.Name).AsAsyncEnumerable())
+        await foreach (var n in db.Author.Select(a => a.Name).ToAsyncEnumerable())
         {
             names.Add(n);
         }
@@ -92,7 +91,7 @@ public class QueryTests
     public async Task Query_Select_Projected()
     {
         var names = new List<string>();
-        await foreach (var obj in db.Author.Select(a => new { a.Name }).AsAsyncEnumerable())
+        await foreach (var obj in db.Author.Select(a => new { a.Name }).ToAsyncEnumerable())
         {
             names.Add(obj.Name);
         }
@@ -103,7 +102,7 @@ public class QueryTests
     public async Task Query_Select_Escaped()
     {
         var names = new List<string>();
-        await foreach (var (n, rn) in db.Author.Select(a => Escaper(a)).AsAsyncEnumerable())
+        await foreach (var (n, rn) in db.Author.Select(a => Escaper(a)).ToAsyncEnumerable())
         {
             names.Add(n);
             names.Add(rn);
@@ -139,7 +138,7 @@ public class QueryTests
     public async Task Query_Distinct()
     {
         var ages = new List<int>();
-        await foreach (var n in db.Author.Select(a => a.Age).Distinct().AsAsyncEnumerable())
+        await foreach (var n in db.Author.Select(a => a.Age).Distinct().ToAsyncEnumerable())
         {
             ages.Add(n);
         }
@@ -220,7 +219,7 @@ public class QueryTests
     public async Task Query_Order()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Reverse().Order().AsAsyncEnumerable())
+        await foreach (var a in db.Author.Reverse().Order().ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -231,7 +230,7 @@ public class QueryTests
     public async Task Query_OrderBy()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.OrderBy(a => a.Age).AsAsyncEnumerable())
+        await foreach (var a in db.Author.OrderBy(a => a.Age).ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -242,7 +241,7 @@ public class QueryTests
     public async Task Query_OrderDescending()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.OrderDescending().AsAsyncEnumerable())
+        await foreach (var a in db.Author.OrderDescending().ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -253,7 +252,7 @@ public class QueryTests
     public async Task Query_OrderByDescending()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.OrderByDescending(a => a.Name).AsAsyncEnumerable())
+        await foreach (var a in db.Author.OrderByDescending(a => a.Name).ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -264,7 +263,7 @@ public class QueryTests
     public async Task Query_Reverse()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Reverse().AsAsyncEnumerable())
+        await foreach (var a in db.Author.Reverse().ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -275,7 +274,7 @@ public class QueryTests
     public async Task Query_Skip()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Skip(1).AsAsyncEnumerable())
+        await foreach (var a in db.Author.Skip(1).ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -293,7 +292,7 @@ public class QueryTests
     public async Task Query_Take()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Take(1).AsAsyncEnumerable())
+        await foreach (var a in db.Author.Take(1).ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }

@@ -194,7 +194,7 @@ internal class PipelineBuilder
 
             var (callee, args, ext) = GetCalleeAndArgs(expr);
 
-            Debug.Assert(callee.Type.IsAssignableTo(typeof(IQueryable)));
+            Debug.Assert(callee.Type.IsAssignableTo(typeof(IQuerySource)));
             Debug.Assert(_builder.Mode != PipelineMode.Scalar);
 
             switch (expr.Method.Name)
