@@ -136,6 +136,27 @@ public class QueryTests
     }
 
     [Test]
+    public async Task Query_ExpressionSyntax()
+    {
+        var q1 = from a in db.Author
+                 where a.Name == "Alice"
+                 select a.Age;
+
+        Assert.AreEqual(new List<int> { 32 }, await q1.ToListAsync());
+
+        var q2 = from a in db.Author.ByName("Alice")
+                 select a.Age;
+
+        Assert.AreEqual(new List<int> { 32 }, await q2.ToListAsync());
+
+        var q3 = from a in db.Author
+                 orderby a.Age
+                 select a.Name;
+
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, await q3.ToListAsync());
+    }
+
+    [Test]
     public async Task Query_Where()
     {
         var names = new List<string>();
