@@ -20,6 +20,8 @@ public abstract class QuerySource : IQuerySource
     // DSL Helpers
 
     internal abstract TResult Execute<TResult>(Expression expression);
+
+    internal abstract Task<TResult> ExecuteAsync<TResult>(Expression expression);
 }
 
 public class QuerySource<T> : QuerySource, IQuerySource<T>
@@ -36,10 +38,15 @@ public class QuerySource<T> : QuerySource, IQuerySource<T>
 
     internal override TResult Execute<TResult>(Expression expression)
     {
-        var pl = Ctx.PipelineCache.Get(Ctx, expression);
-        var res = pl.Result<TResult>(queryOptions: null);
+        var res = ExecuteAsync<TResult>(expression);
         res.Wait();
         return res.Result;
+    }
+
+    internal override Task<TResult> ExecuteAsync<TResult>(Expression expression)
+    {
+        var pl = Ctx.PipelineCache.Get(Ctx, expression);
+        return pl.Result<TResult>(queryOptions: null);
     }
 
     public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null)
