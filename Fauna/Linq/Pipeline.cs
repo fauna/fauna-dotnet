@@ -13,9 +13,9 @@ public enum PipelineMode
 }
 
 internal readonly record struct Pipeline(
-    Func<object[], Query> GetQuery,
+    Query Query,
     IDeserializer Deserializer,
-    Func<object[], Delegate>? GetProjector,
+    Delegate? Projector,
     PipelineMode Mode)
 {
     public static PipelineExecutor Get(DataContext ctx, Expression expr)
@@ -27,7 +27,5 @@ internal readonly record struct Pipeline(
     }
 
     public PipelineExecutor GetExec(DataContext ctx, object[] vars) =>
-        PipelineExecutor.Create(ctx, GetQuery(vars), Deserializer, Proj(vars), Mode);
-
-    private Delegate? Proj(object[] vars) => GetProjector is null ? null : GetProjector(vars);
+        PipelineExecutor.Create(ctx, Query, Deserializer, Projector, Mode);
 }

@@ -47,14 +47,11 @@ internal class PipelineBuilder
         Debug.Assert(ElemDeserializer is not null);
         Debug.Assert(ElemType is not null);
 
-        Func<object[], T> FromClosure<T>(Expression expr, ParameterExpression cp) =>
-            Expression.Lambda<Func<object[], T>>(expr, CParam).Compile();
-
-        var qfunc = FromClosure<Query>(ie.Build(), CParam);
+        var query = Expression.Lambda<Func<Query>>(ie.Build()).Compile().Invoke();
         var deser = ElemDeserializer;
-        var pfunc = ProjectExpr is null ? null : FromClosure<Delegate>(ProjectExpr, CParam);
+        var pfunc = ProjectExpr is null ? null : ProjectExpr.Compile();
 
-        return new Pipeline(qfunc, deser, pfunc, Mode);
+        return new Pipeline(query, deser, pfunc, Mode);
     }
 
     // QuerySwitch handles the top-level method chain, but not lambdas in predicates/projections.
@@ -67,9 +64,6 @@ internal class PipelineBuilder
 
         private IE SubQuery(Expression expr) =>
             new SubquerySwitch(_builder).Apply(expr);
-
-        private Expression SubstClosures(Expression expr) =>
-            Expressions.SubstituteByType(expr, _builder.CExprs);
 
         private void SetElemType(Type ty, IDeserializer? deser = null)
         {
@@ -95,9 +89,6 @@ internal class PipelineBuilder
             var lambda = Expressions.UnwrapLambda(proj);
             Debug.Assert(lambda is not null, $"lambda is {proj.NodeType}");
             Debug.Assert(lambda.Parameters.Count() == 1);
-
-            // need to rewrite closures so the lambda is reusable across invocations
-            lambda = (LambdaExpression)SubstClosures(lambda);
 
             // there is already a projection wired up, so tack on to its mapping lambda
             if (_builder.Mode == PipelineMode.Project)
@@ -350,10 +341,6 @@ internal class PipelineBuilder
             else if (expr.Value is DataContext.Index idx)
             {
                 return CollectionIndex(idx);
-            }
-            else if (_builder.CExprs.TryGetValue(expr.Type, out var cexpr))
-            {
-                return new IE.Closure(cexpr);
             }
             else
             {

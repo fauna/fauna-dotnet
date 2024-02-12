@@ -120,33 +120,6 @@ internal abstract class IntermediateExpr
         }
     }
 
-    // A closure reference, within the C# expr. We build up a call chain which
-    // is invoked when generating the FQL query.
-    internal class Closure : IntermediateExpr
-    {
-        Expression expr;
-
-        public Closure(Expression e)
-        {
-            expr = e;
-        }
-
-        public override string ToString() => $"Closure({expr})";
-
-        public override IntermediateExpr Access(string member)
-        {
-            var e = Expression.PropertyOrField(expr, member);
-            return new Closure(e);
-        }
-
-        public override Expression Build()
-        {
-            var argTypes = new Type[] { typeof(object) };
-            var queryCtor = typeof(QueryVal).GetConstructor(argTypes)!;
-            return Expression.New(queryCtor, expr);
-        }
-    }
-
     // An expression which is translated to FQL
     internal class Expr : IntermediateExpr
     {
