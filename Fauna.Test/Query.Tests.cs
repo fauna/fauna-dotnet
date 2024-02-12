@@ -48,6 +48,20 @@ public class QueryTests
     }
 
     [Test]
+    public void BuildsAQueryWithConstString()
+    {
+        const string strConst = "Parts";
+        var actual = FQL($@"Product.where(.cat == {strConst})");
+
+        var expected = new QueryExpr(
+            new QueryLiteral("Product.where(.cat == "),
+            new QueryVal(strConst),
+            new QueryLiteral(")"));
+
+        Assert.That(actual, Is.EqualTo(expected));
+    }
+
+    [Test]
     public void BuildsAQueryWithGuidParam()
     {
         var guidParam = Guid.NewGuid();

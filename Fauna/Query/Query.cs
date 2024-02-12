@@ -45,9 +45,4 @@ public abstract class Query : IEquatable<Query>, IQueryFragment
     {
         return handler.Result();
     }
-
-    public static Query FQL(string query)
-    {
-        return new QueryExpr(new QueryLiteral(query));
-    }
 }
