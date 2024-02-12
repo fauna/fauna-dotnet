@@ -1,4 +1,3 @@
-using Fauna.Linq;
 using Fauna.Mapping;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
@@ -17,23 +16,28 @@ public abstract class DataContext : BaseClient
     private Client _client;
     [AllowNull]
     private MappingContext _ctx;
+    [AllowNull]
+    internal Linq.PipelineCache _pcache;
 
-    protected override MappingContext MappingCtx { get => _ctx; }
+    internal override MappingContext MappingCtx { get => _ctx; }
+    internal Linq.PipelineCache PipelineCache { get => _pcache; }
 
     internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
     {
         _client = client;
         _collections = collections.ToImmutableDictionary();
         _ctx = ctx;
+        _pcache = new Linq.PipelineCache();
 
-        var provider = new QueryProvider(this);
         foreach (var col in collections.Values)
         {
-            ((QuerySource)col).SetProvider(provider);
+            ((Linq.QuerySource)col).SetContext(this);
         }
 
         _initialized = true;
     }
+
+    // IClient impl
 
     internal override Task<QuerySuccess<T>> QueryAsyncInternal<T>(
         Query query,
@@ -64,7 +68,7 @@ public abstract class DataContext : BaseClient
         public Type DocType { get; }
     }
 
-    public abstract class Collection<Doc> : QuerySource<Doc>, Collection
+    public abstract class Collection<Doc> : Linq.QuerySource<Doc>, Collection
     {
         public string Name { get; }
         public Type DocType { get => typeof(Doc); }
@@ -75,8 +79,6 @@ public abstract class DataContext : BaseClient
             Name = nameAttr?.Name ?? typeof(Doc).Name;
             _expr = Expression.Constant(this);
         }
-
-        public Index<Doc> All() => Index().Call();
 
         // index call DSL
 
@@ -90,20 +92,20 @@ public abstract class DataContext : BaseClient
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException($"{nameof(name)} cannot be null or empty.");
 
-            return new IndexCall(this, name, _provider);
+            return new IndexCall(this, name, _ctx);
         }
 
         protected class IndexCall
         {
             private readonly Collection _coll;
             private readonly string _name;
-            private readonly QueryProvider _provider;
+            private readonly DataContext _ctx;
 
-            public IndexCall(Collection coll, string name, QueryProvider provider)
+            public IndexCall(Collection coll, string name, DataContext ctx)
             {
                 _coll = coll;
                 _name = name;
-                _provider = provider;
+                _ctx = ctx;
             }
 
             public Index<Doc> Call() => Call(new object[] { });
@@ -114,7 +116,7 @@ public abstract class DataContext : BaseClient
 
             public Index<Doc> Call(object a1, object a2, object a3) => Call(new object[] { a1, a2, a3 });
 
-            public Index<Doc> Call(object[] args) => new Index<Doc>(_coll, _name, args, _provider);
+            public Index<Doc> Call(object[] args) => new Index<Doc>(_coll, _name, args, _ctx);
 
         }
     }
@@ -127,20 +129,20 @@ public abstract class DataContext : BaseClient
         public object[] Args { get; }
     }
 
-    public class Index<Doc> : QuerySource<Doc>, Index
+    public class Index<Doc> : Linq.QuerySource<Doc>, Index
     {
         public Collection Collection { get; }
         public string Name { get; }
         public Type DocType { get => typeof(Doc); }
         public object[] Args { get; }
 
-        internal Index(Collection coll, string name, object[] args, QueryProvider provider)
+        internal Index(Collection coll, string name, object[] args, DataContext ctx)
         {
             Collection = coll;
             Name = name;
             Args = args;
             _expr = Expression.Constant(this);
-            _provider = provider;
+            _ctx = ctx;
         }
     }
 

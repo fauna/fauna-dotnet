@@ -38,7 +38,7 @@ internal class ExpressionComparer : EqualityComparer<Expression>
             // we want to consider two exprs equal even if closure instances
             // differ, since we parameterize on these when building the FQL
             // generator expr.
-            if (ExpressionClosures.IsClosureType(lhs.Type)) return true;
+            if (lhs.Type.IsClosureType()) return true;
 
             return lhs.Value == rhs.Value;
         }
@@ -47,7 +47,7 @@ internal class ExpressionComparer : EqualityComparer<Expression>
     private class HashCodeSwitch : ExpressionHashCodeSwitch
     {
         protected override int ConstantExpr(ConstantExpression e) =>
-            ExpressionClosures.IsClosureType(e.Type) ?
+            e.Type.IsClosureType() ?
                 Base(e) * e.Type.GetHashCode() :
                 base.ConstantExpr(e);
     }

@@ -1,4 +1,5 @@
 using Fauna.Mapping;
+using Fauna.Util;
 using System.Diagnostics;
 using System.Reflection;
 
@@ -93,23 +94,7 @@ internal class DataContextBuilder<DB> where DB : DataContext
 
     // helpers
 
-    private static Type? GetColBase(Type ty)
-    {
-        var colType = typeof(DataContext.Collection<>);
-        Type? curr = ty;
-
-        while (curr is not null)
-        {
-            if (curr.IsGenericType && curr.GetGenericTypeDefinition() == colType)
-            {
-                return curr;
-            }
-
-            curr = curr.BaseType;
-        }
-
-        return null;
-    }
+    private static Type? GetColBase(Type ty) => ty.GetGenInst(typeof(DataContext.Collection<>));
 
     private static Type GetDocType(Type ty)
     {

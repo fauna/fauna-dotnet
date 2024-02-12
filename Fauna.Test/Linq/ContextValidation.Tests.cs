@@ -21,12 +21,12 @@ public class ContextValidationTests
     }
 
     [AllowNull]
-    private static Client _client;
+    private static Client client;
 
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
+        client = NewTestClient();
     }
 
     class InvalidGenericDb : DataContext
@@ -39,7 +39,7 @@ public class ContextValidationTests
     {
         try
         {
-            _client.DataContext<InvalidGenericDb>();
+            client.DataContext<InvalidGenericDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -63,7 +63,7 @@ public class ContextValidationTests
     {
         try
         {
-            var db = _client.DataContext<InvalidCrossedDb>();
+            var db = client.DataContext<InvalidCrossedDb>();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)

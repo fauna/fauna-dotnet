@@ -228,7 +228,7 @@ public abstract class BaseClient : IClient
 {
     internal BaseClient() { }
 
-    protected abstract MappingContext MappingCtx { get; }
+    internal abstract MappingContext MappingCtx { get; }
 
     internal abstract Task<QuerySuccess<T>> QueryAsyncInternal<T>(
         Query query,
@@ -294,9 +294,10 @@ public abstract class BaseClient : IClient
 
     #endregion
 
-    private async IAsyncEnumerable<Page<T>> PaginateAsyncInternal<T>(
+    // Internally accessible for QuerySource use
+    internal async IAsyncEnumerable<Page<T>> PaginateAsyncInternal<T>(
         Query query,
-        IDeserializer<Page<T>> deserializer,
+        PageDeserializer<T> deserializer,
         QueryOptions? queryOptions)
     {
         Page<T>? currentPage = null;
