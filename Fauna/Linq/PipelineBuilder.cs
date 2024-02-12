@@ -420,14 +420,18 @@ internal class PipelineBuilder
 
         protected override IE MemberAccessExpr(MemberExpression expr)
         {
-            if (expr.Expression is null)
+            var callee = expr.Expression;
+            if (callee is null)
             {
                 var val = Expression.Lambda(expr).Compile().DynamicInvoke();
                 return IE.Const(val);
             }
+            else if (callee.Type.IsClosureType())
+            {
+                return Apply(callee).Access(expr.Member.Name);
+            }
             else
             {
-                var callee = expr.Expression;
                 var name = expr.Member is PropertyInfo prop ?
                     _builder.Lookup.FieldLookup(prop, callee)?.Name :
                     null;

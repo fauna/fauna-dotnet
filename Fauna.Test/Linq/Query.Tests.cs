@@ -165,6 +165,45 @@ public class QueryTests
     }
 
     [Test]
+    public async Task Query_WhereQuery_ClosureRef()
+    {
+        var name = "Alice";
+        var authors = await db.Author.Where(a => a.Name == name).ToListAsync();
+        var names = authors.Select(a => a.Name);
+        Assert.AreEqual(new List<string> { "Alice" }, names);
+    }
+
+    static readonly string _aliceName = "Alice";
+
+    [Test]
+    public async Task Query_WhereQuery_ConstantField()
+    {
+        var authors = await db.Author.Where(a => a.Name == _aliceName).ToListAsync();
+        var names = authors.Select(a => a.Name);
+        Assert.AreEqual(new List<string> { "Alice" }, names);
+    }
+
+    static string AliceName { get; } = "Alice";
+
+    [Test]
+    public async Task Query_WhereQuery_ConstantProp()
+    {
+        var authors = await db.Author.Where(a => a.Name == AliceName).ToListAsync();
+        var names = authors.Select(a => a.Name);
+        Assert.AreEqual(new List<string> { "Alice" }, names);
+    }
+
+    static string AliceNameVirt { get => "Alice"; }
+
+    [Test]
+    public async Task Query_WhereQuery_ConstantVirtualProp()
+    {
+        var authors = await db.Author.Where(a => a.Name == AliceNameVirt).ToListAsync();
+        var names = authors.Select(a => a.Name);
+        Assert.AreEqual(new List<string> { "Alice" }, names);
+    }
+
+    [Test]
     public async Task Query_Select_Field()
     {
         var names = await db.Author.Select(a => a.Name).ToListAsync();
