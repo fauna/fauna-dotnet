@@ -180,7 +180,7 @@ public static partial class Serializer
             case Dictionary<string, object> d:
                 SerializeIDictionaryInternal(writer, d, context);
                 break;
-            case List<object> e:
+            case IEnumerable<object> e:
                 writer.WriteStartArray();
                 foreach (var o in e)
                 {

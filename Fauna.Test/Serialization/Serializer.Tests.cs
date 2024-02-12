@@ -112,6 +112,21 @@ public class SerializerTests
     }
 
     [Test]
+    public void SerializeArray()
+    {
+        var test = new object[]
+        {
+            42,
+            "foo bar",
+            new object[] {},
+            new Dictionary<string, object>()
+        };
+
+        var actual = Serialize(test);
+        Assert.AreEqual(@"[{""@int"":""42""},""foo bar"",[],{}]", actual);
+    }
+
+    [Test]
     public void SerializeClass()
     {
         var test = new Person();
