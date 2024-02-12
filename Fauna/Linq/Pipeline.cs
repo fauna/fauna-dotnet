@@ -20,12 +20,11 @@ internal readonly record struct Pipeline(
 {
     public static PipelineExecutor Get(DataContext ctx, Expression expr)
     {
-        var closures = Expressions.FindAllClosures(expr);
-        var builder = new PipelineBuilder(ctx, closures, expr);
+        var builder = new PipelineBuilder(ctx, expr);
         var pl = builder.Build();
-        return pl.GetExec(ctx, closures);
+        return pl.GetExec(ctx);
     }
 
-    public PipelineExecutor GetExec(DataContext ctx, object[] vars) =>
+    public PipelineExecutor GetExec(DataContext ctx) =>
         PipelineExecutor.Create(ctx, Query, Deserializer, Projector, Mode);
 }

@@ -14,8 +14,6 @@ internal class PipelineBuilder
     protected MappingContext MappingCtx { get => DataCtx.MappingCtx; }
     protected LookupTable Lookup { get; }
     protected Expression QueryExpr { get; }
-    protected ParameterExpression CParam { get; }
-    protected Dictionary<Type, Expression> CExprs { get; } = new();
 
     // outputs
 
@@ -24,20 +22,11 @@ internal class PipelineBuilder
     protected IDeserializer? ElemDeserializer { get; set; }
     protected LambdaExpression? ProjectExpr { get; set; }
 
-    public PipelineBuilder(DataContext ctx, object[] closures, Expression expr)
+    public PipelineBuilder(DataContext ctx, Expression expr)
     {
         DataCtx = ctx;
         Lookup = new LookupTable(ctx.MappingCtx);
         QueryExpr = expr;
-        CParam = Expression.Parameter(typeof(object[]));
-
-        for (var i = 0; i < closures.Length; i++)
-        {
-            var ctype = closures[i].GetType();
-            CExprs[ctype] = Expression.Convert(
-                Expression.ArrayIndex(CParam, Expression.Constant(i)),
-                ctype);
-        }
     }
 
     public Pipeline Build()
