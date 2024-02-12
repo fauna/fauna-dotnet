@@ -162,12 +162,19 @@ public static class QuerySourceExt
         src.CallAsync<T>(new Func<IQuerySource<T>, Expression<Func<T, bool>>, Task<T>>(LastOrDefaultAsync).Method,
         predicate);
 
-    // public static long LongCount(this IQuerySource src) =>
-    //     src.Call<long>(new Func<IQuerySource, long>(LongCount).Method);
+    public static long LongCount(this IQuerySource src) =>
+        src.Call<long>(new Func<IQuerySource, long>(LongCount).Method);
 
-    // public static long LongCount<T>(this IQuerySource<T> src, Expression<Func<T, bool>> predicate) =>
-    //     src.Call<long>(new Func<IQuerySource<T>, Expression<Func<T, bool>>, long>(LongCount).Method,
-    //     predicate);
+    public static Task<long> LongCountAsync(this IQuerySource src) =>
+        src.CallAsync<long>(new Func<IQuerySource, Task<long>>(LongCountAsync).Method);
+
+    public static long LongCount<T>(this IQuerySource<T> src, Expression<Func<T, bool>> predicate) =>
+        src.Call<long>(new Func<IQuerySource<T>, Expression<Func<T, bool>>, long>(LongCount).Method,
+                      predicate);
+
+    public static Task<long> LongCountAsync<T>(this IQuerySource<T> src, Expression<Func<T, bool>> predicate) =>
+        src.CallAsync<long>(new Func<IQuerySource<T>, Expression<Func<T, bool>>, Task<long>>(LongCountAsync).Method,
+                           predicate);
 
     public static T Max<T>(this IQuerySource<T> src) =>
         src.Call<T>(new Func<IQuerySource<T>, T>(Max).Method);

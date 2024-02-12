@@ -18,9 +18,8 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
         _dict = new DictionaryDeserializer<object?>(this);
     }
 
-    public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
-    {
-        var value = reader.CurrentTokenType switch
+    public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+        reader.CurrentTokenType switch
         {
             TokenType.StartObject => _dict.Deserialize(context, ref reader),
             TokenType.StartArray => _list.Deserialize(context, ref reader),
@@ -39,9 +38,6 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}"),
         };
-
-        return value;
-    }
 
     private object DeserializeRef(MappingContext context, ref Utf8FaunaReader reader)
     {

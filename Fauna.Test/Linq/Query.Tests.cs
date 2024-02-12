@@ -268,13 +268,12 @@ public class QueryTests
         Assert.AreEqual(null, lstNull);
     }
 
-    // [Test]
-    // [Ignore("broken deserialization")]
-    // public void Query_LongCount()
-    // {
-    //     var count = db.Author.LongCount();
-    //     Assert.AreEqual(2L, count);
-    // }
+    [Test]
+    public void Query_LongCount()
+    {
+        var count = db.Author.LongCount();
+        Assert.AreEqual(2L, count);
+    }
 
     [Test]
     public void Query_Max()

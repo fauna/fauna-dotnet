@@ -16,7 +16,7 @@ public static class Deserializer
     private static readonly CheckedDeserializer<object> _object = new();
     private static readonly CheckedDeserializer<string> _string = new();
     private static readonly CheckedDeserializer<int> _int = new();
-    private static readonly CheckedDeserializer<long> _long = new();
+    private static readonly LongDeserializer _long = new();
     private static readonly CheckedDeserializer<double> _double = new();
     private static readonly CheckedDeserializer<DateTime> _dateTime = new();
     private static readonly CheckedDeserializer<bool> _bool = new();
