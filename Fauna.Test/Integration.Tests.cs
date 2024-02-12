@@ -78,7 +78,9 @@ public class IntegrationTests
         {
             pageCount++;
             var data = page.Data;
-            Assert.AreEqual(10, data.Count());
+            // default page size is 16
+            var size = pageCount == 1 ? 16 : 4;
+            Assert.AreEqual(size, data.Count());
         }
 
         Assert.AreEqual(2, pageCount);
