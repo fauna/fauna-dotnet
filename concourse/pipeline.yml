@@ -17,7 +17,6 @@ resources:
     source:
       uri: https://github.com/fauna/fauna-dotnet
       branch: main
-      private_key: ((github-ssh-key))
 
 jobs:
   - name: release
