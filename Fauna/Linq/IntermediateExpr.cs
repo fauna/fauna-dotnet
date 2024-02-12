@@ -31,6 +31,15 @@ internal abstract class IntermediateExpr
     public static IE Op(IE a, string op, IE b) =>
         a.Concat(new Expr(op)).Concat(b);
 
+    public static IE FnCall(string m) =>
+        FnCall(m, new IE[] { });
+
+    public static IE FnCall(string m, IE arg) =>
+        FnCall(m, new IE[] { arg });
+
+    public static IE FnCall(string m, IEnumerable<IE> args) =>
+        Join(args, Exp($"{m}("), ",", _rparen);
+
     public static IE MethodCall(IE callee, string m) =>
         MethodCall(callee, m, new IE[] { });
 

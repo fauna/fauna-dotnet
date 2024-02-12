@@ -62,7 +62,7 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    public interface Collection : IQueryable
+    public interface Collection : Linq.IQuerySource
     {
         public string Name { get; }
         public Type DocType { get; }
@@ -77,7 +77,7 @@ public abstract class DataContext : BaseClient
         {
             var nameAttr = this.GetType().GetCustomAttribute<NameAttribute>();
             Name = nameAttr?.Name ?? typeof(Doc).Name;
-            _expr = Expression.Constant(this);
+            Expr = Expression.Constant(this);
         }
 
         // index call DSL
@@ -92,7 +92,7 @@ public abstract class DataContext : BaseClient
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException($"{nameof(name)} cannot be null or empty.");
 
-            return new IndexCall(this, name, _ctx);
+            return new IndexCall(this, name, Ctx);
         }
 
         protected class IndexCall
@@ -121,7 +121,7 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    public interface Index : IQueryable
+    public interface Index : Linq.IQuerySource
     {
         public Collection Collection { get; }
         public string Name { get; }
@@ -141,8 +141,8 @@ public abstract class DataContext : BaseClient
             Collection = coll;
             Name = name;
             Args = args;
-            _expr = Expression.Constant(this);
-            _ctx = ctx;
+            Expr = Expression.Constant(this);
+            Ctx = ctx;
         }
     }
 

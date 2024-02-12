@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
-using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test.Linq;
@@ -24,18 +23,31 @@ public class QueryTests
     [Test]
     public async Task Collection_PaginateAsync()
     {
+        var names = new List<string>();
         await foreach (var p in db.Author.PaginateAsync())
         {
-            var names = p.Data.Select(a => a.Name);
-            Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+            names.AddRange(p.Data.Select(a => a.Name));
         }
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+
+    [Test]
+    public async Task Index_PaginateAsync()
+    {
+        var names = new List<string>();
+        await foreach (var p in db.Author.ByName("Alice").PaginateAsync())
+        {
+            names.AddRange(p.Data.Select(a => a.Name));
+        }
+        Assert.AreEqual(new List<string> { "Alice" }, names);
     }
 
     [Test]
-    public async Task Collection_AsyncEnumerable()
+    public async Task Query_ToAsyncEnumerable()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.AsAsyncEnumerable())
+        await foreach (var a in db.Author.ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -43,31 +55,112 @@ public class QueryTests
     }
 
     [Test]
-    public async Task Index_PaginateAsync()
-    {
-        await foreach (var p in db.Author.ByName("Alice").PaginateAsync())
-        {
-            var names = p.Data.Select(a => a.Name);
-            Assert.AreEqual(new List<string> { "Alice" }, names);
-        }
-    }
-
-    [Test]
-    public async Task Index_AsyncEnumerable()
+    public void Query_ToEnumerable()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.ByName("Alice").AsAsyncEnumerable())
+        foreach (var a in db.Author.ToEnumerable())
         {
             names.Add(a.Name);
         }
-        Assert.AreEqual(new List<string> { "Alice" }, names);
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToListAsync()
+    {
+        var names = await db.Author.Select(a => a.Name).ToListAsync();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public void Query_ToList()
+    {
+        var names = db.Author.Select(a => a.Name).ToList();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToArrayAsync()
+    {
+        var names = await db.Author.Select(a => a.Name).ToArrayAsync();
+        Assert.AreEqual(new string[] { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public void Query_ToArray()
+    {
+        var names = db.Author.Select(a => a.Name).ToArray();
+        Assert.AreEqual(new string[] { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToHashSetAsync()
+    {
+        var names = await db.Author.Select(a => a.Name).ToHashSetAsync();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public void Query_ToHashSet()
+    {
+        var names = db.Author.Select(a => a.Name).ToHashSet();
+        Assert.AreEqual(new HashSet<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_ToDictionaryAsyncSelector()
+    {
+        var dict = await db.Author.ToDictionaryAsync(a => a.Name, a => a.Age);
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public void Query_ToDictionarySelector()
+    {
+        var dict = db.Author.ToDictionary(a => a.Name, a => a.Age);
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public async Task Query_ToDictionaryAsync()
+    {
+        var dict = await db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionaryAsync();
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public void Query_ToDictionary()
+    {
+        var dict = db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionary();
+        Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
+    }
+
+    [Test]
+    public async Task Query_ExpressionSyntax()
+    {
+        var q1 = from a in db.Author
+                 where a.Name == "Alice"
+                 select a.Age;
+
+        Assert.AreEqual(new List<int> { 32 }, await q1.ToListAsync());
+
+        var q2 = from a in db.Author.ByName("Alice")
+                 select a.Age;
+
+        Assert.AreEqual(new List<int> { 32 }, await q2.ToListAsync());
+
+        var q3 = from a in db.Author
+                 orderby a.Age
+                 select a.Name;
+
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, await q3.ToListAsync());
     }
 
     [Test]
     public async Task Query_Where()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Where(a => a.Name == "Alice").AsAsyncEnumerable())
+        await foreach (var a in db.Author.Where(a => a.Name == "Alice").ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -78,7 +171,7 @@ public class QueryTests
     public async Task Query_Select_Field()
     {
         var names = new List<string>();
-        await foreach (var n in db.Author.Select(a => a.Name).AsAsyncEnumerable())
+        await foreach (var n in db.Author.Select(a => a.Name).ToAsyncEnumerable())
         {
             names.Add(n);
         }
@@ -92,7 +185,7 @@ public class QueryTests
     public async Task Query_Select_Projected()
     {
         var names = new List<string>();
-        await foreach (var obj in db.Author.Select(a => new { a.Name }).AsAsyncEnumerable())
+        await foreach (var obj in db.Author.Select(a => new { a.Name }).ToAsyncEnumerable())
         {
             names.Add(obj.Name);
         }
@@ -103,7 +196,7 @@ public class QueryTests
     public async Task Query_Select_Escaped()
     {
         var names = new List<string>();
-        await foreach (var (n, rn) in db.Author.Select(a => Escaper(a)).AsAsyncEnumerable())
+        await foreach (var (n, rn) in db.Author.Select(a => Escaper(a)).ToAsyncEnumerable())
         {
             names.Add(n);
             names.Add(rn);
@@ -139,7 +232,7 @@ public class QueryTests
     public async Task Query_Distinct()
     {
         var ages = new List<int>();
-        await foreach (var n in db.Author.Select(a => a.Age).Distinct().AsAsyncEnumerable())
+        await foreach (var n in db.Author.Select(a => a.Age).Distinct().ToAsyncEnumerable())
         {
             ages.Add(n);
         }
@@ -194,13 +287,13 @@ public class QueryTests
         Assert.AreEqual(null, lstNull);
     }
 
-    [Test]
-    [Ignore("broken deserialization")]
-    public void Query_LongCount()
-    {
-        var count = db.Author.LongCount();
-        Assert.AreEqual(2, count);
-    }
+    // [Test]
+    // [Ignore("broken deserialization")]
+    // public void Query_LongCount()
+    // {
+    //     var count = db.Author.LongCount();
+    //     Assert.AreEqual(2L, count);
+    // }
 
     [Test]
     public void Query_Max()
@@ -217,10 +310,54 @@ public class QueryTests
     }
 
     [Test]
+    public async Task Query_Order()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.Reverse().Order().ToAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
+    }
+
+    [Test]
+    public async Task Query_OrderBy()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.OrderBy(a => a.Age).ToAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
+    public async Task Query_OrderDescending()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.OrderDescending().ToAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
+    public async Task Query_OrderByDescending()
+    {
+        var names = new List<string>();
+        await foreach (var a in db.Author.OrderByDescending(a => a.Name).ToAsyncEnumerable())
+        {
+            names.Add(a.Name);
+        }
+        Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
+    }
+
+    [Test]
     public async Task Query_Reverse()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Reverse().AsAsyncEnumerable())
+        await foreach (var a in db.Author.Reverse().ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -231,7 +368,7 @@ public class QueryTests
     public async Task Query_Skip()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Skip(1).AsAsyncEnumerable())
+        await foreach (var a in db.Author.Skip(1).ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -249,7 +386,7 @@ public class QueryTests
     public async Task Query_Take()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Take(1).AsAsyncEnumerable())
+        await foreach (var a in db.Author.Take(1).ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
