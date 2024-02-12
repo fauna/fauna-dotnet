@@ -27,6 +27,7 @@ TODO: Describe setup once package is in Nuget
 ## Basic usage
 
 ```csharp
+using Fauna;
 using Fauna.Exceptions;
 using static Fauna.Query;
 
@@ -38,7 +39,7 @@ class Basics
         {
             var client = new Client("secret");
 
-            const string hi = "Hello, Fauna!";
+            var hi = "Hello, Fauna!";
 
             // The FQL template function safely interpolates values. 
             var helloQuery = FQL($@"
@@ -52,14 +53,14 @@ class Basics
             Console.WriteLine(hello.Data); // Hello, Fauna!
             Console.WriteLine(hello.Stats.ToString()); // compute: 1, read: 0, write: 0, ...
 
-            var peopleQuery = FQL($@"Person.all() { first_name }");
+            var peopleQuery = FQL($@"Person.all() {{ first_name }}");
 
             // PaginateAsync returns an IAsyncEnumerable of pages
-            var people = client.PaginateAsync<string>(peopleQuery);
+            var people = client.PaginateAsync<Dictionary<string, object?>>(peopleQuery);
 
             await foreach (var page in people)
             {
-                foreach (var name in page.Data)
+                foreach (var person in page.Data)
                 {
                     Console.WriteLine($"Hello, {person["first_name"]}!"); // Hello, John! ...
                 }
