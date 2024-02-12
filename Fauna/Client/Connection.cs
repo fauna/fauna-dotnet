@@ -2,37 +2,25 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Polly;
 using AuthenticationException = System.Security.Authentication.AuthenticationException;
 
 namespace Fauna;
 
 /// <summary>
-/// Represents a connection to a Fauna database.
+/// An HTTP Client wrapper.
 /// </summary>
 public class Connection : IConnection
 {
-    private readonly Uri _endpoint;
-    private readonly HttpClient _httpClient;
-    private readonly int _maxRetries;
-    private readonly TimeSpan _maxBackoff;
+    private readonly Configuration _cfg;
 
     /// <summary>
     /// Initializes a new instance of the Connection class.
     /// </summary>
-    /// <param name="endpoint">The URI of the Fauna database endpoint.</param>
-    /// <param name="connectionTimeout">The timeout duration for HTTP connections.</param>
-    /// <param name="maxRetries">The maximum number of retry attempts for a request.</param>
-    /// <param name="maxBackoff">The maximum duration to wait before retrying a request.</param>
-    public Connection(Uri endpoint, TimeSpan connectionTimeout, int maxRetries, TimeSpan maxBackoff)
+    /// <param name="configuration">The client configuration to use.</param>
+    public Connection(Configuration configuration)
     {
-        _endpoint = endpoint;
-        _maxRetries = maxRetries;
-        _maxBackoff = maxBackoff;
-        _httpClient = new HttpClient()
-        {
-            BaseAddress = endpoint,
-            Timeout = connectionTimeout
-        };
+        _cfg = configuration;
     }
 
     /// <summary>
@@ -43,6 +31,7 @@ public class Connection : IConnection
     /// <param name="path">The path of the resource to send the request to.</param>
     /// <param name="body">The stream containing the request body.</param>
     /// <param name="headers">A dictionary of headers to be included in the request.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the response from the server as <see cref="HttpResponseMessage"/>.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
     /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
@@ -52,67 +41,70 @@ public class Connection : IConnection
     public async Task<HttpResponseMessage> DoPostAsync(
         string path,
         Stream body,
-        Dictionary<string, string> headers)
+        Dictionary<string, string> headers,
+        CancellationToken cancel = default)
     {
         string FormatMessage(string errorType, string message) => $"{errorType}: {message}";
 
-        int attempt = 0;
-        while (true)
+        try
         {
-            try
+            HttpResponseMessage response;
             {
-                var request = CreateHttpRequest(path, body, headers);
-                var response = await _httpClient.SendAsync(request);
 
-                if (response.StatusCode == HttpStatusCode.TooManyRequests && attempt < _maxRetries)
+                var policyResult = await _cfg.RetryConfiguration.RetryPolicy
+                    .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+                    .ConfigureAwait(false);
+
+                if (policyResult.Outcome == OutcomeType.Successful)
                 {
-                    await ApplyExponentialBackoff(attempt);
-                    attempt++;
+                    response = policyResult.Result;
                 }
                 else
                 {
-                    return response;
+                    throw policyResult.FinalException;
                 }
             }
-            catch (HttpRequestException ex)
+
+            return response;
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new NetworkException(FormatMessage("Network Error", ex.Message), ex);
+        }
+        catch (TaskCanceledException ex)
+        {
+            if (!ex.CancellationToken.IsCancellationRequested)
             {
-                throw new NetworkException(FormatMessage("Network Error", ex.Message), ex);
+                throw new ClientException(FormatMessage("Operation Canceled", ex.Message), ex);
             }
-            catch (TaskCanceledException ex)
+            else
             {
-                if (!ex.CancellationToken.IsCancellationRequested)
-                {
-                    throw new ClientException(FormatMessage("Operation Canceled", ex.Message), ex);
-                }
-                else
-                {
-                    throw new ClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
-                }
+                throw new ClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
             }
-            catch (ArgumentNullException ex)
-            {
-                throw new ClientException(FormatMessage("Null Argument", ex.Message), ex);
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new ClientException(FormatMessage("Invalid Operation", ex.Message), ex);
-            }
-            catch (JsonException ex)
-            {
-                throw new ProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
-            }
-            catch (AuthenticationException ex)
-            {
-                throw new ClientException(FormatMessage("Authentication Failed", ex.Message), ex);
-            }
-            catch (NotSupportedException ex)
-            {
-                throw new ClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
-            }
-            catch (Exception ex)
-            {
-                throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
-            }
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ClientException(FormatMessage("Null Argument", ex.Message), ex);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new ClientException(FormatMessage("Invalid Operation", ex.Message), ex);
+        }
+        catch (JsonException ex)
+        {
+            throw new ProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
+        }
+        catch (AuthenticationException ex)
+        {
+            throw new ClientException(FormatMessage("Authentication Failed", ex.Message), ex);
+        }
+        catch (NotSupportedException ex)
+        {
+            throw new ClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
+        }
+        catch (Exception ex)
+        {
+            throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
         }
     }
 
@@ -123,7 +115,7 @@ public class Connection : IConnection
         {
             Content = new StreamContent(body),
             Method = HttpMethod.Post,
-            RequestUri = new Uri(_endpoint, path)
+            RequestUri = new Uri(_cfg.Endpoint, path)
         };
 
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -135,11 +127,5 @@ public class Connection : IConnection
         }
 
         return request;
-    }
-
-    private async Task ApplyExponentialBackoff(int attempt)
-    {
-        var delay = TimeSpan.FromSeconds(Math.Pow(2, attempt));
-        await Task.Delay(delay > _maxBackoff ? _maxBackoff : delay);
     }
 }

@@ -3,12 +3,12 @@ using NUnit.Framework;
 namespace Fauna.Test;
 
 [TestFixture]
-public class ClientConfigTests
+public class ConfigurationTests
 {
     [Test]
     public void ConstructorWorksFine()
     {
-        var b = new ClientConfig("secret");
+        var b = new Configuration("secret");
 
         Assert.AreEqual("secret", b.Secret);
         Assert.AreEqual(Constants.Endpoints.Default, b.Endpoint);

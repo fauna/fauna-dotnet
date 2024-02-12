@@ -15,7 +15,7 @@ public class Client : BaseClient
 {
     private const string QueryUriPath = "/query/1";
 
-    private readonly ClientConfig _config;
+    private readonly Configuration _config;
     private readonly IConnection _connection;
 
     private readonly MappingContext _defaultCtx = new();
@@ -33,7 +33,7 @@ public class Client : BaseClient
     /// </summary>
     /// <param name="secret">The secret key for authentication.</param>
     public Client(string secret) :
-        this(new ClientConfig(secret))
+        this(new Configuration(secret))
     {
     }
 
@@ -41,23 +41,10 @@ public class Client : BaseClient
     /// Initializes a new instance of the Client class using client configuration.
     /// </summary>
     /// <param name="config">The configuration settings for the client.</param>
-    public Client(ClientConfig config) :
-        this(config, new Connection(config.Endpoint,
-                                    config.ConnectionTimeout,
-                                    config.MaxRetries,
-                                    config.MaxBackoff))
+    public Client(Configuration config)
     {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the Client class using client configuration and a custom connection.
-    /// </summary>
-    /// <param name="config">The configuration settings for the client.</param>
-    /// <param name="connection">The custom connection to be used by the client.</param>
-    public Client(ClientConfig config, IConnection connection)
-    {
-        this._config = config;
-        this._connection = connection;
+        _config = config;
+        _connection = new Connection(config);
     }
 
     /// <summary>
@@ -86,7 +73,8 @@ public class Client : BaseClient
         Query query,
         IDeserializer<T> deserializer,
         MappingContext ctx,
-        QueryOptions? queryOptions)
+        QueryOptions? queryOptions,
+        CancellationToken cancel = default)
     {
         if (query == null)
         {
@@ -99,7 +87,7 @@ public class Client : BaseClient
         using var stream = new MemoryStream();
         Serialize(stream, query, ctx);
 
-        using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers);
+        using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers, cancel);
         var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(ctx,
                                                                             deserializer,
                                                                             httpResponse);
