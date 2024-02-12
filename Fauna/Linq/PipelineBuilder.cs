@@ -109,7 +109,7 @@ internal class PipelineBuilder
 
                 SetElemType(field.Type, field.Deserializer);
 
-                var pquery = IE.Exp("x => ").Concat(IE.Field(IE.Exp("x"), field.Name));
+                var pquery = IE.Exp("x => ").Concat(IE.Exp("x").Access(field.Name));
                 return IE.MethodCall(callee, "map", pquery);
             }
 
@@ -139,7 +139,7 @@ internal class PipelineBuilder
                 _builder.ProjectExpr = plambda;
 
                 // projection query fragment
-                var accs = fields.Select(f => IE.Field(IE.Exp("x"), f.Name));
+                var accs = fields.Select(f => IE.Exp("x").Access(f.Name));
                 var pquery = IE.Exp("x => ").Concat(IE.Array(accs));
                 return IE.MethodCall(callee, "map", pquery);
             }
@@ -413,7 +413,7 @@ internal class PipelineBuilder
                     null;
 
                 if (name is null) throw fail(expr);
-                return IE.Field(Apply(callee), name);
+                return Apply(callee).Access(name);
             }
         }
     }

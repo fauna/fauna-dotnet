@@ -9,8 +9,6 @@ internal abstract class IntermediateExpr
     public static IE Exp(string fql) => new Expr(fql);
     public static IE Const(object? v) => new Constant(v);
 
-    public static IE Field(IE callee, string f) => callee.Access(f);
-
     private static readonly IE _larr = new Expr("[");
     private static readonly IE _rarr = new Expr("]");
     public static IE Array(IE inner) => _larr.Concat(inner).Concat(_rarr);
