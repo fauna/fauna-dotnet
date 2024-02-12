@@ -60,8 +60,7 @@ internal abstract class IntermediateExpr
         return ret;
     }
 
-    // return a subexpression that when executed returns a Query value
-    public abstract Expression Build();
+    public abstract Query Build();
 
     internal virtual List<object> AsFragments() => new List<object> { this };
 
@@ -112,10 +111,7 @@ internal abstract class IntermediateExpr
             return new Constant(newVal);
         }
 
-        public override Expression Build()
-        {
-            return Expression.Constant(new QueryVal(Value), typeof(QueryVal));
-        }
+        public override Query Build() => new QueryVal(Value);
     }
 
     // An expression which is translated to FQL
@@ -142,20 +138,17 @@ internal abstract class IntermediateExpr
             return Concat("." + member);
         }
 
-        public override Expression Build()
+        public override Query Build()
         {
-            Expression ToExpr(object frag) => frag switch
+            IQueryFragment ToFragment(object frag) => frag switch
             {
-                string l => Expression.Constant(new QueryLiteral(l)),
+                string l => new QueryLiteral(l),
                 IntermediateExpr e => e.Build(),
                 _ => throw new InvalidOperationException("Unreachable!")
             };
 
-            var fragExprs = _fragments.Select(ToExpr).ToList();
-            var fragArr = Expression.NewArrayInit(typeof(IQueryFragment), fragExprs);
-            var argTypes = new Type[] { typeof(IList<IQueryFragment>) };
-            var queryCtor = typeof(QueryExpr).GetConstructor(argTypes)!;
-            return Expression.New(queryCtor, fragArr);
+            var fragExprs = _fragments.Select(ToFragment).ToList();
+            return new QueryExpr(fragExprs);
         }
     }
 }

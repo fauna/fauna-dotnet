@@ -36,7 +36,7 @@ internal class PipelineBuilder
         Debug.Assert(ElemDeserializer is not null);
         Debug.Assert(ElemType is not null);
 
-        var query = Expression.Lambda<Func<Query>>(ie.Build()).Compile().Invoke();
+        var query = ie.Build();
         var deser = ElemDeserializer;
         var pfunc = ProjectExpr is null ? null : ProjectExpr.Compile();
 
