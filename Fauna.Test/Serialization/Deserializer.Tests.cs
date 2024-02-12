@@ -96,6 +96,22 @@ public class DeserializerTests
         Assert.AreEqual(42, result);
     }
 
+    [Test]
+    public void DeserializeLongGeneric()
+    {
+        var result1 = Deserialize<long>(@"{""@int"":""42""}");
+        Assert.AreEqual(42L, result1);
+
+        var result2 = Deserialize<long>(@"{""@long"":""2147483648""}");
+        Assert.AreEqual(2147483648L, result2);
+    }
+
+    [Test]
+    public void DeserializeDoubleGeneric()
+    {
+        var result1 = Deserialize<double>(@"{""@double"":""1.0""}");
+        Assert.AreEqual(1D, result1);
+    }
 
     [Test]
     public void DeserializeDateGeneric()
