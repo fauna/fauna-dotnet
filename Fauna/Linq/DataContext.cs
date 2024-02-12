@@ -16,18 +16,14 @@ public abstract class DataContext : BaseClient
     private Client _client;
     [AllowNull]
     private MappingContext _ctx;
-    [AllowNull]
-    internal Linq.PipelineCache _pcache;
 
     internal override MappingContext MappingCtx { get => _ctx; }
-    internal Linq.PipelineCache PipelineCache { get => _pcache; }
 
     internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
     {
         _client = client;
         _collections = collections.ToImmutableDictionary();
         _ctx = ctx;
-        _pcache = new Linq.PipelineCache();
 
         foreach (var col in collections.Values)
         {

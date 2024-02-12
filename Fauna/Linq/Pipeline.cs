@@ -12,40 +12,20 @@ public enum PipelineMode
     Scalar, // final, non-enum result: no more transformations allowed
 }
 
-internal readonly struct PipelineCache
-{
-    private readonly Dictionary<Expression, Pipeline> _cache;
-
-    public PipelineCache()
-    {
-        _cache = new(new ExpressionComparer());
-    }
-
-    public PipelineExecutor Get(DataContext ctx, Expression expr)
-    {
-        var closures = Expressions.FindAllClosures(expr);
-
-        Pipeline pl;
-        lock (_cache)
-        {
-            if (!_cache.TryGetValue(expr, out pl))
-            {
-                var builder = new PipelineBuilder(ctx, closures, expr);
-                pl = builder.Build();
-                _cache[expr] = pl;
-            }
-        }
-
-        return pl.GetExec(ctx, closures);
-    }
-}
-
 internal readonly record struct Pipeline(
     Func<object[], Query> GetQuery,
     IDeserializer Deserializer,
     Func<object[], Delegate>? GetProjector,
     PipelineMode Mode)
 {
+    public static PipelineExecutor Get(DataContext ctx, Expression expr)
+    {
+        var closures = Expressions.FindAllClosures(expr);
+        var builder = new PipelineBuilder(ctx, closures, expr);
+        var pl = builder.Build();
+        return pl.GetExec(ctx, closures);
+    }
+
     public PipelineExecutor GetExec(DataContext ctx, object[] vars) =>
         PipelineExecutor.Create(ctx, GetQuery(vars), Deserializer, Proj(vars), Mode);
 

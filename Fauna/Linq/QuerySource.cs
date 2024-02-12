@@ -45,13 +45,13 @@ public class QuerySource<T> : QuerySource, IQuerySource<T>
 
     internal override Task<TResult> ExecuteAsync<TResult>(Expression expression)
     {
-        var pl = Ctx.PipelineCache.Get(Ctx, expression);
+        var pl = Pipeline.Get(Ctx, expression);
         return pl.Result<TResult>(queryOptions: null);
     }
 
     public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null)
     {
-        var pl = Ctx.PipelineCache.Get(Ctx, Expr);
+        var pl = Pipeline.Get(Ctx, Expr);
         return pl.PagedResult<T>(queryOptions);
     }
 
