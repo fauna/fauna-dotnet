@@ -7,6 +7,12 @@ This driver can only be used with FQL v10, and is not compatible with earlier ve
 
 See the [Fauna Documentation](https://docs.fauna.com/fauna/current/) for additional information about how to configure and query your databases.
 
+## Features
+
+- Injection-safe query composition with interpolated string templates
+- POCO-based data mapping
+- Async LINQ API for type-safe querying
+
 ## Compatibility
 
 - C# ^10.0
@@ -14,12 +20,11 @@ See the [Fauna Documentation](https://docs.fauna.com/fauna/current/) for additio
 - .NET 7.0
 - .NET 8.0
 
-
 ## Installation
 
 TODO: Describe setup once package is in Nuget
 
-## Basic Usage
+## Basic usage
 
 ```csharp
 using Fauna.Exceptions;
@@ -27,21 +32,40 @@ using static Fauna.Query;
 
 class Basics
 {
-     async Task Run()
+    static async Task Main()
     {
-        var client = new Client("secret");
-        const string hi = "Hello, Fauna!";
-        var query = FQL($@"
-        let x = {hi}
-        x");
-
         try
         {
-            var result = await client.QueryAsync<string>(query);
-            Console.WriteLine(result.Data); // Hello, Fauna!
-            Console.WriteLine(result.Stats.ToString()); // compute: 1, read: 0, write: 0, ...
+            var client = new Client("secret");
+
+            const string hi = "Hello, Fauna!";
+
+            // The FQL template function safely interpolates values. 
+            var helloQuery = FQL($@"
+                let x = {hi}
+                x");
+
+            // Optionally specify the expected result type as a type parameter.
+            // If not provided, the value will be deserialized as object?
+            var hello = await client.QueryAsync<string>(helloQuery);
+
+            Console.WriteLine(hello.Data); // Hello, Fauna!
+            Console.WriteLine(hello.Stats.ToString()); // compute: 1, read: 0, write: 0, ...
+
+            var peopleQuery = FQL($@"Person.all() { first_name }");
+
+            // PaginateAsync returns an IAsyncEnumerable of pages
+            var people = client.PaginateAsync<string>(peopleQuery);
+
+            await foreach (var page in people)
+            {
+                foreach (var name in page.Data)
+                {
+                    Console.WriteLine($"Hello, {person["first_name"]}!"); // Hello, John! ...
+                }
+            }
         }
-        catch (ServiceException e)
+        catch (FaunaException e)
         {
             // Handle exceptions 
         }
@@ -49,79 +73,128 @@ class Basics
 }
 ```
 
-## Basic Usage with POCOs
+## Writing more complex queries
 
-Define serialization behavior with attributes on your POCOs.
+The FQL template DSL supports arbitrary composition of subqueries along with values.
 
 ```csharp
-using Fauna.Serialization.Attributes;
-using static Fauna.Query;
+var client = new Client("secret");
+        
+var predicate = args[0] switch {
+    "first" => FQL($".first_name == {args[1]}"),
+    "last"  => FQL($".last_name" == {args[1]}),
+    _       => throw ArgumentException(),
+};
+        
+// Single braces are for template variables, so escape them with double braces.
+var getPerson = FQL($"Person.firstWhere({predicate}) {{ id, first_name, last_name }}");
+        
+// Documents can be mapped to Dictionaries as well as POCOs (see below)
+var result = await client.QueryAsync<Dictionary<string, object?>>(getPerson);
 
-class BasicsWithPocos
+Console.WriteLine(result.Data["id"]);
+Console.WriteLine(result.Data["first_name"]);
+Console.WriteLine(result.Data["last_name"]);
+```
+
+## Database contexts and POCO data mapping
+
+Fauna.Mapping.Attributes and the Fauna.DataContext class provide the ability to bring your Fauna database schema into your code.
+
+### POCO Mapping
+
+You can use attributes to map a POCO class to a Fauna document or object shape:
+
+```csharp
+using Fauna.Mapping.Attributes;
+
+[Object]
+class Person
 {
-    [FaunaObject]
-    private class Person
-    {
-        [Field("first_name")]
-        public string? FirstName { get; set; }
-        
-        [Field("last_name")]
-        public string? LastName { get; set; }
-        
-        [Field("age", FaunaType.Long)]
-        public int Age { get; set; }
-    }
-    
-     async Task Run()
-    {
-        var client = new Client("secret");
-        var person = new Person
-        {
-            FirstName = "John",
-            LastName = "Doe",
-            Age = 42
-        };
-        
-        // Single braces are for template variables, so escape them with double braces.
-        var query = FQL($@"
-        let x = {person}
-        {{ first_name: x.first_name, last_name: x.last_name, age: x.age + 1}}");
-  
-        var result = await client.QueryAsync<Person>(query);
-        Console.WriteLine(result.Data.FirstName); // John
-        Console.WriteLine(result.Data.LastName); // Doe
-        Console.WriteLine(result.Data.Age); // 43
-        Console.WriteLine(result.Stats.ToString()); // compute: 1, read: 0, write: 0, ...
-    }
+    // Property names are automatically converted to camelCase.
+    [Field]
+    public string? Id { get; set; }
+
+    // Manually specify a name by providing a string.
+    [Field("first_name")]
+    public string? FirstName { get; set; }
+
+    [Field("last_name")]
+    public string? LastName { get; set; }
+
+    [Field]
+    public int Age { get; set; }
 }
 ```
 
-## Basic Usage with Composition
+Your POCO classes can be used to drive deserialization:
 
-Compose two or more FQL queries together.
+``` csharp
+var peopleQuery = FQL($@"Person.all()");
+var people = client.PaginateAsync<Person>(peopleQuery).FlattenAsync();
 
-```csharp
-using static Fauna.Query;
-
-class BasicsWithPocos
+await foreach (var p in people)
 {
-    
-    async Task Run()
-    {
-        var client = new Client("secret");
-        
-        // Single braces are for template variables, so escape them with double braces.
-        var getAge = FQL($@"
-        let x = {{ age: 42 }}
-        x.age");
-        
-        var isMinor = FQL($@"
-        {getAge} < 18
-        ");
-  
-        var result = await client.QueryAsync<bool>(isMinor);
-        Console.WriteLine(result.Data); // False
-        Console.WriteLine(result.Stats.ToString()); // compute: 1, read: 0, write: 0, ...
-    }
+    Console.WriteLine($"{p.FirstName} {p.LastName}");
 }
+```
+
+As well as to write to your database:
+
+``` csharp
+var person = new Person { FirstName = "John", LastName = "Smith", Age = 42 };
+
+var result = await client.QueryAsync($@"Person.create({person}).id");
+Console.WriteLine(result.Data); // 69219723210223...
+```
+
+### DataContext
+
+The DataContext class provides a schema-aware view of your database. Subclass it and configure your collections: 
+
+``` csharp
+class PersonDb : DataContext
+{
+    public class PersonCollection : Collection<Person>
+    {
+        public Index<Person> ByFirstName(string first) => Index().Call(first);
+        public Index<Person> ByLastName(string last) => Index().Call(last);
+    }
+
+    public PersonCollection Person { get => GetCollection<PersonCollection>(); }
+}
+```
+
+DataContext provides Client querying which automatically maps your collections' documents to their POCO equivalents even when type hints are not provided.
+
+``` csharp
+var db = client.DataContext<PersonDb>
+
+var result = db.QueryAsync($"Person.all().first()");
+var person = (Person)result.Data!;
+
+Console.WriteLine(person.FirstName);
+```
+
+### LINQ-based queries
+
+Last but not least, your DataContext subclass provides a LINQ-compatible API for type-safe querying.
+
+``` csharp
+// general query
+db.Person.Where(p => p.FirstName == "John")
+         .Select(p => new { p.FirstName, p.LastName })
+         .First();
+
+// or start with an index
+db.Person.ByFirstName("John")
+         .Select(p => new { p.FirstName, p.LastName })
+         .First();
+```
+
+There are async variants of methods which execute queries:
+
+``` csharp
+var syncCount = db.Person.Count();
+var asyncCount = await db.Person.CountAsync();
 ```
