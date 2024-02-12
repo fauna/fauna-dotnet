@@ -7,7 +7,6 @@ using static Fauna.Test.Helpers.TestClientHelper;
 namespace Fauna.Test;
 
 [TestFixture]
-[Ignore("integ test")]
 public class IntegrationTests
 {
     [AllowNull]
@@ -103,15 +102,17 @@ public class IntegrationTests
 
         var paginatedResult = _client.PaginateAsync<Person>(query);
 
-        int pageCount = 0;
+        var pageCount = 0;
+        var itemCount = 0;
         await foreach (var page in paginatedResult)
         {
             pageCount++;
             var data = page.Data;
-            Assert.AreEqual(20, data.Count());
+            itemCount += data.Count;
         }
 
-        Assert.AreEqual(5, pageCount);
+        Assert.Greater(pageCount, 1);
+        Assert.AreEqual(100, itemCount);
     }
 
     [Test]

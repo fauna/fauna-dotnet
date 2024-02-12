@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Fauna.Exceptions;
 using Fauna.Serialization;
 using Fauna.Types;
@@ -16,6 +17,7 @@ interface IClient
     /// <typeparam name="T">The type of the result expected from the query, corresponding to the structure of the FQL query's expected response.</typeparam>
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
     /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
@@ -32,7 +34,8 @@ interface IClient
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
-        QueryOptions? queryOptions = null)
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
         where T : notnull;
 
     /// <summary>
@@ -40,6 +43,7 @@ interface IClient
     /// </summary>
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
     /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
@@ -56,7 +60,8 @@ interface IClient
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
-        QueryOptions? queryOptions = null);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database and returns the typed result.
@@ -65,6 +70,7 @@ interface IClient
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="deserializer">A deserializer for the success data type.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
     /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
@@ -82,7 +88,8 @@ interface IClient
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         IDeserializer<T> deserializer,
-        QueryOptions? queryOptions = null);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database and returns the typed result.
@@ -90,6 +97,7 @@ interface IClient
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="deserializer">A deserializer for the success data type.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation toke to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
     /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
@@ -107,7 +115,8 @@ interface IClient
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
         IDeserializer deserializer,
-        QueryOptions? queryOptions = null);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
@@ -115,6 +124,7 @@ interface IClient
     /// <typeparam name="T">The type of the data expected in each page.</typeparam>
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>An asynchronous enumerable of pages, each containing a list of items of type <typeparamref name="T"/>.</returns>
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
@@ -134,7 +144,8 @@ interface IClient
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
-        QueryOptions? queryOptions = null)
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
         where T : notnull;
 
     /// <summary>
@@ -142,6 +153,7 @@ interface IClient
     /// </summary>
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>An asynchronous enumerable of pages, each containing a list of items.</returns>
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
@@ -161,7 +173,8 @@ interface IClient
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
-        QueryOptions? queryOptions = null);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
@@ -170,6 +183,7 @@ interface IClient
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="elemDeserializer">A data deserializer for the page element type.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>An asynchronous enumerable of pages, each containing a list of items of type <typeparamref name="T"/>.</returns>
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
@@ -190,7 +204,8 @@ interface IClient
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
         IDeserializer<T> elemDeserializer,
-        QueryOptions? queryOptions = null);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
@@ -198,6 +213,7 @@ interface IClient
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="elemDeserializer">A data deserializer for the page element type.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
@@ -218,7 +234,8 @@ interface IClient
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
         IDeserializer elemDeserializer,
-        QueryOptions? queryOptions = null);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 }
 
 /// <summary>
@@ -234,62 +251,71 @@ public abstract class BaseClient : IClient
         Query query,
         IDeserializer<T> deserializer,
         MappingContext ctx,
-        QueryOptions? queryOptions
+        QueryOptions? queryOptions,
+        CancellationToken cancel
     );
 
     #region IClient
 
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
-        QueryOptions? queryOptions = null)
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
         where T : notnull =>
-        QueryAsync<T>(query, Deserializer.Generate<T>(MappingCtx), queryOptions);
+        QueryAsync<T>(query, Deserializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
-        QueryOptions? queryOptions = null) =>
-        QueryAsync<object?>(query, Deserializer.Dynamic, queryOptions);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default) =>
+        QueryAsync<object?>(query, Deserializer.Dynamic, queryOptions, cancel);
 
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         IDeserializer<T> deserializer,
-        QueryOptions? queryOptions = null) =>
-        QueryAsyncInternal(query, deserializer, MappingCtx, queryOptions);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default) =>
+        QueryAsyncInternal(query, deserializer, MappingCtx, queryOptions, cancel);
 
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
         IDeserializer deserializer,
-        QueryOptions? queryOptions = null) =>
-        QueryAsync<object?>(query, (IDeserializer<object?>)deserializer, queryOptions);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default) =>
+        QueryAsync<object?>(query, (IDeserializer<object?>)deserializer, queryOptions, cancel);
 
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
-        QueryOptions? queryOptions = null)
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
         where T : notnull =>
-        PaginateAsync(query, Deserializer.Generate<T>(MappingCtx), queryOptions);
+        PaginateAsync(query, Deserializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
-        QueryOptions? queryOptions = null) =>
-        PaginateAsync(query, Deserializer.Dynamic, queryOptions);
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default) =>
+        PaginateAsync(query, Deserializer.Dynamic, queryOptions, cancel);
 
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
         IDeserializer<T> elemDeserializer,
-        QueryOptions? queryOptions = null)
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
     {
         var deserializer = new PageDeserializer<T>(elemDeserializer);
-        return PaginateAsyncInternal(query, deserializer, queryOptions);
+        return PaginateAsyncInternal(query, deserializer, queryOptions, cancel);
     }
 
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
         IDeserializer elemDeserializer,
-        QueryOptions? queryOptions = null)
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
     {
         var elemObjDeser = (IDeserializer<object?>)elemDeserializer;
         var deserializer = new PageDeserializer<object?>(elemObjDeser);
-        return PaginateAsyncInternal(query, deserializer, queryOptions);
+        return PaginateAsyncInternal(query, deserializer, queryOptions, cancel);
     }
 
     #endregion
@@ -298,7 +324,8 @@ public abstract class BaseClient : IClient
     internal async IAsyncEnumerable<Page<T>> PaginateAsyncInternal<T>(
         Query query,
         PageDeserializer<T> deserializer,
-        QueryOptions? queryOptions)
+        QueryOptions? queryOptions,
+        [EnumeratorCancellation] CancellationToken cancel = default)
     {
         Page<T>? currentPage = null;
 
@@ -311,7 +338,8 @@ public abstract class BaseClient : IClient
             var response = await QueryAsyncInternal(currentQuery,
                                                     deserializer,
                                                     MappingCtx,
-                                                    queryOptions);
+                                                    queryOptions,
+                                                    cancel);
 
             if (response.Data is not null)
             {
