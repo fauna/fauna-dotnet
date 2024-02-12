@@ -43,10 +43,11 @@ public abstract class DataContext : BaseClient
         Query query,
         Serialization.IDeserializer<T> deserializer,
         MappingContext ctx,
-        QueryOptions? queryOptions)
+        QueryOptions? queryOptions,
+        CancellationToken cancel)
     {
         CheckInitialization();
-        return _client.QueryAsyncInternal(query, deserializer, ctx, queryOptions);
+        return _client.QueryAsyncInternal(query, deserializer, ctx, queryOptions, cancel);
     }
 
     // Schema DSL
