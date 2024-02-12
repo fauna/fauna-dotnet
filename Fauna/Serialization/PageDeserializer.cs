@@ -14,14 +14,19 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
 
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
-        if (reader.CurrentTokenType != TokenType.StartPage)
-            throw new SerializationException(
-                $"Unexpected token while deserializing into {typeof(Page<T>)}: {reader.CurrentTokenType}");
+        var endToken = reader.CurrentTokenType switch
+        {
+            TokenType.StartPage => TokenType.EndPage,
+            TokenType.StartObject => TokenType.EndObject,
+            var other =>
+                throw new SerializationException(
+                    $"Unexpected token while deserializing into {typeof(Page<T>)}: {other}"),
+        };
 
         List<T>? data = null;
         string? after = null;
 
-        while (reader.Read() && reader.CurrentTokenType != TokenType.EndPage)
+        while (reader.Read() && reader.CurrentTokenType != endToken)
         {
             var fieldName = reader.GetString()!;
             reader.Read();
