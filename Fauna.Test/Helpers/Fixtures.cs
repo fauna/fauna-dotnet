@@ -25,19 +25,19 @@ public static class Fixtures
 {
     public static AuthorDb AuthorDb(Client client)
     {
-        client.QueryAsync(FQL("Collection.byName('Author')?.delete()")).Wait();
+        client.QueryAsync(FQL($"Collection.byName('Author')?.delete()")).Wait();
         client.QueryAsync(FQL(
-            @"Collection.create({
+            $@"Collection.create({{
                 name: 'Author',
-                indexes: {
-                    byName: {
-                        terms: [{ field: '.name'}]
-                    }
-                }
-            })"))
+                indexes: {{
+                    byName: {{
+                        terms: [{{ field: '.name' }}]
+                    }}
+                }}
+            }})"))
             .Wait();
-        client.QueryAsync(FQL("Author.create({name: 'Alice', age: 32 })")).Wait();
-        client.QueryAsync(FQL("Author.create({name: 'Bob', age: 26 })")).Wait();
+        client.QueryAsync(FQL($"Author.create({{name: 'Alice', age: 32 }})")).Wait();
+        client.QueryAsync(FQL($"Author.create({{name: 'Bob', age: 26 }})")).Wait();
 
         return client.DataContext<AuthorDb>();
     }
