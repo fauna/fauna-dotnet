@@ -1,7 +1,7 @@
 using System.Net;
+using System.Text.Json;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
 
 namespace Fauna;
