@@ -136,7 +136,10 @@ public static class Deserializer
     /// <returns>An <see cref="IDeserializer"/>.</returns>
     public static IDeserializer GenerateNullable(MappingContext context, Type targetType)
     {
-        var deser = (IDeserializer)Generate(context, targetType);
-        return new NullableDeserializer(deser);
+        var inner = (IDeserializer)Generate(context, targetType);
+        var deserType = typeof(NullableDeserializer<>).MakeGenericType(new[] { targetType });
+        var deser = Activator.CreateInstance(deserType, new[] { inner });
+
+        return (IDeserializer)deser!;
     }
 }
