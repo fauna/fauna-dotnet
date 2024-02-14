@@ -31,7 +31,7 @@ namespace Fauna.Test.Exceptions
             Assert.AreEqual("abort", e.ErrorCode);
             Assert.AreEqual(HttpStatusCode.BadRequest, e.StatusCode);
             Assert.AreEqual(1, e.Stats.ComputeOps);
-            Assert.IsNull(e.QueryTags);
+            Assert.IsEmpty(e.QueryTags);
             var d = e.GetData<TestAbortClass>();
             Assert.NotNull(d);
             Assert.AreEqual("special", d!.Name);
