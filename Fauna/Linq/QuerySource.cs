@@ -1,7 +1,5 @@
 using Fauna.Types;
-using System.Collections;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 
 namespace Fauna.Linq;
 
@@ -10,116 +8,54 @@ public abstract class QuerySource : IQuerySource
     [AllowNull]
     internal DataContext Ctx { get; private protected set; }
     [AllowNull]
-    internal Expression Expr { get; private protected set; }
+    internal Pipeline Pipeline { get; private protected set; }
 
     internal void SetContext(DataContext ctx)
     {
         Ctx = ctx;
     }
 
+    internal void SetQuery<TElem>(IntermediateExpr query)
+    {
+        Pipeline = new Pipeline(PipelineMode.Query, query, typeof(TElem), null, null);
+    }
+
     // DSL Helpers
 
-    internal abstract TResult Execute<TResult>(Expression expression);
+    internal abstract TResult Execute<TResult>(Pipeline pl);
 
-    internal abstract Task<TResult> ExecuteAsync<TResult>(Expression expression);
+    internal abstract Task<TResult> ExecuteAsync<TResult>(Pipeline pl);
 }
 
-public class QuerySource<T> : QuerySource, IQuerySource<T>
+public partial class QuerySource<T> : QuerySource, IQuerySource<T>
 {
-    public QuerySource(Expression expr, DataContext ctx)
+    internal QuerySource(DataContext ctx, Pipeline pl)
     {
-        Expr = expr;
         Ctx = ctx;
+        Pipeline = pl;
     }
 
     // Collection/Index DSLs are allowed to set _expr and _ctx in their own
     // constructors, so they use this base one.
     internal QuerySource() { }
 
-    internal override TResult Execute<TResult>(Expression expression)
+    internal override TResult Execute<TResult>(Pipeline pl)
     {
-        var res = ExecuteAsync<TResult>(expression);
+        var res = ExecuteAsync<TResult>(pl);
         res.Wait();
         return res.Result;
     }
 
-    internal override Task<TResult> ExecuteAsync<TResult>(Expression expression)
-    {
-        var pl = Pipeline.Get(Ctx, expression);
-        return pl.Result<TResult>(queryOptions: null);
-    }
+    internal override Task<TResult> ExecuteAsync<TResult>(Pipeline pl) =>
+        pl.GetExec(Ctx).Result<TResult>(queryOptions: null);
 
     public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null)
     {
-        var pl = Pipeline.Get(Ctx, Expr);
-        return pl.PagedResult<T>(queryOptions);
+        var pe = Pipeline.GetExec(Ctx);
+        return pe.PagedResult<T>(queryOptions);
     }
 
     public IAsyncEnumerable<T> ToAsyncEnumerable() => PaginateAsync().FlattenAsync();
 
     public IEnumerable<T> ToEnumerable() => new QuerySourceEnumerable(this);
-
-    public List<T> ToList() => ToEnumerable().ToList();
-    public async Task<List<T>> ToListAsync()
-    {
-        var ret = new List<T>();
-        await foreach (var e in ToAsyncEnumerable()) ret.Add(e);
-        return ret;
-    }
-
-    public T[] ToArray() => ToEnumerable().ToArray();
-    public async Task<T[]> ToArrayAsync() => (await ToListAsync()).ToArray();
-
-    public HashSet<T> ToHashSet() => ToHashSet(null);
-    public Task<HashSet<T>> ToHashSetAsync() => ToHashSetAsync(null);
-
-    public HashSet<T> ToHashSet(IEqualityComparer<T>? comparer) => ToEnumerable().ToHashSet(comparer);
-    public async Task<HashSet<T>> ToHashSetAsync(IEqualityComparer<T>? comparer)
-    {
-        var ret = new HashSet<T>(comparer);
-        await foreach (var e in ToAsyncEnumerable()) ret.Add(e);
-        return ret;
-    }
-
-    public Dictionary<K, V> ToDictionary<K, V>(Func<T, K> getKey, Func<T, V> getValue) where K : notnull =>
-        ToDictionary(getKey, getValue, null);
-    public Task<Dictionary<K, V>> ToDictionaryAsync<K, V>(Func<T, K> getKey, Func<T, V> getValue) where K : notnull =>
-        ToDictionaryAsync(getKey, getValue, null);
-
-    public Dictionary<K, V> ToDictionary<K, V>(Func<T, K> getKey, Func<T, V> getValue, IEqualityComparer<K>? comparer) where K : notnull =>
-        ToEnumerable().ToDictionary(getKey, getValue, comparer);
-    public async Task<Dictionary<K, V>> ToDictionaryAsync<K, V>(Func<T, K> getKey, Func<T, V> getValue, IEqualityComparer<K>? comparer) where K : notnull
-    {
-        var ret = new Dictionary<K, V>(comparer);
-        await foreach (var e in ToAsyncEnumerable()) ret[getKey(e)] = getValue(e);
-        return ret;
-    }
-
-    public record struct QuerySourceEnumerable(QuerySource<T> Source) : IEnumerable<T>
-    {
-        public IEnumerator<T> GetEnumerator()
-        {
-            var pe = Source.PaginateAsync().GetAsyncEnumerator();
-            try
-            {
-                var mv = pe.MoveNextAsync().AsTask();
-                mv.Wait();
-                while (mv.Result)
-                {
-                    var page = pe.Current;
-
-                    foreach (var e in page.Data)
-                    {
-                        yield return e;
-                    }
-
-                    mv = pe.MoveNextAsync().AsTask();
-                    mv.Wait();
-                }
-            }
-            finally { pe.DisposeAsync(); }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    }
 }

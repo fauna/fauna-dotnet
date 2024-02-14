@@ -18,6 +18,7 @@ public abstract class DataContext : BaseClient
     private MappingContext _ctx;
 
     internal override MappingContext MappingCtx { get => _ctx; }
+    internal Linq.LookupTable LookupTable { get => new Linq.LookupTable(_ctx); }
 
     internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
     {
@@ -74,7 +75,7 @@ public abstract class DataContext : BaseClient
         {
             var nameAttr = this.GetType().GetCustomAttribute<NameAttribute>();
             Name = nameAttr?.Name ?? typeof(Doc).Name;
-            Expr = Expression.Constant(this);
+            SetQuery<Doc>(Linq.IntermediateExpr.CollectionAll(this));
         }
 
         // index call DSL
@@ -138,8 +139,8 @@ public abstract class DataContext : BaseClient
             Collection = coll;
             Name = name;
             Args = args;
-            Expr = Expression.Constant(this);
             Ctx = ctx;
+            SetQuery<Doc>(Linq.IntermediateExpr.CollectionIndex(this));
         }
     }
 

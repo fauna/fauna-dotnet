@@ -41,8 +41,11 @@ internal abstract class IntermediateExpr
     public static IE MethodCall(IE callee, string m) =>
         MethodCall(callee, m, new IE[] { });
 
-    public static IE MethodCall(IE callee, string m, IE arg) =>
-        MethodCall(callee, m, new IE[] { arg });
+    public static IE MethodCall(IE callee, string m, IE a1) =>
+        MethodCall(callee, m, new IE[] { a1 });
+
+    public static IE MethodCall(IE callee, string m, IE a1, IE a2) =>
+        MethodCall(callee, m, new IE[] { a1, a2 });
 
     public static IE MethodCall(IE callee, string m, IEnumerable<IE> args) =>
         Join(args, callee.Concat($".{m}("), ",", _rparen);
@@ -59,6 +62,12 @@ internal abstract class IntermediateExpr
         ret = ret.Concat(r);
         return ret;
     }
+
+    public static IE CollectionAll(DataContext.Collection col) =>
+        IE.MethodCall(IE.Exp(col.Name), "all");
+
+    public static IE CollectionIndex(DataContext.Index idx) =>
+        IE.MethodCall(IE.Exp(idx.Collection.Name), idx.Name, idx.Args.Select(a => IE.Const(a)));
 
     public abstract Query Build();
 

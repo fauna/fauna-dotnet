@@ -1,5 +1,4 @@
 using Fauna.Serialization;
-using Fauna.Util;
 using System.Linq.Expressions;
 
 namespace Fauna.Linq;
@@ -13,18 +12,17 @@ public enum PipelineMode
 }
 
 internal readonly record struct Pipeline(
-    Query Query,
-    IDeserializer Deserializer,
-    Delegate? Projector,
-    PipelineMode Mode)
+    PipelineMode Mode,
+    IntermediateExpr Query,
+    Type ElemType,
+    IDeserializer? ElemDeserializer,
+    LambdaExpression? ProjectExpr)
 {
-    public static PipelineExecutor Get(DataContext ctx, Expression expr)
+    public PipelineExecutor GetExec(DataContext ctx)
     {
-        var builder = new PipelineBuilder(ctx, expr);
-        var pl = builder.Build();
-        return pl.GetExec(ctx);
+        var query = Query.Build();
+        var deser = ElemDeserializer ?? Deserializer.Generate(ctx.MappingCtx, ElemType);
+        var proj = ProjectExpr is null ? null : ProjectExpr.Compile();
+        return PipelineExecutor.Create(ctx, query, deser, proj, Mode);
     }
-
-    public PipelineExecutor GetExec(DataContext ctx) =>
-        PipelineExecutor.Create(ctx, Query, Deserializer, Projector, Mode);
 }
