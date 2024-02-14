@@ -3,8 +3,8 @@ using Fauna.Exceptions;
 using Fauna.Linq;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using System.Data;
 using System.Globalization;
+using System.Net;
 
 namespace Fauna;
 
@@ -74,11 +74,11 @@ public class Client : BaseClient
         IDeserializer<T> deserializer,
         MappingContext ctx,
         QueryOptions? queryOptions,
-        CancellationToken cancel = default)
+        CancellationToken cancel)
     {
         if (query == null)
         {
-            throw new ClientException("Query cannot be null");
+            throw new ArgumentNullException(nameof(query));
         }
 
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, queryOptions);
@@ -88,53 +88,17 @@ public class Client : BaseClient
         Serialize(stream, query, ctx);
 
         using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers, cancel);
-        var queryResponse = await QueryResponse.GetFromHttpResponseAsync<T>(ctx,
-                                                                            deserializer,
-                                                                            httpResponse);
-        switch (queryResponse)
+        var body = await httpResponse.Content.ReadAsStringAsync(cancel);
+        var res = QueryResponse.GetFromResponseBody<T>(ctx, deserializer, httpResponse.StatusCode, body);
+        switch (res)
         {
             case QuerySuccess<T> success:
-                LastSeenTxn = queryResponse.LastSeenTxn;
+                LastSeenTxn = res.LastSeenTxn;
                 return success;
-
             case QueryFailure failure:
-                string FormatMessage(string errorType) => $"{errorType}: {failure.ErrorInfo.Message}";
-
-                throw failure.ErrorInfo.Code switch
-                {
-                    // Auth Errors
-                    "unauthorized" => new AuthenticationException(failure, FormatMessage("Unauthorized")),
-                    "forbidden" => new AuthorizationException(failure, FormatMessage("Forbidden")),
-
-                    // Query Errors
-                    "invalid_query" or
-                    "invalid_function_definition" or
-                    "invalid_identifier" or
-                    "invalid_syntax" or
-                    "invalid_type" => new QueryCheckException(failure, FormatMessage("Invalid Query")),
-                    "invalid_argument" => new QueryRuntimeException(failure, FormatMessage("Invalid Argument")),
-                    "abort" => new AbortException(ctx, failure, FormatMessage("Abort")),
-
-                    // Request/Transaction Errors
-                    "invalid_request" => new InvalidRequestException(failure, FormatMessage("Invalid Request")),
-                    "contended_transaction" => new ContendedTransactionException(failure, FormatMessage("Contended Transaction")),
-
-                    // Capacity Errors
-                    "limit_exceeded" => new ThrottlingException(failure, FormatMessage("Limit Exceeded")),
-                    "time_limit_exceeded" => new QueryTimeoutException(failure, FormatMessage("Time Limit Exceeded")),
-
-                    // Server/Network Errors
-                    "internal_error" => new ServiceException(failure, FormatMessage("Internal Error")),
-                    "timeout" or
-                    "time_out" => new QueryTimeoutException(failure, FormatMessage("Timeout")),
-                    "bad_gateway" => new NetworkException(FormatMessage("Bad Gateway")),
-                    "gateway_timeout" => new NetworkException(FormatMessage("Gateway Timeout")),
-
-                    _ => new FaunaException(FormatMessage("Unexpected Error")),
-                };
-
+                throw ExceptionFactory.FromQueryFailure(ctx, failure);
             default:
-                throw new InvalidOperationException("Unreachable");
+                throw ExceptionFactory.FromRawResponse(body, httpResponse);
         }
     }
 

@@ -4,9 +4,9 @@ namespace Fauna.Test.Helpers;
 
 public static class TestClientHelper
 {
-    public static Client NewTestClient()
+    public static Client NewTestClient(string secret = "secret")
     {
-        var cfg = new Configuration("secret")
+        var cfg = new Configuration(secret)
         {
             Endpoint = new Uri("http://localhost:8443"),
         };

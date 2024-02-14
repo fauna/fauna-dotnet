@@ -44,68 +44,24 @@ public class Connection : IConnection
         Dictionary<string, string> headers,
         CancellationToken cancel = default)
     {
-        string FormatMessage(string errorType, string message) => $"{errorType}: {message}";
-
-        try
+        HttpResponseMessage response;
         {
-            HttpResponseMessage response;
+
+            var policyResult = await _cfg.RetryConfiguration.RetryPolicy
+                .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+                .ConfigureAwait(false);
+
+            if (policyResult.Outcome == OutcomeType.Successful)
             {
-
-                var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                    .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
-                    .ConfigureAwait(false);
-
-                if (policyResult.Outcome == OutcomeType.Successful)
-                {
-                    response = policyResult.Result;
-                }
-                else
-                {
-                    throw policyResult.FinalException;
-                }
-            }
-
-            return response;
-        }
-        catch (HttpRequestException ex)
-        {
-            throw new NetworkException(FormatMessage("Network Error", ex.Message), ex);
-        }
-        catch (TaskCanceledException ex)
-        {
-            if (!ex.CancellationToken.IsCancellationRequested)
-            {
-                throw new ClientException(FormatMessage("Operation Canceled", ex.Message), ex);
+                response = policyResult.Result;
             }
             else
             {
-                throw new ClientException(FormatMessage("Operation Timed Out", ex.Message), ex);
+                throw policyResult.FinalException;
             }
         }
-        catch (ArgumentNullException ex)
-        {
-            throw new ClientException(FormatMessage("Null Argument", ex.Message), ex);
-        }
-        catch (InvalidOperationException ex)
-        {
-            throw new ClientException(FormatMessage("Invalid Operation", ex.Message), ex);
-        }
-        catch (JsonException ex)
-        {
-            throw new ProtocolException(FormatMessage("Response Parsing Failed", ex.Message), ex);
-        }
-        catch (AuthenticationException ex)
-        {
-            throw new ClientException(FormatMessage("Authentication Failed", ex.Message), ex);
-        }
-        catch (NotSupportedException ex)
-        {
-            throw new ClientException(FormatMessage("Not Supported Operation", ex.Message), ex);
-        }
-        catch (Exception ex)
-        {
-            throw new FaunaException(FormatMessage("Unexpected Error", ex.Message), ex);
-        }
+
+        return response;
     }
 
     private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)
