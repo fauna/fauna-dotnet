@@ -15,7 +15,7 @@ public abstract class QuerySource : IQuerySource
         Ctx = ctx;
     }
 
-    internal void SetQuery<TElem>(IntermediateExpr query)
+    internal void SetQuery<TElem>(Query query)
     {
         Pipeline = new Pipeline(PipelineMode.Query, query, typeof(TElem), null, null);
     }

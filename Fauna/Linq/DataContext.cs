@@ -1,7 +1,6 @@
 using Fauna.Mapping;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -75,7 +74,7 @@ public abstract class DataContext : BaseClient
         {
             var nameAttr = this.GetType().GetCustomAttribute<NameAttribute>();
             Name = nameAttr?.Name ?? typeof(Doc).Name;
-            SetQuery<Doc>(Linq.IntermediateExpr.CollectionAll(this));
+            SetQuery<Doc>(Linq.IntermediateQueryHelpers.CollectionAll(this));
         }
 
         // index call DSL
@@ -140,7 +139,7 @@ public abstract class DataContext : BaseClient
             Name = name;
             Args = args;
             Ctx = ctx;
-            SetQuery<Doc>(Linq.IntermediateExpr.CollectionIndex(this));
+            SetQuery<Doc>(Linq.IntermediateQueryHelpers.CollectionIndex(this));
         }
     }
 

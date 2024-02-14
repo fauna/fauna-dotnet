@@ -13,16 +13,15 @@ public enum PipelineMode
 
 internal readonly record struct Pipeline(
     PipelineMode Mode,
-    IntermediateExpr Query,
+    Query Query,
     Type ElemType,
     IDeserializer? ElemDeserializer,
     LambdaExpression? ProjectExpr)
 {
     public PipelineExecutor GetExec(DataContext ctx)
     {
-        var query = Query.Build();
         var deser = ElemDeserializer ?? Deserializer.Generate(ctx.MappingCtx, ElemType);
         var proj = ProjectExpr is null ? null : ProjectExpr.Compile();
-        return PipelineExecutor.Create(ctx, query, deser, proj, Mode);
+        return PipelineExecutor.Create(ctx, Query, deser, proj, Mode);
     }
 }

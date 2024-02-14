@@ -1,12 +1,11 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Fauna.Util;
+using QH = Fauna.Linq.IntermediateQueryHelpers;
 
 namespace Fauna.Linq;
 
-using IE = IntermediateExpr;
-
-internal class SubQuerySwitch : DefaultExpressionSwitch<IE>
+internal class SubQuerySwitch : DefaultExpressionSwitch<Query>
 {
     private readonly LookupTable _lookup;
 
@@ -15,38 +14,38 @@ internal class SubQuerySwitch : DefaultExpressionSwitch<IE>
         _lookup = lookup;
     }
 
-    protected override IE ApplyDefault(Expression? expr) =>
+    protected override Query ApplyDefault(Expression? expr) =>
         throw IQuerySource.Fail(expr);
 
-    protected override IE ConstantExpr(ConstantExpression expr)
+    protected override Query ConstantExpr(ConstantExpression expr)
     {
         if (expr.Value is DataContext.Collection col)
         {
-            return IE.CollectionAll(col);
+            return QH.CollectionAll(col);
         }
         else if (expr.Value is DataContext.Index idx)
         {
-            return IE.CollectionIndex(idx);
+            return QH.CollectionIndex(idx);
         }
         else
         {
-            return IE.Const(expr.Value);
+            return QH.Const(expr.Value);
         }
     }
 
-    protected override IE LambdaExpr(LambdaExpression expr)
+    protected override Query LambdaExpr(LambdaExpression expr)
     {
         var ps = expr.Parameters;
         var pinner = string.Join(", ", ps.Select(p => p.Name));
         var param = ps.Count() == 1 ? pinner : $"({pinner})";
-        var arrow = IE.Exp($"{param} =>");
+        var arrow = QH.Expr($"{param} =>");
 
-        return arrow.Concat(IE.Parens(Apply(expr.Body)));
+        return arrow.Concat(QH.Parens(Apply(expr.Body)));
     }
 
-    protected override IE ParameterExpr(ParameterExpression expr) => IE.Exp(expr.Name!);
+    protected override Query ParameterExpr(ParameterExpression expr) => QH.Expr(expr.Name!);
 
-    protected override IE BinaryExpr(BinaryExpression expr)
+    protected override Query BinaryExpr(BinaryExpression expr)
     {
         var op = expr.NodeType switch
         {
@@ -80,37 +79,46 @@ internal class SubQuerySwitch : DefaultExpressionSwitch<IE>
         var lhs = Apply(expr.Left);
         var rhs = Apply(expr.Right);
 
-        return IE.Parens(IE.Op(lhs, op, rhs));
+        return QH.Parens(QH.Op(lhs, op, rhs));
     }
 
-    protected override IE CallExpr(MethodCallExpression expr)
+    protected override Query CallExpr(MethodCallExpression expr)
     {
         var (callee, args, ext) = Expressions.GetCalleeAndArgs(expr);
         var name = _lookup.MethodLookup(expr.Method, callee)?.Name;
         if (name is null) throw IQuerySource.Fail(expr);
-        return IE.MethodCall(Apply(callee), name, ApplyAll(args));
+        return QH.MethodCall(Apply(callee), name, ApplyAll(args));
     }
 
-    protected override IE MemberAccessExpr(MemberExpression expr)
+    protected override Query MemberAccessExpr(MemberExpression expr)
     {
         var callee = expr.Expression;
         if (callee is null)
         {
             var val = Expression.Lambda(expr).Compile().DynamicInvoke();
-            return IE.Const(val);
+            return QH.Const(val);
         }
         else if (callee.Type.IsClosureType())
         {
-            return Apply(callee).Access(expr.Member.Name);
+            var val = Expression.Lambda(expr).Compile().DynamicInvoke();
+            return QH.Const(val);
         }
-        else
-        {
-            var name = expr.Member is PropertyInfo prop ?
-                _lookup.FieldLookup(prop, callee)?.Name :
-                null;
 
-            if (name is null) throw IQuerySource.Fail(expr);
-            return Apply(callee).Access(name);
+        switch (Apply(callee))
+        {
+            case QueryVal v:
+                var c = Expression.Constant(v.Unwrap);
+                var access = Expression.PropertyOrField(c, expr.Member.Name);
+                var val = Expression.Lambda(access).Compile().DynamicInvoke();
+                return QH.Const(val);
+
+            case var q:
+                var name = expr.Member is PropertyInfo prop ?
+                    _lookup.FieldLookup(prop, callee)?.Name :
+                    null;
+
+                if (name is null) throw IQuerySource.Fail(expr);
+                return QH.FieldAccess(q, name);
         }
     }
 }

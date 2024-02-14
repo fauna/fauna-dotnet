@@ -4,13 +4,13 @@ using Fauna.Util;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Linq.Expressions;
-using IE = Fauna.Linq.IntermediateExpr;
+using QH = Fauna.Linq.IntermediateQueryHelpers;
 
 namespace Fauna.Linq;
 
 public partial class QuerySource<T>
 {
-    private IE Query { get => Pipeline.Query; }
+    private Query Query { get => Pipeline.Query; }
     private MappingContext MappingCtx { get => Ctx.MappingCtx; }
     private LookupTable Lookup { get => Ctx.LookupTable; }
 
@@ -19,35 +19,35 @@ public partial class QuerySource<T>
     public IQuerySource<T> Distinct()
     {
         RequireQueryMode();
-        return Chain<T>(q: IE.MethodCall(Query, "distinct"));
+        return Chain<T>(q: QH.MethodCall(Query, "distinct"));
     }
 
     public IQuerySource<T> Order()
     {
         RequireQueryMode();
-        return Chain<T>(q: IE.MethodCall(Query, "order"));
+        return Chain<T>(q: QH.MethodCall(Query, "order"));
     }
 
     public IQuerySource<T> OrderBy<K>(Expression<Func<T, K>> keySelector)
     {
         RequireQueryMode();
-        return Chain<T>(q: IE.MethodCall(Query, "order", SubQuery(keySelector)));
+        return Chain<T>(q: QH.MethodCall(Query, "order", SubQuery(keySelector)));
     }
 
     public IQuerySource<T> OrderByDescending<K>(Expression<Func<T, K>> keySelector)
     {
         RequireQueryMode();
-        return Chain<T>(q: IE.MethodCall(Query, "order", IE.FnCall("desc", SubQuery(keySelector))));
+        return Chain<T>(q: QH.MethodCall(Query, "order", QH.FnCall("desc", SubQuery(keySelector))));
     }
 
     public IQuerySource<T> OrderDescending()
     {
         RequireQueryMode();
-        return Chain<T>(q: IE.MethodCall(Query, "order", IE.Exp("desc(x => x)")));
+        return Chain<T>(q: QH.MethodCall(Query, "order", QH.Expr("desc(x => x)")));
     }
 
     public IQuerySource<T> Reverse() =>
-        Chain<T>(q: IE.MethodCall(Query, "reverse"));
+        Chain<T>(q: QH.MethodCall(Query, "reverse"));
 
     public IQuerySource<R> Select<R>(Expression<Func<T, R>> selector)
     {
@@ -56,10 +56,10 @@ public partial class QuerySource<T>
     }
 
     public IQuerySource<T> Skip(int count) =>
-         Chain<T>(q: IE.MethodCall(Query, "drop", IE.Const(count)));
+         Chain<T>(q: QH.MethodCall(Query, "drop", QH.Const(count)));
 
     public IQuerySource<T> Take(int count) =>
-         Chain<T>(q: IE.MethodCall(Query, "take", IE.Const(count)));
+         Chain<T>(q: QH.MethodCall(Query, "take", QH.Const(count)));
 
     public IQuerySource<T> Where(Expression<Func<T, bool>> predicate) =>
         Chain<T>(q: WhereCall(Query, predicate));
@@ -75,7 +75,7 @@ public partial class QuerySource<T>
         RequireQueryMode("All");
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "every", SubQuery(predicate)),
+            q: QH.MethodCall(Query, "every", SubQuery(predicate)),
             ety: typeof(bool));
     }
 
@@ -84,7 +84,7 @@ public partial class QuerySource<T>
     private Pipeline AnyImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "nonEmpty"),
+            q: QH.MethodCall(Query, "nonEmpty"),
             ety: typeof(bool));
 
     public bool Any(Expression<Func<T, bool>> predicate) =>
@@ -94,7 +94,7 @@ public partial class QuerySource<T>
     private Pipeline AnyImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "nonEmpty"),
+            q: QH.MethodCall(WhereCall(Query, predicate), "nonEmpty"),
             ety: typeof(bool));
 
     public int Count() => Execute<int>(CountImpl());
@@ -102,7 +102,7 @@ public partial class QuerySource<T>
     private Pipeline CountImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "count"),
+            q: QH.MethodCall(Query, "count"),
             ety: typeof(int));
 
     public int Count(Expression<Func<T, bool>> predicate) =>
@@ -112,7 +112,7 @@ public partial class QuerySource<T>
     private Pipeline CountImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "count"),
+            q: QH.MethodCall(WhereCall(Query, predicate), "count"),
             ety: typeof(int));
 
     public T First() => Execute<T>(FirstImpl());
@@ -120,7 +120,7 @@ public partial class QuerySource<T>
     private Pipeline FirstImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "first"));
+            q: QH.MethodCall(Query, "first"));
 
     public T First(Expression<Func<T, bool>> predicate) =>
         Execute<T>(FirstImpl(predicate));
@@ -129,14 +129,14 @@ public partial class QuerySource<T>
     private Pipeline FirstImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "first"));
+            q: QH.MethodCall(WhereCall(Query, predicate), "first"));
 
     public T FirstOrDefault() => Execute<T>(FirstOrDefaultImpl());
     public Task<T> FirstOrDefaultAsync() => ExecuteAsync<T>(FirstOrDefaultImpl());
     private Pipeline FirstOrDefaultImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "first"));
+            q: QH.MethodCall(Query, "first"));
 
     public T FirstOrDefault(Expression<Func<T, bool>> predicate) =>
         Execute<T>(FirstOrDefaultImpl(predicate));
@@ -145,14 +145,14 @@ public partial class QuerySource<T>
     private Pipeline FirstOrDefaultImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "first"));
+            q: QH.MethodCall(WhereCall(Query, predicate), "first"));
 
     public T Last() => Execute<T>(LastImpl());
     public Task<T> LastAsync() => ExecuteAsync<T>(LastImpl());
     private Pipeline LastImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "last"));
+            q: QH.MethodCall(Query, "last"));
 
     public T Last(Expression<Func<T, bool>> predicate) =>
         Execute<T>(LastImpl(predicate));
@@ -161,14 +161,14 @@ public partial class QuerySource<T>
     private Pipeline LastImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "last"));
+            q: QH.MethodCall(WhereCall(Query, predicate), "last"));
 
     public T LastOrDefault() => Execute<T>(LastOrDefaultImpl());
     public Task<T> LastOrDefaultAsync() => ExecuteAsync<T>(LastOrDefaultImpl());
     private Pipeline LastOrDefaultImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "last"));
+            q: QH.MethodCall(Query, "last"));
 
     public T LastOrDefault(Expression<Func<T, bool>> predicate) =>
         Execute<T>(LastOrDefaultImpl(predicate));
@@ -177,14 +177,14 @@ public partial class QuerySource<T>
     private Pipeline LastOrDefaultImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "last"));
+            q: QH.MethodCall(WhereCall(Query, predicate), "last"));
 
     public long LongCount() => Execute<long>(LongCountImpl());
     public Task<long> LongCountAsync() => ExecuteAsync<long>(LongCountImpl());
     private Pipeline LongCountImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "count"),
+            q: QH.MethodCall(Query, "count"),
             ety: typeof(long));
 
     public long LongCount(Expression<Func<T, bool>> predicate) =>
@@ -194,17 +194,17 @@ public partial class QuerySource<T>
     private Pipeline LongCountImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(WhereCall(Query, predicate), "count"),
+            q: QH.MethodCall(WhereCall(Query, predicate), "count"),
             ety: typeof(long));
 
-    private static readonly IE _maxReducer = IE.Exp("(a, b) => if (a >= b) a else b");
+    private static readonly Query _maxReducer = QH.Expr("(a, b) => if (a >= b) a else b");
 
     public T Max() => Execute<T>(MaxImpl());
     public Task<T> MaxAsync() => ExecuteAsync<T>(MaxImpl());
     private Pipeline MaxImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "reduce", _maxReducer));
+            q: QH.MethodCall(Query, "reduce", _maxReducer));
 
     public R Max<R>(Expression<Func<T, R>> selector) => Execute<R>(MaxImpl(selector));
     public Task<R> MaxAsync<R>(Expression<Func<T, R>> selector) => ExecuteAsync<R>(MaxImpl(selector));
@@ -213,18 +213,18 @@ public partial class QuerySource<T>
         RequireQueryMode("Max");
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(IE.MethodCall(Query, "map", SubQuery(selector)), "reduce", _maxReducer),
+            q: QH.MethodCall(QH.MethodCall(Query, "map", SubQuery(selector)), "reduce", _maxReducer),
             ety: typeof(R));
     }
 
-    private static readonly IE _minReducer = IE.Exp("(a, b) => if (a <= b) a else b");
+    private static readonly Query _minReducer = QH.Expr("(a, b) => if (a <= b) a else b");
 
     public T Min() => Execute<T>(MinImpl());
     public Task<T> MinAsync() => ExecuteAsync<T>(MinImpl());
     private Pipeline MinImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(Query, "reduce", _minReducer));
+            q: QH.MethodCall(Query, "reduce", _minReducer));
 
     public R Min<R>(Expression<Func<T, R>> selector) => Execute<R>(MinImpl(selector));
     public Task<R> MinAsync<R>(Expression<Func<T, R>> selector) => ExecuteAsync<R>(MinImpl(selector));
@@ -233,11 +233,11 @@ public partial class QuerySource<T>
         RequireQueryMode("Min");
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(IE.MethodCall(Query, "map", SubQuery(selector)), "reduce", _minReducer),
+            q: QH.MethodCall(QH.MethodCall(Query, "map", SubQuery(selector)), "reduce", _minReducer),
             ety: typeof(R));
     }
 
-    private static readonly IE _sumReducer = IE.Exp("(a, b) => a + b");
+    private static readonly Query _sumReducer = QH.Expr("(a, b) => a + b");
 
     public int Sum(Expression<Func<T, int>> selector) => Execute<int>(SumImpl<int>(selector));
     public Task<int> SumAsync(Expression<Func<T, int>> selector) => ExecuteAsync<int>(SumImpl<int>(selector));
@@ -251,12 +251,12 @@ public partial class QuerySource<T>
     {
         RequireQueryMode("Sum");
         var seed = (typeof(R) == typeof(int) || typeof(R) == typeof(long)) ?
-            IE.Exp("0") :
-            IE.Exp("0.0");
-        var mapped = IE.MethodCall(Query, "map", SubQuery(selector));
+            QH.Expr("0") :
+            QH.Expr("0.0");
+        var mapped = QH.MethodCall(Query, "map", SubQuery(selector));
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: IE.MethodCall(mapped, "fold", seed, _sumReducer),
+            q: QH.MethodCall(mapped, "fold", seed, _sumReducer),
             ety: typeof(R));
     }
 
@@ -274,7 +274,7 @@ public partial class QuerySource<T>
 
     private QuerySource<R> Chain<R>(
         PipelineMode? mode = null,
-        IntermediateExpr? q = null,
+        Query? q = null,
         IDeserializer? deser = null,
         Type? ety = null,
         LambdaExpression? proj = null) =>
@@ -282,7 +282,7 @@ public partial class QuerySource<T>
 
     private Pipeline CopyPipeline(
         PipelineMode? mode = null,
-        IntermediateExpr? q = null,
+        Query? q = null,
         IDeserializer? deser = null,
         Type? ety = null,
         LambdaExpression? proj = null)
@@ -300,16 +300,16 @@ public partial class QuerySource<T>
         return new Pipeline(mode0, q0, ety0, deser0, proj0);
     }
 
-    private IE SubQuery(Expression expr) =>
+    private Query SubQuery(Expression expr) =>
         new SubQuerySwitch(Ctx.LookupTable).Apply(expr);
 
-    private IE WhereCall(IE callee, Expression predicate, [CallerMemberName] string callerName = "")
+    private Query WhereCall(Query callee, Expression predicate, [CallerMemberName] string callerName = "")
     {
         RequireQueryMode(callerName);
-        return IE.MethodCall(callee, "where", SubQuery(predicate));
+        return QH.MethodCall(callee, "where", SubQuery(predicate));
     }
 
-    private Pipeline SelectCall(IE callee, Expression proj, [CallerMemberName] string callerName = "")
+    private Pipeline SelectCall(Query callee, Expression proj, [CallerMemberName] string callerName = "")
     {
         var lambda = Expressions.UnwrapLambda(proj);
         Debug.Assert(lambda is not null, $"lambda is {proj.NodeType}");
@@ -342,9 +342,8 @@ public partial class QuerySource<T>
             var field = Lookup.FieldLookup(access, lparam);
             Debug.Assert(field is not null);
 
-            var pquery = IE.Exp("x => ").Concat(IE.Exp("x").Access(field.Name));
             return CopyPipeline(
-                q: IE.MethodCall(callee, "map", pquery),
+                q: QH.MethodCall(callee, "map", QH.Expr($".{field.Name}")),
                 deser: field.Deserializer,
                 ety: field.Type);
         }
@@ -359,8 +358,8 @@ public partial class QuerySource<T>
             var fields = accesses.Select(a => Lookup.FieldLookup(a, lparam)!);
 
             // projection query fragment
-            var accs = fields.Select(f => IE.Exp("x").Access(f.Name));
-            var pquery = IE.Exp("x => ").Concat(IE.Array(accs));
+            var accs = fields.Select(f => QH.Expr($"x.{f.Name}"));
+            var pquery = QH.Expr("x => ").Concat(QH.Array(accs));
 
             // projected field deserializer
             var deser = new ProjectionDeserializer(fields.Select(f => f.Deserializer));
@@ -373,7 +372,7 @@ public partial class QuerySource<T>
             var plambda = Expression.Lambda(pbody, pparam);
 
             return CopyPipeline(
-                q: IE.MethodCall(callee, "map", pquery),
+                q: QH.MethodCall(callee, "map", pquery),
                 mode: PipelineMode.Project,
                 deser: deser,
                 ety: ety,
