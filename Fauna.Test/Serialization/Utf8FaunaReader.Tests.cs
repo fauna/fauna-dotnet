@@ -169,7 +169,7 @@ public class Utf8FaunaReaderTests
         var reader = new Utf8FaunaReader(s);
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
-            new(TokenType.Date, new DateTime(2023, 12, 3))
+            new(TokenType.Date, new DateOnly(2023, 12, 3))
         };
 
         AssertReader(reader, expectedTokens);
@@ -392,7 +392,7 @@ public class Utf8FaunaReaderTests
             new(TokenType.Double, 0.1M),
 
             new(TokenType.FieldName, "aDate"),
-            new(TokenType.Date, new DateTime(2023, 12, 3)),
+            new(TokenType.Date, new DateOnly(2023, 12, 3)),
 
             new(TokenType.FieldName, "aTime"),
             new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, DateTimeKind.Utc).AddTicks(10).ToLocalTime()),
@@ -464,7 +464,7 @@ public class Utf8FaunaReaderTests
 
             new(TokenType.Double, 0.1M),
 
-            new(TokenType.Date, new DateTime(2023, 12, 3)),
+            new(TokenType.Date, new DateOnly(2023, 12, 3)),
 
             new(TokenType.Time, new DateTime(2023, 12, 3, 14, 52, 10, 1, DateTimeKind.Utc).AddTicks(10).ToLocalTime()),
 
