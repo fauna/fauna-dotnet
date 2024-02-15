@@ -61,7 +61,7 @@ public class DeserializerTests
             {@"{""@int"":""42""}", 42},
             {@"{""@long"":""42""}", 42L},
             {@"{""@double"": ""1.2""}", 1.2d},
-            {@"{""@date"": ""2023-12-03""}", new DateTime(2023, 12, 3)},
+            {@"{""@date"": ""2023-12-03""}", new DateOnly(2023, 12, 3)},
             {@"{""@time"": ""2023-12-03T05:52:10.000001-09:00""}", new DateTime(2023, 12, 3, 14, 52, 10, 0, DateTimeKind.Utc).AddTicks(10).ToLocalTime()},
             {"true", true},
             {"false", false},
@@ -116,8 +116,8 @@ public class DeserializerTests
     [Test]
     public void DeserializeDateGeneric()
     {
-        var result = Deserialize<DateTime>(@"{""@date"": ""2023-12-03""}");
-        Assert.AreEqual(new DateTime(2023, 12, 3), result);
+        var result = Deserialize<DateOnly>(@"{""@date"": ""2023-12-03""}");
+        Assert.AreEqual(new DateOnly(2023, 12, 3), result);
     }
 
     [Test]
@@ -376,7 +376,7 @@ public class DeserializerTests
             { "anInt", 2147483647 },
             { "aLong", 9223372036854775807 },
             { "aDouble", 3.14159d },
-            { "aDate", new DateTime(2023, 12, 3) },
+            { "aDate", new DateOnly(2023, 12, 3) },
             { "aTime", new DateTime(2023, 12, 3, 14, 52, 10, 1, DateTimeKind.Utc).AddTicks(10).ToLocalTime() },
             { "true", true },
             { "false", false },
