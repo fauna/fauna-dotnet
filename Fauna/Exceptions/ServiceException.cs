@@ -4,7 +4,6 @@ using Fauna.Serialization;
 
 namespace Fauna.Exceptions;
 
-
 /// <summary>
 /// Represents an interface for exceptions that are potentially recoverable through retrying the failed operation.
 /// </summary>
@@ -169,7 +168,6 @@ public class ForbiddenException : ServiceException
     }
 }
 
-
 /// <summary>
 /// Represents an exception thrown when there is an authorization error in Fauna.
 /// Corresponds to the 'unauthorized' error code in Fauna.
@@ -191,7 +189,6 @@ public class TimeoutException : ServiceException
     }
 }
 
-
 /// <summary>
 /// Represents exceptions thrown when the query execution time exceeds the specified or default timeout period.
 /// </summary>
@@ -201,7 +198,6 @@ public class QueryTimeoutException : TimeoutException
     {
     }
 }
-
 
 /// <summary>
 /// Represents exceptions thrown when the query has syntax errors.
@@ -237,7 +233,6 @@ public class ThrottlingException : ServiceException, IRetryableException
     {
     }
 }
-
 
 /// <summary>
 /// Represents exceptions caused by invalid requests to Fauna.

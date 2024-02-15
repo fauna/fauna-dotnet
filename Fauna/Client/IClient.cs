@@ -19,9 +19,8 @@ interface IClient
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
     /// <param name="cancel">A cancellation token to use</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -30,7 +29,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
@@ -45,9 +43,8 @@ interface IClient
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
     /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -56,7 +53,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
@@ -72,9 +68,8 @@ interface IClient
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
     /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -83,7 +78,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
@@ -99,9 +93,8 @@ interface IClient
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
     /// <param name="cancel">A cancellation toke to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -110,7 +103,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
@@ -129,9 +121,8 @@ interface IClient
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -140,7 +131,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
@@ -158,9 +148,8 @@ interface IClient
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -169,7 +158,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
@@ -188,9 +176,8 @@ interface IClient
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -199,7 +186,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
@@ -218,9 +204,8 @@ interface IClient
     /// <remarks>
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -229,7 +214,6 @@ interface IClient
     /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
     /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
     /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,

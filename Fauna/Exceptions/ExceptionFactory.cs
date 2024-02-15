@@ -24,8 +24,7 @@ public static class ExceptionFactory
             "invalid_request" => new InvalidRequestException(msg, f),
             "limit_exceeded" => new ThrottlingException(msg, f),
             "time_limit_exceeded" => new QueryTimeoutException(msg, f),
-            "timeout" or
-                "time_out" or
+            "time_out" or
                 "gateway_timeout" => new TimeoutException(msg, f),
             "unauthorized" => new UnauthorizedException(msg, f),
 

@@ -23,21 +23,6 @@ public class Connection : IConnection
         _cfg = configuration;
     }
 
-    /// <summary>
-    /// Asynchronously sends a POST request to the specified path with the provided body and headers.
-    /// Implements retry logic with exponential backoff and handles various HTTP and network-related exceptions.
-    /// </summary>
-    /// <typeparam name="T">The type of the response expected from the request.</typeparam>
-    /// <param name="path">The path of the resource to send the request to.</param>
-    /// <param name="body">The stream containing the request body.</param>
-    /// <param name="headers">A dictionary of headers to be included in the request.</param>
-    /// <param name="cancel">A cancellation token to use.</param>
-    /// <returns>A Task representing the asynchronous operation, which upon completion contains the response from the server as <see cref="HttpResponseMessage"/>.</returns>
-    /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="NetworkException">Thrown for failures in network communication between the client and Fauna service.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="ProtocolException">Thrown when response parsing fails.</exception>
-    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public async Task<HttpResponseMessage> DoPostAsync(
         string path,
         Stream body,
