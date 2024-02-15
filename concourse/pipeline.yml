@@ -17,6 +17,14 @@ resources:
     source:
       uri: https://github.com/fauna/fauna-dotnet
       branch: main
+      
+  - name: docs.git
+    type: git
+    icon: github
+    source:
+      uri: git@github.com:fauna/fauna-dotnet.git
+      branch: gh-pages
+      private_key: ((github-ssh-key))
 
 jobs:
   - name: release
@@ -24,6 +32,7 @@ jobs:
     public: false
     plan:
       - get: repo.git
+      - get: docs.git
 
       - task: publish
         file: repo.git/concourse/tasks/publish.yml
@@ -33,3 +42,10 @@ jobs:
           put: notify
           params:
             text_file: slack-message/publish
+
+      - task: publish-docs
+        file: repo.git/concourse/tasks/publish-docs.yml
+
+      - put: docs.git
+        params:
+          repository: updated-docs.git
