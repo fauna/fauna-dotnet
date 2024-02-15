@@ -15,13 +15,19 @@ internal readonly record struct Pipeline(
     PipelineMode Mode,
     Query Query,
     Type ElemType,
+    bool ElemNullable,
     IDeserializer? ElemDeserializer,
     LambdaExpression? ProjectExpr)
 {
     public PipelineExecutor GetExec(DataContext ctx)
     {
-        var deser = ElemDeserializer ?? Deserializer.Generate(ctx.MappingCtx, ElemType);
+        var deser = ElemDeserializer ??
+            (ElemNullable ?
+             Deserializer.GenerateNullable(ctx.MappingCtx, ElemType) :
+             Deserializer.Generate(ctx.MappingCtx, ElemType));
+
         var proj = ProjectExpr is null ? null : ProjectExpr.Compile();
+
         return PipelineExecutor.Create(ctx, Query, deser, proj, Mode);
     }
 }

@@ -131,21 +131,25 @@ public partial class QuerySource<T>
             mode: PipelineMode.Scalar,
             q: QH.MethodCall(WhereCall(Query, predicate), "first"));
 
-    public T FirstOrDefault() => Execute<T>(FirstOrDefaultImpl());
-    public Task<T> FirstOrDefaultAsync() => ExecuteAsync<T>(FirstOrDefaultImpl());
+    public T? FirstOrDefault() => Execute<T?>(FirstOrDefaultImpl());
+    public Task<T?> FirstOrDefaultAsync() => ExecuteAsync<T?>(FirstOrDefaultImpl());
     private Pipeline FirstOrDefaultImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "first"));
+            q: QH.MethodCall(Query, "first"),
+            ety: typeof(T),
+            enull: true);
 
-    public T FirstOrDefault(Expression<Func<T, bool>> predicate) =>
-        Execute<T>(FirstOrDefaultImpl(predicate));
-    public Task<T> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<T>(FirstOrDefaultImpl(predicate));
+    public T? FirstOrDefault(Expression<Func<T, bool>> predicate) =>
+        Execute<T?>(FirstOrDefaultImpl(predicate));
+    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate) =>
+        ExecuteAsync<T?>(FirstOrDefaultImpl(predicate));
     private Pipeline FirstOrDefaultImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "first"));
+            q: QH.MethodCall(WhereCall(Query, predicate), "first"),
+            ety: typeof(T),
+            enull: true);
 
     public T Last() => Execute<T>(LastImpl());
     public Task<T> LastAsync() => ExecuteAsync<T>(LastImpl());
@@ -277,14 +281,16 @@ public partial class QuerySource<T>
         Query? q = null,
         IDeserializer? deser = null,
         Type? ety = null,
+        bool enull = false,
         LambdaExpression? proj = null) =>
-        new QuerySource<R>(Ctx, CopyPipeline(mode, q, deser, ety, proj));
+        new QuerySource<R>(Ctx, CopyPipeline(mode, q, deser, ety, enull, proj));
 
     private Pipeline CopyPipeline(
         PipelineMode? mode = null,
         Query? q = null,
         IDeserializer? deser = null,
         Type? ety = null,
+        bool enull = false,
         LambdaExpression? proj = null)
     {
         if (deser is not null) Debug.Assert(ety is not null);
@@ -293,11 +299,14 @@ public partial class QuerySource<T>
         var q0 = q ?? Pipeline.Query;
 
         // if ety is not null, reset deser and proj if not provided.
-        var (ety0, deser0, proj0) = ety is not null ?
-            (ety, deser, proj) :
-            (Pipeline.ElemType, Pipeline.ElemDeserializer, proj ?? Pipeline.ProjectExpr);
+        var (ety0, enull0, deser0, proj0) = ety is not null ?
+            (ety, enull, deser, proj) :
+            (Pipeline.ElemType,
+             Pipeline.ElemNullable,
+             Pipeline.ElemDeserializer,
+             proj ?? Pipeline.ProjectExpr);
 
-        return new Pipeline(mode0, q0, ety0, deser0, proj0);
+        return new Pipeline(mode0, q0, ety0, enull0, deser0, proj0);
     }
 
     private Query SubQuery(Expression expr) =>

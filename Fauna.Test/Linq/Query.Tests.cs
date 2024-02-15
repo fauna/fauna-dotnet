@@ -270,7 +270,6 @@ public class QueryTests
     }
 
     [Test]
-    [Ignore("broken deserialization")]
     public void Query_FirstOrDefault()
     {
         var fst = db.Author.FirstOrDefault();

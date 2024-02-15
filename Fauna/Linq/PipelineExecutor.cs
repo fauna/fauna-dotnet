@@ -149,6 +149,11 @@ internal interface PipelineExecutor
                 return ret;
             }
 
+            if (qres.Data is null)
+            {
+                return default(T)!;
+            }
+
             Debug.Assert(typeof(T) == ResType, $"{typeof(T)} is not {ResType}");
             throw new Exception("unreachable");
         }

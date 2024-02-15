@@ -17,7 +17,7 @@ public abstract class QuerySource : IQuerySource
 
     internal void SetQuery<TElem>(Query query)
     {
-        Pipeline = new Pipeline(PipelineMode.Query, query, typeof(TElem), null, null);
+        Pipeline = new Pipeline(PipelineMode.Query, query, typeof(TElem), false, null, null);
     }
 
     // DSL Helpers
