@@ -29,6 +29,12 @@ public class IntegrationTests
         _client = NewTestClient();
     }
 
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _client.Dispose();
+    }
+
     [Test]
     public async Task UserDefinedObjectTest()
     {

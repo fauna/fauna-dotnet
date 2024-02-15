@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents an interface for connections to a Fauna database.
 /// </summary>
-public interface IConnection
+public interface IConnection : IDisposable
 {
     /// <summary>
     /// Asynchronously sends a POST request to the specified path with the provided body and headers.

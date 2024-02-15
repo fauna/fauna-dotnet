@@ -11,11 +11,24 @@ namespace Fauna.Test.Exceptions
     [TestFixture]
     public class ServiceExceptionTests
     {
-        private readonly Client _c = TestClientHelper.NewTestClient();
+        [AllowNull]
+        private Client _c;
 
         private class TestAbortClass
         {
             [AllowNull] public string Name { get; init; }
+        }
+
+        [OneTimeSetUp]
+        public void SetUp()
+        {
+            _c = TestClientHelper.NewTestClient();
+        }
+
+        [OneTimeTearDown]
+        public void TearDown()
+        {
+            _c.Dispose();
         }
 
         [Test]
@@ -67,7 +80,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void UnauthorizedException_Basic()
         {
-            var badClient = TestClientHelper.NewTestClient("invalid");
+            using var badClient = TestClientHelper.NewTestClient("invalid");
             var q = FQL($"42");
             var e = Assert.ThrowsAsync<UnauthorizedException>(async () => await badClient.QueryAsync(q));
             Assert.NotNull(e);

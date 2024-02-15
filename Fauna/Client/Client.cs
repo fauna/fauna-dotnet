@@ -11,7 +11,7 @@ namespace Fauna;
 /// <summary>
 /// Represents a client for interacting with a Fauna.
 /// </summary>
-public class Client : BaseClient
+public class Client : BaseClient, IDisposable
 {
     private const string QueryUriPath = "/query/1";
 
@@ -20,6 +20,8 @@ public class Client : BaseClient
 
     private readonly MappingContext _defaultCtx = new();
     private readonly Dictionary<Type, DataContext> _dbCtxs = new();
+
+    private bool _disposed;
 
     internal override MappingContext MappingCtx { get => _defaultCtx; }
 
@@ -163,5 +165,32 @@ public class Client : BaseClient
     private static string EncodeQueryTags(Dictionary<string, string> tags)
     {
         return string.Join(",", tags.Select(entry => entry.Key + "=" + entry.Value));
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed) return;
+
+        if (disposing)
+        {
+            _connection.Dispose();
+            GC.SuppressFinalize(this);
+        }
+        _disposed = true;
+    }
+
+    /// <summary>
+    /// Disposes the resources used by the <see cref="Client"/> class.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    // A finalizer: https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
+    ~Client()
+    {
+        Dispose(false);
     }
 }
