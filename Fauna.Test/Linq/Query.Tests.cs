@@ -293,7 +293,6 @@ public class QueryTests
     }
 
     [Test]
-    [Ignore("broken deserialization")]
     public void Query_LastOrDefault()
     {
         var lst = db.Author.LastOrDefault();

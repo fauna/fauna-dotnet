@@ -167,21 +167,25 @@ public partial class QuerySource<T>
             mode: PipelineMode.Scalar,
             q: QH.MethodCall(WhereCall(Query, predicate), "last"));
 
-    public T LastOrDefault() => Execute<T>(LastOrDefaultImpl());
-    public Task<T> LastOrDefaultAsync() => ExecuteAsync<T>(LastOrDefaultImpl());
+    public T? LastOrDefault() => Execute<T?>(LastOrDefaultImpl());
+    public Task<T?> LastOrDefaultAsync() => ExecuteAsync<T?>(LastOrDefaultImpl());
     private Pipeline LastOrDefaultImpl() =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "last"));
+            q: QH.MethodCall(Query, "last"),
+            ety: typeof(T),
+            enull: true);
 
-    public T LastOrDefault(Expression<Func<T, bool>> predicate) =>
-        Execute<T>(LastOrDefaultImpl(predicate));
-    public Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<T>(LastOrDefaultImpl(predicate));
+    public T? LastOrDefault(Expression<Func<T, bool>> predicate) =>
+        Execute<T?>(LastOrDefaultImpl(predicate));
+    public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate) =>
+        ExecuteAsync<T?>(LastOrDefaultImpl(predicate));
     private Pipeline LastOrDefaultImpl(Expression<Func<T, bool>> predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "last"));
+            q: QH.MethodCall(WhereCall(Query, predicate), "last"),
+            ety: typeof(T),
+            enull: true);
 
     public long LongCount() => Execute<long>(LongCountImpl());
     public Task<long> LongCountAsync() => ExecuteAsync<long>(LongCountImpl());

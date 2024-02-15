@@ -80,11 +80,11 @@ public interface IQuerySource<T> : IQuerySource
     public T Last(Expression<Func<T, bool>> predicate);
     public Task<T> LastAsync(Expression<Func<T, bool>> predicate);
 
-    public T LastOrDefault();
-    public Task<T> LastOrDefaultAsync();
+    public T? LastOrDefault();
+    public Task<T?> LastOrDefaultAsync();
 
-    public T LastOrDefault(Expression<Func<T, bool>> predicate);
-    public Task<T> LastOrDefaultAsync(Expression<Func<T, bool>> predicate);
+    public T? LastOrDefault(Expression<Func<T, bool>> predicate);
+    public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate);
 
     public long LongCount();
     public Task<long> LongCountAsync();
