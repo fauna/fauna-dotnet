@@ -1,6 +1,7 @@
+using System.Net;
+using System.Text.Json;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using System.Text.Json;
 using static Fauna.Constants.ResponseFields;
 
 namespace Fauna;
@@ -8,9 +9,76 @@ namespace Fauna;
 /// <summary>
 /// Represents the response from a query executed.
 /// </summary>
-public abstract class QueryResponse : QueryInfo
+public abstract class QueryResponse
 {
-    internal QueryResponse(string rawResponseText) : base(rawResponseText) { }
+    public JsonElement RawJson { get; init; }
+
+    /// <summary>
+    /// Gets the last transaction seen by this query.
+    /// </summary>
+    public long LastSeenTxn { get; init; }
+
+    /// <summary>
+    /// Gets the schema version.
+    /// </summary>
+    public long SchemaVersion { get; init; }
+
+    /// <summary>
+    /// Gets a summary of the query execution.
+    /// </summary>
+    public string Summary { get; init; } = "";
+
+    /// <summary>
+    /// Gets a dictionary of query tags, providing additional context about the query.
+    /// </summary>
+    public Dictionary<string, string> QueryTags { get; init; } = new();
+
+    /// <summary>
+    /// Gets the statistics related to the query execution.
+    /// </summary>
+    public QueryStats Stats { get; init; }
+
+    internal QueryResponse(JsonElement json)
+    {
+        RawJson = json;
+
+        if (json.TryGetProperty(LastSeenTxnFieldName, out var elem))
+        {
+            if (elem.TryGetInt64(out var i)) LastSeenTxn = i;
+        }
+
+        if (json.TryGetProperty(SchemaVersionFieldName, out elem))
+        {
+            if (elem.TryGetInt64(out var i)) LastSeenTxn = i;
+        }
+
+        if (json.TryGetProperty(SummaryFieldName, out elem))
+        {
+            Summary = elem.GetString() ?? "";
+        }
+
+
+        if (json.TryGetProperty(QueryTagsFieldName, out elem))
+        {
+            var queryTagsString = elem.GetString();
+
+            if (!string.IsNullOrEmpty(queryTagsString))
+            {
+                var tagPairs = queryTagsString.Split(',').Select(tag =>
+                {
+                    var tokens = tag.Split('=');
+                    return KeyValuePair.Create(tokens[0], tokens[1]);
+                });
+
+                QueryTags = new Dictionary<string, string>(tagPairs);
+            }
+        }
+
+        if (json.TryGetProperty(StatsFieldName, out elem))
+        {
+            Stats = elem.Deserialize<QueryStats>();
+        }
+    }
 
     /// <summary>
     /// Asynchronously parses the HTTP response message to create a QueryResponse instance.
@@ -18,27 +86,30 @@ public abstract class QueryResponse : QueryInfo
     /// <typeparam name="T">The expected data type of the query response.</typeparam>
     /// <param name="ctx">Serialization context for handling response data.</param>
     /// <param name="deserializer">A deserializer for the success data type.</param>
-    /// <param name="message">The HTTP response message received from the Fauna database.</param>
+    /// <param name="statusCode">The HTTP status code.</param>
+    /// <param name="body">The response body.</param>
     /// <returns>A Task that resolves to a QueryResponse instance.</returns>
-    public static async Task<QueryResponse> GetFromHttpResponseAsync<T>(
+    public static QueryResponse? GetFromResponseBody<T>(
         MappingContext ctx,
         IDeserializer<T> deserializer,
-        HttpResponseMessage message)
+        HttpStatusCode statusCode,
+        string body)
     {
-        QueryResponse queryResponse;
-
-        var body = await message.Content.ReadAsStringAsync();
-
-        if (!message.IsSuccessStatusCode)
+        try
         {
-            queryResponse = new QueryFailure(body);
-        }
-        else
-        {
-            queryResponse = new QuerySuccess<T>(ctx, deserializer, body);
-        }
+            var json = JsonSerializer.Deserialize<JsonElement>(body);
 
-        return queryResponse;
+            if (statusCode is >= HttpStatusCode.OK and <= (HttpStatusCode)299)
+            {
+                return new QuerySuccess<T>(ctx, deserializer, json);
+            }
+
+            return new QueryFailure(statusCode, json);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
     }
 }
 
@@ -46,7 +117,7 @@ public abstract class QueryResponse : QueryInfo
 /// Represents a successful query response.
 /// </summary>
 /// <typeparam name="T">The type of data expected in the query result.</typeparam>
-sealed public class QuerySuccess<T> : QueryResponse
+public sealed class QuerySuccess<T> : QueryResponse
 {
     /// <summary>
     /// Gets the deserialized data from the query response.
@@ -63,21 +134,21 @@ sealed public class QuerySuccess<T> : QueryResponse
     /// </summary>
     /// <param name="ctx">The serialization context used for deserializing the response data.</param>
     /// <param name="deserializer">A deserializer for the response data type.</param>
-    /// <param name="rawResponseText">The raw JSON response text from the Fauna database.</param>
+    /// <param name="json">The parsed JSON response body.</param>
     public QuerySuccess(
         MappingContext ctx,
         IDeserializer<T> deserializer,
-        string rawResponseText)
-        : base(rawResponseText)
+        JsonElement json)
+        : base(json)
     {
-        var dataText = _responseBody.GetProperty(DataFieldName).GetRawText();
+        var dataText = json.GetProperty(DataFieldName).GetRawText();
         var reader = new Utf8FaunaReader(dataText);
         reader.Read();
         Data = deserializer.Deserialize(ctx, ref reader);
 
-        if (_responseBody.TryGetProperty(StaticTypeFieldName, out var jsonElement))
+        if (json.TryGetProperty(StaticTypeFieldName, out var elem))
         {
-            StaticType = jsonElement.GetString();
+            StaticType = elem.GetString();
         }
     }
 }
@@ -85,20 +156,28 @@ sealed public class QuerySuccess<T> : QueryResponse
 /// <summary>
 /// Represents a failed query response.
 /// </summary>
-sealed public class QueryFailure : QueryResponse
+public sealed class QueryFailure : QueryResponse
 {
-    /// <summary>
-    /// Gets the error information associated with the failed query.
-    /// </summary>
-    public ErrorInfo ErrorInfo { get; init; }
+    public HttpStatusCode StatusCode { get; init; }
+    public string ErrorCode { get; init; } = "";
+    public string Message { get; init; } = "";
+    public object? ConstraintFailures { get; init; }
+    public object? Abort { get; init; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryFailure"/> class, parsing the provided raw response text to extract error information.
     /// </summary>
-    /// <param name="rawResponseText">The raw JSON response text from the Fauna that contains the error information.</param>
-    public QueryFailure(string rawResponseText) : base(rawResponseText)
+    /// <param name="statusCode">The HTTP status code.</param>
+    /// <param name="json">The JSON response body.</param>
+    public QueryFailure(HttpStatusCode statusCode, JsonElement json) : base(json)
     {
-        var errorBlock = _responseBody.GetProperty(ErrorFieldName);
-        ErrorInfo = errorBlock.Deserialize<ErrorInfo>();
+        StatusCode = statusCode;
+        if (!json.TryGetProperty(ErrorFieldName, out var elem)) return;
+
+        var info = elem.Deserialize<ErrorInfo>();
+        ErrorCode = info.Code ?? "";
+        Message = info.Message ?? "";
+        ConstraintFailures = info.ConstraintFailures;
+        Abort = info.Abort;
     }
 }

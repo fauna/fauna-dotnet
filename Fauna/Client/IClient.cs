@@ -20,8 +20,8 @@ interface IClient
     /// <param name="cancel">A cancellation token to use</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -46,8 +46,8 @@ interface IClient
     /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -73,8 +73,8 @@ interface IClient
     /// <param name="cancel">A cancellation token to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -100,8 +100,8 @@ interface IClient
     /// <param name="cancel">A cancellation toke to use.</param>
     /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -130,8 +130,8 @@ interface IClient
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -159,8 +159,8 @@ interface IClient
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -189,8 +189,8 @@ interface IClient
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
@@ -219,8 +219,8 @@ interface IClient
     /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
     /// </remarks>
     /// <exception cref="ClientException">Thrown when client-side errors occur before sending the request to Fauna.</exception>
-    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
-    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="ForbiddenException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="UnauthorizedException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
     /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
     /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
     /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>

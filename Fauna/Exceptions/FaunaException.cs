@@ -1,4 +1,6 @@
-﻿namespace Fauna.Exceptions;
+﻿using System.Net;
+
+namespace Fauna.Exceptions;
 
 /// <summary>
 /// Represents the base exception class for all exceptions specific to Fauna interactions.
@@ -12,3 +14,4 @@ public class FaunaException : Exception
     public FaunaException(string message, Exception innerException)
     : base(message, innerException) { }
 }
+
