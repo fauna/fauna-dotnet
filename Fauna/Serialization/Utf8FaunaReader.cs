@@ -210,16 +210,16 @@ public ref struct Utf8FaunaReader
     }
 
     /// <summary>
-    /// Retrieves a DateTime value from the current token.
+    /// Retrieves a DateOnly value from the current token.
     /// </summary>
-    /// <returns>A DateTime representation of the current token's value.</returns>
-    public DateTime GetDate()
+    /// <returns>A DateOnly representation of the current token's value.</returns>
+    public DateOnly GetDate()
     {
         ValidateTaggedType(TokenType.Date);
 
         try
         {
-            return DateTime.Parse(_taggedTokenValue!);
+            return DateOnly.Parse(_taggedTokenValue!);
         }
         catch (Exception e)
         {
