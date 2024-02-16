@@ -130,7 +130,7 @@ class Person
 
 Your POCO classes can be used to drive deserialization:
 
-``` csharp
+```csharp
 var peopleQuery = FQL($@"Person.all()");
 var people = client.PaginateAsync<Person>(peopleQuery).FlattenAsync();
 
@@ -142,7 +142,7 @@ await foreach (var p in people)
 
 As well as to write to your database:
 
-``` csharp
+```csharp
 var person = new Person { FirstName = "John", LastName = "Smith", Age = 42 };
 
 var result = await client.QueryAsync($@"Person.create({person}).id");
@@ -153,7 +153,7 @@ Console.WriteLine(result.Data); // 69219723210223...
 
 The DataContext class provides a schema-aware view of your database. Subclass it and configure your collections: 
 
-``` csharp
+```csharp
 class PersonDb : DataContext
 {
     public class PersonCollection : Collection<Person>
@@ -168,7 +168,7 @@ class PersonDb : DataContext
 
 DataContext provides Client querying which automatically maps your collections' documents to their POCO equivalents even when type hints are not provided.
 
-``` csharp
+```csharp
 var db = client.DataContext<PersonDb>
 
 var result = db.QueryAsync($"Person.all().first()");
@@ -181,7 +181,7 @@ Console.WriteLine(person.FirstName);
 
 Last but not least, your DataContext subclass provides a LINQ-compatible API for type-safe querying.
 
-``` csharp
+```csharp
 // general query
 db.Person.Where(p => p.FirstName == "John")
          .Select(p => new { p.FirstName, p.LastName })
@@ -195,7 +195,48 @@ db.Person.ByFirstName("John")
 
 There are async variants of methods which execute queries:
 
-``` csharp
+```csharp
 var syncCount = db.Person.Count();
 var asyncCount = await db.Person.CountAsync();
+```
+
+## Paginating [Fauna Sets](https://docs.fauna.com/fauna/current/reference/reference/schema_entities/set/)
+
+When you wish to paginate a Set, such as a Collection or Index, use `Client.Paginate`.
+
+Example of a query that returns a Set:
+```csharp
+var query = FQL($"Person.all()");
+await foreach (var page in client.PaginateAsync<Person>(query))
+{
+    // handle each page
+}
+
+await foreach (var item in client.PaginateAsync<Person>(query).FlattenAsync())
+{
+    // handle each item
+}
+```
+
+Example of a query that returns an object with an embedded Set:
+```csharp
+[Object]
+class MyResult
+{
+    [Field("users")]
+    public Page<Person>? Users { get; set; }
+}
+
+var query = FQL($"{{users: Person.all()}}");
+var result = await client.QueryAsync<MyResult>(query);
+
+await foreach (var page in client.PaginateAsync(result.Data.Users!))
+{
+    // handle each page
+} 
+
+await foreach (var item in client.PaginateAsync(result.Data.Users!).FlattenAsync())
+{
+    // handle each item
+} 
 ```

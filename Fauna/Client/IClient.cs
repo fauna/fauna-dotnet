@@ -140,6 +140,35 @@ interface IClient
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
+    /// The provided page is the first page yielded.
+    /// </summary>
+    /// <typeparam name="T">The type of the data expected in each page.</typeparam>
+    /// <param name="page">The initial page.</param>
+    /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
+    /// <returns>An asynchronous enumerable of pages, each containing a list of items of type <typeparamref name="T"/>.</returns>
+    /// <remarks>
+    /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
+    /// </remarks>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
+    public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
+        Page<T> page,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
+        where T : notnull;
+
+    /// <summary>
+    /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
     /// </summary>
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
@@ -161,6 +190,33 @@ interface IClient
     /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
+
+    /// <summary>
+    /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
+    /// The provided page is the first page yielded.
+    /// </summary>
+    /// <param name="page">The initial page.</param>
+    /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
+    /// <returns>An asynchronous enumerable of pages, each containing a list of items.</returns>
+    /// <remarks>
+    /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
+    /// </remarks>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
+    public IAsyncEnumerable<Page<object?>> PaginateAsync(
+        Page<object?> page,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default);
 
@@ -195,6 +251,36 @@ interface IClient
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
+    /// The provided page is the first page yielded.
+    /// </summary>
+    /// <typeparam name="T">The type of the data expected in each page.</typeparam>
+    /// <param name="page">The initial page.</param>
+    /// <param name="elemDeserializer">A data deserializer for the page element type.</param>
+    /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
+    /// <returns>An asynchronous enumerable of pages, each containing a list of items of type <typeparamref name="T"/>.</returns>
+    /// <remarks>
+    /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
+    /// </remarks>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
+    public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
+        Page<T> page,
+        IDeserializer<T> elemDeserializer,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
+
+    /// <summary>
+    /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
     /// </summary>
     /// <param name="query">The FQL query object representing the query to be executed against the Fauna database.</param>
     /// <param name="elemDeserializer">A data deserializer for the page element type.</param>
@@ -220,7 +306,37 @@ interface IClient
         IDeserializer elemDeserializer,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default);
+
+    /// <summary>
+    /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
+    /// The provided page is the first page yielded.
+    /// </summary>
+    /// <param name="page">The FQL query object representing the query to be executed against the Fauna database.</param>
+    /// <param name="elemDeserializer">A data deserializer for the page element type.</param>
+    /// <param name="queryOptions">Optional parameters to customize the query execution, such as timeout settings and custom headers.</param>
+    /// <param name="cancel">A cancellation token to use.</param>
+    /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution.</returns>
+    /// <remarks>
+    /// This method handles pagination by sending multiple requests to Fauna as needed, based on the presence of an 'after' cursor in the query results.
+    /// </remarks>
+    /// <exception cref="UnauthorizedException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="ForbiddenException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
+    public IAsyncEnumerable<Page<object?>> PaginateAsync(
+        Page<object?> page,
+        IDeserializer elemDeserializer,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default);
 }
+
 
 /// <summary>
 /// The base class for Client and DataContext.
@@ -275,11 +391,24 @@ public abstract class BaseClient : IClient
         where T : notnull =>
         PaginateAsync(query, Deserializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
+    public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
+        Page<T> page,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
+        where T : notnull =>
+        PaginateAsync(page, Deserializer.Generate<T>(MappingCtx), queryOptions, cancel);
+
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
         PaginateAsync(query, Deserializer.Dynamic, queryOptions, cancel);
+
+    public IAsyncEnumerable<Page<object?>> PaginateAsync(
+        Page<object?> page,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default) =>
+        PaginateAsync(page, Deserializer.Dynamic, queryOptions, cancel);
 
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
@@ -289,6 +418,16 @@ public abstract class BaseClient : IClient
     {
         var deserializer = new PageDeserializer<T>(elemDeserializer);
         return PaginateAsyncInternal(query, deserializer, queryOptions, cancel);
+    }
+
+    public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
+        Page<T> page,
+        IDeserializer<T> elemDeserializer,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
+    {
+        var deserializer = new PageDeserializer<T>(elemDeserializer);
+        return PaginateAsyncInternal(page, deserializer, queryOptions, cancel);
     }
 
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
@@ -302,6 +441,17 @@ public abstract class BaseClient : IClient
         return PaginateAsyncInternal(query, deserializer, queryOptions, cancel);
     }
 
+    public IAsyncEnumerable<Page<object?>> PaginateAsync(
+        Page<object?> page,
+        IDeserializer elemDeserializer,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancel = default)
+    {
+        var elemObjDeser = (IDeserializer<object?>)elemDeserializer;
+        var deserializer = new PageDeserializer<object?>(elemObjDeser);
+        return PaginateAsyncInternal(page, deserializer, queryOptions, cancel);
+    }
+
     #endregion
 
     // Internally accessible for QuerySource use
@@ -311,29 +461,38 @@ public abstract class BaseClient : IClient
         QueryOptions? queryOptions,
         [EnumeratorCancellation] CancellationToken cancel = default)
     {
-        Page<T>? currentPage = null;
+        var p = await QueryAsyncInternal(query,
+            deserializer,
+            MappingCtx,
+            queryOptions,
+            cancel);
 
-        do
+        await foreach (var page in PaginateAsyncInternal(p.Data, deserializer, queryOptions, cancel))
         {
-            var currentQuery = currentPage?.After is not null
-                ? new QueryExpr(new QueryLiteral($"Set.paginate('{currentPage.After}')"))
-                : query;
+            yield return page;
+        }
+    }
 
-            var response = await QueryAsyncInternal(currentQuery,
-                                                    deserializer,
-                                                    MappingCtx,
-                                                    queryOptions,
-                                                    cancel);
+    private async IAsyncEnumerable<Page<T>> PaginateAsyncInternal<T>(
+        Page<T> page,
+        PageDeserializer<T> deserializer,
+        QueryOptions? queryOptions,
+        [EnumeratorCancellation] CancellationToken cancel = default)
+    {
+        yield return page;
 
-            if (response.Data is not null)
-            {
-                currentPage = response.Data;
-                yield return currentPage;
-            }
-            else
-            {
-                throw new FaunaException("Unexpected response received.");
-            }
-        } while (currentPage?.After is not null);
+        while (page.After is not null)
+        {
+            var q = new QueryExpr(new QueryLiteral($"Set.paginate('{page.After}')"));
+
+            var response = await QueryAsyncInternal(q,
+                deserializer,
+                MappingCtx,
+                queryOptions,
+                cancel);
+
+            page = response.Data;
+            yield return page;
+        }
     }
 }

@@ -1,6 +1,7 @@
 using Fauna.Mapping.Attributes;
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
+using Fauna.Types;
 using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;
 
@@ -23,10 +24,17 @@ public class IntegrationTests
         public int Age { get; set; }
     }
 
+    [Object]
+    private class EmbeddedSets
+    {
+        [Field("set")] public Page<EmbeddedSet>? Set { get; set; }
+    }
+
     [OneTimeSetUp]
     public void SetUp()
     {
         _client = NewTestClient();
+        Fixtures.EmbeddedSetDb(_client);
     }
 
     [Test]
@@ -137,6 +145,41 @@ public class IntegrationTests
 
         int itemCount = 0;
         await foreach (var item in paginatedResult.FlattenAsync())
+        {
+            itemCount++;
+        }
+
+        Assert.AreEqual(100, itemCount);
+    }
+
+    [Test]
+    public async Task Paginate_EmbeddedSet()
+    {
+        var q = FQL($"{{ set: EmbeddedSet.all() }}");
+        var r = await _client.QueryAsync<EmbeddedSets>(q);
+
+        Assert.NotNull(r.Data.Set);
+        var pageCount = 0;
+        var itemCount = 0;
+        await foreach (var page in _client.PaginateAsync(r.Data.Set!))
+        {
+            itemCount += page.Data.Count;
+            pageCount++;
+        }
+
+        Assert.AreEqual(100, itemCount);
+        Assert.AreEqual(7, pageCount);
+    }
+
+    [Test]
+    public async Task Paginate_EmbeddedSetFlattened()
+    {
+        var q = FQL($"{{ set: EmbeddedSet.all() }}");
+        var r = await _client.QueryAsync<EmbeddedSets>(q);
+
+        Assert.NotNull(r.Data.Set);
+        var itemCount = 0;
+        await foreach (var item in _client.PaginateAsync(r.Data.Set!).FlattenAsync())
         {
             itemCount++;
         }
