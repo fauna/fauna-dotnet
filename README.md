@@ -202,7 +202,7 @@ var asyncCount = await db.Person.CountAsync();
 
 ## Paginating [Fauna Sets](https://docs.fauna.com/fauna/current/reference/reference/schema_entities/set/)
 
-When you wish to paginate a Set, such as a Collection or Index, use `Client.Paginate`.
+When you wish to paginate a Set, such as a Collection or Index, use `Client.PaginateAsync`.
 
 Example of a query that returns a Set:
 ```csharp
