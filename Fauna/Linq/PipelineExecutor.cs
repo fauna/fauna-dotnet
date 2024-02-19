@@ -115,7 +115,7 @@ internal interface PipelineExecutor
                 return res;
             }
 
-            Debug.Assert(typeof(T) == ResType);
+            Debug.Assert(typeof(T) == ResType, $"{typeof(T)} is not {ResType}");
             throw new Exception("unreachable");
         }
 
@@ -149,7 +149,7 @@ internal interface PipelineExecutor
                 return ret;
             }
 
-            Debug.Assert(typeof(T) == ResType);
+            Debug.Assert(typeof(T) == ResType, $"{typeof(T)} is not {ResType}");
             throw new Exception("unreachable");
         }
 

@@ -1,5 +1,4 @@
 using Fauna.Serialization;
-using Fauna.Util;
 using System.Linq.Expressions;
 
 namespace Fauna.Linq;
@@ -12,42 +11,17 @@ public enum PipelineMode
     Scalar, // final, non-enum result: no more transformations allowed
 }
 
-internal readonly struct PipelineCache
-{
-    private readonly Dictionary<Expression, Pipeline> _cache;
-
-    public PipelineCache()
-    {
-        _cache = new(new ExpressionComparer());
-    }
-
-    public PipelineExecutor Get(DataContext ctx, Expression expr)
-    {
-        var closures = Expressions.FindAllClosures(expr);
-
-        Pipeline pl;
-        lock (_cache)
-        {
-            if (!_cache.TryGetValue(expr, out pl))
-            {
-                var builder = new PipelineBuilder(ctx, closures, expr);
-                pl = builder.Build();
-                _cache[expr] = pl;
-            }
-        }
-
-        return pl.GetExec(ctx, closures);
-    }
-}
-
 internal readonly record struct Pipeline(
-    Func<object[], Query> GetQuery,
-    IDeserializer Deserializer,
-    Func<object[], Delegate>? GetProjector,
-    PipelineMode Mode)
+    PipelineMode Mode,
+    Query Query,
+    Type ElemType,
+    IDeserializer? ElemDeserializer,
+    LambdaExpression? ProjectExpr)
 {
-    public PipelineExecutor GetExec(DataContext ctx, object[] vars) =>
-        PipelineExecutor.Create(ctx, GetQuery(vars), Deserializer, Proj(vars), Mode);
-
-    private Delegate? Proj(object[] vars) => GetProjector is null ? null : GetProjector(vars);
+    public PipelineExecutor GetExec(DataContext ctx)
+    {
+        var deser = ElemDeserializer ?? Deserializer.Generate(ctx.MappingCtx, ElemType);
+        var proj = ProjectExpr is null ? null : ProjectExpr.Compile();
+        return PipelineExecutor.Create(ctx, Query, deser, proj, Mode);
+    }
 }

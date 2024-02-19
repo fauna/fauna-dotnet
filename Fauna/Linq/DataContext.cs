@@ -1,7 +1,6 @@
 using Fauna.Mapping;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -16,18 +15,15 @@ public abstract class DataContext : BaseClient
     private Client _client;
     [AllowNull]
     private MappingContext _ctx;
-    [AllowNull]
-    internal Linq.PipelineCache _pcache;
 
     internal override MappingContext MappingCtx { get => _ctx; }
-    internal Linq.PipelineCache PipelineCache { get => _pcache; }
+    internal Linq.LookupTable LookupTable { get => new Linq.LookupTable(_ctx); }
 
     internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
     {
         _client = client;
         _collections = collections.ToImmutableDictionary();
         _ctx = ctx;
-        _pcache = new Linq.PipelineCache();
 
         foreach (var col in collections.Values)
         {
@@ -78,7 +74,7 @@ public abstract class DataContext : BaseClient
         {
             var nameAttr = this.GetType().GetCustomAttribute<NameAttribute>();
             Name = nameAttr?.Name ?? typeof(Doc).Name;
-            Expr = Expression.Constant(this);
+            SetQuery<Doc>(Linq.IntermediateQueryHelpers.CollectionAll(this));
         }
 
         // index call DSL
@@ -142,8 +138,8 @@ public abstract class DataContext : BaseClient
             Collection = coll;
             Name = name;
             Args = args;
-            Expr = Expression.Constant(this);
             Ctx = ctx;
+            SetQuery<Doc>(Linq.IntermediateQueryHelpers.CollectionIndex(this));
         }
     }
 

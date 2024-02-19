@@ -317,15 +317,21 @@ public class QueryTests
     [Test]
     public void Query_Max()
     {
-        var max = db.Author.Select(a => a.Age).Max();
-        Assert.AreEqual(32, max);
+        var max1 = db.Author.Select(a => a.Age).Max();
+        Assert.AreEqual(32, max1);
+
+        var max2 = db.Author.Max(a => a.Age);
+        Assert.AreEqual(32, max2);
     }
 
     [Test]
     public void Query_Min()
     {
-        var min = db.Author.Select(a => a.Age).Min();
-        Assert.AreEqual(26, min);
+        var min1 = db.Author.Select(a => a.Age).Min();
+        Assert.AreEqual(26, min1);
+
+        var min2 = db.Author.Min(a => a.Age);
+        Assert.AreEqual(26, min2);
     }
 
     [Test]
@@ -382,8 +388,14 @@ public class QueryTests
     [Test]
     public void Query_Sum()
     {
-        var sum = db.Author.Select(a => a.Age).Sum();
-        Assert.AreEqual(58, sum);
+        var sum1 = db.Author.Select(a => a.Age).Sum();
+        Assert.AreEqual(58, sum1);
+
+        var sum2 = db.Author.Sum(a => a.Age);
+        Assert.AreEqual(58, sum2);
+
+        var sum4 = db.Author.Sum(a => 1D * a.Age);
+        Assert.AreEqual(58D, sum4);
     }
 
     [Test]

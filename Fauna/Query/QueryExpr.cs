@@ -30,12 +30,12 @@ public sealed class QueryExpr : Query, IQueryFragment
     /// <summary>
     /// Gets the readonly collection of query fragments.
     /// </summary>
-    public ReadOnlyCollection<IQueryFragment> Unwrap { get; }
+    public IReadOnlyCollection<IQueryFragment> Unwrap { get; }
 
     /// <summary>
     /// Gets the readonly collection of query fragments.
     /// </summary>
-    public ReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
+    public IReadOnlyCollection<IQueryFragment> Fragments => Unwrap;
 
     /// <summary>
     /// Serializes the query expression.
