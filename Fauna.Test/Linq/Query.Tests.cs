@@ -267,6 +267,16 @@ public class QueryTests
 
         var fstPred = db.Author.First(a => a.Name == "Bob");
         Assert.AreEqual("Bob", fstPred.Name);
+
+        try
+        {
+            db.Author.First(a => a.Name == "No name");
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Empty set", ex.Message);
+        }
     }
 
     [Test]
@@ -290,6 +300,16 @@ public class QueryTests
 
         var lstPred = db.Author.Last(a => a.Name == "Alice");
         Assert.AreEqual("Alice", lstPred.Name);
+
+        try
+        {
+            db.Author.Last(a => a.Name == "No name");
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Empty set", ex.Message);
+        }
     }
 
     [Test]
@@ -320,6 +340,16 @@ public class QueryTests
 
         var max2 = db.Author.Max(a => a.Age);
         Assert.AreEqual(32, max2);
+
+        try
+        {
+            db.Author.Where(a => a.Name == "No name").Max(a => a.Age);
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Empty set", ex.Message);
+        }
     }
 
     [Test]
@@ -330,6 +360,16 @@ public class QueryTests
 
         var min2 = db.Author.Min(a => a.Age);
         Assert.AreEqual(26, min2);
+
+        try
+        {
+            db.Author.Where(a => a.Name == "No name").Min(a => a.Age);
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Empty set", ex.Message);
+        }
     }
 
     [Test]

@@ -1,3 +1,4 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Util;
@@ -66,10 +67,8 @@ public partial class QuerySource<T>
 
     // Terminal result methods
 
-    public bool All(Expression<Func<T, bool>> predicate) =>
-        Execute<bool>(AllImpl(predicate));
-    public Task<bool> AllAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<bool>(AllImpl(predicate));
+    public bool All(Expression<Func<T, bool>> predicate) => Execute<bool>(AllImpl(predicate));
+    public Task<bool> AllAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<bool>(AllImpl(predicate));
     private Pipeline AllImpl(Expression<Func<T, bool>> predicate)
     {
         RequireQueryMode("All");
@@ -79,169 +78,103 @@ public partial class QuerySource<T>
             ety: typeof(bool));
     }
 
-    public bool Any() => Execute<bool>(AnyImpl());
-    public Task<bool> AnyAsync() => ExecuteAsync<bool>(AnyImpl());
-    private Pipeline AnyImpl() =>
+    public bool Any() => Execute<bool>(AnyImpl(null));
+    public Task<bool> AnyAsync() => ExecuteAsync<bool>(AnyImpl(null));
+    public bool Any(Expression<Func<T, bool>> predicate) => Execute<bool>(AnyImpl(predicate));
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<bool>(AnyImpl(predicate));
+    private Pipeline AnyImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "nonEmpty"),
+            q: QH.MethodCall(MaybeWhereCall(Query, predicate), "nonEmpty"),
             ety: typeof(bool));
 
-    public bool Any(Expression<Func<T, bool>> predicate) =>
-        Execute<bool>(AnyImpl(predicate));
-    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<bool>(AnyImpl(predicate));
-    private Pipeline AnyImpl(Expression<Func<T, bool>> predicate) =>
+    public int Count() => Execute<int>(CountImpl(null));
+    public Task<int> CountAsync() => ExecuteAsync<int>(CountImpl(null));
+    public int Count(Expression<Func<T, bool>> predicate) => Execute<int>(CountImpl(predicate));
+    public Task<int> CountAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<int>(CountImpl(predicate));
+    private Pipeline CountImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "nonEmpty"),
-            ety: typeof(bool));
-
-    public int Count() => Execute<int>(CountImpl());
-    public Task<int> CountAsync() => ExecuteAsync<int>(CountImpl());
-    private Pipeline CountImpl() =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "count"),
+            q: QH.MethodCall(MaybeWhereCall(Query, predicate), "count"),
             ety: typeof(int));
 
-    public int Count(Expression<Func<T, bool>> predicate) =>
-        Execute<int>(CountImpl(predicate));
-    public Task<int> CountAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<int>(CountImpl(predicate));
-    private Pipeline CountImpl(Expression<Func<T, bool>> predicate) =>
+    public T First() => ExecuteMaybeEmpty<T>(FirstImpl(null));
+    public Task<T> FirstAsync() => ExecuteMaybeEmptyAsync<T>(FirstImpl(null));
+    public T First(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmpty<T>(FirstImpl(predicate));
+    public Task<T> FirstAsync(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmptyAsync<T>(FirstImpl(predicate));
+    private Pipeline FirstImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "count"),
-            ety: typeof(int));
+            q: QH.MethodCall(AbortIfEmpty(MaybeWhereCall(Query, predicate)), "first"));
 
-    public T First() => Execute<T>(FirstImpl());
-    public Task<T> FirstAsync() => ExecuteAsync<T>(FirstImpl());
-    private Pipeline FirstImpl() =>
+    public T? FirstOrDefault() => Execute<T?>(FirstOrDefaultImpl(null));
+    public Task<T?> FirstOrDefaultAsync() => ExecuteAsync<T?>(FirstOrDefaultImpl(null));
+    public T? FirstOrDefault(Expression<Func<T, bool>> predicate) => Execute<T?>(FirstOrDefaultImpl(predicate));
+    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<T?>(FirstOrDefaultImpl(predicate));
+    private Pipeline FirstOrDefaultImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "first"));
-
-    public T First(Expression<Func<T, bool>> predicate) =>
-        Execute<T>(FirstImpl(predicate));
-    public Task<T> FirstAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<T>(FirstImpl(predicate));
-    private Pipeline FirstImpl(Expression<Func<T, bool>> predicate) =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "first"));
-
-    public T? FirstOrDefault() => Execute<T?>(FirstOrDefaultImpl());
-    public Task<T?> FirstOrDefaultAsync() => ExecuteAsync<T?>(FirstOrDefaultImpl());
-    private Pipeline FirstOrDefaultImpl() =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "first"),
+            q: QH.MethodCall(MaybeWhereCall(Query, predicate), "first"),
             ety: typeof(T),
             enull: true);
 
-    public T? FirstOrDefault(Expression<Func<T, bool>> predicate) =>
-        Execute<T?>(FirstOrDefaultImpl(predicate));
-    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<T?>(FirstOrDefaultImpl(predicate));
-    private Pipeline FirstOrDefaultImpl(Expression<Func<T, bool>> predicate) =>
+    public T Last() => ExecuteMaybeEmpty<T>(LastImpl(null));
+    public Task<T> LastAsync() => ExecuteMaybeEmptyAsync<T>(LastImpl(null));
+    public T Last(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmpty<T>(LastImpl(predicate));
+    public Task<T> LastAsync(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmptyAsync<T>(LastImpl(predicate));
+    private Pipeline LastImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "first"),
+            q: QH.MethodCall(AbortIfEmpty(MaybeWhereCall(Query, predicate)), "last"));
+
+    public T? LastOrDefault() => Execute<T?>(LastOrDefaultImpl(null));
+    public Task<T?> LastOrDefaultAsync() => ExecuteAsync<T?>(LastOrDefaultImpl(null));
+    public T? LastOrDefault(Expression<Func<T, bool>> predicate) => Execute<T?>(LastOrDefaultImpl(predicate));
+    public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<T?>(LastOrDefaultImpl(predicate));
+    private Pipeline LastOrDefaultImpl(Expression<Func<T, bool>>? predicate) =>
+        CopyPipeline(
+            mode: PipelineMode.Scalar,
+            q: QH.MethodCall(MaybeWhereCall(Query, predicate), "last"),
             ety: typeof(T),
             enull: true);
 
-    public T Last() => Execute<T>(LastImpl());
-    public Task<T> LastAsync() => ExecuteAsync<T>(LastImpl());
-    private Pipeline LastImpl() =>
+    public long LongCount() => Execute<long>(LongCountImpl(null));
+    public Task<long> LongCountAsync() => ExecuteAsync<long>(LongCountImpl(null));
+    public long LongCount(Expression<Func<T, bool>> predicate) => Execute<long>(LongCountImpl(predicate));
+    public Task<long> LongCountAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<long>(LongCountImpl(predicate));
+    private Pipeline LongCountImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "last"));
-
-    public T Last(Expression<Func<T, bool>> predicate) =>
-        Execute<T>(LastImpl(predicate));
-    public Task<T> LastAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<T>(LastImpl(predicate));
-    private Pipeline LastImpl(Expression<Func<T, bool>> predicate) =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "last"));
-
-    public T? LastOrDefault() => Execute<T?>(LastOrDefaultImpl());
-    public Task<T?> LastOrDefaultAsync() => ExecuteAsync<T?>(LastOrDefaultImpl());
-    private Pipeline LastOrDefaultImpl() =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "last"),
-            ety: typeof(T),
-            enull: true);
-
-    public T? LastOrDefault(Expression<Func<T, bool>> predicate) =>
-        Execute<T?>(LastOrDefaultImpl(predicate));
-    public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<T?>(LastOrDefaultImpl(predicate));
-    private Pipeline LastOrDefaultImpl(Expression<Func<T, bool>> predicate) =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "last"),
-            ety: typeof(T),
-            enull: true);
-
-    public long LongCount() => Execute<long>(LongCountImpl());
-    public Task<long> LongCountAsync() => ExecuteAsync<long>(LongCountImpl());
-    private Pipeline LongCountImpl() =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "count"),
-            ety: typeof(long));
-
-    public long LongCount(Expression<Func<T, bool>> predicate) =>
-        Execute<long>(LongCountImpl(predicate));
-    public Task<long> LongCountAsync(Expression<Func<T, bool>> predicate) =>
-        ExecuteAsync<long>(LongCountImpl(predicate));
-    private Pipeline LongCountImpl(Expression<Func<T, bool>> predicate) =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(WhereCall(Query, predicate), "count"),
+            q: QH.MethodCall(MaybeWhereCall(Query, predicate), "count"),
             ety: typeof(long));
 
     private static readonly Query _maxReducer = QH.Expr("(a, b) => if (a >= b) a else b");
 
-    public T Max() => Execute<T>(MaxImpl());
-    public Task<T> MaxAsync() => ExecuteAsync<T>(MaxImpl());
-    private Pipeline MaxImpl() =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "reduce", _maxReducer));
-
-    public R Max<R>(Expression<Func<T, R>> selector) => Execute<R>(MaxImpl(selector));
-    public Task<R> MaxAsync<R>(Expression<Func<T, R>> selector) => ExecuteAsync<R>(MaxImpl(selector));
-    private Pipeline MaxImpl<R>(Expression<Func<T, R>> selector)
+    public T Max() => ExecuteMaybeEmpty<T>(MaxImpl<T>(null));
+    public Task<T> MaxAsync() => ExecuteMaybeEmptyAsync<T>(MaxImpl<T>(null));
+    public R Max<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmpty<R>(MaxImpl(selector));
+    public Task<R> MaxAsync<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmptyAsync<R>(MaxImpl(selector));
+    private Pipeline MaxImpl<R>(Expression<Func<T, R>>? selector)
     {
         RequireQueryMode("Max");
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(QH.MethodCall(Query, "map", SubQuery(selector)), "reduce", _maxReducer),
+            q: QH.MethodCall(MaybeMap(AbortIfEmpty(Query), selector), "reduce", _maxReducer),
             ety: typeof(R));
     }
 
     private static readonly Query _minReducer = QH.Expr("(a, b) => if (a <= b) a else b");
 
-    public T Min() => Execute<T>(MinImpl());
-    public Task<T> MinAsync() => ExecuteAsync<T>(MinImpl());
-    private Pipeline MinImpl() =>
-        CopyPipeline(
-            mode: PipelineMode.Scalar,
-            q: QH.MethodCall(Query, "reduce", _minReducer));
-
-    public R Min<R>(Expression<Func<T, R>> selector) => Execute<R>(MinImpl(selector));
-    public Task<R> MinAsync<R>(Expression<Func<T, R>> selector) => ExecuteAsync<R>(MinImpl(selector));
-    private Pipeline MinImpl<R>(Expression<Func<T, R>> selector)
+    public T Min() => ExecuteMaybeEmpty<T>(MinImpl<T>(null));
+    public Task<T> MinAsync() => ExecuteMaybeEmptyAsync<T>(MinImpl<T>(null));
+    public R Min<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmpty<R>(MinImpl(selector));
+    public Task<R> MinAsync<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmptyAsync<R>(MinImpl(selector));
+    private Pipeline MinImpl<R>(Expression<Func<T, R>>? selector)
     {
         RequireQueryMode("Min");
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(QH.MethodCall(Query, "map", SubQuery(selector)), "reduce", _minReducer),
+            q: QH.MethodCall(MaybeMap(AbortIfEmpty(Query), selector), "reduce", _minReducer),
             ety: typeof(R));
     }
 
@@ -280,6 +213,37 @@ public partial class QuerySource<T>
         }
     }
 
+    private R ExecuteMaybeEmpty<R>(Pipeline pl)
+    {
+        try
+        {
+            return Execute<R>(pl);
+        }
+        catch (AbortException ex)
+        {
+            throw TranslateEmptySetAbort(ex);
+        }
+    }
+
+    private async Task<R> ExecuteMaybeEmptyAsync<R>(Pipeline pl)
+    {
+        try
+        {
+            return await ExecuteAsync<R>(pl);
+        }
+        catch (AggregateException ex)
+        {
+            if (ex.InnerExceptions.First() is AbortException aex)
+            {
+                throw TranslateEmptySetAbort(aex);
+            }
+            else
+            {
+                throw;
+            }
+        }
+    }
+
     private QuerySource<R> Chain<R>(
         PipelineMode? mode = null,
         Query? q = null,
@@ -312,6 +276,21 @@ public partial class QuerySource<T>
 
         return new Pipeline(mode0, q0, ety0, enull0, deser0, proj0);
     }
+
+    // There is a bug in abort data deserialization if the abort
+    // value is a string. Work around it by using an array.
+    // FIXME(matt) remove workaround and use a string
+    private Query AbortIfEmpty(Query setq) =>
+        QH.Expr("({ let s = (").Concat(setq).Concat("); if (s.isEmpty()) abort(['empty set']); s })");
+
+    private Exception TranslateEmptySetAbort(AbortException ex) =>
+        ex.GetData<List<string>>()?.First() == "empty set" ? new InvalidOperationException("Empty set") : ex;
+
+    private Query MaybeWhereCall(Query callee, Expression? predicate, [CallerMemberName] string callerName = "") =>
+        predicate is null ? callee : WhereCall(callee, predicate, callerName);
+
+    private Query MaybeMap(Query setq, Expression? selector) =>
+        selector is null ? setq : QH.MethodCall(setq, "map", SubQuery(selector));
 
     private Query SubQuery(Expression expr) =>
         new SubQuerySwitch(Ctx.LookupTable).Apply(expr);
