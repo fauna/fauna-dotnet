@@ -24,8 +24,7 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
             TokenType.StartObject => _dict.Deserialize(context, ref reader),
             TokenType.StartArray => _list.Deserialize(context, ref reader),
             TokenType.StartPage => _page.Deserialize(context, ref reader),
-            TokenType.StartRef => DeserializeRef(context, ref reader),
-            TokenType.StartDocument => DeserializeDocument(context, ref reader),
+            TokenType.StartRef or TokenType.StartDocument => DeserializeDocumentOrRef(context, ref reader, reader.CurrentTokenType),
             TokenType.String => reader.GetString(),
             TokenType.Int => reader.GetInt(),
             TokenType.Long => reader.GetLong(),
@@ -39,84 +38,20 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}"),
         };
 
-    private object DeserializeRef(MappingContext context, ref Utf8FaunaReader reader)
-    {
-        string? id = null;
-        string? name = null;
-        Module? coll = null;
-        var exists = true;
-        string? cause = null;
-        var allProps = new Dictionary<string, object?>();
-
-        while (reader.Read() && reader.CurrentTokenType != TokenType.EndRef)
-        {
-            if (reader.CurrentTokenType != TokenType.FieldName)
-                throw new SerializationException(
-                    $"Unexpected token while deserializing into DocumentRef: {reader.CurrentTokenType}");
-
-            var fieldName = reader.GetString()!;
-            reader.Read();
-            switch (fieldName)
-            {
-                case "id":
-                    id = reader.GetString();
-                    allProps["id"] = id;
-                    break;
-                case "name":
-                    name = reader.GetString();
-                    allProps["name"] = name;
-                    break;
-                case "coll":
-                    coll = reader.GetModule();
-                    allProps["coll"] = coll;
-                    break;
-                case "exists":
-                    exists = reader.GetBoolean();
-                    allProps["exists"] = exists;
-                    break;
-                case "cause":
-                    cause = reader.GetString();
-                    allProps["cause"] = cause;
-                    break;
-                default:
-                    allProps[fieldName] = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
-                    break;
-            }
-        }
-
-        if (id != null && coll != null)
-        {
-            if (exists)
-            {
-                return new DocumentRef(id, coll);
-            }
-
-            return new NullDocumentRef(id, coll, cause!);
-        }
-
-        if (name != null && coll != null)
-        {
-            if (exists)
-            {
-                return new NamedDocumentRef(name, coll);
-            }
-
-            return new NullNamedDocumentRef(name, coll, cause!);
-        }
-
-        // Unsupported ref type, but don't fail for forward compatibility.
-        return allProps;
-    }
-
-    private object DeserializeDocument(MappingContext context, ref Utf8FaunaReader reader)
+    private object DeserializeDocumentOrRef(MappingContext context, ref Utf8FaunaReader reader, TokenType startToken)
     {
         var data = new Dictionary<string, object?>();
         string? id = null;
         string? name = null;
         DateTime? ts = null;
         Module? coll = null;
+        string? cause = null;
+        bool? exists = null;
 
-        while (reader.Read() && reader.CurrentTokenType != TokenType.EndDocument)
+
+        var endToken = startToken == TokenType.StartRef ? TokenType.EndRef : TokenType.EndDocument;
+
+        while (reader.Read() && reader.CurrentTokenType != endToken)
         {
             if (reader.CurrentTokenType != TokenType.FieldName)
                 throw new SerializationException(
@@ -147,22 +82,51 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
                 case "ts":
                     ts = reader.GetTime();
                     break;
+                case "exists":
+                    exists = reader.GetBoolean();
+                    break;
+                case "cause":
+                    cause = reader.GetString();
+                    break;
                 default:
-                    data[fieldName] = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
+                    data[fieldName] = Singleton.Deserialize(context, ref reader);
                     break;
             }
         }
 
-        if (id != null && coll != null && ts != null)
+        if (id != null && coll != null && ts != null && startToken == TokenType.StartDocument)
         {
             if (name != null) data["name"] = name;
-            return new Document(id, coll, ts.GetValueOrDefault(), data);
+            if (cause != null) data["cause"] = cause;
+            if (exists != null) data["exists"] = exists;
+            return new Document(id, coll, ts, data);
         }
 
-        if (name != null && coll != null && ts != null)
+        if (name != null && coll != null && ts != null && startToken == TokenType.StartDocument)
         {
-            return new NamedDocument(name, coll, ts.GetValueOrDefault(), data);
+            return new NamedDocument(name, coll, ts, data);
         }
+
+        if (id != null && coll != null && startToken == TokenType.StartRef)
+        {
+            if (exists != null && !exists.Value)
+            {
+                return new Document(id, coll, ts, data, cause);
+            }
+
+            return new DocumentRef(id, coll, cause);
+        }
+
+        if (name != null && coll != null && startToken == TokenType.StartRef)
+        {
+            if (exists != null && !exists.Value)
+            {
+                return new NamedDocument(name, coll, ts, data, cause);
+            }
+
+            return new NamedDocumentRef(name, coll, cause);
+        }
+
 
         // Unsupported document type, but don't fail for forward compatibility.
         if (id != null) data["id"] = id;

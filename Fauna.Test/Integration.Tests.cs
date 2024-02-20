@@ -1,6 +1,5 @@
 using Fauna.Mapping.Attributes;
 using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
 using Fauna.Types;
 using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;
@@ -10,8 +9,7 @@ namespace Fauna.Test;
 [TestFixture]
 public class IntegrationTests
 {
-    [AllowNull]
-    private static Client _client;
+    private static Client _client = NewTestClient();
 
     [Object]
     private class Person
@@ -33,7 +31,6 @@ public class IntegrationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
         Fixtures.EmbeddedSetDb(_client);
     }
 

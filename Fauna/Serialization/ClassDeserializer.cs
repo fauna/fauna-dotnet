@@ -35,6 +35,7 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
         var endToken = reader.CurrentTokenType switch
         {
             TokenType.StartDocument => TokenType.EndDocument,
+            TokenType.StartRef => TokenType.EndRef,
             TokenType.StartObject => TokenType.EndObject,
             var other => throw UnexpectedToken(other),
         };
@@ -110,6 +111,5 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
     }
 
     private SerializationException UnexpectedToken(TokenType tokenType) =>
-        new SerializationException(
-            $"Unexpected token while deserializing into class {_info.Type.Name}: {tokenType}");
+        new($"Unexpected token while deserializing into class {_info.Type.Name}: {tokenType}");
 }

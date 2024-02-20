@@ -1,4 +1,5 @@
 using Fauna.Mapping.Attributes;
+using Fauna.Types;
 using static Fauna.Query;
 
 namespace Fauna.Test;
@@ -35,6 +36,13 @@ public class EmbeddedSetDb : DataContext
     public EmbeddedSetCol OneHundredB { get => GetCollection<EmbeddedSetCol>(); }
 }
 
+public class SingleDocument : INullableDocumentRef
+{
+    [Field] public string? Id { get; set; }
+    [Field] public bool IsValid { get; set; }
+    [Field] public string? Cause { get; set; }
+}
+
 public static class Fixtures
 {
     public static AuthorDb AuthorDb(Client client)
@@ -64,6 +72,16 @@ public static class Fixtures
             .Wait();
         client.QueryAsync(FQL($"Set.sequence(0,100).forEach(i => EmbeddedSet.create({{num: i}}))")).Wait();
         return client.DataContext<EmbeddedSetDb>();
+    }
+
+
+    public static void SingleDocumentDb(Client client)
+    {
+        client.QueryAsync(FQL($"Collection.byName('SingleDocument')?.delete()")).Wait();
+        client.QueryAsync(FQL(
+                $"Collection.create({{name: 'SingleDocument'}})"))
+            .Wait();
+        client.QueryAsync(FQL($"SingleDocument.create({{isValid: true}})")).Wait();
     }
 
 }

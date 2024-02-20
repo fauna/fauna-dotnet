@@ -305,7 +305,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NullDocumentRef>(given);
+        var actual = Deserialize<Document>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual("not found", actual.Cause);
@@ -340,7 +340,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NullNamedDocumentRef>(given);
+        var actual = Deserialize<NamedDocument>(given);
         Assert.AreEqual("RefName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual("not found", actual.Cause);
