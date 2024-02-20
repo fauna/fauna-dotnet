@@ -3,6 +3,7 @@ using Fauna.Types;
 using Fauna.Util;
 using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Fauna.Linq;
 
@@ -17,11 +18,11 @@ internal interface PipelineExecutor
     Type ElemType { get; }
     Type ResType { get; }
 
-    IAsyncEnumerable<Page<object?>> PagedResult(QueryOptions? queryOptions);
-    Task<object?> Result(QueryOptions? queryOptions);
+    IAsyncEnumerable<Page<object?>> PagedResult(QueryOptions? queryOptions, CancellationToken cancel = default);
+    Task<object?> Result(QueryOptions? queryOptions, CancellationToken cancel = default);
 
-    IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions);
-    Task<T> Result<T>(QueryOptions? queryOptions);
+    IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions, CancellationToken cancel = default);
+    Task<T> Result<T>(QueryOptions? queryOptions, CancellationToken cancel = default);
 
     public static PipelineExecutor Create(
         DataContext ctx,
@@ -88,9 +89,9 @@ internal interface PipelineExecutor
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(IEnumerable<E>); }
 
-        public IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions)
+        public IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions, CancellationToken cancel = default)
         {
-            var pages = Ctx.PaginateAsyncInternal(Query, Deser, queryOptions);
+            var pages = Ctx.PaginateAsyncInternal(Query, Deser, queryOptions, cancel);
             if (pages is IAsyncEnumerable<Page<T>> ret)
             {
                 return ret;
@@ -100,15 +101,16 @@ internal interface PipelineExecutor
             throw new Exception("unreachable");
         }
 
-        public async Task<T> Result<T>(QueryOptions? queryOptions)
+        public async Task<T> Result<T>(QueryOptions? queryOptions, CancellationToken cancel = default)
         {
-            var pages = PagedResult<E>(queryOptions);
+            var pages = PagedResult<E>(queryOptions, cancel);
             var elems = new List<E>();
 
             if (elems is T res)
             {
                 await foreach (var page in pages)
                 {
+                    cancel.ThrowIfCancellationRequested();
                     elems.AddRange(page.Data);
                 }
 
@@ -119,17 +121,17 @@ internal interface PipelineExecutor
             throw new Exception("unreachable");
         }
 
-        public async IAsyncEnumerable<Page<object?>> PagedResult(QueryOptions? queryOptions)
+        public async IAsyncEnumerable<Page<object?>> PagedResult(QueryOptions? queryOptions, [EnumeratorCancellation] CancellationToken cancel = default)
         {
-            await foreach (var page in PagedResult<E>(queryOptions))
+            await foreach (var page in PagedResult<E>(queryOptions, cancel))
             {
                 var data = page.Data.Select(e => (object?)e).ToList();
                 yield return new Page<object?>(data, page.After);
             }
         }
 
-        public async Task<object?> Result(QueryOptions? queryOptions) =>
-            await Result<IEnumerable<E>>(queryOptions);
+        public async Task<object?> Result(QueryOptions? queryOptions, CancellationToken cancel = default) =>
+            await Result<IEnumerable<E>>(queryOptions, cancel);
     }
 
 
@@ -141,9 +143,9 @@ internal interface PipelineExecutor
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(E); }
 
-        public async Task<T> Result<T>(QueryOptions? queryOptions)
+        public async Task<T> Result<T>(QueryOptions? queryOptions, CancellationToken cancel = default)
         {
-            var qres = await Ctx.QueryAsync(Query, Deser, queryOptions);
+            var qres = await Ctx.QueryAsync(Query, Deser, queryOptions, cancel);
             if (qres.Data is T ret)
             {
                 return ret;
@@ -158,9 +160,9 @@ internal interface PipelineExecutor
             throw new Exception("unreachable");
         }
 
-        public async IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions)
+        public async IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions, [EnumeratorCancellation] CancellationToken cancel = default)
         {
-            if (await Result<E>(queryOptions) is T ret)
+            if (await Result<E>(queryOptions, cancel) is T ret)
             {
                 yield return new Page<T>(new List<T> { ret }, null);
             }
@@ -169,12 +171,12 @@ internal interface PipelineExecutor
             throw new Exception("unreachable");
         }
 
-        public async Task<object?> Result(QueryOptions? queryOptions) =>
-            await Result<E>(queryOptions);
+        public async Task<object?> Result(QueryOptions? queryOptions, CancellationToken cancel = default) =>
+            await Result<E>(queryOptions, cancel);
 
-        public async IAsyncEnumerable<Page<object?>> PagedResult(QueryOptions? queryOptions)
+        public async IAsyncEnumerable<Page<object?>> PagedResult(QueryOptions? queryOptions, [EnumeratorCancellation] CancellationToken cancel = default)
         {
-            yield return new Page<object?>(new List<object?> { await Result(queryOptions) }, null);
+            yield return new Page<object?>(new List<object?> { await Result(queryOptions, cancel) }, null);
         }
     }
 }
