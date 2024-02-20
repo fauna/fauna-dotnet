@@ -17,7 +17,7 @@ public abstract class QuerySource : IQuerySource
 
     internal void SetQuery<TElem>(Query query)
     {
-        Pipeline = new Pipeline(PipelineMode.Query, query, typeof(TElem), null, null);
+        Pipeline = new Pipeline(PipelineMode.Query, query, typeof(TElem), false, null, null);
     }
 
     // DSL Helpers
@@ -41,9 +41,16 @@ public partial class QuerySource<T> : QuerySource, IQuerySource<T>
 
     internal override TResult Execute<TResult>(Pipeline pl)
     {
-        var res = ExecuteAsync<TResult>(pl);
-        res.Wait();
-        return res.Result;
+        try
+        {
+            var res = ExecuteAsync<TResult>(pl);
+            res.Wait();
+            return res.Result;
+        }
+        catch (AggregateException ex)
+        {
+            throw ex.InnerExceptions.First();
+        }
     }
 
     internal override Task<TResult> ExecuteAsync<TResult>(Pipeline pl) =>

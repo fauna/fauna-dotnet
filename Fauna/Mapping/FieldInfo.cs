@@ -39,7 +39,9 @@ public sealed class FieldInfo
                     _deserializer = Fauna.Serialization.Deserializer.Generate(_ctx, Type);
                     if (IsNullable)
                     {
-                        _deserializer = new NullableDeserializer(_deserializer);
+                        var deserType = typeof(NullableDeserializer<>).MakeGenericType(new[] { Type });
+                        var deser = Activator.CreateInstance(deserType, new[] { _deserializer });
+                        _deserializer = (IDeserializer)deser!;
                     }
                 }
 
