@@ -13,6 +13,7 @@ public interface INamedDocumentRef : INullableDocumentRef
 {
     public string Name { get; set; }
     public Module Collection { get; set; }
+    public DateTime? Ts { get; set; }
 }
 
 public interface INullableDocumentRef
