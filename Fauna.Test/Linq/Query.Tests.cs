@@ -476,6 +476,53 @@ public class QueryTests
     }
 
     [Test]
+    public void Query_Single()
+    {
+        try
+        {
+            db.Author.Single();
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Set contains more than one element", ex.Message);
+        }
+
+        var sngPred = db.Author.Single(a => a.Name == "Alice");
+        Assert.AreEqual("Alice", sngPred.Name);
+
+        try
+        {
+            db.Author.Single(a => a.Name == "No name");
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Empty set", ex.Message);
+        }
+    }
+
+    [Test]
+    public void Query_SingleOrDefault()
+    {
+        try
+        {
+            db.Author.SingleOrDefault();
+            Assert.Fail();
+        }
+        catch (InvalidOperationException ex)
+        {
+            Assert.AreEqual("Set contains more than one element", ex.Message);
+        }
+
+        var sngPred = db.Author.SingleOrDefault(a => a.Name == "Alice");
+        Assert.AreEqual("Alice", sngPred?.Name);
+
+        var sngNull = db.Author.SingleOrDefault(a => a.Name == "No name");
+        Assert.AreEqual(null, sngNull);
+    }
+
+    [Test]
     public async Task Query_Skip()
     {
         var authors = await db.Author.Skip(1).ToListAsync();

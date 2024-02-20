@@ -196,6 +196,28 @@ public partial class QuerySource<T>
             ety: typeof(R));
     }
 
+    public T Single() => Execute<T>(SingleImpl(null));
+    public Task<T> SingleAsync(CancellationToken cancel = default) => ExecuteAsync<T>(SingleImpl(null), cancel);
+    public T Single(Expression<Func<T, bool>> predicate) => Execute<T>(SingleImpl(predicate));
+    public Task<T> SingleAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<T>(SingleImpl(predicate), cancel);
+    private Pipeline SingleImpl(Expression<Func<T, bool>>? predicate) =>
+        CopyPipeline(
+            mode: PipelineMode.Scalar,
+            q: QH.MethodCall(AbortIfEmpty(Singularize(MaybeWhereCall(Query, predicate))), "first"));
+
+    public T SingleOrDefault() => Execute<T>(SingleOrDefaultImpl(null));
+    public Task<T> SingleOrDefaultAsync(CancellationToken cancel = default) => ExecuteAsync<T>(SingleOrDefaultImpl(null), cancel);
+    public T SingleOrDefault(Expression<Func<T, bool>> predicate) => Execute<T>(SingleOrDefaultImpl(predicate));
+    public Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<T>(SingleOrDefaultImpl(predicate), cancel);
+    private Pipeline SingleOrDefaultImpl(Expression<Func<T, bool>>? predicate) =>
+        CopyPipeline(
+            mode: PipelineMode.Scalar,
+            q: QH.MethodCall(Singularize(MaybeWhereCall(Query, predicate)), "first"),
+            ety: typeof(T),
+            enull: true);
+
     private static readonly Query _sumReducer = QH.Expr("(a, b) => a + b");
 
     public int Sum(Expression<Func<T, int>> selector) => Execute<int>(SumImpl<int>(selector));
@@ -295,7 +317,17 @@ public partial class QuerySource<T>
     // value is a string. Work around it by using an array.
     // FIXME(matt) remove workaround and use a string
     private Query AbortIfEmpty(Query setq) =>
-        QH.Expr("({ let s = (").Concat(setq).Concat("); if (s.isEmpty()) abort(['empty']); s })");
+        QH.Expr(@"({ let s = (").Concat(setq).Concat(@")
+            if (s.isEmpty()) abort(['empty'])
+            s
+        })");
+
+    private Query Singularize(Query setq) =>
+        QH.Expr(@"({
+          let s = (").Concat(setq).Concat(@").take(2).toArray()
+          if (s.length > 1) abort(['not single'])
+          s.take(1)
+        })");
 
     private Exception TranslateException(Exception ex) =>
         ex switch
