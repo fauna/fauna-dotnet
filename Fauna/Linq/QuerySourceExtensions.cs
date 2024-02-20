@@ -22,10 +22,6 @@ public static class QuerySourceExtensions
     public static Task<long> SumAsync(this IQuerySource<long> src, CancellationToken cancel = default) =>
         src.SumAsync(x => x, cancel);
 
-    public static float Sum(this IQuerySource<float> src) => src.Sum(x => x);
-    public static Task<float> SumAsync(this IQuerySource<float> src, CancellationToken cancel = default) =>
-        src.SumAsync(x => x, cancel);
-
     public static double Sum(this IQuerySource<double> src) => src.Sum(x => x);
     public static Task<double> SumAsync(this IQuerySource<double> src, CancellationToken cancel = default) =>
         src.SumAsync(x => x, cancel);

@@ -204,9 +204,6 @@ public partial class QuerySource<T>
     public long Sum(Expression<Func<T, long>> selector) => Execute<long>(SumImpl<long>(selector));
     public Task<long> SumAsync(Expression<Func<T, long>> selector, CancellationToken cancel = default) =>
         ExecuteAsync<long>(SumImpl<long>(selector), cancel);
-    public float Sum(Expression<Func<T, float>> selector) => Execute<float>(SumImpl<float>(selector));
-    public Task<float> SumAsync(Expression<Func<T, float>> selector, CancellationToken cancel = default) =>
-        ExecuteAsync<float>(SumImpl<float>(selector), cancel);
     public double Sum(Expression<Func<T, double>> selector) => Execute<double>(SumImpl<double>(selector));
     public Task<double> SumAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default) =>
         ExecuteAsync<double>(SumImpl<double>(selector), cancel);

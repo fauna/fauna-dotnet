@@ -128,8 +128,8 @@ public interface IQuerySource<T> : IQuerySource
     public long Sum(Expression<Func<T, long>> selector);
     public Task<long> SumAsync(Expression<Func<T, long>> selector, CancellationToken cancel = default);
 
-    public float Sum(Expression<Func<T, float>> selector);
-    public Task<float> SumAsync(Expression<Func<T, float>> selector, CancellationToken cancel = default);
+    // public float Sum(Expression<Func<T, float>> selector);
+    // public Task<float> SumAsync(Expression<Func<T, float>> selector, CancellationToken cancel = default);
 
     public double Sum(Expression<Func<T, double>> selector);
     public Task<double> SumAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default);
