@@ -21,6 +21,20 @@ public class AuthorDb : DataContext
     public AuthorCol Author { get => GetCollection<AuthorCol>(); }
 }
 
+public class EmbeddedSet
+{
+    [Field] public string? Id { get; set; }
+    [Field] public int Num { get; set; }
+}
+
+public class EmbeddedSetDb : DataContext
+{
+    public class EmbeddedSetCol : Collection<EmbeddedSet>
+    { }
+
+    public EmbeddedSetCol OneHundredB { get => GetCollection<EmbeddedSetCol>(); }
+}
+
 public static class Fixtures
 {
     public static AuthorDb AuthorDb(Client client)
@@ -41,4 +55,15 @@ public static class Fixtures
 
         return client.DataContext<AuthorDb>();
     }
+
+    public static EmbeddedSetDb EmbeddedSetDb(Client client)
+    {
+        client.QueryAsync(FQL($"Collection.byName('EmbeddedSet')?.delete()")).Wait();
+        client.QueryAsync(FQL(
+                $"Collection.create({{name: 'EmbeddedSet'}})"))
+            .Wait();
+        client.QueryAsync(FQL($"Set.sequence(0,100).forEach(i => EmbeddedSet.create({{num: i}}))")).Wait();
+        return client.DataContext<EmbeddedSetDb>();
+    }
+
 }
