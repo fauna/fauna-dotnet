@@ -110,17 +110,17 @@ public interface IQuerySource<T> : IQuerySource
     public R Min<R>(Expression<Func<T, R>> selector);
     public Task<R> MinAsync<R>(Expression<Func<T, R>> selector, CancellationToken cancel = default);
 
-    // public T Single();
-    // public Task<T> SingleAsync(CancellationToken cancel = default);
+    public T Single();
+    public Task<T> SingleAsync(CancellationToken cancel = default);
 
-    // public T Single(Expression<Func<T, bool>> predicate);
-    // public Task<T> SingleAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
+    public T Single(Expression<Func<T, bool>> predicate);
+    public Task<T> SingleAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
-    // public T SingleOrDefault();
-    // public Task<T> SingleOrDefaultAsync(CancellationToken cancel = default);
+    public T SingleOrDefault();
+    public Task<T> SingleOrDefaultAsync(CancellationToken cancel = default);
 
-    // public T SingleOrDefault(Expression<Func<T, bool>> predicate);
-    // public Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
+    public T SingleOrDefault(Expression<Func<T, bool>> predicate);
+    public Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
     public int Sum(Expression<Func<T, int>> selector);
     public Task<int> SumAsync(Expression<Func<T, int>> selector, CancellationToken cancel = default);
