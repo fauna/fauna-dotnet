@@ -1,9 +1,5 @@
-﻿using Fauna.Exceptions;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text.Json;
+﻿using System.Net.Http.Headers;
 using Polly;
-using AuthenticationException = System.Security.Authentication.AuthenticationException;
 
 namespace Fauna;
 
@@ -13,6 +9,7 @@ namespace Fauna;
 public class Connection : IConnection
 {
     private readonly Configuration _cfg;
+    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the Connection class.
@@ -68,5 +65,31 @@ public class Connection : IConnection
         }
 
         return request;
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (_disposed) return;
+
+        if (disposing && _cfg.DisposeHttpClient)
+        {
+            _cfg.HttpClient.Dispose();
+            GC.SuppressFinalize(this);
+        }
+        _disposed = true;
+    }
+
+    /// <summary>
+    /// Disposes the resources used by the <see cref="Connection"/> class.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+    }
+
+    // A finalizer: https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
+    ~Connection()
+    {
+        Dispose(false);
     }
 }

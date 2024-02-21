@@ -7,9 +7,14 @@
 public record Configuration
 {
     /// <summary>
+    /// Whether the Client should manage the 
+    /// </summary>
+    public bool DisposeHttpClient { get; }
+
+    /// <summary>
     /// The HTTP Client to use for requests.
     /// </summary>
-    public HttpClient HttpClient { get; init; }
+    public HttpClient HttpClient { get; }
 
     /// <summary>
     /// The secret key used for authentication.
@@ -19,7 +24,7 @@ public record Configuration
     /// <summary>
     /// The endpoint URL of the Fauna server.
     /// </summary>
-    public Uri Endpoint { get; set; } = Constants.Endpoints.Default;
+    public Uri Endpoint { get; init; } = Constants.Endpoints.Default;
 
     /// <summary>
     /// Default options for queries sent to Fauna.
@@ -38,10 +43,19 @@ public record Configuration
     /// <param name="httpClient">The HTTP Client to use.</param>
     public Configuration(string secret, HttpClient? httpClient = null)
     {
-        HttpClient = httpClient ?? new HttpClient()
+        if (httpClient is null)
         {
-            Timeout = TimeSpan.FromSeconds(5)
-        };
+            HttpClient = new HttpClient
+            {
+                Timeout = TimeSpan.FromSeconds(5)
+            };
+            DisposeHttpClient = true;
+        }
+        else
+        {
+            HttpClient = httpClient;
+        }
+
         Secret = secret;
     }
 }

@@ -12,6 +12,17 @@ public class ConfigurationTests
 
         Assert.AreEqual("secret", b.Secret);
         Assert.AreEqual(Constants.Endpoints.Default, b.Endpoint);
+        Assert.IsTrue(b.DisposeHttpClient);
+    }
+
+    [Test]
+    public void ConstructorWithHttpClient()
+    {
+        var b = new Configuration("secret", new HttpClient());
+
+        Assert.AreEqual("secret", b.Secret);
+        Assert.AreEqual(Constants.Endpoints.Default, b.Endpoint);
+        Assert.IsFalse(b.DisposeHttpClient);
     }
 
     [Test]

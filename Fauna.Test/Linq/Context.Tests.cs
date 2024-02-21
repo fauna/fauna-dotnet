@@ -45,6 +45,12 @@ public class ContextTests
         client = NewTestClient();
     }
 
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        client.Dispose();
+    }
+
     [Test]
     public void ReturnsADataContext()
     {

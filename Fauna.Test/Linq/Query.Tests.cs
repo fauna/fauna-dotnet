@@ -20,6 +20,12 @@ public class QueryTests
         db = Fixtures.AuthorDb(client);
     }
 
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        client.Dispose();
+    }
+
     [Test]
     public async Task Collection_PaginateAsync()
     {
