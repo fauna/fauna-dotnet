@@ -68,7 +68,8 @@ public partial class QuerySource<T>
     // Terminal result methods
 
     public bool All(Expression<Func<T, bool>> predicate) => Execute<bool>(AllImpl(predicate));
-    public Task<bool> AllAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<bool>(AllImpl(predicate));
+    public Task<bool> AllAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<bool>(AllImpl(predicate), cancel);
     private Pipeline AllImpl(Expression<Func<T, bool>> predicate)
     {
         RequireQueryMode("All");
@@ -79,9 +80,11 @@ public partial class QuerySource<T>
     }
 
     public bool Any() => Execute<bool>(AnyImpl(null));
-    public Task<bool> AnyAsync() => ExecuteAsync<bool>(AnyImpl(null));
+    public Task<bool> AnyAsync(CancellationToken cancel = default) =>
+        ExecuteAsync<bool>(AnyImpl(null), cancel);
     public bool Any(Expression<Func<T, bool>> predicate) => Execute<bool>(AnyImpl(predicate));
-    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<bool>(AnyImpl(predicate));
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<bool>(AnyImpl(predicate), cancel);
     private Pipeline AnyImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
@@ -89,9 +92,11 @@ public partial class QuerySource<T>
             ety: typeof(bool));
 
     public int Count() => Execute<int>(CountImpl(null));
-    public Task<int> CountAsync() => ExecuteAsync<int>(CountImpl(null));
+    public Task<int> CountAsync(CancellationToken cancel = default) =>
+        ExecuteAsync<int>(CountImpl(null), cancel);
     public int Count(Expression<Func<T, bool>> predicate) => Execute<int>(CountImpl(predicate));
-    public Task<int> CountAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<int>(CountImpl(predicate));
+    public Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<int>(CountImpl(predicate), cancel);
     private Pipeline CountImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
@@ -99,18 +104,22 @@ public partial class QuerySource<T>
             ety: typeof(int));
 
     public T First() => ExecuteMaybeEmpty<T>(FirstImpl(null));
-    public Task<T> FirstAsync() => ExecuteMaybeEmptyAsync<T>(FirstImpl(null));
+    public Task<T> FirstAsync(CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<T>(FirstImpl(null), cancel);
     public T First(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmpty<T>(FirstImpl(predicate));
-    public Task<T> FirstAsync(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmptyAsync<T>(FirstImpl(predicate));
+    public Task<T> FirstAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<T>(FirstImpl(predicate), cancel);
     private Pipeline FirstImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
             q: QH.MethodCall(AbortIfEmpty(MaybeWhereCall(Query, predicate)), "first"));
 
     public T? FirstOrDefault() => Execute<T?>(FirstOrDefaultImpl(null));
-    public Task<T?> FirstOrDefaultAsync() => ExecuteAsync<T?>(FirstOrDefaultImpl(null));
+    public Task<T?> FirstOrDefaultAsync(CancellationToken cancel = default) =>
+        ExecuteAsync<T?>(FirstOrDefaultImpl(null), cancel);
     public T? FirstOrDefault(Expression<Func<T, bool>> predicate) => Execute<T?>(FirstOrDefaultImpl(predicate));
-    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<T?>(FirstOrDefaultImpl(predicate));
+    public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<T?>(FirstOrDefaultImpl(predicate), cancel);
     private Pipeline FirstOrDefaultImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
@@ -119,18 +128,22 @@ public partial class QuerySource<T>
             enull: true);
 
     public T Last() => ExecuteMaybeEmpty<T>(LastImpl(null));
-    public Task<T> LastAsync() => ExecuteMaybeEmptyAsync<T>(LastImpl(null));
+    public Task<T> LastAsync(CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<T>(LastImpl(null), cancel);
     public T Last(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmpty<T>(LastImpl(predicate));
-    public Task<T> LastAsync(Expression<Func<T, bool>> predicate) => ExecuteMaybeEmptyAsync<T>(LastImpl(predicate));
+    public Task<T> LastAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<T>(LastImpl(predicate), cancel);
     private Pipeline LastImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
             q: QH.MethodCall(AbortIfEmpty(MaybeWhereCall(Query, predicate)), "last"));
 
     public T? LastOrDefault() => Execute<T?>(LastOrDefaultImpl(null));
-    public Task<T?> LastOrDefaultAsync() => ExecuteAsync<T?>(LastOrDefaultImpl(null));
+    public Task<T?> LastOrDefaultAsync(CancellationToken cancel = default) =>
+        ExecuteAsync<T?>(LastOrDefaultImpl(null), cancel);
     public T? LastOrDefault(Expression<Func<T, bool>> predicate) => Execute<T?>(LastOrDefaultImpl(predicate));
-    public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<T?>(LastOrDefaultImpl(predicate));
+    public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<T?>(LastOrDefaultImpl(predicate), cancel);
     private Pipeline LastOrDefaultImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
@@ -139,9 +152,11 @@ public partial class QuerySource<T>
             enull: true);
 
     public long LongCount() => Execute<long>(LongCountImpl(null));
-    public Task<long> LongCountAsync() => ExecuteAsync<long>(LongCountImpl(null));
+    public Task<long> LongCountAsync(CancellationToken cancel = default) =>
+        ExecuteAsync<long>(LongCountImpl(null), cancel);
     public long LongCount(Expression<Func<T, bool>> predicate) => Execute<long>(LongCountImpl(predicate));
-    public Task<long> LongCountAsync(Expression<Func<T, bool>> predicate) => ExecuteAsync<long>(LongCountImpl(predicate));
+    public Task<long> LongCountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default) =>
+        ExecuteAsync<long>(LongCountImpl(predicate), cancel);
     private Pipeline LongCountImpl(Expression<Func<T, bool>>? predicate) =>
         CopyPipeline(
             mode: PipelineMode.Scalar,
@@ -151,9 +166,11 @@ public partial class QuerySource<T>
     private static readonly Query _maxReducer = QH.Expr("(a, b) => if (a >= b) a else b");
 
     public T Max() => ExecuteMaybeEmpty<T>(MaxImpl<T>(null));
-    public Task<T> MaxAsync() => ExecuteMaybeEmptyAsync<T>(MaxImpl<T>(null));
+    public Task<T> MaxAsync(CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<T>(MaxImpl<T>(null), cancel);
     public R Max<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmpty<R>(MaxImpl(selector));
-    public Task<R> MaxAsync<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmptyAsync<R>(MaxImpl(selector));
+    public Task<R> MaxAsync<R>(Expression<Func<T, R>> selector, CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<R>(MaxImpl(selector), cancel);
     private Pipeline MaxImpl<R>(Expression<Func<T, R>>? selector)
     {
         RequireQueryMode("Max");
@@ -166,9 +183,10 @@ public partial class QuerySource<T>
     private static readonly Query _minReducer = QH.Expr("(a, b) => if (a <= b) a else b");
 
     public T Min() => ExecuteMaybeEmpty<T>(MinImpl<T>(null));
-    public Task<T> MinAsync() => ExecuteMaybeEmptyAsync<T>(MinImpl<T>(null));
+    public Task<T> MinAsync(CancellationToken cancel = default) => ExecuteMaybeEmptyAsync<T>(MinImpl<T>(null), cancel);
     public R Min<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmpty<R>(MinImpl(selector));
-    public Task<R> MinAsync<R>(Expression<Func<T, R>> selector) => ExecuteMaybeEmptyAsync<R>(MinImpl(selector));
+    public Task<R> MinAsync<R>(Expression<Func<T, R>> selector, CancellationToken cancel = default) =>
+        ExecuteMaybeEmptyAsync<R>(MinImpl(selector), cancel);
     private Pipeline MinImpl<R>(Expression<Func<T, R>>? selector)
     {
         RequireQueryMode("Min");
@@ -181,13 +199,14 @@ public partial class QuerySource<T>
     private static readonly Query _sumReducer = QH.Expr("(a, b) => a + b");
 
     public int Sum(Expression<Func<T, int>> selector) => Execute<int>(SumImpl<int>(selector));
-    public Task<int> SumAsync(Expression<Func<T, int>> selector) => ExecuteAsync<int>(SumImpl<int>(selector));
+    public Task<int> SumAsync(Expression<Func<T, int>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<int>(SumImpl<int>(selector), cancel);
     public long Sum(Expression<Func<T, long>> selector) => Execute<long>(SumImpl<long>(selector));
-    public Task<long> SumAsync(Expression<Func<T, long>> selector) => ExecuteAsync<long>(SumImpl<long>(selector));
-    public float Sum(Expression<Func<T, float>> selector) => Execute<float>(SumImpl<float>(selector));
-    public Task<float> SumAsync(Expression<Func<T, float>> selector) => ExecuteAsync<float>(SumImpl<float>(selector));
+    public Task<long> SumAsync(Expression<Func<T, long>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<long>(SumImpl<long>(selector), cancel);
     public double Sum(Expression<Func<T, double>> selector) => Execute<double>(SumImpl<double>(selector));
-    public Task<double> SumAsync(Expression<Func<T, double>> selector) => ExecuteAsync<double>(SumImpl<double>(selector));
+    public Task<double> SumAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<double>(SumImpl<double>(selector), cancel);
     private Pipeline SumImpl<R>(Expression<Func<T, R>> selector)
     {
         RequireQueryMode("Sum");
@@ -225,11 +244,11 @@ public partial class QuerySource<T>
         }
     }
 
-    private async Task<R> ExecuteMaybeEmptyAsync<R>(Pipeline pl)
+    private async Task<R> ExecuteMaybeEmptyAsync<R>(Pipeline pl, CancellationToken cancel)
     {
         try
         {
-            return await ExecuteAsync<R>(pl);
+            return await ExecuteAsync<R>(pl, cancel);
         }
         catch (AggregateException ex)
         {

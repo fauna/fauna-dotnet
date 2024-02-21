@@ -50,6 +50,66 @@ public class QueryTests
     }
 
     [Test]
+    public async Task Query_Cancellation()
+    {
+        async Task TestCancel(string method, Func<CancellationToken, Task> testfn)
+        {
+            using var cancel = new CancellationTokenSource();
+            cancel.Cancel();
+            try
+            {
+                await testfn(cancel.Token);
+                Assert.Fail($"{method} was not cancelled");
+            }
+            catch (System.Threading.Tasks.TaskCanceledException) { }
+        }
+
+        await TestCancel("PaginateAsync", async (c) =>
+        {
+            await foreach (var p in db.Author.PaginateAsync(cancel: c))
+            {
+                Console.WriteLine(p.Data);
+            }
+        });
+        await TestCancel("ToAsyncEnumerable", async (c) =>
+        {
+            await foreach (var a in db.Author.ToAsyncEnumerable(cancel: c))
+            {
+                Console.WriteLine(a);
+            }
+        });
+
+        await TestCancel("AllAsync", async (c) => await db.Author.AllAsync(d => true, c));
+        await TestCancel("AnyAsync", async (c) => await db.Author.AnyAsync(c));
+        await TestCancel("AnyAsync", async (c) => await db.Author.AnyAsync(d => true, c));
+        await TestCancel("CountAsync", async (c) => await db.Author.CountAsync(c));
+        await TestCancel("CountAsync", async (c) => await db.Author.CountAsync(d => true, c));
+        await TestCancel("FirstAsync", async (c) => await db.Author.FirstAsync(c));
+        await TestCancel("FirstAsync", async (c) => await db.Author.FirstAsync(d => true, c));
+        await TestCancel("FirstOrDefaultAsync", async (c) => await db.Author.FirstOrDefaultAsync(c));
+        await TestCancel("FirstOrDefaultAsync", async (c) => await db.Author.FirstOrDefaultAsync(d => true, c));
+        await TestCancel("LastAsync", async (c) => await db.Author.LastAsync(c));
+        await TestCancel("LastAsync", async (c) => await db.Author.LastAsync(d => true, c));
+        await TestCancel("LastOrDefaultAsync", async (c) => await db.Author.LastOrDefaultAsync(c));
+        await TestCancel("LastOrDefaultAsync", async (c) => await db.Author.LastOrDefaultAsync(d => true, c));
+        await TestCancel("LongCountAsync", async (c) => await db.Author.LongCountAsync(c));
+        await TestCancel("LongCountAsync", async (c) => await db.Author.LongCountAsync(d => true, c));
+        await TestCancel("MaxAsync", async (c) => await db.Author.MaxAsync(c));
+        await TestCancel("MaxAsync", async (c) => await db.Author.MaxAsync(d => true, c));
+        await TestCancel("MinAsync", async (c) => await db.Author.MinAsync(c));
+        await TestCancel("MinAsync", async (c) => await db.Author.MinAsync(d => true, c));
+        await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (int)1, c));
+        await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (long)1L, c));
+        await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (double)1D, c));
+
+        await TestCancel("ToListAsync", async (c) => await db.Author.ToListAsync(c));
+        await TestCancel("ToArrayAsync", async (c) => await db.Author.ToArrayAsync(c));
+        await TestCancel("ToHashSetAsync", async (c) => await db.Author.ToHashSetAsync(c));
+        await TestCancel("ToDictionaryAsync", async (c) =>
+            await db.Author.ToDictionaryAsync(a => a.Name, a => a.Age, c));
+    }
+
+    [Test]
     public async Task Query_ToAsyncEnumerable()
     {
         var names = new List<string>();

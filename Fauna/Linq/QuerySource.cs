@@ -24,7 +24,7 @@ public abstract class QuerySource : IQuerySource
 
     internal abstract TResult Execute<TResult>(Pipeline pl);
 
-    internal abstract Task<TResult> ExecuteAsync<TResult>(Pipeline pl);
+    internal abstract Task<TResult> ExecuteAsync<TResult>(Pipeline pl, CancellationToken cancel = default);
 }
 
 public partial class QuerySource<T> : QuerySource, IQuerySource<T>
@@ -53,16 +53,17 @@ public partial class QuerySource<T> : QuerySource, IQuerySource<T>
         }
     }
 
-    internal override Task<TResult> ExecuteAsync<TResult>(Pipeline pl) =>
-        pl.GetExec(Ctx).Result<TResult>(queryOptions: null);
+    internal override Task<TResult> ExecuteAsync<TResult>(Pipeline pl, CancellationToken cancel = default) =>
+        pl.GetExec(Ctx).Result<TResult>(queryOptions: null, cancel: cancel);
 
-    public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null)
+    public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null, CancellationToken cancel = default)
     {
         var pe = Pipeline.GetExec(Ctx);
-        return pe.PagedResult<T>(queryOptions);
+        return pe.PagedResult<T>(queryOptions, cancel);
     }
 
-    public IAsyncEnumerable<T> ToAsyncEnumerable() => PaginateAsync().FlattenAsync();
+    public IAsyncEnumerable<T> ToAsyncEnumerable(CancellationToken cancel = default) =>
+        PaginateAsync(cancel: cancel).FlattenAsync();
 
     public IEnumerable<T> ToEnumerable() => new QuerySourceEnumerable(this);
 }
