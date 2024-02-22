@@ -48,4 +48,4 @@ jobs:
 
       - put: docs.git
         params:
-          repository: updated-docs.git
+          repository: docs-updated.git
