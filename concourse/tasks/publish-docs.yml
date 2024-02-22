@@ -1,0 +1,18 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: mcr.microsoft.com/dotnet/sdk
+    tag: 8.0-alpine3.19
+
+inputs:
+  - name: repo.git
+  - name: docs.git
+
+outputs:
+  - name: updated-docs.git
+
+run:
+  path: ./repo.git/concourse/scripts/publish_docs.sh
+  
