@@ -3,21 +3,18 @@ set -eou
 cd ./repo.git
 
 apk add xmlstarlet
-ls #debug
 PACKAGE_VERSION=$(xml sel -t -v "/Project/PropertyGroup/Version" ./Fauna/Fauna.csproj)
 
 echo "Current docs version: $PACKAGE_VERSION"
 cd ../
-ls #debug
 git clone docs.git docs-updated.git
 
 cd docs-updated.git
 
-echo "${PACKAGE_VERSION}" #debug
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
-
-pwd #debug
+ls ../../repo.git
+ls ../../repo.git/doc
 sed -i.bak "s/_DOC_VERSION_/${PACKAGE_VERSION}/" ../../repo.git/doc/Doxyfile
 
 apk add doxygen
