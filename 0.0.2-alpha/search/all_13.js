@@ -1,0 +1,9 @@
+var searchData=
+[
+  ['unauthorizedexception_0',['unauthorizedexception',['../class_fauna_1_1_exceptions_1_1_unauthorized_exception.html',1,'Fauna.Exceptions.UnauthorizedException'],['../class_fauna_1_1_exceptions_1_1_unauthorized_exception.html#a5ded2030cb009507ecae3d9d0a4575b2',1,'Fauna.Exceptions.UnauthorizedException.UnauthorizedException()']]],
+  ['unwrap_1',['unwrap',['../class_fauna_1_1_query_expr.html#a15ecd8bb43a28ae4c53852da41455a37',1,'Fauna.QueryExpr.Unwrap'],['../class_fauna_1_1_query_literal.html#a3f611be6098117cb2a14563627cf5bf6',1,'Fauna.QueryLiteral.Unwrap'],['../class_fauna_1_1_query_val.html#a8cee65a5c9047d781885c6a2bb5f93c3',1,'Fauna.QueryVal.Unwrap']]],
+  ['utf8faunareader_2',['utf8faunareader',['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html',1,'Fauna.Serialization.Utf8FaunaReader'],['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html#a12393dfb40044cd779a83dae18d00a59',1,'Fauna.Serialization.Utf8FaunaReader.Utf8FaunaReader(ReadOnlySequence&lt; byte &gt; bytes)'],['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html#a5091a273d4ba7cf535201c0430bb966b',1,'Fauna.Serialization.Utf8FaunaReader.Utf8FaunaReader(string str)']]],
+  ['utf8faunareader_2ecs_3',['Utf8FaunaReader.cs',['../_utf8_fauna_reader_8cs.html',1,'']]],
+  ['utf8faunawriter_4',['utf8faunawriter',['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html',1,'Fauna.Serialization.Utf8FaunaWriter'],['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html#aebd64b5c3c21ef052921fa27694cbfb1',1,'Fauna.Serialization.Utf8FaunaWriter.Utf8FaunaWriter(IBufferWriter&lt; byte &gt; bufferWriter)'],['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html#a54915e325dc4d021ca046e4ae538672e',1,'Fauna.Serialization.Utf8FaunaWriter.Utf8FaunaWriter(Stream stream)']]],
+  ['utf8faunawriter_2ecs_5',['Utf8FaunaWriter.cs',['../_utf8_fauna_writer_8cs.html',1,'']]]
+];
