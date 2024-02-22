@@ -24,10 +24,10 @@ public static class Deserializer
     private static readonly CheckedDeserializer<Module> _module = new();
     private static readonly CheckedDeserializer<Document> _doc = new();
     private static readonly CheckedDeserializer<NamedDocument> _namedDoc = new();
+    private static readonly DocumentDeserializer<NullableDocument<Document>> _nullableDoc = new();
+    private static readonly DocumentDeserializer<NullableDocument<NamedDocument>> _nullableNamedDoc = new();
     private static readonly CheckedDeserializer<DocumentRef> _docRef = new();
-    private static readonly CheckedDeserializer<NullDocumentRef> _nullDocRef = new();
     private static readonly CheckedDeserializer<NamedDocumentRef> _namedDocRef = new();
-    private static readonly CheckedDeserializer<NullNamedDocumentRef> _nullNamedDocRef = new();
 
     /// <summary>
     /// Generates a deserializer for the specified non-nullable .NET type.
@@ -62,9 +62,28 @@ public static class Deserializer
         if (targetType == typeof(Document)) return _doc;
         if (targetType == typeof(NamedDocument)) return _namedDoc;
         if (targetType == typeof(DocumentRef)) return _docRef;
-        if (targetType == typeof(NullDocumentRef)) return _nullDocRef;
         if (targetType == typeof(NamedDocumentRef)) return _namedDocRef;
-        if (targetType == typeof(NullNamedDocumentRef)) return _nullNamedDocRef;
+
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>))
+        {
+            var argTypes = targetType.GetGenericArguments();
+            var valueType = argTypes[0];
+
+            if (valueType == typeof(Document))
+            {
+                var deserType = typeof(NullableDocumentDeserializer<>).MakeGenericType(new[] { valueType });
+                var deser = Activator.CreateInstance(deserType, new[] { _nullableDoc });
+
+                return (IDeserializer)deser!;
+            }
+            if (valueType == typeof(NamedDocument))
+            {
+                var deserType = typeof(NullableDocumentDeserializer<>).MakeGenericType(new[] { valueType });
+                var deser = Activator.CreateInstance(deserType, new[] { _nullableNamedDoc });
+
+                return (IDeserializer)deser!;
+            }
+        }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
         {

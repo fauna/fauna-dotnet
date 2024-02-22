@@ -1,3 +1,4 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 
@@ -44,9 +45,8 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
         string? id = null;
         string? name = null;
         Module? coll = null;
-        var exists = true;
         string? cause = null;
-        var allProps = new Dictionary<string, object?>();
+        var exists = true;
 
         while (reader.Read() && reader.CurrentTokenType != TokenType.EndRef)
         {
@@ -60,59 +60,49 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
             {
                 case "id":
                     id = reader.GetString();
-                    allProps["id"] = id;
                     break;
                 case "name":
                     name = reader.GetString();
-                    allProps["name"] = name;
                     break;
                 case "coll":
                     coll = reader.GetModule();
-                    allProps["coll"] = coll;
-                    break;
-                case "exists":
-                    exists = reader.GetBoolean();
-                    allProps["exists"] = exists;
                     break;
                 case "cause":
                     cause = reader.GetString();
-                    allProps["cause"] = cause;
                     break;
-                default:
-                    allProps[fieldName] = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
+                case "exists":
+                    exists = reader.GetBoolean();
                     break;
             }
         }
 
-        if (id != null && coll != null)
+        if (id != null && coll != null && exists)
         {
-            if (exists)
-            {
-                return new DocumentRef(id, coll);
-            }
-
-            return new NullDocumentRef(id, coll, cause!);
+            return new DocumentRef(id, coll);
         }
 
-        if (name != null && coll != null)
+        if (name != null && coll != null && exists)
         {
-            if (exists)
-            {
-                return new NamedDocumentRef(name, coll);
-            }
-
-            return new NullNamedDocumentRef(name, coll, cause!);
+            return new NamedDocumentRef(name, coll);
         }
 
-        // Unsupported ref type, but don't fail for forward compatibility.
-        return allProps;
+        if ((id != null || name != null) && coll != null && !exists)
+        {
+            throw new NullDocumentException(
+                $"Document {id ?? name} in collection {coll.Name} is null: {cause}",
+                (id ?? name)!,
+                coll,
+                cause!);
+        }
+
+        throw new SerializationException("Unsupported reference type");
     }
 
     private object DeserializeDocument(MappingContext context, ref Utf8FaunaReader reader)
     {
         var data = new Dictionary<string, object?>();
         string? id = null;
-        string? name = null;
+        object? name = null;
         DateTime? ts = null;
         Module? coll = null;
 
@@ -130,7 +120,7 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
                     id = reader.GetString();
                     break;
                 case "name":
-                    name = reader.GetString();
+                    name = Singleton.Deserialize(context, ref reader);
                     break;
                 case "coll":
                     coll = reader.GetModule();
@@ -140,7 +130,8 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
                     // start with id and coll.
                     if (context.TryGetCollection(coll.Name, out var collInfo))
                     {
-                        return collInfo.Deserializer.DeserializeDocument(context, id, name, ref reader);
+                        // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
+                        return collInfo.Deserializer.DeserializeDocument(context, id, name != null ? (string)name : null, ref reader);
                     }
 
                     break;
@@ -148,7 +139,7 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
                     ts = reader.GetTime();
                     break;
                 default:
-                    data[fieldName] = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
+                    data[fieldName] = Singleton.Deserialize(context, ref reader);
                     break;
             }
         }
@@ -161,7 +152,8 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
 
         if (name != null && coll != null && ts != null)
         {
-            return new NamedDocument(name, coll, ts.GetValueOrDefault(), data);
+            // If we're here, name is a string.
+            return new NamedDocument((string)name, coll, ts.GetValueOrDefault(), data);
         }
 
         // Unsupported document type, but don't fail for forward compatibility.

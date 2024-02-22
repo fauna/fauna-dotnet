@@ -293,7 +293,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullRef()
+    public void DeserializeNullAsNullableDocument()
     {
         const string given = @"
                              {
@@ -305,11 +305,21 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NullDocumentRef>(given);
-        Assert.AreEqual("123", actual.Id);
-        Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Cause);
+        var actual = Deserialize<NullableDocument<Document>>(given);
+
+        switch (actual)
+        {
+            case NullDocument<Document> d:
+                Assert.AreEqual("123", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual.GetType()}");
+                break;
+        }
     }
+
 
     [Test]
     public void DeserializeNamedRef()
@@ -328,7 +338,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullNamedRef()
+    public void DeserializeNullAsNullableNamedDocument()
     {
         const string given = @"
                              {
@@ -340,10 +350,19 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NullNamedDocumentRef>(given);
-        Assert.AreEqual("RefName", actual.Name);
-        Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Cause);
+        var actual = Deserialize<NullableDocument<NamedDocument>>(given);
+
+        switch (actual)
+        {
+            case NullDocument<NamedDocument> d:
+                Assert.AreEqual("RefName", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual.GetType()}");
+                break;
+        }
     }
 
     [Test]
