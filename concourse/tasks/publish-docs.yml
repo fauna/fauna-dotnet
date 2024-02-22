@@ -11,7 +11,7 @@ inputs:
   - name: docs.git
 
 outputs:
-  - name: updated-docs.git
+  - name: docs-updated.git
 
 run:
   path: ./repo.git/concourse/scripts/publish-docs.sh
