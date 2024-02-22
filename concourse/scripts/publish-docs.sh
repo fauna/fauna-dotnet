@@ -14,7 +14,7 @@ cd docs-updated.git
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
 
-sed -i.bak "s/_DOC_VERSION_/${PACKAGE_VERSION}/" ../../repo.git/doc/DoxyFile
+sed -i.bak "s/_DOC_VERSION_/${PACKAGE_VERSION}/" ../../repo.git/doc/Doxyfile
 
 apk add doxygen
 
