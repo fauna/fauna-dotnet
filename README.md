@@ -1,7 +1,7 @@
 # The Official .NET Driver for [Fauna](https://fauna.com/)
 
 > [!CAUTION]
-> This driver is currently under development and should not be used for production.
+> This driver is currently in beta and should not be used for production workloads.
 
 This driver can only be used with FQL v10, and is not compatible with earlier versions of FQL. To query your databases with earlier API versions, see [faunadb-csharp](https://github.com/fauna/faunadb-csharp).
 
@@ -21,8 +21,12 @@ See the [Fauna Documentation](https://docs.fauna.com/fauna/current/) for additio
 - .NET 8.0
 
 ## Installation
+Be sure to include prerelease versions given the driver is currently in beta.
 
-TODO: Describe setup once package is in Nuget
+Using the .NET CLI:
+```
+dotnet add package Fauna --prerelease
+```
 
 ## Basic usage
 
