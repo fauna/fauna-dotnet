@@ -4,9 +4,9 @@ using Polly;
 namespace Fauna;
 
 /// <summary>
-/// An HTTP Client wrapper.
+/// A class that handles HTTP requests and retries.
 /// </summary>
-public class Connection : IConnection
+internal class Connection : IConnection
 {
     private readonly Configuration _cfg;
     private bool _disposed;
@@ -14,7 +14,7 @@ public class Connection : IConnection
     /// <summary>
     /// Initializes a new instance of the Connection class.
     /// </summary>
-    /// <param name="configuration">The client configuration to use.</param>
+    /// <param name="configuration">The <see cref="Configuration"/> to use.</param>
     public Connection(Configuration configuration)
     {
         _cfg = configuration;

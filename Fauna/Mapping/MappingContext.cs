@@ -2,6 +2,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Fauna.Mapping;
 
+/// <summary>
+/// A class representing the mapping context to be used during serialization and deserialization.
+/// </summary>
 public sealed class MappingContext
 {
     // FIXME(matt) possibly replace with more efficient cache impl
@@ -10,7 +13,7 @@ public sealed class MappingContext
     private readonly Dictionary<Type, MappingInfo> _baseTypes = new();
 
     public MappingContext() { }
-
+    
     public MappingContext(IEnumerable<DataContext.Collection> collections)
     {
         foreach (var col in collections)
@@ -29,16 +32,33 @@ public sealed class MappingContext
         }
     }
 
+    /// <summary>
+    /// Gets the <see cref="MappingInfo"/> for a given collection name.
+    /// </summary>
+    /// <param name="col">The collection name to get.</param>
+    /// <param name="ret">When this method returns, contains the <see cref="MappingInfo"/> associated with the collection if found; otherwise, <c>null</c>. This parameter is passed uninitialized.</param>
+    /// <returns><c>true</c> if the <see cref="MappingContext"/> contains <see cref="MappingInfo"/> for the specified collection; otherwise, <c>false</c>.</returns>
     public bool TryGetCollection(string col, [NotNullWhen(true)] out MappingInfo? ret)
     {
         return _collections.TryGetValue(col, out ret);
     }
 
+    /// <summary>
+    /// Gets the <see cref="MappingInfo"/> for a given <see cref="Type"/>.
+    /// </summary>
+    /// <param name="ty">The type to get.</param>
+    /// <param name="ret">When this method returns, contains the <see cref="MappingInfo"/> associated with the type if found; otherwise, <c>null</c>. This parameter is passed uninitialized.</param>
+    /// <returns><c>true</c> if the <see cref="MappingContext"/> contains <see cref="MappingInfo"/> for the specified type; otherwise, <c>false</c>.</returns>
     public bool TryGetBaseType(Type ty, [NotNullWhen(true)] out MappingInfo? ret)
     {
         return _baseTypes.TryGetValue(ty, out ret);
     }
 
+    /// <summary>
+    /// Gets the <see cref="MappingInfo"/> for a given <see cref="Type"/>.
+    /// </summary>
+    /// <param name="ty">The type to get.</param>
+    /// <returns></returns>
     public MappingInfo GetInfo(Type ty)
     {
         lock (this)

@@ -3,20 +3,23 @@ using Polly;
 
 namespace Fauna;
 
+/// <summary>
+/// A class representing a retry configuration for queries.
+/// </summary>
 public class RetryConfiguration
 {
 
     /// <summary>
-    /// Async retry policy
+    /// Gets the retry policy.
     /// </summary>
     public AsyncPolicy<HttpResponseMessage> RetryPolicy { get; set; }
 
 
     /// <summary>
-    /// Creates a new RetryConfiguration object
+    /// Creates a new <see cref="RetryConfiguration"/> instance.
     /// </summary>
     /// <param name="retryCount">Maximum times to retry a request.</param>
-    /// <param name="maxBackoff">The maximum backoff to apply</param>
+    /// <param name="maxBackoff">The maximum backoff to apply.</param>
     public RetryConfiguration(int retryCount, TimeSpan maxBackoff)
     {
         RetryPolicy = Policy

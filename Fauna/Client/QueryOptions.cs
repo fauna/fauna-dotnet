@@ -22,7 +22,7 @@ public class QueryOptions
 
     /// <summary>
     /// Gets or sets a string-encoded set of caller-defined tags for identifying the request in logs and response bodies. 
-    /// Format is a list of key:value pairs, each key and value limited to [a-zA-Z0-9_].
+    /// Each key and value should be limited to [a-zA-Z0-9_].
     /// </summary>
     public Dictionary<string, string>? QueryTags { get; set; } = null;
 
@@ -32,34 +32,36 @@ public class QueryOptions
     public string? TraceParent { get; set; } = null;
 
     /// <summary>
-    /// Combines default query options with overrides from the client configuration.
+    /// Merges two instances of <see cref="QueryOptions"/>.
     /// </summary>
-    /// <param name="defaultQueryOptions">The default query options.</param>
-    /// <param name="queryOptionOverrides">The query options provided for a specific query, overriding the defaults.</param>
+    /// <param name="options">The default query options.</param>
+    /// <param name="overrides">The query options provided for a specific query, overriding the defaults.</param>
     /// <returns>A <see cref="QueryOptions"/> object representing the final combined set of query options.</returns>
-    internal static QueryOptions? GetFinalQueryOptions(QueryOptions? defaultQueryOptions, QueryOptions? queryOptionOverrides)
+    internal static QueryOptions? GetFinalQueryOptions(QueryOptions? options, QueryOptions? overrides)
     {
 
-        if (defaultQueryOptions == null && queryOptionOverrides == null)
+        if (options == null && overrides == null)
         {
             return null;
         }
-        else if (defaultQueryOptions == null)
+
+        if (options == null)
         {
-            return queryOptionOverrides;
+            return overrides;
         }
-        else if (queryOptionOverrides == null)
+
+        if (overrides == null)
         {
-            return defaultQueryOptions;
+            return options;
         }
 
         var finalQueryOptions = new QueryOptions()
         {
-            Linearized = defaultQueryOptions.Linearized,
-            TypeCheck = defaultQueryOptions.TypeCheck,
-            QueryTimeout = defaultQueryOptions.QueryTimeout,
-            QueryTags = defaultQueryOptions.QueryTags,
-            TraceParent = defaultQueryOptions.TraceParent,
+            Linearized = options.Linearized,
+            TypeCheck = options.TypeCheck,
+            QueryTimeout = options.QueryTimeout,
+            QueryTags = options.QueryTags,
+            TraceParent = options.TraceParent,
         };
 
         var properties = typeof(QueryOptions).GetProperties();
@@ -71,7 +73,7 @@ public class QueryOptions
                 continue;
             }
 
-            var propertyOverride = prop.GetValue(queryOptionOverrides);
+            var propertyOverride = prop.GetValue(overrides);
 
             if (propertyOverride != null)
             {
@@ -79,15 +81,15 @@ public class QueryOptions
             }
         }
 
-        if (queryOptionOverrides.QueryTags != null)
+        if (overrides.QueryTags != null)
         {
             if (finalQueryOptions.QueryTags == null)
             {
-                finalQueryOptions.QueryTags = queryOptionOverrides.QueryTags;
+                finalQueryOptions.QueryTags = overrides.QueryTags;
             }
             else
             {
-                foreach (var kv in queryOptionOverrides.QueryTags)
+                foreach (var kv in overrides.QueryTags)
                 {
                     if (finalQueryOptions.QueryTags.ContainsKey(kv.Key))
                     {

@@ -5,10 +5,22 @@ using System.Reflection;
 
 namespace Fauna.Mapping;
 
+/// <summary>
+/// A class that encapsulates the class mapping, serialization, and deserialization of a Fauna object, including documents.
+/// </summary>
 public sealed class MappingInfo
 {
+    /// <summary>
+    /// The associated type.
+    /// </summary>
     public Type Type { get; }
+    /// <summary>
+    /// A read-only list of <see cref="FieldInfo"/> representing the object.
+    /// </summary>
     public IReadOnlyList<FieldInfo> Fields { get; }
+    /// <summary>
+    /// A read-only dictionary of <see cref="FieldInfo"/> representing the object.
+    /// </summary>
     public IReadOnlyDictionary<string, FieldInfo> FieldsByName { get; }
 
     internal bool ShouldEscapeObject { get; }

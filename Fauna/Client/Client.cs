@@ -31,7 +31,7 @@ public class Client : BaseClient, IDisposable
     public long LastSeenTxn { get; private set; }
 
     /// <summary>
-    /// Initializes a new instance of the Client class using a secret key.
+    /// Initializes a new instance of a Client with a secret.
     /// </summary>
     /// <param name="secret">The secret key for authentication.</param>
     public Client(string secret) :
@@ -40,7 +40,7 @@ public class Client : BaseClient, IDisposable
     }
 
     /// <summary>
-    /// Initializes a new instance of the Client class using client configuration.
+    /// Initializes a new instance of the Client with a custom <see cref="Configuration"/>.
     /// </summary>
     /// <param name="config">The configuration settings for the client.</param>
     public Client(Configuration config)
@@ -50,7 +50,7 @@ public class Client : BaseClient, IDisposable
     }
 
     /// <summary>
-    /// Create and return a new database context which uses this client.
+    /// Create and return a new database context which uses the <see cref="Client"/> instance.
     /// </summary>
     /// <typeparam name="DB">The DataContext subtype to instantiate.</typeparam>
     /// <returns>An instance of <typeparamref name="DB"/>.</returns>
@@ -69,6 +69,21 @@ public class Client : BaseClient, IDisposable
         }
 
         return (DB)ctx;
+    }
+    
+    /// <summary>
+    /// Disposes the resources used by the <see cref="Client"/> class.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    // A finalizer: https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
+    ~Client()
+    {
+        Dispose(false);
     }
 
     internal override async Task<QuerySuccess<T>> QueryAsyncInternal<T>(
@@ -177,20 +192,5 @@ public class Client : BaseClient, IDisposable
             GC.SuppressFinalize(this);
         }
         _disposed = true;
-    }
-
-    /// <summary>
-    /// Disposes the resources used by the <see cref="Client"/> class.
-    /// </summary>
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    // A finalizer: https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
-    ~Client()
-    {
-        Dispose(false);
     }
 }

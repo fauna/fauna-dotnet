@@ -1,9 +1,9 @@
 ﻿namespace Fauna;
 
 /// <summary>
-/// Represents an interface for connections to a Fauna database.
+/// Represents an interface for making HTTP requests.
 /// </summary>
-public interface IConnection : IDisposable
+internal interface IConnection : IDisposable
 {
     /// <summary>
     /// Asynchronously sends a POST request to the specified path with the provided body and headers.
