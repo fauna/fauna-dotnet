@@ -8,7 +8,7 @@ namespace Fauna;
 public static class PaginationExtensions
 {
     /// <summary>
-    /// Flattens pages into a stream of items.
+    /// Flattens all pages into a stream of items.
     /// </summary>
     /// <typeparam name="T">Data type.</typeparam>
     /// <param name="pages">Pages to flatten.</param>
