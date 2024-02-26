@@ -1,15 +1,17 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal class DocumentDeserializer<T> : BaseDeserializer<T>
+internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
 {
+
     public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         return reader.CurrentTokenType switch
         {
-            TokenType.StartObject => DeserializeDocument(context, ref reader),
+            TokenType.StartDocument => DeserializeDocument(context, ref reader),
             TokenType.StartRef => DeserializeRef(context, ref reader),
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing into {typeof(NullableDocument<T>)}: {reader.CurrentTokenType}")
@@ -48,10 +50,12 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T>
                     // start with id and coll.
                     if (context.TryGetCollection(coll.Name, out var collInfo))
                     {
-                        // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
-                        var doc = collInfo.Deserializer.DeserializeDocument(context, id, name != null ? (string)name : null, ref reader);
-                        if (doc is T v) return v;
-                        throw new SerializationException($"Expected type {typeof(T)} but received {doc.GetType()}");
+                        // If the user asks for a different type, don't use the saved deserializer.
+                        if (collInfo.Type == typeof(T) || typeof(object) == typeof(T))
+                        {
+                            // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
+                            return (collInfo.Deserializer.DeserializeDocument(context, id, name != null ? (string)name : null, ref reader) as T)!;
+                        }
                     }
 
                     break;
@@ -66,20 +70,59 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T>
 
         if (id != null && coll != null && ts != null)
         {
+            // For convenience, if a user asks for a DocumentRef but gets a document, give them the ref.
+            if (typeof(DocumentRef) == typeof(T))
+            {
+                return (new DocumentRef(id, coll) as T)!;
+            }
+
+            // For convenience, if a user asks for a NullableDocument<DocumentRef> but gets a document, give it to them.
+            if (typeof(NullableDocument<DocumentRef>) == typeof(T))
+            {
+                var docRef = new DocumentRef(id, coll);
+                return (new NonNullDocument<DocumentRef>(docRef) as T)!;
+            }
+
             if (name != null) data["name"] = name;
-            var r = new Document(id, coll, ts.GetValueOrDefault(), data);
-            if (r is T d) return d;
-            var nr = (NullableDocument<Document>)new NonNullDocument<Document>(r);
-            if (nr is T nnd) return nnd;
+
+            var doc = new Document(id, coll, ts.GetValueOrDefault(), data);
+            if (typeof(Document) == typeof(T))
+            {
+                return (doc as T)!;
+            }
+
+            return (new NonNullDocument<Document>(doc) as T)!;
         }
 
         if (name != null && coll != null && ts != null)
         {
             // If we're here, name is a string.
+            var nameAsString = (string)name;
             var r = new NamedDocument((string)name, coll, ts.GetValueOrDefault(), data);
             if (r is T d) return d;
             var nr = (NullableDocument<NamedDocument>)new NonNullDocument<NamedDocument>(r);
             if (nr is T nnd) return nnd;
+
+            // For convenience, if a user asks for a NamedDocumentRef but gets a named document, give them the ref.
+            if (typeof(NamedDocumentRef) == typeof(T))
+            {
+                return (new NamedDocumentRef(nameAsString, coll) as T)!;
+            }
+
+            // For convenience, if a user asks for a NullableDocument<NamedDocumentRef> but gets a named document, give it to them.
+            if (typeof(NullableDocument<NamedDocumentRef>) == typeof(T))
+            {
+                var docRef = new NamedDocumentRef(nameAsString, coll);
+                return (new NonNullDocument<NamedDocumentRef>(docRef) as T)!;
+            }
+
+            var doc = new NamedDocument(nameAsString, coll, ts.GetValueOrDefault(), data);
+            if (typeof(NamedDocument) == typeof(T))
+            {
+                return (doc as T)!;
+            }
+
+            return (new NonNullDocument<NamedDocument>(doc) as T)!;
         }
 
         throw new SerializationException("Unsupported document type.");
@@ -121,22 +164,58 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T>
             }
         }
 
-        if ((id != null || name != null) && coll != null && exists)
+        if (id != null && coll != null && exists)
         {
-            throw new SerializationException($"Expected a document but received a ref: {id ?? name} in {coll.Name}");
+            var docRef = new DocumentRef(id, coll);
+            if (typeof(NullableDocument<DocumentRef>) == typeof(T))
+            {
+                return (new NonNullDocument<DocumentRef>(docRef) as T)!;
+            }
+
+            return (docRef as T)!;
         }
 
-        if ((id != null || name != null) && coll != null && !exists)
+        if (name != null && coll != null && exists)
         {
-            var ty = typeof(T);
-            if (ty.IsGenericType && ty.GetGenericTypeDefinition() == typeof(NullableDocument<>))
+            var docRef = new NamedDocumentRef(name, coll);
+            if (typeof(NullableDocument<NamedDocumentRef>) == typeof(T))
             {
-                var inner = ty.GetGenericArguments()[0];
-                var nty = typeof(NullDocument<>).MakeGenericType(inner);
-                var r = Activator.CreateInstance(nty, (id ?? name)!, coll, cause!);
-                return (T)r!;
+                return (new NonNullDocument<NamedDocumentRef>(docRef) as T)!;
             }
+
+            return (docRef as T)!;
         }
+
+        if (id != null && coll != null && !exists)
+        {
+            if (typeof(DocumentRef) == typeof(T) || typeof(Document) == typeof(T))
+            {
+                throw new NullDocumentException(id, coll, cause!);
+            }
+
+            if (typeof(NullableDocument<DocumentRef>) == typeof(T))
+            {
+                return (new NullDocument<DocumentRef>(id, coll, cause!) as T)!;
+            }
+
+            return (new NullDocument<Document>(id, coll, cause!) as T)!;
+        }
+
+        if (name != null && coll != null && !exists)
+        {
+            if (typeof(NamedDocumentRef) == typeof(T) || typeof(NamedDocument) == typeof(T))
+            {
+                throw new NullDocumentException(name, coll, cause!);
+            }
+
+            if (typeof(NullableDocument<NamedDocumentRef>) == typeof(T))
+            {
+                return (new NullDocument<NamedDocumentRef>(name, coll, cause!) as T)!;
+            }
+
+            return (new NullDocument<NamedDocument>(name, coll, cause!) as T)!;
+        }
+
 
         throw new SerializationException("Unsupported reference type");
     }

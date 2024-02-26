@@ -10,7 +10,7 @@ internal class NullDocumentException : Exception
 
     public string Cause { get; }
 
-    public NullDocumentException(string message, string id, Module collection, string cause) : base(message)
+    public NullDocumentException(string id, Module collection, string cause) : base($"Document {id} in collection {collection.Name} is null: {cause}")
     {
         Id = id;
         Collection = collection;
