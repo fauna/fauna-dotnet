@@ -13,7 +13,7 @@ public sealed class MappingContext
     private readonly Dictionary<Type, MappingInfo> _baseTypes = new();
 
     public MappingContext() { }
-    
+
     public MappingContext(IEnumerable<DataContext.Collection> collections)
     {
         foreach (var col in collections)

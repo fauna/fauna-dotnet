@@ -70,7 +70,7 @@ public class Client : BaseClient, IDisposable
 
         return (DB)ctx;
     }
-    
+
     /// <summary>
     /// Disposes the resources used by the <see cref="Client"/> class.
     /// </summary>
