@@ -1,6 +1,7 @@
 using Fauna.Mapping.Attributes;
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
+using Fauna.Exceptions;
 using Fauna.Types;
 using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;
@@ -191,5 +192,34 @@ public class IntegrationTests
         }
 
         Assert.AreEqual(100, itemCount);
+    }
+
+    [Test]
+    public void NullNamedDocumentThrowsNullDocumentException()
+    {
+        var q = FQL($"Collection.byName('Fake')");
+        var e = Assert.ThrowsAsync<NullDocumentException>(async () => await _client.QueryAsync<NamedDocument>(q));
+        Assert.NotNull(e);
+        Assert.AreEqual("Fake", e!.Id);
+        Assert.AreEqual("Collection", e.Collection.Name);
+        Assert.AreEqual("not found", e.Cause);
+    }
+
+    [Test]
+    public async Task NullNamedDocument()
+    {
+        var q = FQL($"Collection.byName('Fake')");
+        var r = await _client.QueryAsync<NullableDocument<NamedDocument>>(q);
+        switch (r.Data)
+        {
+            case NullDocument<NamedDocument> d:
+                Assert.AreEqual("Fake", d.Id);
+                Assert.AreEqual("Collection", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"Expected NullDocument<NamedDocument> but received {r.Data.GetType()}");
+                break;
+        }
     }
 }

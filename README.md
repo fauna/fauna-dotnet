@@ -240,3 +240,36 @@ await foreach (var item in client.PaginateAsync(result.Data.Users!).FlattenAsync
     // handle each item
 } 
 ```
+
+## Null Documents
+A null document ((NullDoc)[https://docs.fauna.com/fauna/current/reference/fql_reference/types#nulldoc]) can be handled two ways.
+
+Option 1, you can let the driver throw an exception and do something with it.
+```csharp
+try {
+    await client.QueryAsync<NamedDocument>(FQL($"Collection.byName('Fake')"))
+} catch (NullDocumentException e) {
+    Console.WriteLine(e.Id); // "Fake"
+    Console.WriteLine(e.Collection.Name); // "Collection"
+    Console.WriteLine(e.Cause); // "not found"
+}
+```
+
+Option 2, you wrap your expected type in a NullableDocument<>. You can wrap Document, NamedDocument, DocumentRef, NamedDocumentRef, and POCOs.
+```csharp
+var q = FQL($"Collection.byName('Fake')");
+var r = await client.QueryAsync<NullableDocument<NamedDocument>>(q);
+switch (r.Data)
+{
+    case NullDocument<NamedDocument> d:
+        // Handle the null document case
+        Console.WriteLine(d.Id); // "Fake"
+        Console.WriteLine(d.Collection.Name); // "Collection"
+        Console.WriteLine(d.Cause); // "not found"
+        break;
+    case NonNullDocument<NamedDocument> d:
+        var doc = d.Value!; // NamedDocument
+        break;
+}
+```
+

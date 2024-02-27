@@ -24,12 +24,8 @@ public static class Deserializer
     private static readonly CheckedDeserializer<Module> _module = new();
     private static readonly DocumentDeserializer<Document> _doc = new();
     private static readonly DocumentDeserializer<NamedDocument> _namedDoc = new();
-    private static readonly DocumentDeserializer<NullableDocument<Document>> _nullableDoc = new();
-    private static readonly DocumentDeserializer<NullableDocument<NamedDocument>> _nullableNamedDoc = new();
     private static readonly DocumentDeserializer<DocumentRef> _docRef = new();
     private static readonly DocumentDeserializer<NamedDocumentRef> _namedDocRef = new();
-    private static readonly DocumentDeserializer<NullableDocument<DocumentRef>> _nullabelDocRef = new();
-    private static readonly DocumentDeserializer<NullableDocument<NamedDocumentRef>> _nullabelNamedDocRef = new();
 
     /// <summary>
     /// Generates a deserializer for the specified non-nullable .NET type.
@@ -65,10 +61,15 @@ public static class Deserializer
         if (targetType == typeof(NamedDocument)) return _namedDoc;
         if (targetType == typeof(DocumentRef)) return _docRef;
         if (targetType == typeof(NamedDocumentRef)) return _namedDocRef;
-        if (targetType == typeof(NullableDocument<Document>)) return _nullableDoc;
-        if (targetType == typeof(NullableDocument<NamedDocument>)) return _nullableNamedDoc;
-        if (targetType == typeof(NullableDocument<DocumentRef>)) return _nullabelDocRef;
-        if (targetType == typeof(NullableDocument<NamedDocumentRef>)) return _nullabelNamedDocRef;
+
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>))
+        {
+            var argTypes = targetType.GetGenericArguments();
+            var valueType = argTypes[0];
+            var deserType = typeof(NullableDocumentDeserializer<>).MakeGenericType(new[] { valueType });
+            var deser = Activator.CreateInstance(deserType);
+            return (IDeserializer)deser!;
+        }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
         {
