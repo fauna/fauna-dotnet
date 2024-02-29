@@ -98,7 +98,7 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
         {
             // If we're here, name is a string.
             var nameAsString = (string)name;
-            var r = new NamedDocument((string)name, coll, ts.GetValueOrDefault(), data);
+            var r = new NamedDocument(nameAsString, coll, ts.GetValueOrDefault(), data);
             if (r is T d) return d;
             var nr = (NullableDocument<NamedDocument>)new NonNullDocument<NamedDocument>(r);
             if (nr is T nnd) return nnd;

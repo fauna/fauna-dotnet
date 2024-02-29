@@ -1,5 +1,4 @@
 using Fauna.Mapping.Attributes;
-using Fauna.Types;
 using static Fauna.Query;
 
 namespace Fauna.Test;

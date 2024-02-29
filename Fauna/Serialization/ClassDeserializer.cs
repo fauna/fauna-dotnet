@@ -10,7 +10,7 @@ internal interface IClassDeserializer : IDeserializer
     public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader);
 }
 
-internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer where T : class
+internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
 {
     private static readonly string _idField = "id";
     private static readonly string _nameField = "name";
