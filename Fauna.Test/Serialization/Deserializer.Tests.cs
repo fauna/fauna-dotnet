@@ -1,3 +1,4 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
@@ -129,7 +130,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeDocument()
+    public void DeserializeDocumentUnchecked()
     {
         const string given = @"
                              {
@@ -142,16 +143,49 @@ public class DeserializerTests
                              }";
 
         var actual = Deserialize(given);
-        Assert.AreEqual(typeof(Document), actual?.GetType());
-        var typed = (actual as Document)!;
-        Assert.AreEqual("123", typed.Id);
-        Assert.AreEqual(new Module("MyColl"), typed.Collection);
-        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), typed.Ts);
-        Assert.AreEqual("name_value", typed["name"]);
+        switch (actual)
+        {
+            case NonNullDocument<Document> d:
+                Assert.AreEqual("123", d.Value!.Id);
+                Assert.AreEqual("MyColl", d.Value!.Collection.Name);
+                Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), d.Value!.Ts);
+                Assert.AreEqual("name_value", d.Value!["name"]);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
     }
 
     [Test]
-    public void DeserializeDocumentWithType()
+    public void DeserializeNullDocumentUnchecked()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize(given);
+        switch (actual)
+        {
+            case NullDocument<Document> d:
+                Assert.AreEqual("123", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeDocumentChecked()
     {
         const string given = @"
                              {
@@ -168,6 +202,83 @@ public class DeserializerTests
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
         Assert.AreEqual("name_value", actual["name"]);
+    }
+
+    [Test]
+    public void DeserializeNonNullDocumentChecked()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""name"":""name_value""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<Document>>(given);
+        switch (actual)
+        {
+            case NonNullDocument<Document> d:
+                Assert.AreEqual("123", d.Value!.Id);
+                Assert.AreEqual(new Module("MyColl"), d.Value!.Collection);
+                Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), d.Value!.Ts);
+                Assert.AreEqual("name_value", d.Value!["name"]);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNullDocumentChecked()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<Document>>(given);
+
+        switch (actual)
+        {
+            case NullDocument<Document> d:
+                Assert.AreEqual("123", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNullDocumentCheckedThrowsWithoutWrapper()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var e = Assert.Throws<NullDocumentException>(() => Deserialize<Document>(given));
+        Assert.NotNull(e);
+        Assert.AreEqual("123", e!.Id);
+        Assert.AreEqual("MyColl", e.Collection.Name);
+        Assert.AreEqual("not found", e.Cause);
+        Assert.AreEqual("Document 123 in collection MyColl is null: not found", e.Message);
     }
 
     [Test]
@@ -190,6 +301,80 @@ public class DeserializerTests
         var actual2 = Deserialize<ClassForDocumentWithIdString>(given);
         Assert.AreEqual("user_value", actual2.UserField);
         Assert.AreEqual("123", actual2.Id);
+    }
+
+    [Test]
+    public void DeserializeDocumentToNonNullDocumentClass()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<ClassForDocument>>(given);
+        switch (actual)
+        {
+            case NonNullDocument<ClassForDocument> d:
+                Assert.AreEqual(123, d.Value!.Id);
+                Assert.AreEqual("user_value", d.Value!.UserField);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeDocumentToNullDocumentClass()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<ClassForDocument>>(given);
+        switch (actual)
+        {
+            case NullDocument<ClassForDocument> d:
+                Assert.AreEqual("123", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNullDocumentClassThrowsWithoutWrapper()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var e = Assert.Throws<NullDocumentException>(() => Deserialize<ClassForDocument>(given));
+        Assert.NotNull(e);
+        Assert.AreEqual("123", e!.Id);
+        Assert.AreEqual("MyColl", e.Collection.Name);
+        Assert.AreEqual("not found", e.Cause);
+        Assert.AreEqual("Document 123 in collection MyColl is null: not found", e.Message);
     }
 
     [Test]
@@ -217,7 +402,45 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNamedDocument()
+    public void DeserializeRegisteredClassToDocumentRef()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MappedColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Deserialize<DocumentRef>(given);
+        Assert.AreEqual("123", actual.Id);
+        Assert.AreEqual(new Module("MappedColl"), actual.Collection);
+    }
+
+    [Test]
+    public void DeserializeRegisteredClassToDocument()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""id"":""123"",
+                                     ""coll"":{""@mod"":""MappedColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Deserialize<Document>(given);
+        Assert.AreEqual("123", actual.Id);
+        Assert.AreEqual(new Module("MappedColl"), actual.Collection);
+        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
+        Assert.AreEqual("user_value", actual["user_field"]);
+    }
+
+    [Test]
+    public void DeserializeNamedDocumentUnchecked()
     {
         const string given = @"
                              {
@@ -230,16 +453,49 @@ public class DeserializerTests
                              }";
 
         var actual = Deserialize(given);
-        Assert.AreEqual(typeof(NamedDocument), actual?.GetType());
-        var typed = (actual as NamedDocument)!;
-        Assert.AreEqual("DocName", typed.Name);
-        Assert.AreEqual(new Module("MyColl"), typed.Collection);
-        Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), typed.Ts);
-        Assert.AreEqual("user_value", typed["user_field"]);
+        switch (actual)
+        {
+            case NamedDocument d:
+                Assert.AreEqual("DocName", d.Name);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), d.Ts);
+                Assert.AreEqual("user_value", d["user_field"]);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
     }
 
     [Test]
-    public void DeserializeNamedDocumentWithType()
+    public void DeserializeNullNamedDocumentUnchecked()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize(given);
+        switch (actual)
+        {
+            case NullDocument<NamedDocument> d:
+                Assert.AreEqual("RefName", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNamedDocumentChecked()
     {
         const string given = @"
                              {
@@ -256,6 +512,55 @@ public class DeserializerTests
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
         Assert.AreEqual("user_value", actual["user_field"]);
+    }
+
+    [Test]
+    public void DeserializeNullNamedDocumentChecked()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<NamedDocument>>(given);
+
+        switch (actual)
+        {
+            case NullDocument<NamedDocument> d:
+                Assert.AreEqual("RefName", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNullNamedDocumentThrowsWithoutWrapper()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var e = Assert.Throws<NullDocumentException>(() => Deserialize<NamedDocument>(given));
+        Assert.NotNull(e);
+        Assert.AreEqual("RefName", e!.Id);
+        Assert.AreEqual("MyColl", e.Collection.Name);
+        Assert.AreEqual("not found", e.Cause);
+        Assert.AreEqual("Document RefName in collection MyColl is null: not found", e.Message);
     }
 
     [Test]
@@ -277,6 +582,80 @@ public class DeserializerTests
     }
 
     [Test]
+    public void DeserializeNonNullNamedDocumentToClass()
+    {
+        const string given = @"
+                             {
+                                 ""@doc"":{
+                                     ""name"":""DocName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<ClassForNamedDocument>>(given);
+        switch (actual)
+        {
+            case NonNullDocument<ClassForNamedDocument> d:
+                Assert.AreEqual("DocName", d.Value!.Name);
+                Assert.AreEqual("user_value", d.Value!.UserField);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNullNamedDocumentToClass()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var actual = Deserialize<NullableDocument<ClassForNamedDocument>>(given);
+        switch (actual)
+        {
+            case NullDocument<ClassForNamedDocument> d:
+                Assert.AreEqual("RefName", d.Id);
+                Assert.AreEqual("MyColl", d.Collection.Name);
+                Assert.AreEqual("not found", d.Cause);
+                break;
+            default:
+                Assert.Fail($"result is type: {actual?.GetType()}");
+                break;
+        }
+    }
+
+    [Test]
+    public void DeserializeNullNamedDocumentClassThrowsWithoutWrapper()
+    {
+        const string given = @"
+                             {
+                                 ""@ref"":{
+                                     ""name"":""RefName"",
+                                     ""coll"":{""@mod"":""MyColl""},
+                                     ""exists"":false,
+                                     ""cause"":""not found""
+                                 }
+                             }";
+
+        var e = Assert.Throws<NullDocumentException>(() => Deserialize<ClassForNamedDocument>(given));
+        Assert.NotNull(e);
+        Assert.AreEqual("RefName", e!.Id);
+        Assert.AreEqual("MyColl", e.Collection.Name);
+        Assert.AreEqual("not found", e.Cause);
+        Assert.AreEqual("Document RefName in collection MyColl is null: not found", e.Message);
+    }
+
+    [Test]
     public void DeserializeRef()
     {
         const string given = @"
@@ -293,22 +672,21 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullRef()
+    public void DeserializeDocumentAsDocumentRef()
     {
         const string given = @"
                              {
-                                 ""@ref"":{
+                                 ""@doc"":{
                                      ""id"":""123"",
                                      ""coll"":{""@mod"":""MyColl""},
-                                     ""exists"":false,
-                                     ""cause"":""not found""
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
                                  }
                              }";
 
-        var actual = Deserialize<NullDocumentRef>(given);
+        var actual = Deserialize<DocumentRef>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Cause);
     }
 
     [Test]
@@ -328,22 +706,21 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullNamedRef()
+    public void DeserializeNamedDocumentAsNamedDocumentRef()
     {
         const string given = @"
                              {
-                                 ""@ref"":{
-                                     ""name"":""RefName"",
+                                 ""@doc"":{
+                                     ""name"":""DocName"",
                                      ""coll"":{""@mod"":""MyColl""},
-                                     ""exists"":false,
-                                     ""cause"":""not found""
+                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
+                                     ""user_field"":""user_value""
                                  }
                              }";
 
-        var actual = Deserialize<NullNamedDocumentRef>(given);
-        Assert.AreEqual("RefName", actual.Name);
+        var actual = Deserialize<NamedDocumentRef>(given);
+        Assert.AreEqual("DocName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
-        Assert.AreEqual("not found", actual.Cause);
     }
 
     [Test]

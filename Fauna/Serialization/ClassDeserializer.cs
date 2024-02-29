@@ -1,5 +1,7 @@
 using Fauna.Mapping;
 using System.Diagnostics;
+using Fauna.Exceptions;
+using Fauna.Types;
 
 namespace Fauna.Serialization;
 
@@ -36,8 +38,53 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
         {
             TokenType.StartDocument => TokenType.EndDocument,
             TokenType.StartObject => TokenType.EndObject,
+            TokenType.StartRef => TokenType.EndRef,
             var other => throw UnexpectedToken(other),
         };
+
+        if (endToken == TokenType.EndRef)
+        {
+            string? id = null;
+            string? name = null;
+            Module? coll = null;
+            string? cause = null;
+            var exists = true;
+
+            while (reader.Read() && reader.CurrentTokenType != TokenType.EndRef)
+            {
+                if (reader.CurrentTokenType != TokenType.FieldName)
+                    throw new SerializationException(
+                        $"Unexpected token while deserializing into DocumentRef: {reader.CurrentTokenType}");
+
+                var fieldName = reader.GetString()!;
+                reader.Read();
+                switch (fieldName)
+                {
+                    case "id":
+                        id = reader.GetString();
+                        break;
+                    case "name":
+                        name = reader.GetString();
+                        break;
+                    case "coll":
+                        coll = reader.GetModule();
+                        break;
+                    case "cause":
+                        cause = reader.GetString();
+                        break;
+                    case "exists":
+                        exists = reader.GetBoolean();
+                        break;
+                }
+            }
+
+            if ((id != null || name != null) && coll != null && exists)
+            {
+                throw new SerializationException("Cannot deserialize refs into classes.");
+            }
+
+            throw new NullDocumentException((id ?? name)!, coll!, cause!);
+        }
 
         var instance = CreateInstance();
         SetFields(instance, context, ref reader, endToken);

@@ -9,10 +9,9 @@ internal class CheckedDeserializer<T> : BaseDeserializer<T>
         var tokenType = reader.CurrentTokenType;
         var obj = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
 
-        if (obj is T v)
-            return v;
-        else
-            throw new SerializationException(
-                $"Unexpected token while deserializing: {tokenType}");
+        if (obj is T v) return v;
+
+        throw new SerializationException(
+            $"Expected type {typeof(T)} but received {obj?.GetType()}");
     }
 }
