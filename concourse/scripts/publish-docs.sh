@@ -11,6 +11,17 @@ git clone docs.git docs-updated.git
 
 cd docs-updated.git
 
+rm index.html
+echo "<section style=\"margin: 20px\">" >> index.html
+echo "<header>Current Version</header>" >> index.html
+echo "<li><a href='https://fauna.github.io/fauna-dotnet/$PACKAGE_VERSION'>$PACKAGE_VERSION</a></li>" >> index.html
+echo "</section>" >> index.html
+
+echo "<section style=\"margin: 20px\">" >> index.html
+echo "<header>All Versions</header>" >> index.html
+git tag -l --sort=-v:refname | awk '{print "<li><a href=\"https://fauna.github.io/fauna-dotnet/"$0"\">"$0"</a></li>"}' >> index.html
+echo "</section>" >> index.html
+
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
 
