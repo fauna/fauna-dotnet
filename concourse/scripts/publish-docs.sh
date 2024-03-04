@@ -1,6 +1,7 @@
 #!/bin/sh
 set -eou
 cd ./repo.git
+REPO_GIT_DIR="$(pwd)/.git"
 
 apk add xmlstarlet
 PACKAGE_VERSION=$(xml sel -t -v "/Project/PropertyGroup/Version" ./Fauna/Fauna.csproj)
@@ -19,7 +20,7 @@ echo "</section>" >> index.html
 
 echo "<section style=\"margin: 20px\">" >> index.html
 echo "<header>All Versions</header>" >> index.html
-git tag -l --sort=-v:refname | awk '{print "<li><a href=\"https://fauna.github.io/fauna-dotnet/"$0"\">"$0"</a></li>"}' >> index.html
+git --git-dir "$REPO_GIT_DIR" tag -l --sort=-v:refname | awk '{print "<li><a href=\"https://fauna.github.io/fauna-dotnet/"$0"\">"$0"</a></li>"}' >> index.html
 echo "</section>" >> index.html
 
 mkdir "${PACKAGE_VERSION}"
