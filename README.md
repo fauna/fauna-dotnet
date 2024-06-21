@@ -45,7 +45,7 @@ class Basics
 
             var hi = "Hello, Fauna!";
 
-            // The FQL template function safely interpolates values. 
+            // The FQL template function safely interpolates values.
             var helloQuery = FQL($@"
                 let x = {hi}
                 x");
@@ -72,7 +72,7 @@ class Basics
         }
         catch (FaunaException e)
         {
-            // Handle exceptions 
+            // Handle exceptions
         }
     }
 }
@@ -84,16 +84,16 @@ The FQL template DSL supports arbitrary composition of subqueries along with val
 
 ```csharp
 var client = new Client("secret");
-        
+
 var predicate = args[0] switch {
     "first" => FQL($".first_name == {args[1]}"),
     "last"  => FQL($".last_name" == {args[1]}),
     _       => throw ArgumentException(),
 };
-        
+
 // Single braces are for template variables, so escape them with double braces.
 var getPerson = FQL($"Person.firstWhere({predicate}) {{ id, first_name, last_name }}");
-        
+
 // Documents can be mapped to Dictionaries as well as POCOs (see below)
 var result = await client.QueryAsync<Dictionary<string, object?>>(getPerson);
 
@@ -155,7 +155,7 @@ Console.WriteLine(result.Data); // 69219723210223...
 
 ### DataContext
 
-The DataContext class provides a schema-aware view of your database. Subclass it and configure your collections: 
+The DataContext class provides a schema-aware view of your database. Subclass it and configure your collections:
 
 ```csharp
 class PersonDb : DataContext
@@ -206,7 +206,7 @@ var asyncCount = await db.Person.CountAsync();
 
 ## Paginating [Fauna Sets](https://docs.fauna.com/fauna/current/reference/reference/schema_entities/set/)
 
-When you wish to paginate a Set, such as a Collection or Index, use `Client.PaginateAsync`.
+When you wish to paginate a Set, such as a Collection or Index, use `PaginateAsync`.
 
 Example of a query that returns a Set:
 ```csharp
@@ -237,12 +237,12 @@ var result = await client.QueryAsync<MyResult>(query);
 await foreach (var page in client.PaginateAsync(result.Data.Users!))
 {
     // handle each page
-} 
+}
 
 await foreach (var item in client.PaginateAsync(result.Data.Users!).FlattenAsync())
 {
     // handle each item
-} 
+}
 ```
 
 ## Null Documents
@@ -276,4 +276,3 @@ switch (r.Data)
         break;
 }
 ```
-
