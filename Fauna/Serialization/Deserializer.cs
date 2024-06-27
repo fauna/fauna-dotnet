@@ -62,6 +62,21 @@ public static class Deserializer
         if (targetType == typeof(DocumentRef)) return _docRef;
         if (targetType == typeof(NamedDocumentRef)) return _namedDocRef;
 
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+        {
+            var args = targetType.GetGenericArguments();
+            if (args.Length == 1)
+            {
+                var inner = (IDeserializer)Generate(context, args[0]);
+                var deserType = typeof(NullableStructDeserializer<>).MakeGenericType(new[] { args[0] });
+                var deser = Activator.CreateInstance(deserType, new[] { inner });
+
+                return (IDeserializer)deser!;
+            }
+
+            throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
+        }
+
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>))
         {
             var argTypes = targetType.GetGenericArguments();
