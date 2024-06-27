@@ -55,7 +55,7 @@ public sealed class FieldInfo
                 if (_deserializer is null)
                 {
                     _deserializer = Fauna.Serialization.Deserializer.Generate(_ctx, Type);
-                    if (IsNullable)
+                    if (IsNullable && _deserializer.GetType().GetGenericTypeDefinition() != typeof(NullableStructDeserializer<>))
                     {
                         var deserType = typeof(NullableDeserializer<>).MakeGenericType(new[] { Type });
                         var deser = Activator.CreateInstance(deserType, new[] { _deserializer });

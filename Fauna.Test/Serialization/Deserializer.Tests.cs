@@ -932,4 +932,28 @@ public class DeserializerTests
         Assert.AreEqual(40, result.Data[1].Age);
         Assert.AreEqual("next_page_cursor", result.After);
     }
+
+    [Test]
+    public void DeserializeNullableStructAsValue()
+    {
+        const string given = @"{
+            ""val"":{""@int"":""42""}
+        }";
+
+        var result = Deserialize<NullableInt>(given);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(42, result.Val);
+    }
+
+    [Test]
+    public void DeserializeNullableStructAsNull()
+    {
+        const string given = @"{
+            ""val"": null
+        }";
+
+        var result = Deserialize<NullableInt>(given);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(null, result.Val);
+    }
 }

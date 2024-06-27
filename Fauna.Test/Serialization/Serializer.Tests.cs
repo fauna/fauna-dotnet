@@ -294,4 +294,22 @@ public class SerializerTests
             Assert.AreEqual(expected, actual);
         }
     }
+
+    [Test]
+    public void SerializeNullableStructAsNull()
+    {
+        var i = new int?();
+
+        var actual = Serialize(i);
+        Assert.AreEqual("null", actual);
+    }
+
+    [Test]
+    public void SerializeNullableStructAsValue()
+    {
+        var i = new int?(42);
+
+        var actual = Serialize(i);
+        Assert.AreEqual(@"{""@int"":""42""}", actual);
+    }
 }

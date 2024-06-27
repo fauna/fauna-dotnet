@@ -9,6 +9,11 @@ class Person
     public int Age { get; set; } = 61;
 }
 
+class NullableInt
+{
+    public int? Val { get; set; }
+}
+
 [Object]
 class ClassForDocument
 {
