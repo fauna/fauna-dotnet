@@ -17,6 +17,8 @@ public static class Deserializer
     private static readonly CheckedDeserializer<string> _string = new();
     private static readonly CheckedDeserializer<int> _int = new();
     private static readonly LongDeserializer _long = new();
+    private static readonly ShortDeserializer _short = new();
+    private static readonly UShortDeserializer _ushort = new();
     private static readonly CheckedDeserializer<double> _double = new();
     private static readonly CheckedDeserializer<DateOnly> _dateOnly = new();
     private static readonly CheckedDeserializer<DateTime> _dateTime = new();
@@ -50,6 +52,8 @@ public static class Deserializer
     {
         if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
+        if (targetType == typeof(short)) return _short;
+        if (targetType == typeof(ushort)) return _ushort;
         if (targetType == typeof(int)) return _int;
         if (targetType == typeof(long)) return _long;
         if (targetType == typeof(double)) return _double;

@@ -282,6 +282,40 @@ public ref struct Utf8FaunaReader
     }
 
     /// <summary>
+    /// Retrieves an short value from the current token.
+    /// </summary>
+    /// <returns>An short representation of the current token's value.</returns>
+    public short GetShort()
+    {
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long);
+        try
+        {
+            return short.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get short from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves an unsigned short value from the current token.
+    /// </summary>
+    /// <returns>An unsigned short representation of the current token's value.</returns>
+    public ushort GetUnsignedShort()
+    {
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long);
+        try
+        {
+            return ushort.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get ushort from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
     /// Retrieves a long value from the current token.
     /// </summary>
     /// <returns>A long representation of the current token's value.</returns>
@@ -405,6 +439,15 @@ public ref struct Utf8FaunaReader
             throw new InvalidOperationException($"CurrentTokenType is a {CurrentTokenType.ToString()}, not a {type.ToString()}.");
         }
     }
+
+    private void ValidateTaggedTypes(params TokenType[] types)
+    {
+        if (!types.Contains(CurrentTokenType) || _taggedTokenValue == null || _taggedTokenValue.GetType() != typeof(string))
+        {
+            throw new InvalidOperationException($"CurrentTokenType is a {CurrentTokenType.ToString()}, not in {types}.");
+        }
+    }
+
 
     private void HandleStartObject()
     {
