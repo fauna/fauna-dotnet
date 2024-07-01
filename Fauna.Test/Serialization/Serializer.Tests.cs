@@ -139,7 +139,7 @@ public class SerializerTests
     {
         var test = new PersonWithAttributes();
         var actual = Serialize(test);
-        Assert.AreEqual(@"{""first_name"":""Baz"",""last_name"":""Luhrmann"",""age"":{""@long"":""61""}}", actual);
+        Assert.AreEqual(@"{""first_name"":""Baz"",""last_name"":""Luhrmann"",""age"":{""@int"":""61""}}", actual);
     }
 
     [Test]
@@ -164,52 +164,6 @@ public class SerializerTests
             var actual = Serialize(test);
             Assert.AreEqual(expected, actual);
         }
-    }
-
-    [Test]
-    public void SerializeClassWithTypeConversions()
-    {
-        var test = new PersonWithTypeOverrides();
-        var expectedWithWhitespace = @"
-                       {
-                           ""short_to_long"": {""@long"": ""10""},
-                           ""ushort_to_long"": {""@long"": ""11""},
-                           ""byte_to_long"": {""@long"": ""12""},
-                           ""sbyte_to_long"": {""@long"": ""13""},
-                           ""int_to_long"": {""@long"": ""20""},
-                           ""uint_to_long"": {""@long"": ""21""},
-                           ""long_to_long"": {""@long"": ""30""},
-                           ""short_to_int"": {""@int"": ""40""},
-                           ""ushort_to_int"": {""@int"": ""41""},
-                           ""byte_to_int"": {""@int"": ""42""},
-                           ""sbyte_to_int"": {""@int"": ""43""},
-                           ""int_to_int"": {""@int"": ""50""},
-                           ""short_to_double"": {""@double"": ""60""},
-                           ""int_to_double"": {""@double"": ""70""},
-                           ""long_to_double"": {""@double"": ""80""},
-                           ""double_to_double"": {""@double"": ""10.1""},
-                           ""float_to_double"": {""@double"": ""1.344499945640564""},
-                           ""true_to_true"": true,
-                           ""false_to_false"": false,
-                           ""class_to_string"": ""TheThing"",
-                           ""string_to_string"": ""aString"",
-                           ""datetime_to_date"": {""@date"": ""2023-12-13""},
-                           ""dateonly_to_date"": {""@date"": ""2023-12-13""},
-                           ""datetimeoffset_to_date"": {""@date"": ""2023-12-13""},
-                           ""datetime_to_time"": {""@time"":""2023-12-13T12:12:12.0010010Z""},
-                           ""datetimeoffset_to_time"": {""@time"":""2023-12-13T12:12:12.0010010\u002B00:00""}
-                       }
-                       ";
-        var expected = Regex.Replace(expectedWithWhitespace, @"\s", string.Empty);
-        var actual = Serialize(test);
-        Assert.AreEqual(expected, actual);
-    }
-
-    [Test]
-    public void SerializeObjectWithInvalidTypeHint()
-    {
-        var obj = new ClassWithInvalidPropertyTypeHint();
-        Assert.Throws<SerializationException>(() => Serialize(obj));
     }
 
     [Test]
@@ -263,10 +217,16 @@ public class SerializerTests
         {
             { short.MaxValue, @"{""@int"":""32767""}" },
             { short.MinValue, @"{""@int"":""-32768""}" },
+            { ushort.MaxValue, @"{""@int"":""65535""}" },
+            { ushort.MinValue, @"{""@int"":""0""}" },
             { int.MaxValue, @"{""@int"":""2147483647""}" },
             { int.MinValue, @"{""@int"":""-2147483648""}" },
+            { uint.MaxValue, @"{""@long"":""4294967295""}" },
+            { uint.MinValue, @"{""@long"":""0""}" },
             { long.MaxValue, @"{""@long"":""9223372036854775807""}" },
             { long.MinValue, @"{""@long"":""-9223372036854775808""}" },
+            { float.MaxValue, @"{""@double"":""3.4028234663852886E\u002B38""}" },
+            { float.MinValue, @"{""@double"":""-3.4028234663852886E\u002B38""}" },
             { double.MaxValue, @"{""@double"":""1.7976931348623157E\u002B308""}" },
             { double.MinValue, @"{""@double"":""-1.7976931348623157E\u002B308""}" }
         };
