@@ -18,10 +18,6 @@ public sealed class FieldInfo
     /// </summary>
     public PropertyInfo Property { get; }
     /// <summary>
-    /// Indicates which fauna type the value should serialize into.
-    /// </summary>
-    public FaunaType? FaunaTypeHint { get; }
-    /// <summary>
     /// The <see cref="Type"/> that the field should deserialize into.
     /// </summary>
     public Type Type { get; }
@@ -39,7 +35,6 @@ public sealed class FieldInfo
         var nullInfo = nullCtx.Create(prop);
 
         Name = attr.Name ?? FieldName.Canonical(prop.Name);
-        FaunaTypeHint = attr.Type;
         Property = prop;
         Type = prop.PropertyType;
         IsNullable = nullInfo.WriteState is NullabilityState.Nullable;
