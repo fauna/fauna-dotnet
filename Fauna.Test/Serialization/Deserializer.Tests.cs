@@ -43,6 +43,15 @@ public class DeserializerTests
         return obj;
     }
 
+    public void RunTestCases<T>(Dictionary<string, T> cases) where T : notnull
+    {
+        foreach (KeyValuePair<string, T> entry in cases)
+        {
+            var result = Deserialize<T>(entry.Key);
+            Assert.AreEqual(entry.Value, result);
+        }
+    }
+
     [Test]
     public void CastDeserializer()
     {
@@ -74,6 +83,110 @@ public class DeserializerTests
             var result = Deserialize(entry.Key);
             Assert.AreEqual(entry.Value, result);
         }
+    }
+
+    [Test]
+    public void DeserializeSByte()
+    {
+        const sbyte val = 42;
+        var tests = new Dictionary<string, sbyte>
+        {
+            {@"{""@int"":""42""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeByte()
+    {
+        const byte val = 42;
+        var tests = new Dictionary<string, byte>
+        {
+            {@"{""@int"":""42""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeShort()
+    {
+        const short val = 42;
+        var tests = new Dictionary<string, short>
+        {
+            {@"{""@int"":""42""}", val},
+            {@"{""@long"":""42""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeUShort()
+    {
+        const ushort val = 42;
+        var tests = new Dictionary<string, ushort>
+        {
+            {@"{""@int"":""42""}", val},
+            {@"{""@long"":""42""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeUInt()
+    {
+        const uint val = 42u;
+        var tests = new Dictionary<string, uint>
+        {
+            {@"{""@int"":""42""}", val},
+            {@"{""@long"":""42""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeInt()
+    {
+        const int val = 42;
+        var tests = new Dictionary<string, int>
+        {
+            {@"{""@int"":""42""}", val},
+            {@"{""@long"":""42""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeFloat()
+    {
+        const float val = 42f;
+        var tests = new Dictionary<string, float>
+        {
+            {@"{""@int"":""42""}", val},
+            {@"{""@long"":""42""}", val},
+            {@"{""@double"": ""42.0""}", val},
+        };
+
+        RunTestCases(tests);
+    }
+
+    [Test]
+    public void DeserializeDouble()
+    {
+        const double val = 42d;
+        var tests = new Dictionary<string, double>
+        {
+            {@"{""@int"":""42""}", val},
+            {@"{""@long"":""42""}", val},
+            {@"{""@double"": ""42.0""}", val},
+        };
+
+        RunTestCases(tests);
     }
 
     [Test]

@@ -1,9 +1,7 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
-using Fauna.Types;
 using NUnit.Framework;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Fauna.Test.Serialization;
 
@@ -35,6 +33,24 @@ public class RoundTripTests
     }
 
     [Test]
+    public void RoundTripByte()
+    {
+        const byte test = 3;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<byte>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
+
+    [Test]
+    public void RoundTripSByte()
+    {
+        const sbyte test = 3;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<sbyte>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
+
+    [Test]
     public void RoundTripShort()
     {
         const short test = 40;
@@ -52,4 +68,48 @@ public class RoundTripTests
         Assert.AreEqual(test, deserialized);
     }
 
+    [Test]
+    public void RoundTripInt()
+    {
+        const int test = 40;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<short>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
+
+    [Test]
+    public void RoundTripUInt()
+    {
+        const uint test = 40;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<uint>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
+
+    [Test]
+    public void RoundTripLong()
+    {
+        const long test = 40;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<long>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
+
+    [Test]
+    public void RoundTripFloat()
+    {
+        const float test = 40.2f;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<float>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
+
+    [Test]
+    public void RoundTripDouble()
+    {
+        const double test = 40.2d;
+        var serialized = Serialize(test);
+        var deserialized = Deserialize<double>(serialized);
+        Assert.AreEqual(test, deserialized);
+    }
 }

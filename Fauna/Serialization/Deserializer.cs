@@ -15,11 +15,15 @@ public static class Deserializer
 
     private static readonly CheckedDeserializer<object> _object = new();
     private static readonly CheckedDeserializer<string> _string = new();
-    private static readonly CheckedDeserializer<int> _int = new();
-    private static readonly LongDeserializer _long = new();
+    private static readonly ByteDeserializer _byte = new();
+    private static readonly SByteDeserializer _sbyte = new();
     private static readonly ShortDeserializer _short = new();
     private static readonly UShortDeserializer _ushort = new();
-    private static readonly CheckedDeserializer<double> _double = new();
+    private static readonly IntDeserializer _int = new();
+    private static readonly UIntDeserializer _uint = new();
+    private static readonly LongDeserializer _long = new();
+    private static readonly FloatDeserializer _float = new();
+    private static readonly DoubleDeserializer _double = new();
     private static readonly CheckedDeserializer<DateOnly> _dateOnly = new();
     private static readonly CheckedDeserializer<DateTime> _dateTime = new();
     private static readonly CheckedDeserializer<bool> _bool = new();
@@ -52,10 +56,14 @@ public static class Deserializer
     {
         if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
+        if (targetType == typeof(byte)) return _byte;
+        if (targetType == typeof(sbyte)) return _sbyte;
         if (targetType == typeof(short)) return _short;
         if (targetType == typeof(ushort)) return _ushort;
         if (targetType == typeof(int)) return _int;
+        if (targetType == typeof(uint)) return _uint;
         if (targetType == typeof(long)) return _long;
+        if (targetType == typeof(float)) return _float;
         if (targetType == typeof(double)) return _double;
         if (targetType == typeof(DateOnly)) return _dateOnly;
         if (targetType == typeof(DateTime)) return _dateTime;

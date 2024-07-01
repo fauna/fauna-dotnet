@@ -228,12 +228,30 @@ public ref struct Utf8FaunaReader
     }
 
     /// <summary>
+    /// Retrieves a float value from the current token.
+    /// </summary>
+    /// <returns>A float representation of the current token's value.</returns>
+    public float GetFloat()
+    {
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long, TokenType.Double);
+
+        try
+        {
+            return float.Parse(_taggedTokenValue!, CultureInfo.InvariantCulture);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get float from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
     /// Retrieves a double value from the current token.
     /// </summary>
     /// <returns>A double representation of the current token's value.</returns>
     public double GetDouble()
     {
-        ValidateTaggedType(TokenType.Double);
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long, TokenType.Double);
 
         try
         {
@@ -264,12 +282,48 @@ public ref struct Utf8FaunaReader
     }
 
     /// <summary>
+    /// Retrieves an byte value from the current token.
+    /// </summary>
+    /// <returns>A byte representation of the current token's value.</returns>
+    public byte GetByte()
+    {
+        ValidateTaggedTypes(TokenType.Int);
+
+        try
+        {
+            return byte.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get byte from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves an unsigned byte value from the current token.
+    /// </summary>
+    /// <returns>An unsigned byte representation of the current token's value.</returns>
+    public sbyte GetUnsignedByte()
+    {
+        ValidateTaggedTypes(TokenType.Int);
+
+        try
+        {
+            return sbyte.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get sbyte from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
     /// Retrieves an integer value from the current token.
     /// </summary>
     /// <returns>An integer representation of the current token's value.</returns>
     public int GetInt()
     {
-        ValidateTaggedType(TokenType.Int);
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long);
 
         try
         {
@@ -278,6 +332,24 @@ public ref struct Utf8FaunaReader
         catch (Exception e)
         {
             throw new SerializationException($"Failed to get int from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves an unsigned integer value from the current token.
+    /// </summary>
+    /// <returns>An unsigned integer representation of the current token's value.</returns>
+    public uint GetUnsignedInt()
+    {
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long);
+
+        try
+        {
+            return uint.Parse(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get uint from {_taggedTokenValue}", e);
         }
     }
 
@@ -321,7 +393,7 @@ public ref struct Utf8FaunaReader
     /// <returns>A long representation of the current token's value.</returns>
     public long GetLong()
     {
-        ValidateTaggedType(TokenType.Long);
+        ValidateTaggedTypes(TokenType.Int, TokenType.Long);
 
         try
         {
