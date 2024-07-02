@@ -43,7 +43,7 @@ public class DeserializerTests
         return obj;
     }
 
-    public void RunTestCases<T>(Dictionary<string, T> cases) where T : notnull
+    private void RunTestCases<T>(Dictionary<string, T> cases) where T : notnull
     {
         foreach (KeyValuePair<string, T> entry in cases)
         {
@@ -63,7 +63,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeValues()
+    public void DeserializeValuesDynamic()
     {
         var tests = new Dictionary<string, object?>
         {
@@ -243,7 +243,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeDocumentUnchecked()
+    public void DeserializeDocument()
     {
         const string given = @"
                              {
@@ -271,7 +271,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullDocumentUnchecked()
+    public void DeserializeNullDocument()
     {
         const string given = @"
                              {
@@ -298,7 +298,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeDocumentChecked()
+    public void DeserializeDocumentGeneric()
     {
         const string given = @"
                              {
@@ -318,7 +318,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNonNullDocumentChecked()
+    public void DeserializeNonNullDocumentGeneric()
     {
         const string given = @"
                              {
@@ -346,7 +346,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullDocumentChecked()
+    public void DeserializeNullDocumentGeneric()
     {
         const string given = @"
                              {
@@ -374,7 +374,7 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeNullDocumentCheckedThrowsWithoutWrapper()
+    public void DeserializeNullDocumentGenericThrowsWithoutWrapper()
     {
         const string given = @"
                              {
