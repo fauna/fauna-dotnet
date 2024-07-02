@@ -3,7 +3,6 @@ using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Fauna.Test.Serialization;
 
@@ -47,6 +46,8 @@ public class SerializerTests
             // \u002 is the + character. This is expected because we do not
             // enable unsafe json serialization. Fauna wire protocol supports this.
             {@"{""@time"":""2023-12-14T12:12:12.0010010\u002B00:00""}", new DateTimeOffset(dt.AddDays(1))},
+            {@"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""ACollection""}}}", new DocumentRef("123", new Module("ACollection"))},
+            {@"{""@ref"":{""id"":""124"",""coll"":{""@mod"":""ACollection""}}}", new Document("124", new Module("ACollection"), DateTime.Now)}
         };
 
         foreach (var (expected, test) in tests)
@@ -194,7 +195,7 @@ public class SerializerTests
     }
 
     [Test]
-    public void SerializeCollectionEdgeCases()
+    public void SerializeEmptyCollections()
     {
         var tests = new Dictionary<object, string>
         {
