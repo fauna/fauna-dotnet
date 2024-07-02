@@ -1,4 +1,5 @@
 using Fauna.Mapping.Attributes;
+using Fauna.Types;
 
 namespace Fauna.Test.Serialization;
 
