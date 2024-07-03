@@ -36,6 +36,12 @@ public record Configuration
     /// </summary>
     public RetryConfiguration RetryConfiguration { get; init; } = new(3, TimeSpan.FromSeconds(20));
 
+
+    /// <summary>
+    /// StatsCollector for the client.
+    /// </summary>
+    public IStatsCollector? StatsCollector { get; init; } = new StatsCollector();
+
     /// <summary>
     /// Initializes a new instance of the <see cref="Configuration"/> record with the specified secret key.
     /// </summary>

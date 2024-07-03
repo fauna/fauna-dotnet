@@ -222,4 +222,58 @@ public class IntegrationTests
                 break;
         }
     }
+
+    [Test]
+    public async Task StatsCollector()
+    {
+        if (_client.StatsCollector is null)
+        {
+            Assert.Fail("StatsCollector should not be null");
+            return;
+        }
+
+        var startingStats = _client.StatsCollector.Read();
+
+        var q = FQL($"{{ set: EmbeddedSet.all() }}");
+        var r = await _client.QueryAsync<EmbeddedSets>(q);
+
+        Assert.NotNull(r.Data.Set);
+
+        var queriesMade = startingStats.QueryCount;
+        await foreach (var page in _client.PaginateAsync(r.Data.Set!))
+        {
+            var pageStats = _client.StatsCollector.Read();
+            Assert.Greater(pageStats.ReadOps, startingStats.ReadOps);
+            Assert.Greater(pageStats.StorageBytesRead, startingStats.StorageBytesRead);
+            Assert.Greater(pageStats.QueryCount, queriesMade);
+            queriesMade = pageStats.QueryCount;
+        }
+
+        _client.StatsCollector.ReadAndReset();
+        var resultStats = _client.StatsCollector.Read();
+        Assert.Zero(resultStats.ReadOps);
+        Assert.Zero(resultStats.ComputeOps);
+        Assert.Zero(resultStats.WriteOps);
+        Assert.Zero(resultStats.QueryTimeMs);
+        Assert.Zero(resultStats.ContentionRetries);
+        Assert.Zero(resultStats.StorageBytesRead);
+        Assert.Zero(resultStats.StorageBytesWrite);
+        Assert.Zero(resultStats.QueryCount);
+        Assert.Zero(resultStats.RateLimitedReadQueryCount);
+        Assert.Zero(resultStats.RateLimitedComputeQueryCount);
+        Assert.Zero(resultStats.RateLimitedWriteQueryCount);
+    }
+
+    [Test]
+    public async Task NullableStatsCollector()
+    {
+        var testClient = NewTestClient(hasStatsCollector: false);
+
+        var query = FQL($"4+5");
+        var result = await testClient.QueryAsync<int>(query);
+        var actual = result.Data;
+
+        Assert.AreEqual(9, actual);
+        Assert.Null(testClient.StatsCollector);
+    }
 }
