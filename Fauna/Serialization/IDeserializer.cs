@@ -18,4 +18,7 @@ public abstract class BaseDeserializer<T> : IDeserializer<T>
         Deserialize(context, ref reader);
 
     public abstract T Deserialize(MappingContext context, ref Utf8FaunaReader reader);
+
+    protected static SerializationException UnexpectedToken(TokenType token) =>
+        new($"Unexpected token while deserializing: {token}");
 }

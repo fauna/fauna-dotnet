@@ -11,10 +11,10 @@ public static class Deserializer
     /// <summary>
     /// The dynamic data deserializer.
     /// </summary>
-    public static IDeserializer<object?> Dynamic { get; } = DynamicDeserializer.Singleton;
+    public static IDeserializer<object?> Dynamic => DynamicDeserializer.Singleton;
 
     private static readonly CheckedDeserializer<object> _object = new();
-    private static readonly CheckedDeserializer<string> _string = new();
+    private static readonly StringDeserializer _string = new();
     private static readonly ByteDeserializer _byte = new();
     private static readonly SByteDeserializer _sbyte = new();
     private static readonly ShortDeserializer _short = new();
@@ -24,10 +24,10 @@ public static class Deserializer
     private static readonly LongDeserializer _long = new();
     private static readonly FloatDeserializer _float = new();
     private static readonly DoubleDeserializer _double = new();
-    private static readonly CheckedDeserializer<DateOnly> _dateOnly = new();
-    private static readonly CheckedDeserializer<DateTime> _dateTime = new();
-    private static readonly CheckedDeserializer<bool> _bool = new();
-    private static readonly CheckedDeserializer<Module> _module = new();
+    private static readonly DateOnlyDeserializer _dateOnly = new();
+    private static readonly DateTimeDeserializer _dateTime = new();
+    private static readonly BooleanDeserializer _bool = new();
+    private static readonly ModuleDeserializer _module = new();
     private static readonly DocumentDeserializer<Document> _doc = new();
     private static readonly DocumentDeserializer<NamedDocument> _namedDoc = new();
     private static readonly DocumentDeserializer<DocumentRef> _docRef = new();

@@ -10,6 +10,7 @@ namespace Fauna.Test.Serialization;
 public class DeserializerTests
 {
     private readonly MappingContext ctx;
+    private const string DocumentWithShortWire = @"{""@doc"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""a_short"":{""@int"":""42""}}}";
 
     public DeserializerTests()
     {
@@ -315,6 +316,13 @@ public class DeserializerTests
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
         Assert.AreEqual(DateTime.Parse("2023-12-15T01:01:01.0010010Z"), actual.Ts);
         Assert.AreEqual("name_value", actual["name"]);
+    }
+
+    [Test]
+    public void DeserializeDocumentAsClassWithShort()
+    {
+        var actual = Deserialize<ClassWithShort>(DocumentWithShortWire);
+        Assert.AreEqual((short)42, actual.AShort);
     }
 
     [Test]

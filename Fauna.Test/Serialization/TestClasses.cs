@@ -23,6 +23,12 @@ class ClassForDocument
 }
 
 [Object]
+class ClassWithShort
+{
+    [Field("a_short")] public short AShort { get; set; }
+}
+
+[Object]
 class ClassForDocumentWithIdString
 {
     [Field] public string? Id { get; set; }
