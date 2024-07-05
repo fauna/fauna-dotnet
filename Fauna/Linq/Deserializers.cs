@@ -48,6 +48,6 @@ internal class ProjectionDeserializer : BaseDeserializer<object?[]>
         return values;
     }
 
-    private SerializationException UnexpectedToken(TokenType tokenType) =>
-        new SerializationException($"Unexpected token while deserializing LINQ element: {tokenType}");
+    private new static SerializationException UnexpectedToken(TokenType tokenType) =>
+        new($"Unexpected token while deserializing LINQ element: {tokenType}");
 }

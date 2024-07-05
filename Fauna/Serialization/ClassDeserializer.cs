@@ -156,7 +156,6 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
         }
     }
 
-    private SerializationException UnexpectedToken(TokenType tokenType) =>
-        new SerializationException(
-            $"Unexpected token while deserializing into class {_info.Type.Name}: {tokenType}");
+    private new SerializationException UnexpectedToken(TokenType tokenType) =>
+        new($"Unexpected token while deserializing into class {_info.Type.Name}: {tokenType}");
 }

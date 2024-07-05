@@ -14,12 +14,18 @@ public class RoundTripTests
     private const string LongWire = @"{""@long"":""42""}";
     private const string DoubleWire = @"{""@double"":""42""}";
     private const string DoubleWithDecimalWire = @"{""@double"":""42.2""}";
+    private const string TrueWire = "true";
+    private const string FalseWire = "false";
+    private const string DateTimeWire = @"{""@time"":""2023-12-15T01:01:01.0010011Z""}";
+    private const string DateWire = @"{""@date"":""2023-12-15""}";
+    private const string ModuleWire = @"{""@mod"":""Foo""}";
     private const string DocumentWire = @"{""@doc"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}}";
     private const string DocumentRefWire = @"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""MyColl""}}}";
     private const string NullDocumentWire = @"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""exists"":false,""cause"":""not found""}}";
     private const string NamedDocumentWire = @"{""@doc"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}}";
     private const string NullNamedDocumentWire = @"{""@ref"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""},""exists"":false,""cause"":""not found""}}";
     private const string NamedDocumentRefWire = @"{""@ref"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""}}}";
+    private const string ObjectWithShortWire = @"{""a_short"":{""@int"":""42""}}";
 
     public static string Serialize(object? obj)
     {
@@ -113,6 +119,54 @@ public class RoundTripTests
         var deserialized = Deserialize<double>(DoubleWithDecimalWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(DoubleWithDecimalWire, serialized);
+    }
+
+    [Test]
+    public void RoundTripTrue()
+    {
+        var deserialized = Deserialize<bool>(TrueWire);
+        var serialized = Serialize(deserialized);
+        Assert.AreEqual(TrueWire, serialized);
+    }
+
+    [Test]
+    public void RoundTripFalse()
+    {
+        var deserialized = Deserialize<bool>(FalseWire);
+        var serialized = Serialize(deserialized);
+        Assert.AreEqual(FalseWire, serialized);
+    }
+
+    [Test]
+    public void RoundTripDateTime()
+    {
+        var deserialized = Deserialize<DateTime>(DateTimeWire);
+        var serialized = Serialize(deserialized);
+        Assert.AreEqual(DateTimeWire, serialized);
+    }
+
+    [Test]
+    public void RoundTripDateOnly()
+    {
+        var deserialized = Deserialize<DateOnly>(DateWire);
+        var serialized = Serialize(deserialized);
+        Assert.AreEqual(DateWire, serialized);
+    }
+
+    [Test]
+    public void RoundTripModule()
+    {
+        var deserialized = Deserialize<Module>(ModuleWire);
+        var serialized = Serialize(deserialized);
+        Assert.AreEqual(ModuleWire, serialized);
+    }
+
+    [Test]
+    public void RoundTripClassWithShort()
+    {
+        var deserialized = Deserialize<ClassWithShort>(ObjectWithShortWire);
+        var serialized = Serialize(deserialized);
+        Assert.AreEqual(ObjectWithShortWire, serialized);
     }
 
     [Test]
