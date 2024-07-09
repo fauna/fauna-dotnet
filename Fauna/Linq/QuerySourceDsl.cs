@@ -196,6 +196,28 @@ public partial class QuerySource<T>
             ety: typeof(R));
     }
 
+    private static readonly Query _avgReducer = QH.Expr("(a, b) => a + b");
+    public int Average(Expression<Func<T, int>> selector) => Execute<int>(AverageImpl<int>(selector));
+    public Task<int> AverageAsync(Expression<Func<T, int>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<int>(AverageImpl<int>(selector), cancel);
+    public long Average(Expression<Func<T, long>> selector) => Execute<long>(AverageImpl<long>(selector));
+    public Task<long> AverageAsync(Expression<Func<T, long>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<long>(AverageImpl<long>(selector), cancel);
+    public double Average(Expression<Func<T, double>> selector) => Execute<double>(AverageImpl<double>(selector));
+    public Task<double> AverageAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<double>(AverageImpl<double>(selector), cancel);
+
+    private Pipeline AverageImpl<R>(Expression<Func<T, R>> selector)
+    {
+        RequireQueryMode("Average");
+        var seed = (typeof(R) == typeof(int) || typeof(R) == typeof(long)) ? QH.Expr("0") : QH.Expr("0.0");
+        var mapped = QH.Expr("let t = ").Concat(AbortIfEmpty(Query)).Concat(";").Concat(QH.MethodCall(QH.Expr("t"), "map", SubQuery(selector)));
+        return CopyPipeline(
+            mode: PipelineMode.Scalar,
+            q: QH.MethodCall(mapped, "fold", seed, _avgReducer).Concat(QH.Expr("/")).Concat(QH.MethodCall(QH.Expr("t"), "count")),
+            ety: typeof(R));
+    }
+
     public T Single() => Execute<T>(SingleImpl(null));
     public Task<T> SingleAsync(CancellationToken cancel = default) => ExecuteAsync<T>(SingleImpl(null), cancel);
     public T Single(Expression<Func<T, bool>> predicate) => Execute<T>(SingleImpl(predicate));

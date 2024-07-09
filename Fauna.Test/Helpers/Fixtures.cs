@@ -9,6 +9,8 @@ public class Author
     [Field] public string? Id { get; set; }
     [Field] public string Name { get; set; } = "Alice";
     [Field] public int Age { get; set; }
+    [Field] public long Subscribers { get; set; }
+    [Field] public double Score { get; set; }
 }
 
 public class AuthorDb : DataContext
@@ -61,8 +63,8 @@ public static class Fixtures
                 }}
             }})"))
             .Wait();
-        client.QueryAsync(FQL($"Author.create({{name: 'Alice', age: 32 }})")).Wait();
-        client.QueryAsync(FQL($"Author.create({{name: 'Bob', age: 26 }})")).Wait();
+        client.QueryAsync(FQL($"Author.create({{name: 'Alice', age: 32, subscribers: 10000000, score: 91.3 }})")).Wait();
+        client.QueryAsync(FQL($"Author.create({{name: 'Bob', age: 26, subscribers: 300000000, score: 83.5 }})")).Wait();
         client.QueryAsync(FQL($"Function.create({{name: 'SayHello', body: '() => \"Hello!\"'}})")).Wait();
         client.QueryAsync(FQL($"Function.create({{name: 'SayHelloArray', body: '() => [SayHello(), SayHello()]'}})")).Wait();
         client.QueryAsync(FQL($"Function.create({{name: 'GetAuthors', body: '() => Author.all()'}})")).Wait();

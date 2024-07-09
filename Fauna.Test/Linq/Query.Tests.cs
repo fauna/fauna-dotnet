@@ -101,6 +101,9 @@ public class QueryTests
         await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (int)1, c));
         await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (long)1L, c));
         await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (double)1D, c));
+        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (int)1, c));
+        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (long)1L, c));
+        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (double)1D, c));
 
         await TestCancel("ToListAsync", async (c) => await db.Author.ToListAsync(c));
         await TestCancel("ToArrayAsync", async (c) => await db.Author.ToArrayAsync(c));
@@ -436,6 +439,34 @@ public class QueryTests
         {
             Assert.AreEqual("Empty set", ex.Message);
         }
+    }
+
+    [Test]
+    public void Query_Average()
+    {
+        var avg1 = db.Author.Select(a => a.Age).Average();
+        Assert.AreEqual(29, avg1);
+
+        var avg1Long = db.Author.Select(a => a.Subscribers).Average();
+        Assert.IsInstanceOf(typeof(long), avg1Long);
+        Assert.AreEqual(155000000, avg1Long);
+
+        var avg1Double = db.Author.Select(a => a.Score).Average();
+        Assert.IsInstanceOf(typeof(double), avg1Double);
+        Assert.AreEqual(87.400000000000006, avg1Double);
+
+        var avg2 = db.Author.Average(a => a.Age);
+        Assert.AreEqual(29, avg2);
+
+        var avg2Long = db.Author.Average(a => a.Subscribers);
+        Assert.IsInstanceOf(typeof(long), avg2Long);
+        Assert.AreEqual(155000000, avg2Long);
+
+        var avg2Double = db.Author.Average(a => a.Score);
+        Assert.IsInstanceOf(typeof(double), avg2Double);
+        Assert.AreEqual(87.400000000000006, avg2Double);
+
+        Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age));
     }
 
     [Test]
