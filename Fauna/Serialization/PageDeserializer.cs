@@ -14,31 +14,44 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
 
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
-        var endToken = reader.CurrentTokenType switch
+        var wrapInPage = false;
+        TokenType endToken = TokenType.None;
+        switch (reader.CurrentTokenType)
         {
-            TokenType.StartPage => TokenType.EndPage,
-            TokenType.StartObject => TokenType.EndObject,
-            var other =>
-                throw new SerializationException(
-                    $"Unexpected token while deserializing into {typeof(Page<T>)}: {other}"),
-        };
+            case TokenType.StartPage:
+                endToken = TokenType.EndPage;
+                break;
+            case TokenType.StartObject:
+                endToken = TokenType.EndObject;
+                break;
+            default:
+                wrapInPage = true;
+                break;
+        }
 
         List<T>? data = null;
         string? after = null;
 
-        while (reader.Read() && reader.CurrentTokenType != endToken)
+        if (wrapInPage)
         {
-            var fieldName = reader.GetString()!;
-            reader.Read();
-
-            switch (fieldName)
+            data = _dataDeserializer.Deserialize(context, ref reader);
+        }
+        else
+        {
+            while (reader.Read() && reader.CurrentTokenType != endToken)
             {
-                case "data":
-                    data = _dataDeserializer.Deserialize(context, ref reader);
-                    break;
-                case "after":
-                    after = reader.GetString()!;
-                    break;
+                var fieldName = reader.GetString()!;
+                reader.Read();
+
+                switch (fieldName)
+                {
+                    case "data":
+                        data = _dataDeserializer.Deserialize(context, ref reader);
+                        break;
+                    case "after":
+                        after = reader.GetString()!;
+                        break;
+                }
             }
         }
 

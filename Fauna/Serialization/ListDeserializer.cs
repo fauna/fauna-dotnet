@@ -13,14 +13,24 @@ internal class ListDeserializer<T> : BaseDeserializer<List<T>>
 
     public override List<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
-        if (reader.CurrentTokenType != TokenType.StartArray)
+        if (reader.CurrentTokenType == TokenType.StartPage)
             throw new SerializationException(
-                $"Unexpected token while deserializing into {typeof(List<T>)}: {reader.CurrentTokenType}");
+            $"Unexpected token while deserializing into {typeof(List<T>)}: {reader.CurrentTokenType}");
+
+        var wrapInList = reader.CurrentTokenType != TokenType.StartArray;
 
         var lst = new List<T>();
-        while (reader.Read() && reader.CurrentTokenType != TokenType.EndArray)
+
+        if (wrapInList)
         {
             lst.Add(_elemDeserializer.Deserialize(context, ref reader));
+        }
+        else
+        {
+            while (reader.Read() && reader.CurrentTokenType != TokenType.EndArray)
+            {
+                lst.Add(_elemDeserializer.Deserialize(context, ref reader));
+            }
         }
 
         return lst;

@@ -38,7 +38,7 @@ internal class DataContextBuilder<DB> where DB : DataContext
     }
 
     private static bool IsColType(Type ty) =>
-        ty.GetInterfaces().Where(iface => iface == typeof(DataContext.Collection)).Any();
+        ty.GetInterfaces().Any(iface => iface == typeof(DataContext.Collection));
 
     private static void ValidateColType(Type ty)
     {

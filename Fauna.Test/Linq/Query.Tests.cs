@@ -556,4 +556,39 @@ public class QueryTests
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
+
+    [Test]
+    public async Task Query_Function_Value_Single()
+    {
+        var ret = await db.SayHello().SingleAsync();
+        Assert.AreEqual("Hello!", ret);
+    }
+
+    [Test]
+    public async Task Query_Function_Value_List()
+    {
+        var ret = await db.SayHello().ToListAsync();
+        Assert.AreEqual(new List<string> { "Hello!" }, ret);
+    }
+
+    [Test]
+    public async Task Query_Function_With_Param()
+    {
+        var ret = await db.Add2(8).SingleAsync();
+        Assert.AreEqual(10, ret);
+    }
+
+    [Test]
+    public async Task Query_Function_Array()
+    {
+        var ret = await db.SayHelloArray().ToListAsync();
+        Assert.AreEqual(new List<string> { "Hello!", "Hello!" }, ret);
+    }
+
+    [Test]
+    public async Task Query_Function_Set()
+    {
+        var ret = await db.GetAuthors().Select(x => x.Name).ToListAsync();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, ret);
+    }
 }
