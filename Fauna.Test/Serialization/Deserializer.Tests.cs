@@ -982,6 +982,15 @@ public class DeserializerTests
     }
 
     [Test]
+    public void DeserializeIntoListFromSingleValue()
+    {
+        const string given = @"""item1""";
+        var expected = new List<string> { "item1" };
+        var p = Deserialize<List<string>>(given);
+        Assert.AreEqual(expected, p);
+    }
+
+    [Test]
     public void DeserializeIntoGenericListWithPrimitive()
     {
         const string given = @"[""item1"",""item2""]";
@@ -1027,6 +1036,17 @@ public class DeserializerTests
         Assert.IsNotNull(result);
         Assert.AreEqual(new List<int> { 1, 2, 3 }, result.Data);
         Assert.AreEqual("next_page_cursor", result.After);
+    }
+
+    [Test]
+    public void DeserializeIntoPageWithSingleValue()
+    {
+        const string given = @"""SingleValue""";
+
+        var result = Deserialize<Page<string>>(given);
+        Assert.IsNotNull(result);
+        Assert.AreEqual(new List<string> { "SingleValue" }, result.Data);
+        Assert.IsNull(result.After);
     }
 
     [Test]

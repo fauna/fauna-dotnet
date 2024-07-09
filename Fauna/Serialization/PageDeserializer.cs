@@ -14,20 +14,25 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
 
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
-        var endToken = reader.CurrentTokenType switch
+        var wrapInPage = false;
+        TokenType endToken = TokenType.None;
+        switch (reader.CurrentTokenType)
         {
-            TokenType.StartPage => TokenType.EndPage,
-            TokenType.StartObject => TokenType.EndObject,
-            TokenType.StartArray => TokenType.EndArray,
-            var other =>
-                throw new SerializationException(
-                    $"Unexpected token while deserializing into {typeof(Page<T>)}: {other}"),
-        };
+            case TokenType.StartPage:
+                endToken = TokenType.EndPage;
+                break;
+            case TokenType.StartObject:
+                endToken = TokenType.EndObject;
+                break;
+            default:
+                wrapInPage = true;
+                break;
+        }
 
         List<T>? data = null;
         string? after = null;
 
-        if (endToken == TokenType.EndArray)
+        if (wrapInPage)
         {
             data = _dataDeserializer.Deserialize(context, ref reader);
         }

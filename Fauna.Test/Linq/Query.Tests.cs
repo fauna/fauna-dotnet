@@ -558,10 +558,17 @@ public class QueryTests
     }
 
     [Test]
-    public async Task Query_Function_Single()
+    public async Task Query_Function_Value_Single()
     {
         var ret = await db.SayHello().SingleAsync();
         Assert.AreEqual("Hello!", ret);
+    }
+
+    [Test]
+    public async Task Query_Function_Value_List()
+    {
+        var ret = await db.SayHello().ToListAsync();
+        Assert.AreEqual(new List<string> { "Hello!" }, ret);
     }
 
     [Test]
