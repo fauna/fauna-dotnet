@@ -143,6 +143,61 @@ public abstract class DataContext : BaseClient
         }
     }
 
+    // UDF / Function DSL
+
+    public interface IFunction : Linq.IQuerySource
+    {
+        public string Name { get; }
+        public Type ReturnType { get; }
+        public object[] Args { get; }
+    }
+
+    protected class FunctionCall<T>
+    {
+        private readonly string _name;
+        private readonly DataContext _ctx;
+
+        public FunctionCall(string name, DataContext ctx)
+        {
+            _name = name;
+            _ctx = ctx;
+        }
+
+        public Function<T> Call() => Call(Array.Empty<object>());
+
+        public Function<T> Call(object a1) => Call(new[] { a1 });
+
+        public Function<T> Call(object a1, object a2) => Call(new[] { a1, a2 });
+
+        public Function<T> Call(object a1, object a2, object a3) => Call(new[] { a1, a2, a3 });
+
+        public Function<T> Call(object[] args) => new(_name, args, _ctx);
+
+    }
+
+    protected FunctionCall<T> Fn<T>(string name = "", [CallerMemberName] string callerName = "")
+    {
+        var fnName = name == "" ? callerName : name;
+        return new FunctionCall<T>(fnName, this);
+    }
+
+    public class Function<T> : Linq.QuerySource<T>, IFunction
+    {
+        public string Name { get; }
+
+        public Type ReturnType => typeof(T);
+
+        public object[] Args { get; }
+
+        internal Function(string name, object[] args, DataContext ctx)
+        {
+            Name = name;
+            Args = args;
+            Ctx = ctx;
+            SetQuery<T>(Linq.IntermediateQueryHelpers.Function(this));
+        }
+    }
+
     protected Col GetCollection<Col>() where Col : Collection
     {
         CheckInitialization();

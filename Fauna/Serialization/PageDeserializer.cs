@@ -18,6 +18,7 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
         {
             TokenType.StartPage => TokenType.EndPage,
             TokenType.StartObject => TokenType.EndObject,
+            TokenType.StartArray => TokenType.EndArray,
             var other =>
                 throw new SerializationException(
                     $"Unexpected token while deserializing into {typeof(Page<T>)}: {other}"),
@@ -26,19 +27,26 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
         List<T>? data = null;
         string? after = null;
 
-        while (reader.Read() && reader.CurrentTokenType != endToken)
+        if (endToken == TokenType.EndArray)
         {
-            var fieldName = reader.GetString()!;
-            reader.Read();
-
-            switch (fieldName)
+            data = _dataDeserializer.Deserialize(context, ref reader);
+        }
+        else
+        {
+            while (reader.Read() && reader.CurrentTokenType != endToken)
             {
-                case "data":
-                    data = _dataDeserializer.Deserialize(context, ref reader);
-                    break;
-                case "after":
-                    after = reader.GetString()!;
-                    break;
+                var fieldName = reader.GetString()!;
+                reader.Read();
+
+                switch (fieldName)
+                {
+                    case "data":
+                        data = _dataDeserializer.Deserialize(context, ref reader);
+                        break;
+                    case "after":
+                        after = reader.GetString()!;
+                        break;
+                }
             }
         }
 

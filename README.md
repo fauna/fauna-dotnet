@@ -167,6 +167,8 @@ class PersonDb : DataContext
     }
 
     public PersonCollection Person { get => GetCollection<PersonCollection>(); }
+    public Function<int> AddTwo(int val) => Fn<int>().Call(val);
+    public Function<int> TimesTwo(int val) => Fn<int>("MultiplyByTwo").Call(val);
 }
 ```
 

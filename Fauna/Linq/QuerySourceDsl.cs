@@ -324,9 +324,14 @@ public partial class QuerySource<T>
 
     private Query Singularize(Query setq) =>
         QH.Expr(@"({
-          let s = (").Concat(setq).Concat(@").take(2).toArray()
-          if (s.length > 1) abort(['not single'])
-          s.take(1)
+          let s = (").Concat(setq).Concat(@")
+          let s = if (s isa Set) s.toArray() else s
+          if (s isa Array) {
+            if (s.length > 1) abort(['not single'])
+            s.take(1)
+          } else {
+            [s]
+          }
         })");
 
     private Exception TranslateException(Exception ex) =>

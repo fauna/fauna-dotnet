@@ -32,8 +32,11 @@ public class ContextTests
         [Name("posts")]
         public class PostCol : Collection<Post> { }
 
-        public AuthorCol Author { get => GetCollection<AuthorCol>(); }
-        public PostCol Post { get => GetCollection<PostCol>(); }
+        public AuthorCol Author => GetCollection<AuthorCol>();
+        public PostCol Post => GetCollection<PostCol>();
+        public Function<string> TestFunc() => Fn<string>("TestFunc").Call();
+        public Function<string> TestFuncInferred() => Fn<string>().Call();
+
     }
 
     [AllowNull]
@@ -70,5 +73,15 @@ public class ContextTests
         Assert.AreEqual(byName2.Name, "realByName");
         Assert.AreEqual(byName2.DocType, typeof(Author));
         Assert.AreEqual(byName2.Args, new object[] { "Alice" });
+
+        var fn = db.TestFunc();
+        Assert.AreEqual(fn.Name, "TestFunc");
+        Assert.AreEqual(fn.ReturnType, typeof(string));
+        Assert.AreEqual(fn.Args, Array.Empty<object>());
+
+        var fnInferred = db.TestFuncInferred();
+        Assert.AreEqual(fnInferred.Name, "TestFuncInferred");
+        Assert.AreEqual(fnInferred.ReturnType, typeof(string));
+        Assert.AreEqual(fnInferred.Args, Array.Empty<object>());
     }
 }

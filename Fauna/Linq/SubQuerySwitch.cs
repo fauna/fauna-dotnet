@@ -19,18 +19,12 @@ internal class SubQuerySwitch : DefaultExpressionSwitch<Query>
 
     protected override Query ConstantExpr(ConstantExpression expr)
     {
-        if (expr.Value is DataContext.Collection col)
+        return expr.Value switch
         {
-            return QH.CollectionAll(col);
-        }
-        else if (expr.Value is DataContext.Index idx)
-        {
-            return QH.CollectionIndex(idx);
-        }
-        else
-        {
-            return QH.Const(expr.Value);
-        }
+            DataContext.Collection col => QH.CollectionAll(col),
+            DataContext.Index idx => QH.CollectionIndex(idx),
+            _ => QH.Const(expr.Value)
+        };
     }
 
     protected override Query LambdaExpr(LambdaExpression expr)
