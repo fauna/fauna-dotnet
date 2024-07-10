@@ -20,7 +20,6 @@ public readonly struct QueryStats
     [JsonPropertyName(Stats_ReadOps)]
     public int ReadOps { get; init; }
 
-
     /// <summary>
     /// The number of write operations consumed by the query.
     /// </summary>

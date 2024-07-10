@@ -26,6 +26,11 @@ public class Client : BaseClient, IDisposable
     internal override MappingContext MappingCtx { get => _defaultCtx; }
 
     /// <summary>
+    /// Provides collection and aggregation of query statistics. Can be set to null in the <see cref="Configuration"/>.
+    /// </summary>
+    public readonly IStatsCollector? StatsCollector;
+
+    /// <summary>
     /// Gets the timestamp of the last transaction seen by this client.
     /// </summary>
     public long LastSeenTxn { get; private set; }
@@ -46,6 +51,7 @@ public class Client : BaseClient, IDisposable
     public Client(Configuration config)
     {
         _config = config;
+        StatsCollector = config.StatsCollector;
         _connection = new Connection(config);
     }
 
@@ -111,8 +117,10 @@ public class Client : BaseClient, IDisposable
         {
             case QuerySuccess<T> success:
                 LastSeenTxn = res.LastSeenTxn;
+                StatsCollector?.Add(res.Stats);
                 return success;
             case QueryFailure failure:
+                StatsCollector?.Add(res.Stats);
                 throw ExceptionFactory.FromQueryFailure(ctx, failure);
             default:
                 throw ExceptionFactory.FromRawResponse(body, httpResponse);
