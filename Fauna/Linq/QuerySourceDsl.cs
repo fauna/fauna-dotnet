@@ -196,7 +196,6 @@ public partial class QuerySource<T>
             ety: typeof(R));
     }
 
-    private static readonly Query _avgReducer = QH.Expr("(a, b) => a + b");
     public int Average(Expression<Func<T, int>> selector) => Execute<int>(AverageImpl<int>(selector));
     public Task<int> AverageAsync(Expression<Func<T, int>> selector, CancellationToken cancel = default) =>
         ExecuteAsync<int>(AverageImpl<int>(selector), cancel);
@@ -214,7 +213,7 @@ public partial class QuerySource<T>
         var mapped = QH.Expr("let t = ").Concat(AbortIfEmpty(Query)).Concat(";").Concat(QH.MethodCall(QH.Expr("t"), "map", SubQuery(selector)));
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(mapped, "fold", seed, _avgReducer).Concat(QH.Expr("/")).Concat(QH.MethodCall(QH.Expr("t"), "count")),
+            q: QH.MethodCall(mapped, "fold", seed, _sumReducer).Concat(QH.Expr("/")).Concat(QH.MethodCall(QH.Expr("t"), "count")),
             ety: typeof(R));
     }
 
