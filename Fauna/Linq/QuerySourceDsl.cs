@@ -209,11 +209,23 @@ public partial class QuerySource<T>
     private Pipeline AverageImpl<R>(Expression<Func<T, R>> selector)
     {
         RequireQueryMode("Average");
-        var seed = (typeof(R) == typeof(int) || typeof(R) == typeof(long)) ? QH.Expr("0") : QH.Expr("0.0");
-        var mapped = QH.Expr("let t = ").Concat(AbortIfEmpty(Query)).Concat(";").Concat(QH.MethodCall(QH.Expr("t"), "map", SubQuery(selector)));
+
+        var isIntOrLong = (typeof(R) == typeof(int) || typeof(R) == typeof(long));
+        var seed = isIntOrLong ? QH.Expr("0") : QH.Expr("0.0");
+
+        var select = QH.Expr("let t = ").Concat(AbortIfEmpty(Query)).Concat(";\n");
+        var mapped = select.Concat(QH.MethodCall(QH.Expr("t"), "map", SubQuery(selector)));
+        var q = QH.MethodCall(mapped, "fold", seed, _sumReducer).Concat(QH.Expr("/"));
+
+        var count = QH.MethodCall(QH.Expr("t"), "count");
+
+        q = q.Concat(isIntOrLong
+            ? count
+            : QH.MethodCall(QH.MethodCall(count, "toString"), "parseDouble"));
+
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: QH.MethodCall(mapped, "fold", seed, _sumReducer).Concat(QH.Expr("/")).Concat(QH.MethodCall(QH.Expr("t"), "count")),
+            q: q,
             ety: typeof(R));
     }
 
