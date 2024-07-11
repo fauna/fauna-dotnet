@@ -466,6 +466,19 @@ public class QueryTests
         Assert.IsInstanceOf(typeof(double), avg2Double);
         Assert.AreEqual(87.400000000000006, avg2Double);
 
+
+        var avgCastDouble = db.Author.Average(a => (double)a.Age);
+        Assert.IsInstanceOf(typeof(double), avgCastDouble);
+        Assert.AreEqual(29.0D, avgCastDouble);
+
+        var avgCastLong = db.Author.Average(a => (long)a.Age);
+        Assert.IsInstanceOf(typeof(long), avgCastLong);
+        Assert.AreEqual(29L, avgCastLong);
+
+        var avgCastInt = db.Author.Average(a => (int)a.Score);
+        Assert.IsInstanceOf(typeof(int), avgCastInt);
+        Assert.AreEqual(87, avgCastInt);
+
         Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age));
     }
 
@@ -621,5 +634,13 @@ public class QueryTests
     {
         var ret = await db.GetAuthors().Select(x => x.Name).ToListAsync();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, ret);
+    }
+
+    [Test]
+    public async Task Query_CastTypes()
+    {
+        Assert.AreEqual(new[] { 91, 83 }, await db.GetAuthors().Select(a => (int)a.Score).ToArrayAsync());
+        Assert.AreEqual(new[] { 32.0D, 26.0D }, await db.GetAuthors().Select(a => (double)a.Age).ToArrayAsync());
+        Assert.AreEqual(new[] { 91L, 83L }, await db.GetAuthors().Select(a => (long)a.Score).ToArrayAsync());
     }
 }
