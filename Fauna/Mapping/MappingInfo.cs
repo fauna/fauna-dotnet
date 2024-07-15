@@ -2,6 +2,7 @@ using Fauna.Mapping.Attributes;
 using Fauna.Serialization;
 using System.Collections.Immutable;
 using System.Reflection;
+using Module = Fauna.Types.Module;
 
 namespace Fauna.Mapping;
 
@@ -25,13 +26,16 @@ public sealed class MappingInfo
 
     internal bool ShouldEscapeObject { get; }
     internal IClassDeserializer Deserializer { get; }
+    internal Module? Collection { get; }
 
-    internal MappingInfo(MappingContext ctx, Type ty)
+    internal MappingInfo(MappingContext ctx, Type ty, string? colName = null)
     {
         ctx.Add(ty, this);
         Type = ty;
 
         var objAttr = ty.GetCustomAttribute<ObjectAttribute>();
+        Collection = colName != null ? new Module(colName) : null;
+
         var hasAttributes = objAttr != null;
         var fields = new List<FieldInfo>();
         var byName = new Dictionary<string, FieldInfo>();

@@ -30,16 +30,16 @@ public static class Deserializer
     private static readonly ModuleDeserializer _module = new();
     private static readonly DocumentDeserializer<Document> _doc = new();
     private static readonly DocumentDeserializer<NamedDocument> _namedDoc = new();
-    private static readonly DocumentDeserializer<DocumentRef> _docRef = new();
-    private static readonly DocumentDeserializer<NamedDocumentRef> _namedDocRef = new();
+    private static readonly DocumentDeserializer<Ref> _docRef = new();
+    private static readonly DocumentDeserializer<NamedRef> _namedDocRef = new();
 
     /// <summary>
-    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// Generates a deserializer for the specified .NET type.
     /// </summary>
     /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
     /// <param name="context">The serialization context.</param>
     /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T> Generate<T>(MappingContext context) where T : notnull
+    public static IDeserializer<T> Generate<T>(MappingContext context)
     {
         var targetType = typeof(T);
         var deser = (IDeserializer<T>)Generate(context, targetType);
@@ -71,8 +71,8 @@ public static class Deserializer
         if (targetType == typeof(Module)) return _module;
         if (targetType == typeof(Document)) return _doc;
         if (targetType == typeof(NamedDocument)) return _namedDoc;
-        if (targetType == typeof(DocumentRef)) return _docRef;
-        if (targetType == typeof(NamedDocumentRef)) return _namedDocRef;
+        if (targetType == typeof(Ref)) return _docRef;
+        if (targetType == typeof(NamedRef)) return _namedDocRef;
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
@@ -98,47 +98,51 @@ public static class Deserializer
             return (IDeserializer)deser!;
         }
 
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        if (targetType.IsGenericType)
         {
-            var argTypes = targetType.GetGenericArguments();
-            var keyType = argTypes[0];
-            var valueType = argTypes[1];
+            var typeDef = targetType.GetGenericTypeDefinition();
+            if (typeDef == typeof(Dictionary<,>))
+            {
+                var argTypes = targetType.GetGenericArguments();
+                var keyType = argTypes[0];
+                var valueType = argTypes[1];
 
-            if (keyType != typeof(string))
-                throw new ArgumentException(
-                    $"Unsupported Dictionary key type. Key must be of type string, but was a {keyType}");
+                if (keyType != typeof(string))
+                    throw new ArgumentException(
+                        $"Unsupported Dictionary key type. Key must be of type string, but was a {keyType}");
 
-            var valueDeserializer = Generate(context, valueType);
+                var valueDeserializer = Generate(context, valueType);
 
-            var deserType = typeof(DictionaryDeserializer<>).MakeGenericType(new[] { valueType });
-            var deser = Activator.CreateInstance(deserType, new[] { valueDeserializer });
+                var deserType = typeof(DictionaryDeserializer<>).MakeGenericType(new[] { valueType });
+                var deser = Activator.CreateInstance(deserType, new[] { valueDeserializer });
 
-            return (IDeserializer)deser!;
+                return (IDeserializer)deser!;
+            }
+
+            if (typeDef == typeof(List<>) || typeDef == typeof(IEnumerable<>))
+            {
+                var elemType = targetType.GetGenericArguments()[0];
+                var elemDeserializer = Generate(context, elemType);
+
+                var deserType = typeof(ListDeserializer<>).MakeGenericType(new[] { elemType });
+                var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
+
+                return (IDeserializer)deser!;
+            }
+
+            if (typeDef == typeof(Page<>))
+            {
+                var elemType = targetType.GetGenericArguments()[0];
+                var elemDeserializer = Generate(context, elemType);
+
+                var deserType = typeof(PageDeserializer<>).MakeGenericType(new[] { elemType });
+                var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
+
+                return (IDeserializer)deser!;
+            }
         }
 
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
-        {
-            var elemType = targetType.GetGenericArguments()[0];
-            var elemDeserializer = Generate(context, elemType);
-
-            var deserType = typeof(ListDeserializer<>).MakeGenericType(new[] { elemType });
-            var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
-
-            return (IDeserializer)deser!;
-        }
-
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>))
-        {
-            var elemType = targetType.GetGenericArguments()[0];
-            var elemDeserializer = Generate(context, elemType);
-
-            var deserType = typeof(PageDeserializer<>).MakeGenericType(new[] { elemType });
-            var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
-
-            return (IDeserializer)deser!;
-        }
-
-        if (targetType.IsClass && !targetType.IsGenericType)
+        if (targetType is { IsClass: true, IsGenericType: false })
         {
             var info = context.GetInfo(targetType);
             return info.Deserializer;

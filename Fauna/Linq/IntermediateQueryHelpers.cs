@@ -2,10 +2,9 @@ namespace Fauna.Linq;
 
 internal static class IntermediateQueryHelpers
 {
-    public static QueryExpr Expr(string fql) =>
-        new QueryExpr(new List<IQueryFragment> { new QueryLiteral(fql) });
+    public static QueryExpr Expr(string fql) => new(new List<IQueryFragment> { new QueryLiteral(fql) });
 
-    public static QueryVal Const(object? v) => new QueryVal(v);
+    public static QueryVal Const(object? v) => new(v);
 
     private static readonly Query _larr = Expr("[");
     private static readonly Query _rarr = Expr("]");
@@ -64,7 +63,7 @@ internal static class IntermediateQueryHelpers
         return ret;
     }
 
-    public static Query CollectionAll(DataContext.Collection col) =>
+    public static Query CollectionAll(DataContext.ICollection col) =>
         MethodCall(Expr(col.Name), "all");
 
     public static Query CollectionIndex(DataContext.Index idx) =>

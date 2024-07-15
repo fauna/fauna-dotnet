@@ -54,7 +54,7 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
             {
                 if (reader.CurrentTokenType != TokenType.FieldName)
                     throw new SerializationException(
-                        $"Unexpected token while deserializing into DocumentRef: {reader.CurrentTokenType}");
+                        $"Unexpected token while deserializing into Ref: {reader.CurrentTokenType}");
 
                 var fieldName = reader.GetString()!;
                 reader.Read();

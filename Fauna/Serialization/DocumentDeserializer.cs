@@ -70,17 +70,17 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
 
         if (id != null && coll != null && ts != null)
         {
-            // For convenience, if a user asks for a DocumentRef but gets a document, give them the ref.
-            if (typeof(DocumentRef) == typeof(T))
+            // For convenience, if a user asks for a Ref but gets a document, give them the ref.
+            if (typeof(Ref) == typeof(T))
             {
-                return (new DocumentRef(id, coll) as T)!;
+                return (new Ref(id, coll) as T)!;
             }
 
-            // For convenience, if a user asks for a NullableDocument<DocumentRef> but gets a document, give it to them.
-            if (typeof(NullableDocument<DocumentRef>) == typeof(T))
+            // For convenience, if a user asks for a NullableDocument<Ref> but gets a document, give it to them.
+            if (typeof(NullableDocument<Ref>) == typeof(T))
             {
-                var docRef = new DocumentRef(id, coll);
-                return (new NonNullDocument<DocumentRef>(docRef) as T)!;
+                var docRef = new Ref(id, coll);
+                return (new NonNullDocument<Ref>(docRef) as T)!;
             }
 
             if (name != null) data["name"] = name;
@@ -103,17 +103,17 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
             var nr = (NullableDocument<NamedDocument>)new NonNullDocument<NamedDocument>(r);
             if (nr is T nnd) return nnd;
 
-            // For convenience, if a user asks for a NamedDocumentRef but gets a named document, give them the ref.
-            if (typeof(NamedDocumentRef) == typeof(T))
+            // For convenience, if a user asks for a NamedRef but gets a named document, give them the ref.
+            if (typeof(NamedRef) == typeof(T))
             {
-                return (new NamedDocumentRef(nameAsString, coll) as T)!;
+                return (new NamedRef(nameAsString, coll) as T)!;
             }
 
-            // For convenience, if a user asks for a NullableDocument<NamedDocumentRef> but gets a named document, give it to them.
-            if (typeof(NullableDocument<NamedDocumentRef>) == typeof(T))
+            // For convenience, if a user asks for a NullableDocument<NamedRef> but gets a named document, give it to them.
+            if (typeof(NullableDocument<NamedRef>) == typeof(T))
             {
-                var docRef = new NamedDocumentRef(nameAsString, coll);
-                return (new NonNullDocument<NamedDocumentRef>(docRef) as T)!;
+                var docRef = new NamedRef(nameAsString, coll);
+                return (new NonNullDocument<NamedRef>(docRef) as T)!;
             }
 
             var doc = new NamedDocument(nameAsString, coll, ts.GetValueOrDefault(), data);
@@ -140,7 +140,7 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
         {
             if (reader.CurrentTokenType != TokenType.FieldName)
                 throw new SerializationException(
-                    $"Unexpected token while deserializing into DocumentRef: {reader.CurrentTokenType}");
+                    $"Unexpected token while deserializing into Ref: {reader.CurrentTokenType}");
 
             var fieldName = reader.GetString()!;
             reader.Read();
@@ -166,10 +166,10 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
 
         if (id != null && coll != null && exists)
         {
-            var docRef = new DocumentRef(id, coll);
-            if (typeof(NullableDocument<DocumentRef>) == typeof(T))
+            var docRef = new Ref(id, coll);
+            if (typeof(NullableDocument<Ref>) == typeof(T))
             {
-                return (new NonNullDocument<DocumentRef>(docRef) as T)!;
+                return (new NonNullDocument<Ref>(docRef) as T)!;
             }
 
             return (docRef as T)!;
@@ -177,10 +177,10 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
 
         if (name != null && coll != null && exists)
         {
-            var docRef = new NamedDocumentRef(name, coll);
-            if (typeof(NullableDocument<NamedDocumentRef>) == typeof(T))
+            var docRef = new NamedRef(name, coll);
+            if (typeof(NullableDocument<NamedRef>) == typeof(T))
             {
-                return (new NonNullDocument<NamedDocumentRef>(docRef) as T)!;
+                return (new NonNullDocument<NamedRef>(docRef) as T)!;
             }
 
             return (docRef as T)!;
@@ -188,14 +188,14 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
 
         if (id != null && coll != null && !exists)
         {
-            if (typeof(DocumentRef) == typeof(T) || typeof(Document) == typeof(T))
+            if (typeof(Ref) == typeof(T) || typeof(Document) == typeof(T))
             {
                 throw new NullDocumentException(id, coll, cause!);
             }
 
-            if (typeof(NullableDocument<DocumentRef>) == typeof(T))
+            if (typeof(NullableDocument<Ref>) == typeof(T))
             {
-                return (new NullDocument<DocumentRef>(id, coll, cause!) as T)!;
+                return (new NullDocument<Ref>(id, coll, cause!) as T)!;
             }
 
             return (new NullDocument<Document>(id, coll, cause!) as T)!;
@@ -203,14 +203,14 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
 
         if (name != null && coll != null && !exists)
         {
-            if (typeof(NamedDocumentRef) == typeof(T) || typeof(NamedDocument) == typeof(T))
+            if (typeof(NamedRef) == typeof(T) || typeof(NamedDocument) == typeof(T))
             {
                 throw new NullDocumentException(name, coll, cause!);
             }
 
-            if (typeof(NullableDocument<NamedDocumentRef>) == typeof(T))
+            if (typeof(NullableDocument<NamedRef>) == typeof(T))
             {
-                return (new NullDocument<NamedDocumentRef>(name, coll, cause!) as T)!;
+                return (new NullDocument<NamedRef>(name, coll, cause!) as T)!;
             }
 
             return (new NullDocument<NamedDocument>(name, coll, cause!) as T)!;

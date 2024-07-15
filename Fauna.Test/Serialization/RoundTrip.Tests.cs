@@ -20,11 +20,11 @@ public class RoundTripTests
     private const string DateWire = @"{""@date"":""2023-12-15""}";
     private const string ModuleWire = @"{""@mod"":""Foo""}";
     private const string DocumentWire = @"{""@doc"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}}";
-    private const string DocumentRefWire = @"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""MyColl""}}}";
+    private const string RefWire = @"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""MyColl""}}}";
     private const string NullDocumentWire = @"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""exists"":false,""cause"":""not found""}}";
     private const string NamedDocumentWire = @"{""@doc"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}}";
     private const string NullNamedDocumentWire = @"{""@ref"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""},""exists"":false,""cause"":""not found""}}";
-    private const string NamedDocumentRefWire = @"{""@ref"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""}}}";
+    private const string NamedRefWire = @"{""@ref"":{""name"":""Foo"",""coll"":{""@mod"":""MyColl""}}}";
     private const string ObjectWithShortWire = @"{""a_short"":{""@int"":""42""}}";
 
     public static string Serialize(object? obj)
@@ -181,25 +181,25 @@ public class RoundTripTests
     [Test]
     public void RoundTripDocumentRef()
     {
-        var deserialized = Deserialize<DocumentRef>(DocumentRefWire);
+        var deserialized = Deserialize<Ref>(RefWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(DocumentRefWire, serialized);
+        Assert.AreEqual(RefWire, serialized);
     }
 
     [Test]
     public void RoundTripNonNullDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<DocumentRef>>(DocumentRefWire);
+        var deserialized = Deserialize<NullableDocument<Ref>>(RefWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(DocumentRefWire, serialized);
+        Assert.AreEqual(RefWire, serialized);
     }
 
     [Test]
     public void RoundTripNullDocumentRefChangesToDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<DocumentRef>>(NullDocumentWire);
+        var deserialized = Deserialize<NullableDocument<Ref>>(NullDocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(DocumentRefWire, serialized);
+        Assert.AreEqual(RefWire, serialized);
     }
 
     [Test]
@@ -207,7 +207,7 @@ public class RoundTripTests
     {
         var deserialized = Deserialize<Document>(DocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(DocumentRefWire, serialized);
+        Assert.AreEqual(RefWire, serialized);
     }
 
     [Test]
@@ -215,7 +215,7 @@ public class RoundTripTests
     {
         var deserialized = Deserialize<NullableDocument<Document>>(DocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(DocumentRefWire, serialized);
+        Assert.AreEqual(RefWire, serialized);
     }
 
     [Test]
@@ -223,31 +223,31 @@ public class RoundTripTests
     {
         var deserialized = Deserialize<NullableDocument<Document>>(NullDocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(DocumentRefWire, serialized);
+        Assert.AreEqual(RefWire, serialized);
     }
 
     [Test]
     public void RoundTripNamedDocumentRef()
     {
-        var deserialized = Deserialize<NamedDocumentRef>(NamedDocumentRefWire);
+        var deserialized = Deserialize<NamedRef>(NamedRefWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(NamedDocumentRefWire, serialized);
+        Assert.AreEqual(NamedRefWire, serialized);
     }
 
     [Test]
     public void RoundTripNonNullNamedDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<NamedDocumentRef>>(NamedDocumentRefWire);
+        var deserialized = Deserialize<NullableDocument<NamedRef>>(NamedRefWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(NamedDocumentRefWire, serialized);
+        Assert.AreEqual(NamedRefWire, serialized);
     }
 
     [Test]
     public void RoundTripNullNamedDocumentRefChangesToNamedDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<NamedDocumentRef>>(NullNamedDocumentWire);
+        var deserialized = Deserialize<NullableDocument<NamedRef>>(NullNamedDocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(NamedDocumentRefWire, serialized);
+        Assert.AreEqual(NamedRefWire, serialized);
     }
 
     [Test]
@@ -255,7 +255,7 @@ public class RoundTripTests
     {
         var deserialized = Deserialize<NamedDocument>(NamedDocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(NamedDocumentRefWire, serialized);
+        Assert.AreEqual(NamedRefWire, serialized);
     }
 
     [Test]
@@ -263,7 +263,7 @@ public class RoundTripTests
     {
         var deserialized = Deserialize<NullableDocument<NamedDocument>>(NamedDocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(NamedDocumentRefWire, serialized);
+        Assert.AreEqual(NamedRefWire, serialized);
     }
 
     [Test]
@@ -271,6 +271,6 @@ public class RoundTripTests
     {
         var deserialized = Deserialize<NullableDocument<NamedDocument>>(NullNamedDocumentWire);
         var serialized = Serialize(deserialized);
-        Assert.AreEqual(NamedDocumentRefWire, serialized);
+        Assert.AreEqual(NamedRefWire, serialized);
     }
 }

@@ -3,9 +3,9 @@ namespace Fauna.Types;
 /// <summary>
 /// Represents a document ref.
 /// </summary>
-public class DocumentRef
+public class Ref
 {
-    public DocumentRef(string id, Module collection)
+    public Ref(string id, Module collection)
     {
         Id = id;
         Collection = collection;
@@ -20,4 +20,26 @@ public class DocumentRef
     /// Gets the collection to which the ref belongs.
     /// </summary>
     public Module Collection { get; }
+}
+
+
+/// <summary>
+/// Represents a document ref.
+/// </summary>
+public class Ref<Doc>
+{
+    private readonly Doc _doc;
+
+    public Ref(Doc doc)
+    {
+        _doc = doc;
+    }
+
+    /// <summary>
+    /// Gets the wrapped value.
+    /// </summary>
+    public Doc Unwrap()
+    {
+        return _doc;
+    }
 }

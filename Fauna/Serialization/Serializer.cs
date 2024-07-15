@@ -15,6 +15,11 @@ public static class Serializer
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
 
+    internal static readonly HashSet<string> SkipFields = new()
+    {
+        "id", "ts", "coll"
+    };
+
     /// <summary>
     /// Serializes an object to a Fauna compatible format.
     /// </summary>
@@ -81,59 +86,59 @@ public static class Serializer
             case DateOnly v:
                 w.WriteDateValue(v);
                 break;
-            case DocumentRef doc:
-                SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
+            case Ref doc:
+                SerializeRefInternal(w, doc.Id, doc.Collection);
                 break;
             case Document doc:
-                SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
+                SerializeRefInternal(w, doc.Id, doc.Collection);
                 break;
             case NullableDocument<Document> doc:
                 switch (doc)
                 {
                     case NullDocument<Document> d:
-                        SerializeDocumentRefInternal(w, d.Id, d.Collection);
+                        SerializeRefInternal(w, d.Id, d.Collection);
                         break;
                     case NonNullDocument<Document> d:
-                        SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
+                        SerializeRefInternal(w, d.Value!.Id, d.Value!.Collection);
                         break;
                 }
                 break;
-            case NullableDocument<DocumentRef> doc:
+            case NullableDocument<Ref> doc:
                 switch (doc)
                 {
-                    case NullDocument<DocumentRef> d:
-                        SerializeDocumentRefInternal(w, d.Id, d.Collection);
+                    case NullDocument<Ref> d:
+                        SerializeRefInternal(w, d.Id, d.Collection);
                         break;
-                    case NonNullDocument<DocumentRef> d:
-                        SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
+                    case NonNullDocument<Ref> d:
+                        SerializeRefInternal(w, d.Value!.Id, d.Value!.Collection);
                         break;
                 }
                 break;
-            case NamedDocumentRef doc:
-                SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
+            case NamedRef doc:
+                SerializeNamedRefInternal(w, doc.Name, doc.Collection);
                 break;
             case NamedDocument doc:
-                SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
+                SerializeNamedRefInternal(w, doc.Name, doc.Collection);
                 break;
             case NullableDocument<NamedDocument> doc:
                 switch (doc)
                 {
                     case NullDocument<NamedDocument> d:
-                        SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
+                        SerializeNamedRefInternal(w, d.Id, d.Collection);
                         break;
                     case NonNullDocument<NamedDocument> d:
-                        SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
+                        SerializeNamedRefInternal(w, d.Value!.Name, d.Value!.Collection);
                         break;
                 }
                 break;
-            case NullableDocument<NamedDocumentRef> doc:
+            case NullableDocument<NamedRef> doc:
                 switch (doc)
                 {
-                    case NullDocument<NamedDocumentRef> d:
-                        SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
+                    case NullDocument<NamedRef> d:
+                        SerializeNamedRefInternal(w, d.Id, d.Collection);
                         break;
-                    case NonNullDocument<NamedDocumentRef> d:
-                        SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
+                    case NonNullDocument<NamedRef> d:
+                        SerializeNamedRefInternal(w, d.Value!.Name, d.Value!.Collection);
                         break;
                 }
                 break;
@@ -155,7 +160,7 @@ public static class Serializer
     }
 
 
-    private static void SerializeDocumentRefInternal(Utf8FaunaWriter writer, string id, Module coll)
+    private static void SerializeRefInternal(Utf8FaunaWriter writer, string id, Module coll)
     {
         writer.WriteStartRef();
         writer.WriteString("id", id);
@@ -163,7 +168,7 @@ public static class Serializer
         writer.WriteEndRef();
     }
 
-    private static void SerializeNamedDocumentRefInternal(Utf8FaunaWriter writer, string name, Module coll)
+    private static void SerializeNamedRefInternal(Utf8FaunaWriter writer, string name, Module coll)
     {
         writer.WriteStartRef();
         writer.WriteString("name", name);
@@ -187,13 +192,66 @@ public static class Serializer
     private static void SerializeClassInternal(MappingContext ctx, Utf8FaunaWriter writer, object obj)
     {
         var t = obj.GetType();
-        var mapping = ctx.GetInfo(t);
+        if (t.IsGenericType && t.GetGenericTypeDefinition() == typeof(Ref<>))
+        {
+            var ta = t.GetGenericTypeDefinition().GenericTypeArguments[0];
+            var mi = ctx.GetInfo(ta);
+            var o = (Ref<object>)obj;
+            object? id = null;
+            object? coll = null;
+
+            foreach (var fi in mi.Fields)
+            {
+                switch (fi.Name.ToLowerInvariant())
+                {
+                    case "id":
+                        id = fi.Property.GetValue(o);
+                        break;
+                    case "coll":
+                        coll = fi.Property.GetValue(o);
+                        break;
+                }
+            }
+
+            coll ??= mi.Collection;
+            if (coll is null || coll.GetType() != typeof(Module))
+            {
+                throw new SerializationException("Wrapped object must have a non-null public `coll` property of type Module" +
+                                                 " or be associated with a Collection within a DataContext to be serialized as a document reference.");
+            }
+
+            switch (id)
+            {
+                case string s:
+                    SerializeRefInternal(writer, s, (Module)coll);
+                    break;
+                case int i:
+                    SerializeRefInternal(writer, i.ToString(), (Module)coll);
+                    break;
+                case null:
+                    throw new SerializationException("Wrapped object must have a non-null public `id` property to be serialized as a document reference.");
+                default:
+                    throw new SerializationException($"`id` property is an unsupported type `{id.GetType()}`");
+            }
+        }
+        else
+        {
+            var mapping = ctx.GetInfo(t);
+            SerializeClassObjectInternal(ctx, writer, obj, mapping,
+                mapping.Collection != null ? SkipFields : null);
+        }
+    }
+
+    private static void SerializeClassObjectInternal(MappingContext ctx, Utf8FaunaWriter writer, object obj, MappingInfo mapping, IReadOnlySet<string>? skipFields)
+    {
         var shouldEscape = mapping.ShouldEscapeObject;
 
         if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
         foreach (var field in mapping.Fields)
         {
-            writer.WriteFieldName(field.Name!);
+            if (skipFields is not null && skipFields.Contains(field.Name.ToLowerInvariant())) continue;
+
+            writer.WriteFieldName(field.Name);
             var v = field.Property.GetValue(obj);
             SerializeValueInternal(ctx, writer, v);
         }

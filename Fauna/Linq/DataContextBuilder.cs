@@ -24,12 +24,10 @@ internal class DataContextBuilder<DB> where DB : DataContext
             ValidateColProp(colTypes, p);
         }
 
-        var colImpls = new Dictionary<Type, DataContext.Collection>();
+        var colImpls = new Dictionary<Type, DataContext.ICollection>();
         foreach (var ty in colTypes)
         {
-            colImpls[ty] = (DataContext.Collection)Activator.CreateInstance(ty)!;
-            var nameAttr = ty.GetCustomAttribute<DataContext.NameAttribute>();
-            var colName = nameAttr?.Name ?? ty.Name;
+            colImpls[ty] = (DataContext.ICollection)Activator.CreateInstance(ty)!;
         }
 
         var db = (DB)Activator.CreateInstance(dbType)!;
@@ -38,7 +36,7 @@ internal class DataContextBuilder<DB> where DB : DataContext
     }
 
     private static bool IsColType(Type ty) =>
-        ty.GetInterfaces().Any(iface => iface == typeof(DataContext.Collection));
+        ty.GetInterfaces().Any(iface => iface == typeof(DataContext.ICollection));
 
     private static void ValidateColType(Type ty)
     {
