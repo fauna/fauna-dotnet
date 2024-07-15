@@ -9,28 +9,28 @@ public class QueryTests
 {
 
     [AllowNull]
-    private static Client client;
+    private static Client _client = null!;
     [AllowNull]
-    private static AuthorDb db;
+    private static AuthorDb _db = null!;
 
     [OneTimeSetUp]
     public void SetUp()
     {
-        client = NewTestClient();
-        db = Fixtures.AuthorDb(client);
+        _client = NewTestClient();
+        _db = Fixtures.AuthorDb(_client);
     }
 
     [OneTimeTearDown]
     public void TearDown()
     {
-        client.Dispose();
+        _client.Dispose();
     }
 
     [Test]
     public async Task Collection_PaginateAsync()
     {
         var names = new List<string>();
-        await foreach (var p in db.Author.PaginateAsync())
+        await foreach (var p in _db.Author.PaginateAsync())
         {
             names.AddRange(p.Data.Select(a => a.Name));
         }
@@ -42,7 +42,7 @@ public class QueryTests
     public async Task Index_PaginateAsync()
     {
         var names = new List<string>();
-        await foreach (var p in db.Author.ByName("Alice").PaginateAsync())
+        await foreach (var p in _db.Author.ByName("Alice").PaginateAsync())
         {
             names.AddRange(p.Data.Select(a => a.Name));
         }
@@ -66,57 +66,57 @@ public class QueryTests
 
         await TestCancel("PaginateAsync", async (c) =>
         {
-            await foreach (var p in db.Author.PaginateAsync(cancel: c))
+            await foreach (var p in _db.Author.PaginateAsync(cancel: c))
             {
                 Console.WriteLine(p.Data);
             }
         });
         await TestCancel("ToAsyncEnumerable", async (c) =>
         {
-            await foreach (var a in db.Author.ToAsyncEnumerable(cancel: c))
+            await foreach (var a in _db.Author.ToAsyncEnumerable(cancel: c))
             {
                 Console.WriteLine(a);
             }
         });
 
-        await TestCancel("AllAsync", async (c) => await db.Author.AllAsync(d => true, c));
-        await TestCancel("AnyAsync", async (c) => await db.Author.AnyAsync(c));
-        await TestCancel("AnyAsync", async (c) => await db.Author.AnyAsync(d => true, c));
-        await TestCancel("CountAsync", async (c) => await db.Author.CountAsync(c));
-        await TestCancel("CountAsync", async (c) => await db.Author.CountAsync(d => true, c));
-        await TestCancel("FirstAsync", async (c) => await db.Author.FirstAsync(c));
-        await TestCancel("FirstAsync", async (c) => await db.Author.FirstAsync(d => true, c));
-        await TestCancel("FirstOrDefaultAsync", async (c) => await db.Author.FirstOrDefaultAsync(c));
-        await TestCancel("FirstOrDefaultAsync", async (c) => await db.Author.FirstOrDefaultAsync(d => true, c));
-        await TestCancel("LastAsync", async (c) => await db.Author.LastAsync(c));
-        await TestCancel("LastAsync", async (c) => await db.Author.LastAsync(d => true, c));
-        await TestCancel("LastOrDefaultAsync", async (c) => await db.Author.LastOrDefaultAsync(c));
-        await TestCancel("LastOrDefaultAsync", async (c) => await db.Author.LastOrDefaultAsync(d => true, c));
-        await TestCancel("LongCountAsync", async (c) => await db.Author.LongCountAsync(c));
-        await TestCancel("LongCountAsync", async (c) => await db.Author.LongCountAsync(d => true, c));
-        await TestCancel("MaxAsync", async (c) => await db.Author.MaxAsync(c));
-        await TestCancel("MaxAsync", async (c) => await db.Author.MaxAsync(d => true, c));
-        await TestCancel("MinAsync", async (c) => await db.Author.MinAsync(c));
-        await TestCancel("MinAsync", async (c) => await db.Author.MinAsync(d => true, c));
-        await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (int)1, c));
-        await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (long)1L, c));
-        await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (double)1D, c));
-        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (int)1, c));
-        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (long)1L, c));
-        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (double)1D, c));
+        await TestCancel("AllAsync", async (c) => await _db.Author.AllAsync(d => true, c));
+        await TestCancel("AnyAsync", async (c) => await _db.Author.AnyAsync(c));
+        await TestCancel("AnyAsync", async (c) => await _db.Author.AnyAsync(d => true, c));
+        await TestCancel("CountAsync", async (c) => await _db.Author.CountAsync(c));
+        await TestCancel("CountAsync", async (c) => await _db.Author.CountAsync(d => true, c));
+        await TestCancel("FirstAsync", async (c) => await _db.Author.FirstAsync(c));
+        await TestCancel("FirstAsync", async (c) => await _db.Author.FirstAsync(d => true, c));
+        await TestCancel("FirstOrDefaultAsync", async (c) => await _db.Author.FirstOrDefaultAsync(c));
+        await TestCancel("FirstOrDefaultAsync", async (c) => await _db.Author.FirstOrDefaultAsync(d => true, c));
+        await TestCancel("LastAsync", async (c) => await _db.Author.LastAsync(c));
+        await TestCancel("LastAsync", async (c) => await _db.Author.LastAsync(d => true, c));
+        await TestCancel("LastOrDefaultAsync", async (c) => await _db.Author.LastOrDefaultAsync(c));
+        await TestCancel("LastOrDefaultAsync", async (c) => await _db.Author.LastOrDefaultAsync(d => true, c));
+        await TestCancel("LongCountAsync", async (c) => await _db.Author.LongCountAsync(c));
+        await TestCancel("LongCountAsync", async (c) => await _db.Author.LongCountAsync(d => true, c));
+        await TestCancel("MaxAsync", async (c) => await _db.Author.MaxAsync(c));
+        await TestCancel("MaxAsync", async (c) => await _db.Author.MaxAsync(d => true, c));
+        await TestCancel("MinAsync", async (c) => await _db.Author.MinAsync(c));
+        await TestCancel("MinAsync", async (c) => await _db.Author.MinAsync(d => true, c));
+        await TestCancel("SumAsync", async (c) => await _db.Author.SumAsync(d => (int)1, c));
+        await TestCancel("SumAsync", async (c) => await _db.Author.SumAsync(d => (long)1L, c));
+        await TestCancel("SumAsync", async (c) => await _db.Author.SumAsync(d => (double)1D, c));
+        await TestCancel("AverageAsync", async (c) => await _db.Author.AverageAsync(d => (int)1, c));
+        await TestCancel("AverageAsync", async (c) => await _db.Author.AverageAsync(d => (long)1L, c));
+        await TestCancel("AverageAsync", async (c) => await _db.Author.AverageAsync(d => (double)1D, c));
 
-        await TestCancel("ToListAsync", async (c) => await db.Author.ToListAsync(c));
-        await TestCancel("ToArrayAsync", async (c) => await db.Author.ToArrayAsync(c));
-        await TestCancel("ToHashSetAsync", async (c) => await db.Author.ToHashSetAsync(c));
+        await TestCancel("ToListAsync", async (c) => await _db.Author.ToListAsync(c));
+        await TestCancel("ToArrayAsync", async (c) => await _db.Author.ToArrayAsync(c));
+        await TestCancel("ToHashSetAsync", async (c) => await _db.Author.ToHashSetAsync(c));
         await TestCancel("ToDictionaryAsync", async (c) =>
-            await db.Author.ToDictionaryAsync(a => a.Name, a => a.Age, c));
+            await _db.Author.ToDictionaryAsync(a => a.Name, a => a.Age, c));
     }
 
     [Test]
     public async Task Query_ToAsyncEnumerable()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.ToAsyncEnumerable())
+        await foreach (var a in _db.Author.ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -127,7 +127,7 @@ public class QueryTests
     public void Query_ToEnumerable()
     {
         var names = new List<string>();
-        foreach (var a in db.Author.ToEnumerable())
+        foreach (var a in _db.Author.ToEnumerable())
         {
             names.Add(a.Name);
         }
@@ -137,88 +137,88 @@ public class QueryTests
     [Test]
     public async Task Query_ToListAsync()
     {
-        var names = await db.Author.Select(a => a.Name).ToListAsync();
+        var names = await _db.Author.Select(a => a.Name).ToListAsync();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
     }
 
     [Test]
     public void Query_ToList()
     {
-        var names = db.Author.Select(a => a.Name).ToList();
+        var names = _db.Author.Select(a => a.Name).ToList();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
     }
 
     [Test]
     public async Task Query_ToArrayAsync()
     {
-        var names = await db.Author.Select(a => a.Name).ToArrayAsync();
+        var names = await _db.Author.Select(a => a.Name).ToArrayAsync();
         Assert.AreEqual(new string[] { "Alice", "Bob" }, names);
     }
 
     [Test]
     public void Query_ToArray()
     {
-        var names = db.Author.Select(a => a.Name).ToArray();
+        var names = _db.Author.Select(a => a.Name).ToArray();
         Assert.AreEqual(new string[] { "Alice", "Bob" }, names);
     }
 
     [Test]
     public async Task Query_ToHashSetAsync()
     {
-        var names = await db.Author.Select(a => a.Name).ToHashSetAsync();
+        var names = await _db.Author.Select(a => a.Name).ToHashSetAsync();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
     }
 
     [Test]
     public void Query_ToHashSet()
     {
-        var names = db.Author.Select(a => a.Name).ToHashSet();
+        var names = _db.Author.Select(a => a.Name).ToHashSet();
         Assert.AreEqual(new HashSet<string> { "Alice", "Bob" }, names);
     }
 
     [Test]
     public async Task Query_ToDictionaryAsyncSelector()
     {
-        var dict = await db.Author.ToDictionaryAsync(a => a.Name, a => a.Age);
+        var dict = await _db.Author.ToDictionaryAsync(a => a.Name, a => a.Age);
         Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
     }
 
     [Test]
     public void Query_ToDictionarySelector()
     {
-        var dict = db.Author.ToDictionary(a => a.Name, a => a.Age);
+        var dict = _db.Author.ToDictionary(a => a.Name, a => a.Age);
         Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
     }
 
     [Test]
     public async Task Query_ToDictionaryAsync()
     {
-        var dict = await db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionaryAsync();
+        var dict = await _db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionaryAsync();
         Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
     }
 
     [Test]
     public void Query_ToDictionary()
     {
-        var dict = db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionary();
+        var dict = _db.Author.Select(a => ValueTuple.Create(a.Name, a.Age)).ToDictionary();
         Assert.AreEqual(new Dictionary<string, int> { { "Alice", 32 }, { "Bob", 26 } }, dict);
     }
 
     [Test]
     public async Task Query_ExpressionSyntax()
     {
-        var q1 = from a in db.Author
+        var q1 = from a in _db.Author
                  where a.Name == "Alice"
                  select a.Age;
 
         Assert.AreEqual(new List<int> { 32 }, await q1.ToListAsync());
 
-        var q2 = from a in db.Author.ByName("Alice")
+        var q2 = from a in _db.Author.ByName("Alice")
                  select a.Age;
 
         Assert.AreEqual(new List<int> { 32 }, await q2.ToListAsync());
 
-        var q3 = from a in db.Author
+        var q3 = from a in _db.Author
                  orderby a.Age
                  select a.Name;
 
@@ -228,7 +228,7 @@ public class QueryTests
     [Test]
     public async Task Query_Where()
     {
-        var authors = await db.Author.Where(a => a.Name == "Alice").ToListAsync();
+        var authors = await _db.Author.Where(a => a.Name == "Alice").ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
@@ -237,7 +237,7 @@ public class QueryTests
     public async Task Query_WhereQuery_ClosureRef()
     {
         var name = "Alice";
-        var authors = await db.Author.Where(a => a.Name == name).ToListAsync();
+        var authors = await _db.Author.Where(a => a.Name == name).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
@@ -247,7 +247,7 @@ public class QueryTests
     [Test]
     public async Task Query_WhereQuery_ConstantField()
     {
-        var authors = await db.Author.Where(a => a.Name == _aliceName).ToListAsync();
+        var authors = await _db.Author.Where(a => a.Name == _aliceName).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
@@ -257,7 +257,7 @@ public class QueryTests
     [Test]
     public async Task Query_WhereQuery_ConstantProp()
     {
-        var authors = await db.Author.Where(a => a.Name == AliceName).ToListAsync();
+        var authors = await _db.Author.Where(a => a.Name == AliceName).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
@@ -267,7 +267,7 @@ public class QueryTests
     [Test]
     public async Task Query_WhereQuery_ConstantVirtualProp()
     {
-        var authors = await db.Author.Where(a => a.Name == AliceNameVirt).ToListAsync();
+        var authors = await _db.Author.Where(a => a.Name == AliceNameVirt).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
@@ -275,14 +275,14 @@ public class QueryTests
     [Test]
     public async Task Query_Select_Field()
     {
-        var names = await db.Author.Select(a => a.Name).ToListAsync();
+        var names = await _db.Author.Select(a => a.Name).ToListAsync();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, names);
     }
 
     [Test]
     public async Task Query_Select_Projected()
     {
-        var obj = await db.Author.Select(a => new { a.Name }).ToListAsync();
+        var obj = await _db.Author.Select(a => new { a.Name }).ToListAsync();
         var names = obj.Select(o => o.Name);
         Assert.AreEqual(new List<string> { "Alice", "Bob", }, names);
     }
@@ -293,53 +293,53 @@ public class QueryTests
     [Test]
     public async Task Query_Select_Escaped()
     {
-        var tups = await db.Author.Select(a => Escaper(a)).ToListAsync();
+        var tups = await _db.Author.Select(a => Escaper(a)).ToListAsync();
         Assert.AreEqual(new List<(string, string)> { ("Alice", "ecilA"), ("Bob", "boB") }, tups);
     }
 
     [Test]
     public void Query_Any()
     {
-        var any = db.Author.Any();
+        var any = _db.Author.Any();
         Assert.AreEqual(true, any);
 
-        var anyPred = db.Author.Any(a => a.Name == "Bob");
+        var anyPred = _db.Author.Any(a => a.Name == "Bob");
         Assert.AreEqual(true, anyPred);
     }
 
     [Test]
     public void Query_All()
     {
-        var all = db.Author.All(a => a.Name == "Bob");
+        var all = _db.Author.All(a => a.Name == "Bob");
         Assert.AreEqual(false, all);
     }
 
     [Test]
     public void Query_Count()
     {
-        var count = db.Author.Count();
+        var count = _db.Author.Count();
         Assert.AreEqual(2, count);
     }
 
     [Test]
     public async Task Query_Distinct()
     {
-        var ages = await db.Author.Select(a => a.Age).Distinct().ToListAsync();
+        var ages = await _db.Author.Select(a => a.Age).Distinct().ToListAsync();
         Assert.AreEqual(new List<int> { 26, 32 }, ages);
     }
 
     [Test]
     public void Query_First()
     {
-        var fst = db.Author.First();
+        var fst = _db.Author.First();
         Assert.AreEqual("Alice", fst.Name);
 
-        var fstPred = db.Author.First(a => a.Name == "Bob");
+        var fstPred = _db.Author.First(a => a.Name == "Bob");
         Assert.AreEqual("Bob", fstPred.Name);
 
         try
         {
-            db.Author.First(a => a.Name == "No name");
+            _db.Author.First(a => a.Name == "No name");
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -351,28 +351,28 @@ public class QueryTests
     [Test]
     public void Query_FirstOrDefault()
     {
-        var fst = db.Author.FirstOrDefault();
+        var fst = _db.Author.FirstOrDefault();
         Assert.AreEqual("Alice", fst?.Name);
 
-        var fstPred = db.Author.FirstOrDefault(a => a.Name == "Bob");
+        var fstPred = _db.Author.FirstOrDefault(a => a.Name == "Bob");
         Assert.AreEqual("Bob", fstPred?.Name);
 
-        var fstNull = db.Author.FirstOrDefault(a => a.Name == "No name");
+        var fstNull = _db.Author.FirstOrDefault(a => a.Name == "No name");
         Assert.AreEqual(null, fstNull);
     }
 
     [Test]
     public void Query_Last()
     {
-        var lst = db.Author.Last();
+        var lst = _db.Author.Last();
         Assert.AreEqual("Bob", lst.Name);
 
-        var lstPred = db.Author.Last(a => a.Name == "Alice");
+        var lstPred = _db.Author.Last(a => a.Name == "Alice");
         Assert.AreEqual("Alice", lstPred.Name);
 
         try
         {
-            db.Author.Last(a => a.Name == "No name");
+            _db.Author.Last(a => a.Name == "No name");
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -384,35 +384,35 @@ public class QueryTests
     [Test]
     public void Query_LastOrDefault()
     {
-        var lst = db.Author.LastOrDefault();
+        var lst = _db.Author.LastOrDefault();
         Assert.AreEqual("Bob", lst?.Name);
 
-        var lstPred = db.Author.LastOrDefault(a => a.Name == "Alice");
+        var lstPred = _db.Author.LastOrDefault(a => a.Name == "Alice");
         Assert.AreEqual("Alice", lstPred?.Name);
 
-        var lstNull = db.Author.LastOrDefault(a => a.Name == "No name");
+        var lstNull = _db.Author.LastOrDefault(a => a.Name == "No name");
         Assert.AreEqual(null, lstNull);
     }
 
     [Test]
     public void Query_LongCount()
     {
-        var count = db.Author.LongCount();
+        var count = _db.Author.LongCount();
         Assert.AreEqual(2L, count);
     }
 
     [Test]
     public void Query_Max()
     {
-        var max1 = db.Author.Select(a => a.Age).Max();
+        var max1 = _db.Author.Select(a => a.Age).Max();
         Assert.AreEqual(32, max1);
 
-        var max2 = db.Author.Max(a => a.Age);
+        var max2 = _db.Author.Max(a => a.Age);
         Assert.AreEqual(32, max2);
 
         try
         {
-            db.Author.Where(a => a.Name == "No name").Max(a => a.Age);
+            _db.Author.Where(a => a.Name == "No name").Max(a => a.Age);
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -424,15 +424,15 @@ public class QueryTests
     [Test]
     public void Query_Min()
     {
-        var min1 = db.Author.Select(a => a.Age).Min();
+        var min1 = _db.Author.Select(a => a.Age).Min();
         Assert.AreEqual(26, min1);
 
-        var min2 = db.Author.Min(a => a.Age);
+        var min2 = _db.Author.Min(a => a.Age);
         Assert.AreEqual(26, min2);
 
         try
         {
-            db.Author.Where(a => a.Name == "No name").Min(a => a.Age);
+            _db.Author.Where(a => a.Name == "No name").Min(a => a.Age);
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -444,28 +444,28 @@ public class QueryTests
     [Test]
     public void Query_Average()
     {
-        var avg = db.Author.Average(a => a.Score);
+        var avg = _db.Author.Average(a => a.Score);
         Assert.IsInstanceOf(typeof(double), avg);
         Assert.AreEqual(87.400000000000006, avg);
 
-        var avgCastInt = db.Author.Average(a => a.Age);
+        var avgCastInt = _db.Author.Average(a => a.Age);
         Assert.IsInstanceOf(typeof(double), avgCastInt);
         Assert.AreEqual(29.0D, avgCastInt);
 
-        var avgCastLong = db.Author.Average(a => a.Subscribers);
+        var avgCastLong = _db.Author.Average(a => a.Subscribers);
         Assert.IsInstanceOf(typeof(double), avgCastLong);
         Assert.AreEqual(155000000.0D, avgCastLong);
 
-        Assert.AreEqual(29.0D, db.Author.AverageAsync(a => a.Age).Result);
+        Assert.AreEqual(29.0D, _db.Author.AverageAsync(a => a.Age).Result);
 
-        Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age), "Empty set");
+        Assert.Throws<InvalidOperationException>(() => _db.Author.Where(a => a.Name == "No name").Average(a => a.Age), "Empty set");
     }
 
     [Test]
     public async Task Query_Order()
     {
         var names = new List<string>();
-        await foreach (var a in db.Author.Reverse().Order().ToAsyncEnumerable())
+        await foreach (var a in _db.Author.Reverse().Order().ToAsyncEnumerable())
         {
             names.Add(a.Name);
         }
@@ -475,7 +475,7 @@ public class QueryTests
     [Test]
     public async Task Query_OrderBy()
     {
-        var authors = await db.Author.OrderBy(a => a.Age).ToListAsync();
+        var authors = await _db.Author.OrderBy(a => a.Age).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
     }
@@ -483,7 +483,7 @@ public class QueryTests
     [Test]
     public async Task Query_OrderDescending()
     {
-        var authors = await db.Author.OrderDescending().ToListAsync();
+        var authors = await _db.Author.OrderDescending().ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
     }
@@ -491,7 +491,7 @@ public class QueryTests
     [Test]
     public async Task Query_OrderByDescending()
     {
-        var authors = await db.Author.OrderByDescending(a => a.Name).ToListAsync();
+        var authors = await _db.Author.OrderByDescending(a => a.Name).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
     }
@@ -499,7 +499,7 @@ public class QueryTests
     [Test]
     public async Task Query_Reverse()
     {
-        var authors = await db.Author.Reverse().ToListAsync();
+        var authors = await _db.Author.Reverse().ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Bob", "Alice" }, names);
     }
@@ -509,7 +509,7 @@ public class QueryTests
     {
         try
         {
-            db.Author.Single();
+            _db.Author.Single();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -517,12 +517,12 @@ public class QueryTests
             Assert.AreEqual("Set contains more than one element", ex.Message);
         }
 
-        var sngPred = db.Author.Single(a => a.Name == "Alice");
+        var sngPred = _db.Author.Single(a => a.Name == "Alice");
         Assert.AreEqual("Alice", sngPred.Name);
 
         try
         {
-            db.Author.Single(a => a.Name == "No name");
+            _db.Author.Single(a => a.Name == "No name");
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -536,7 +536,7 @@ public class QueryTests
     {
         try
         {
-            db.Author.SingleOrDefault();
+            _db.Author.SingleOrDefault();
             Assert.Fail();
         }
         catch (InvalidOperationException ex)
@@ -544,17 +544,17 @@ public class QueryTests
             Assert.AreEqual("Set contains more than one element", ex.Message);
         }
 
-        var sngPred = db.Author.SingleOrDefault(a => a.Name == "Alice");
+        var sngPred = _db.Author.SingleOrDefault(a => a.Name == "Alice");
         Assert.AreEqual("Alice", sngPred?.Name);
 
-        var sngNull = db.Author.SingleOrDefault(a => a.Name == "No name");
+        var sngNull = _db.Author.SingleOrDefault(a => a.Name == "No name");
         Assert.AreEqual(null, sngNull);
     }
 
     [Test]
     public async Task Query_Skip()
     {
-        var authors = await db.Author.Skip(1).ToListAsync();
+        var authors = await _db.Author.Skip(1).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Bob" }, names);
     }
@@ -562,20 +562,20 @@ public class QueryTests
     [Test]
     public void Query_Sum()
     {
-        var sum1 = db.Author.Select(a => a.Age).Sum();
+        var sum1 = _db.Author.Select(a => a.Age).Sum();
         Assert.AreEqual(58, sum1);
 
-        var sum2 = db.Author.Sum(a => a.Age);
+        var sum2 = _db.Author.Sum(a => a.Age);
         Assert.AreEqual(58, sum2);
 
-        var sum4 = db.Author.Sum(a => 1D * a.Age);
+        var sum4 = _db.Author.Sum(a => 1D * a.Age);
         Assert.AreEqual(58D, sum4);
     }
 
     [Test]
     public async Task Query_Take()
     {
-        var authors = await db.Author.Take(1).ToListAsync();
+        var authors = await _db.Author.Take(1).ToListAsync();
         var names = authors.Select(a => a.Name);
         Assert.AreEqual(new List<string> { "Alice" }, names);
     }
@@ -583,43 +583,43 @@ public class QueryTests
     [Test]
     public async Task Query_Function_Value_Single()
     {
-        var ret = await db.SayHello().SingleAsync();
+        var ret = await _db.SayHello().SingleAsync();
         Assert.AreEqual("Hello!", ret);
     }
 
     [Test]
     public async Task Query_Function_Value_List()
     {
-        var ret = await db.SayHello().ToListAsync();
+        var ret = await _db.SayHello().ToListAsync();
         Assert.AreEqual(new List<string> { "Hello!" }, ret);
     }
 
     [Test]
     public async Task Query_Function_With_Param()
     {
-        var ret = await db.Add2(8).SingleAsync();
+        var ret = await _db.Add2(8).SingleAsync();
         Assert.AreEqual(10, ret);
     }
 
     [Test]
     public async Task Query_Function_Array()
     {
-        var ret = await db.SayHelloArray().ToListAsync();
+        var ret = await _db.SayHelloArray().ToListAsync();
         Assert.AreEqual(new List<string> { "Hello!", "Hello!" }, ret);
     }
 
     [Test]
     public async Task Query_Function_Set()
     {
-        var ret = await db.GetAuthors().Select(x => x.Name).ToListAsync();
+        var ret = await _db.GetAuthors().Select(x => x.Name).ToListAsync();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, ret);
     }
 
     [Test]
     public async Task Query_CastTypes()
     {
-        Assert.AreEqual(new[] { 91, 83 }, await db.GetAuthors().Select(a => (int)a.Score).ToArrayAsync());
-        Assert.AreEqual(new[] { 32.0D, 26.0D }, await db.GetAuthors().Select(a => (double)a.Age).ToArrayAsync());
-        Assert.AreEqual(new[] { 91L, 83L }, await db.GetAuthors().Select(a => (long)a.Score).ToArrayAsync());
+        Assert.AreEqual(new[] { 91, 83 }, await _db.GetAuthors().Select(a => (int)a.Score).ToArrayAsync());
+        Assert.AreEqual(new[] { 32.0D, 26.0D }, await _db.GetAuthors().Select(a => (double)a.Age).ToArrayAsync());
+        Assert.AreEqual(new[] { 91L, 83L }, await _db.GetAuthors().Select(a => (long)a.Score).ToArrayAsync());
     }
 }

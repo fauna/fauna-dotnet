@@ -12,7 +12,7 @@ namespace Fauna.Test;
 public class IntegrationTests
 {
     [AllowNull]
-    private static Client _client;
+    private static Client _client = null!;
 
     [Object]
     private class Person
