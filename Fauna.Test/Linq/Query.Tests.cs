@@ -444,40 +444,17 @@ public class QueryTests
     [Test]
     public void Query_Average()
     {
-        var avg1 = db.Author.Select(a => a.Age).Average();
-        Assert.AreEqual(29, avg1);
+        var avg = db.Author.Average(a => a.Score);
+        Assert.IsInstanceOf(typeof(double), avg);
+        Assert.AreEqual(87.400000000000006, avg);
 
-        var avg1Long = db.Author.Select(a => a.Subscribers).Average();
-        Assert.IsInstanceOf(typeof(long), avg1Long);
-        Assert.AreEqual(155000000, avg1Long);
+        var avgCastInt = db.Author.Average(a => a.Age);
+        Assert.IsInstanceOf(typeof(double), avgCastInt);
+        Assert.AreEqual(29.0D, avgCastInt);
 
-        var avg1Double = db.Author.Select(a => a.Score).Average();
-        Assert.IsInstanceOf(typeof(double), avg1Double);
-        Assert.AreEqual(87.400000000000006, avg1Double);
-
-        var avg2 = db.Author.Average(a => a.Age);
-        Assert.AreEqual(29, avg2);
-
-        var avg2Long = db.Author.Average(a => a.Subscribers);
-        Assert.IsInstanceOf(typeof(long), avg2Long);
-        Assert.AreEqual(155000000, avg2Long);
-
-        var avg2Double = db.Author.Average(a => a.Score);
-        Assert.IsInstanceOf(typeof(double), avg2Double);
-        Assert.AreEqual(87.400000000000006, avg2Double);
-
-
-        var avgCastDouble = db.Author.Average(a => (double)a.Age);
-        Assert.IsInstanceOf(typeof(double), avgCastDouble);
-        Assert.AreEqual(29.0D, avgCastDouble);
-
-        var avgCastLong = db.Author.Average(a => (long)a.Age);
-        Assert.IsInstanceOf(typeof(long), avgCastLong);
-        Assert.AreEqual(29L, avgCastLong);
-
-        var avgCastInt = db.Author.Average(a => (int)a.Score);
-        Assert.IsInstanceOf(typeof(int), avgCastInt);
-        Assert.AreEqual(87, avgCastInt);
+        var avgCastLong = db.Author.Average(a => a.Subscribers);
+        Assert.IsInstanceOf(typeof(double), avgCastLong);
+        Assert.AreEqual(155000000.0D, avgCastLong);
 
         Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age));
     }

@@ -196,12 +196,6 @@ public partial class QuerySource<T>
             ety: typeof(R));
     }
 
-    public int Average(Expression<Func<T, int>> selector) => Execute<int>(AverageImpl(selector));
-    public Task<int> AverageAsync(Expression<Func<T, int>> selector, CancellationToken cancel = default) =>
-        ExecuteAsync<int>(AverageImpl(selector), cancel);
-    public long Average(Expression<Func<T, long>> selector) => Execute<long>(AverageImpl(selector));
-    public Task<long> AverageAsync(Expression<Func<T, long>> selector, CancellationToken cancel = default) =>
-        ExecuteAsync<long>(AverageImpl(selector), cancel);
     public double Average(Expression<Func<T, double>> selector) => Execute<double>(AverageImpl(selector));
     public Task<double> AverageAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default) =>
         ExecuteAsync<double>(AverageImpl(selector), cancel);
