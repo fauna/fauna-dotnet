@@ -26,7 +26,7 @@ public static class QuerySourceExtensions
     public static Task<double> SumAsync(this IQuerySource<double> src, CancellationToken cancel = default) =>
         src.SumAsync(x => x, cancel);
 
-    public static double Average(this IQuerySource<double> src) => src.Sum(x => x) / src.Count();
+    public static double Average(this IQuerySource<double> src) => src.Average(x => x);
     public static Task<double> AverageAsync(this IQuerySource<double> src, CancellationToken cancel = default) =>
         src.AverageAsync(x => x, cancel);
 }
