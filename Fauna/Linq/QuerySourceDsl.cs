@@ -204,22 +204,9 @@ public partial class QuerySource<T>
     {
         RequireQueryMode("Average");
 
-        var isIntOrLong = (typeof(R) == typeof(int) || typeof(R) == typeof(long));
-        var seed = isIntOrLong ? QH.Expr("0") : QH.Expr("0.0");
-
-        var select = QH.Expr("let t = ").Concat(AbortIfEmpty(Query)).Concat(";\n");
-        var mapped = select.Concat(QH.MethodCall(QH.Expr("t"), "map", SubQuery(selector)));
-        var q = QH.MethodCall(mapped, "fold", seed, _sumReducer).Concat(QH.Expr("/"));
-
-        var count = QH.MethodCall(QH.Expr("t"), "count");
-
-        q = q.Concat(isIntOrLong
-            ? count
-            : QH.MethodCall(QH.MethodCall(count, "toString"), "parseDouble"));
-
         return CopyPipeline(
             mode: PipelineMode.Scalar,
-            q: q,
+            q: QH.FnCall("Math.mean", QH.MethodCall(QH.MethodCall(AbortIfEmpty(Query), "map", SubQuery(selector)), "toArray")),
             ety: typeof(R));
     }
 
