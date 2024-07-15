@@ -196,6 +196,20 @@ public partial class QuerySource<T>
             ety: typeof(R));
     }
 
+    public double Average(Expression<Func<T, double>> selector) => Execute<double>(AverageImpl(selector));
+    public Task<double> AverageAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default) =>
+        ExecuteAsync<double>(AverageImpl(selector), cancel);
+
+    private Pipeline AverageImpl<R>(Expression<Func<T, R>> selector)
+    {
+        RequireQueryMode("Average");
+
+        return CopyPipeline(
+            mode: PipelineMode.Scalar,
+            q: QH.FnCall("Math.mean", QH.MethodCall(QH.MethodCall(AbortIfEmpty(Query), "map", SubQuery(selector)), "toArray")),
+            ety: typeof(R));
+    }
+
     public T Single() => Execute<T>(SingleImpl(null));
     public Task<T> SingleAsync(CancellationToken cancel = default) => ExecuteAsync<T>(SingleImpl(null), cancel);
     public T Single(Expression<Func<T, bool>> predicate) => Execute<T>(SingleImpl(predicate));

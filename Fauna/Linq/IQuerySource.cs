@@ -134,6 +134,9 @@ public interface IQuerySource<T> : IQuerySource
     public double Sum(Expression<Func<T, double>> selector);
     public Task<double> SumAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default);
 
+    public double Average(Expression<Func<T, double>> selector);
+    public Task<double> AverageAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default);
+
     // Collection result methods
 
     public List<T> ToList();

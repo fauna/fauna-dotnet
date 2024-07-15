@@ -101,6 +101,9 @@ public class QueryTests
         await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (int)1, c));
         await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (long)1L, c));
         await TestCancel("SumAsync", async (c) => await db.Author.SumAsync(d => (double)1D, c));
+        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (int)1, c));
+        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (long)1L, c));
+        await TestCancel("AverageAsync", async (c) => await db.Author.AverageAsync(d => (double)1D, c));
 
         await TestCancel("ToListAsync", async (c) => await db.Author.ToListAsync(c));
         await TestCancel("ToArrayAsync", async (c) => await db.Author.ToArrayAsync(c));
@@ -439,6 +442,26 @@ public class QueryTests
     }
 
     [Test]
+    public void Query_Average()
+    {
+        var avg = db.Author.Average(a => a.Score);
+        Assert.IsInstanceOf(typeof(double), avg);
+        Assert.AreEqual(87.400000000000006, avg);
+
+        var avgCastInt = db.Author.Average(a => a.Age);
+        Assert.IsInstanceOf(typeof(double), avgCastInt);
+        Assert.AreEqual(29.0D, avgCastInt);
+
+        var avgCastLong = db.Author.Average(a => a.Subscribers);
+        Assert.IsInstanceOf(typeof(double), avgCastLong);
+        Assert.AreEqual(155000000.0D, avgCastLong);
+
+        Assert.AreEqual(29.0D, db.Author.AverageAsync(a => a.Age).Result);
+
+        Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age), "Empty set");
+    }
+
+    [Test]
     public async Task Query_Order()
     {
         var names = new List<string>();
@@ -590,5 +613,13 @@ public class QueryTests
     {
         var ret = await db.GetAuthors().Select(x => x.Name).ToListAsync();
         Assert.AreEqual(new List<string> { "Alice", "Bob" }, ret);
+    }
+
+    [Test]
+    public async Task Query_CastTypes()
+    {
+        Assert.AreEqual(new[] { 91, 83 }, await db.GetAuthors().Select(a => (int)a.Score).ToArrayAsync());
+        Assert.AreEqual(new[] { 32.0D, 26.0D }, await db.GetAuthors().Select(a => (double)a.Age).ToArrayAsync());
+        Assert.AreEqual(new[] { 91L, 83L }, await db.GetAuthors().Select(a => (long)a.Score).ToArrayAsync());
     }
 }
