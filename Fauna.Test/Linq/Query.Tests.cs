@@ -458,7 +458,7 @@ public class QueryTests
 
         Assert.AreEqual(29.0D, db.Author.AverageAsync(a => a.Age).Result);
 
-        Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age));
+        Assert.Throws<InvalidOperationException>(() => db.Author.Where(a => a.Name == "No name").Average(a => a.Age), "Empty set");
     }
 
     [Test]
