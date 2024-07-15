@@ -10,11 +10,11 @@ public abstract class DataContext : BaseClient
 {
     private bool _initialized = false;
     [AllowNull]
-    private IReadOnlyDictionary<Type, Collection> _collections;
+    private IReadOnlyDictionary<Type, Collection> _collections = null!;
     [AllowNull]
-    private Client _client;
+    private Client _client = null!;
     [AllowNull]
-    private MappingContext _ctx;
+    private MappingContext _ctx = null!;
 
     internal override MappingContext MappingCtx { get => _ctx; }
     internal Linq.LookupTable LookupTable { get => new Linq.LookupTable(_ctx); }

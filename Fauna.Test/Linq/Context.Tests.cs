@@ -40,24 +40,24 @@ public class ContextTests
     }
 
     [AllowNull]
-    private static Client client;
+    private static Client _client = null!;
 
     [OneTimeSetUp]
     public void SetUp()
     {
-        client = NewTestClient();
+        _client = NewTestClient();
     }
 
     [OneTimeTearDown]
     public void TearDown()
     {
-        client.Dispose();
+        _client.Dispose();
     }
 
     [Test]
     public void ReturnsADataContext()
     {
-        var db = client.DataContext<AuthorDb>();
+        var db = _client.DataContext<AuthorDb>();
 
         Assert.AreEqual(db.Author.Name, "Author");
         Assert.AreEqual(db.Author.DocType, typeof(Author));
