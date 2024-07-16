@@ -6,7 +6,6 @@ using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Test.Helpers;
 using NUnit.Framework;
-using TimeoutException = Fauna.Exceptions.TimeoutException;
 
 namespace Fauna.Test.Exceptions
 {
@@ -149,7 +148,7 @@ namespace Fauna.Test.Exceptions
         [TestCase(440, "time_out", typeof(QueryTimeoutException))]
         [TestCase(500, "internal_error", typeof(ServiceException))]
         [TestCase(503, "time_out", typeof(QueryTimeoutException))]
-        [TestCase(504, "gateway_timeout", typeof(TimeoutException))]
+        [TestCase(504, "gateway_timeout", typeof(NetworkException))]
         [TestCase(400, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(401, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(403, "some unhandled code", typeof(QueryRuntimeException))]

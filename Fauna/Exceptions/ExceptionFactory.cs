@@ -22,7 +22,7 @@ public static class ExceptionFactory
             "invalid_request" => new InvalidRequestException(msg, f),
             "limit_exceeded" => new ThrottlingException(msg, f),
             "time_out" => new QueryTimeoutException(msg, f),
-            "gateway_timeout" => new TimeoutException(msg, f),
+            "gateway_timeout" => new NetworkException(msg, f.StatusCode, f.Message),
             "unauthorized" => new UnauthorizedException(msg, f),
 
             _ => new QueryRuntimeException(msg, f)
