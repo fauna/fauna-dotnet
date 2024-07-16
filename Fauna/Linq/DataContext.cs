@@ -10,7 +10,7 @@ public abstract class DataContext : BaseClient
 {
     private bool _initialized = false;
     [AllowNull]
-    private IReadOnlyDictionary<Type, Collection> _collections = null!;
+    private IReadOnlyDictionary<Type, ICollection> _collections = null!;
     [AllowNull]
     private Client _client = null!;
     [AllowNull]
@@ -19,7 +19,7 @@ public abstract class DataContext : BaseClient
     internal override MappingContext MappingCtx { get => _ctx; }
     internal Linq.LookupTable LookupTable { get => new Linq.LookupTable(_ctx); }
 
-    internal void Init(Client client, Dictionary<Type, Collection> collections, MappingContext ctx)
+    internal void Init(Client client, Dictionary<Type, ICollection> collections, MappingContext ctx)
     {
         _client = client;
         _collections = collections.ToImmutableDictionary();
@@ -59,13 +59,13 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    public interface Collection : Linq.IQuerySource
+    public interface ICollection : Linq.IQuerySource
     {
         public string Name { get; }
         public Type DocType { get; }
     }
 
-    public abstract class Collection<Doc> : Linq.QuerySource<Doc>, Collection
+    public abstract class Collection<Doc> : Linq.QuerySource<Doc>, ICollection
     {
         public string Name { get; }
         public Type DocType { get => typeof(Doc); }
@@ -94,11 +94,11 @@ public abstract class DataContext : BaseClient
 
         protected class IndexCall
         {
-            private readonly Collection _coll;
+            private readonly ICollection _coll;
             private readonly string _name;
             private readonly DataContext _ctx;
 
-            public IndexCall(Collection coll, string name, DataContext ctx)
+            public IndexCall(ICollection coll, string name, DataContext ctx)
             {
                 _coll = coll;
                 _name = name;
@@ -118,22 +118,22 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    public interface Index : Linq.IQuerySource
+    public interface IIndex : Linq.IQuerySource
     {
-        public Collection Collection { get; }
+        public ICollection Collection { get; }
         public string Name { get; }
         public Type DocType { get; }
         public object[] Args { get; }
     }
 
-    public class Index<Doc> : Linq.QuerySource<Doc>, Index
+    public class Index<Doc> : Linq.QuerySource<Doc>, IIndex
     {
-        public Collection Collection { get; }
+        public ICollection Collection { get; }
         public string Name { get; }
         public Type DocType { get => typeof(Doc); }
         public object[] Args { get; }
 
-        internal Index(Collection coll, string name, object[] args, DataContext ctx)
+        internal Index(ICollection coll, string name, object[] args, DataContext ctx)
         {
             Collection = coll;
             Name = name;
@@ -198,7 +198,7 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    protected Col GetCollection<Col>() where Col : Collection
+    protected Col GetCollection<Col>() where Col : ICollection
     {
         CheckInitialization();
         return (Col)_collections[typeof(Col)];

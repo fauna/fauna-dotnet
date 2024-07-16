@@ -30,8 +30,8 @@ public static class Deserializer
     private static readonly ModuleDeserializer _module = new();
     private static readonly DocumentDeserializer<Document> _doc = new();
     private static readonly DocumentDeserializer<NamedDocument> _namedDoc = new();
-    private static readonly DocumentDeserializer<DocumentRef> _docRef = new();
-    private static readonly DocumentDeserializer<NamedDocumentRef> _namedDocRef = new();
+    private static readonly DocumentDeserializer<Ref> _docRef = new();
+    private static readonly DocumentDeserializer<NamedRef> _namedDocRef = new();
 
     /// <summary>
     /// Generates a deserializer for the specified non-nullable .NET type.
@@ -71,8 +71,8 @@ public static class Deserializer
         if (targetType == typeof(Module)) return _module;
         if (targetType == typeof(Document)) return _doc;
         if (targetType == typeof(NamedDocument)) return _namedDoc;
-        if (targetType == typeof(DocumentRef)) return _docRef;
-        if (targetType == typeof(NamedDocumentRef)) return _namedDocRef;
+        if (targetType == typeof(Ref)) return _docRef;
+        if (targetType == typeof(NamedRef)) return _namedDocRef;
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
         {

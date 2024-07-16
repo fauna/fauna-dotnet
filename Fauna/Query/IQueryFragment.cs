@@ -12,6 +12,7 @@ public interface IQueryFragment
     /// <summary>
     /// Serializes the query fragment into the provided stream.
     /// </summary>
+    /// <param name="ctx">The context to be used during serialization.</param>
     /// <param name="writer">The writer to which the query fragment is serialized.</param>
     void Serialize(MappingContext ctx, Utf8FaunaWriter writer);
 }

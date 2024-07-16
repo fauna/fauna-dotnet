@@ -535,7 +535,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<DocumentRef>(given);
+        var actual = Deserialize<Ref>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MappedColl"), actual.Collection);
     }
@@ -787,7 +787,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<DocumentRef>(given);
+        var actual = Deserialize<Ref>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
@@ -805,7 +805,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<DocumentRef>(given);
+        var actual = Deserialize<Ref>(given);
         Assert.AreEqual("123", actual.Id);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
@@ -821,7 +821,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NamedDocumentRef>(given);
+        var actual = Deserialize<NamedRef>(given);
         Assert.AreEqual("RefName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }
@@ -839,7 +839,7 @@ public class DeserializerTests
                                  }
                              }";
 
-        var actual = Deserialize<NamedDocumentRef>(given);
+        var actual = Deserialize<NamedRef>(given);
         Assert.AreEqual("DocName", actual.Name);
         Assert.AreEqual(new Module("MyColl"), actual.Collection);
     }

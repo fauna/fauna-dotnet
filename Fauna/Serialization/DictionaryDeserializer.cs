@@ -4,7 +4,7 @@ namespace Fauna.Serialization;
 
 internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T>>
 {
-    private IDeserializer<T> _elemDeserializer;
+    private readonly IDeserializer<T> _elemDeserializer;
 
     public DictionaryDeserializer(IDeserializer<T> elemDeserializer)
     {

@@ -14,7 +14,7 @@ public sealed class MappingContext
 
     public MappingContext() { }
 
-    public MappingContext(IEnumerable<DataContext.Collection> collections)
+    public MappingContext(IEnumerable<DataContext.ICollection> collections)
     {
         foreach (var col in collections)
         {

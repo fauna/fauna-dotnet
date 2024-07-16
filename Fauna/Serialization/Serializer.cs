@@ -81,7 +81,7 @@ public static class Serializer
             case DateOnly v:
                 w.WriteDateValue(v);
                 break;
-            case DocumentRef doc:
+            case Ref doc:
                 SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
                 break;
             case Document doc:
@@ -98,18 +98,18 @@ public static class Serializer
                         break;
                 }
                 break;
-            case NullableDocument<DocumentRef> doc:
+            case NullableDocument<Ref> doc:
                 switch (doc)
                 {
-                    case NullDocument<DocumentRef> d:
+                    case NullDocument<Ref> d:
                         SerializeDocumentRefInternal(w, d.Id, d.Collection);
                         break;
-                    case NonNullDocument<DocumentRef> d:
+                    case NonNullDocument<Ref> d:
                         SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
                         break;
                 }
                 break;
-            case NamedDocumentRef doc:
+            case NamedRef doc:
                 SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
                 break;
             case NamedDocument doc:
@@ -126,13 +126,13 @@ public static class Serializer
                         break;
                 }
                 break;
-            case NullableDocument<NamedDocumentRef> doc:
+            case NullableDocument<NamedRef> doc:
                 switch (doc)
                 {
-                    case NullDocument<NamedDocumentRef> d:
+                    case NullDocument<NamedRef> d:
                         SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
                         break;
-                    case NonNullDocument<NamedDocumentRef> d:
+                    case NonNullDocument<NamedRef> d:
                         SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
                         break;
                 }
