@@ -7,16 +7,17 @@ public static class ExceptionFactory
 {
     public static Exception FromQueryFailure(MappingContext ctx, QueryFailure f)
     {
-        var msg = $"{f.StatusCode} ({f.ErrorCode}): {f.Message}{(f.Summary is { Length: > 0 } ? "\n---\n" + f.Summary : "")}";
+        var msg =
+            $"{f.StatusCode} ({f.ErrorCode}): {f.Message}{(f.Summary is { Length: > 0 } ? "\n---\n" + f.Summary : "")}";
 
         return f.ErrorCode switch
         {
             "abort" => new AbortException(msg, f, ctx),
             "bad_gateway" => new BadGatewayException(msg, f),
             "contended_transaction" => new ContendedTransactionException(msg, f),
-            "forbidden" => new ForbiddenException(msg, f), 
+            "forbidden" => new ForbiddenException(msg, f),
             "internal_error" => new ServiceException(msg, f),
-            "invalid_argument" => new QueryRuntimeException(msg, f), 
+            "invalid_argument" => new QueryRuntimeException(msg, f),
             "invalid_query" or
                 "invalid_function_definition" or
                 "invalid_identifier" or
@@ -26,7 +27,7 @@ public static class ExceptionFactory
             "limit_exceeded" => new ThrottlingException(msg, f),
             "time_out" => new QueryTimeoutException(msg, f),
             "gateway_timeout" => new TimeoutException(msg, f),
-            "unauthorized" => new UnauthorizedException(msg, f), 
+            "unauthorized" => new UnauthorizedException(msg, f),
 
             _ => new QueryRuntimeException(msg, f)
         };
@@ -43,7 +44,8 @@ public static class ExceptionFactory
 
         return r.StatusCode switch
         {
-            HttpStatusCode.TooManyRequests => new ThrottlingException($"{r.StatusCode}: {r.ReasonPhrase ?? "Too many requests."}"),
+            HttpStatusCode.TooManyRequests => new ThrottlingException(
+                $"{r.StatusCode}: {r.ReasonPhrase ?? "Too many requests."}"),
             _ => new FaunaException($"{r.StatusCode}: {r.ReasonPhrase}")
         };
     }
