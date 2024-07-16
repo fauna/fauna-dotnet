@@ -4,7 +4,6 @@ using Fauna.Linq;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using System.Globalization;
-using System.Net;
 
 namespace Fauna;
 

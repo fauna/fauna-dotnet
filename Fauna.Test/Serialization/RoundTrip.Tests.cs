@@ -181,7 +181,7 @@ public class RoundTripTests
     [Test]
     public void RoundTripDocumentRef()
     {
-        var deserialized = Deserialize<DocumentRef>(DocumentRefWire);
+        var deserialized = Deserialize<Ref>(DocumentRefWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(DocumentRefWire, serialized);
     }
@@ -189,7 +189,7 @@ public class RoundTripTests
     [Test]
     public void RoundTripNonNullDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<DocumentRef>>(DocumentRefWire);
+        var deserialized = Deserialize<NullableDocument<Ref>>(DocumentRefWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(DocumentRefWire, serialized);
     }
@@ -197,7 +197,7 @@ public class RoundTripTests
     [Test]
     public void RoundTripNullDocumentRefChangesToDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<DocumentRef>>(NullDocumentWire);
+        var deserialized = Deserialize<NullableDocument<Ref>>(NullDocumentWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(DocumentRefWire, serialized);
     }
@@ -229,7 +229,7 @@ public class RoundTripTests
     [Test]
     public void RoundTripNamedDocumentRef()
     {
-        var deserialized = Deserialize<NamedDocumentRef>(NamedDocumentRefWire);
+        var deserialized = Deserialize<NamedRef>(NamedDocumentRefWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(NamedDocumentRefWire, serialized);
     }
@@ -237,7 +237,7 @@ public class RoundTripTests
     [Test]
     public void RoundTripNonNullNamedDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<NamedDocumentRef>>(NamedDocumentRefWire);
+        var deserialized = Deserialize<NullableDocument<NamedRef>>(NamedDocumentRefWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(NamedDocumentRefWire, serialized);
     }
@@ -245,7 +245,7 @@ public class RoundTripTests
     [Test]
     public void RoundTripNullNamedDocumentRefChangesToNamedDocumentRef()
     {
-        var deserialized = Deserialize<NullableDocument<NamedDocumentRef>>(NullNamedDocumentWire);
+        var deserialized = Deserialize<NullableDocument<NamedRef>>(NullNamedDocumentWire);
         var serialized = Serialize(deserialized);
         Assert.AreEqual(NamedDocumentRefWire, serialized);
     }

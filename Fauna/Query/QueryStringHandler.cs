@@ -8,7 +8,7 @@ namespace Fauna;
 [InterpolatedStringHandler]
 public ref struct QueryStringHandler
 {
-    List<IQueryFragment> fragments;
+    private readonly List<IQueryFragment> _fragments;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueryStringHandler"/> struct.
@@ -17,7 +17,7 @@ public ref struct QueryStringHandler
     /// <param name="formattedCount">The number of format items in the interpolated string.</param>
     public QueryStringHandler(int literalLength, int formattedCount)
     {
-        fragments = new List<IQueryFragment>();
+        _fragments = new List<IQueryFragment>();
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ public ref struct QueryStringHandler
     /// <param name="value">The literal string to append.</param>
     public void AppendLiteral(string value)
     {
-        fragments.Add(new QueryLiteral(value));
+        _fragments.Add(new QueryLiteral(value));
     }
 
     /// <summary>
@@ -37,11 +37,11 @@ public ref struct QueryStringHandler
     {
         if (value is QueryExpr expr)
         {
-            fragments.Add(expr);
+            _fragments.Add(expr);
         }
         else
         {
-            fragments.Add(new QueryVal(value));
+            _fragments.Add(new QueryVal(value));
         }
     }
 
@@ -51,6 +51,6 @@ public ref struct QueryStringHandler
     /// <returns>A <see cref="Query"/> instance representing the constructed query fragments.</returns>
     public Query Result()
     {
-        return new QueryExpr(fragments);
+        return new QueryExpr(_fragments);
     }
 }

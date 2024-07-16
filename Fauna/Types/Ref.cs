@@ -3,9 +3,9 @@ namespace Fauna.Types;
 /// <summary>
 /// Represents a document ref.
 /// </summary>
-public class DocumentRef
+public class Ref
 {
-    public DocumentRef(string id, Module collection)
+    public Ref(string id, Module collection)
     {
         Id = id;
         Collection = collection;

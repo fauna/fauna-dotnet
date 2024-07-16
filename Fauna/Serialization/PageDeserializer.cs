@@ -5,7 +5,7 @@ namespace Fauna.Serialization;
 
 internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
 {
-    private IDeserializer<List<T>> _dataDeserializer;
+    private readonly IDeserializer<List<T>> _dataDeserializer;
 
     public PageDeserializer(IDeserializer<T> elemDeserializer)
     {
@@ -15,7 +15,7 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         var wrapInPage = false;
-        TokenType endToken = TokenType.None;
+        var endToken = TokenType.None;
         switch (reader.CurrentTokenType)
         {
             case TokenType.StartPage:

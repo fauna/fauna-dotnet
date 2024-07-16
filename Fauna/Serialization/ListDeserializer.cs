@@ -4,7 +4,7 @@ namespace Fauna.Serialization;
 
 internal class ListDeserializer<T> : BaseDeserializer<List<T>>
 {
-    private IDeserializer<T> _elemDeserializer;
+    private readonly IDeserializer<T> _elemDeserializer;
 
     public ListDeserializer(IDeserializer<T> elemDeserializer)
     {

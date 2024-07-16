@@ -1,6 +1,5 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
-using Fauna.Util;
 using System.Linq.Expressions;
 using System.Reflection;
 

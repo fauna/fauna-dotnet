@@ -12,8 +12,8 @@ internal interface IClassDeserializer : IDeserializer
 
 internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
 {
-    private static readonly string _idField = "id";
-    private static readonly string _nameField = "name";
+    private const string IdField = "id";
+    private const string NameField = "name";
 
     private readonly MappingInfo _info;
 
@@ -103,11 +103,11 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
             var fieldName = reader.GetString()!;
             reader.Read();
 
-            if (fieldName == _idField && reader.CurrentTokenType == TokenType.String)
+            if (fieldName == IdField && reader.CurrentTokenType == TokenType.String)
             {
                 TrySetId(instance, reader.GetString()!);
             }
-            else if (fieldName == _nameField && reader.CurrentTokenType == TokenType.String)
+            else if (fieldName == NameField && reader.CurrentTokenType == TokenType.String)
             {
                 TrySetName(instance, reader.GetString()!);
             }
@@ -124,7 +124,7 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
 
     private void TrySetId(object instance, string id)
     {
-        if (_info.FieldsByName.TryGetValue(_idField, out var field))
+        if (_info.FieldsByName.TryGetValue(IdField, out var field))
         {
             if (field.Type == typeof(long))
             {
@@ -143,7 +143,7 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
 
     private void TrySetName(object instance, string name)
     {
-        if (_info.FieldsByName.TryGetValue(_nameField, out var field))
+        if (_info.FieldsByName.TryGetValue(NameField, out var field))
         {
             if (field.Type == typeof(string))
             {

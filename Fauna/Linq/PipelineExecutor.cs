@@ -7,13 +7,13 @@ using System.Runtime.CompilerServices;
 
 namespace Fauna.Linq;
 
-internal interface PipelineExecutor
+internal interface IPipelineExecutor
 {
     private static readonly MethodInfo _createEnumExec =
-        typeof(PipelineExecutor).GetMethod(nameof(CreateEnumExec), BindingFlags.Public | BindingFlags.Static)!;
+        typeof(IPipelineExecutor).GetMethod(nameof(CreateEnumExec), BindingFlags.Public | BindingFlags.Static)!;
 
     private static readonly MethodInfo _createScalarExec =
-        typeof(PipelineExecutor).GetMethod(nameof(CreateScalarExec), BindingFlags.Public | BindingFlags.Static)!;
+        typeof(IPipelineExecutor).GetMethod(nameof(CreateScalarExec), BindingFlags.Public | BindingFlags.Static)!;
 
     Type ElemType { get; }
     Type ResType { get; }
@@ -24,7 +24,7 @@ internal interface PipelineExecutor
     IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions, CancellationToken cancel = default);
     Task<T> Result<T>(QueryOptions? queryOptions, CancellationToken cancel = default);
 
-    public static PipelineExecutor Create(
+    public static IPipelineExecutor Create(
         DataContext ctx,
         Query query,
         IDeserializer deser,
@@ -53,7 +53,7 @@ internal interface PipelineExecutor
         var args = new object?[] { ctx, query, deser, proj };
         var exec = method.MakeGenericMethod(typeArgs).Invoke(null, args);
 
-        return (PipelineExecutor)exec!;
+        return (IPipelineExecutor)exec!;
     }
 
     public static EnumExecutor<E> CreateEnumExec<I, E>(
@@ -84,7 +84,7 @@ internal interface PipelineExecutor
     public readonly record struct EnumExecutor<E>(
         DataContext Ctx,
         Query Query,
-        PageDeserializer<E> Deser) : PipelineExecutor
+        PageDeserializer<E> Deser) : IPipelineExecutor
     {
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(IEnumerable<E>); }
@@ -138,7 +138,7 @@ internal interface PipelineExecutor
     public readonly record struct ScalarExecutor<E>(
         DataContext Ctx,
         Query Query,
-        IDeserializer<E> Deser) : PipelineExecutor
+        IDeserializer<E> Deser) : IPipelineExecutor
     {
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(E); }

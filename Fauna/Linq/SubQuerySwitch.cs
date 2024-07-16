@@ -21,8 +21,8 @@ internal class SubQuerySwitch : DefaultExpressionSwitch<Query>
     {
         return expr.Value switch
         {
-            DataContext.Collection col => QH.CollectionAll(col),
-            DataContext.Index idx => QH.CollectionIndex(idx),
+            DataContext.ICollection col => QH.CollectionAll(col),
+            DataContext.IIndex idx => QH.CollectionIndex(idx),
             _ => QH.Const(expr.Value)
         };
     }
