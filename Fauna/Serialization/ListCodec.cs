@@ -2,13 +2,13 @@ using Fauna.Mapping;
 
 namespace Fauna.Serialization;
 
-internal class ListDeserializer<T> : BaseDeserializer<List<T>>
+internal class ListCodec<T> : BaseCodec<List<T>>
 {
-    private readonly IDeserializer<T> _elemDeserializer;
+    private readonly ICodec<T> _elemCodec;
 
-    public ListDeserializer(IDeserializer<T> elemDeserializer)
+    public ListCodec(ICodec<T> elemCodec)
     {
-        _elemDeserializer = elemDeserializer;
+        _elemCodec = elemCodec;
     }
 
     public override List<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -23,16 +23,29 @@ internal class ListDeserializer<T> : BaseDeserializer<List<T>>
 
         if (wrapInList)
         {
-            lst.Add(_elemDeserializer.Deserialize(context, ref reader));
+            lst.Add(_elemCodec.Deserialize(context, ref reader));
         }
         else
         {
             while (reader.Read() && reader.CurrentTokenType != TokenType.EndArray)
             {
-                lst.Add(_elemDeserializer.Deserialize(context, ref reader));
+                lst.Add(_elemCodec.Deserialize(context, ref reader));
             }
         }
 
         return lst;
+    }
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, List<T>? o)
+    {
+        writer.WriteStartArray();
+        if (o is not null)
+        {
+            foreach (var elem in o)
+            {
+                _elemCodec.Serialize(context, writer, elem);
+            }
+        }
+        writer.WriteEndArray();
     }
 }

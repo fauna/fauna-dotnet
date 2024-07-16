@@ -93,7 +93,7 @@ public class Client : BaseClient, IDisposable
 
     internal override async Task<QuerySuccess<T>> QueryAsyncInternal<T>(
         Query query,
-        IDeserializer<T> deserializer,
+        ICodec<T> codec,
         MappingContext ctx,
         QueryOptions? queryOptions,
         CancellationToken cancel)
@@ -111,7 +111,7 @@ public class Client : BaseClient, IDisposable
 
         using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers, cancel);
         var body = await httpResponse.Content.ReadAsStringAsync(cancel);
-        var res = QueryResponse.GetFromResponseBody<T>(ctx, deserializer, httpResponse.StatusCode, body);
+        var res = QueryResponse.GetFromResponseBody<T>(ctx, codec, httpResponse.StatusCode, body);
         switch (res)
         {
             case QuerySuccess<T> success:

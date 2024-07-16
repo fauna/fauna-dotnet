@@ -37,13 +37,13 @@ public abstract class DataContext : BaseClient
 
     internal override Task<QuerySuccess<T>> QueryAsyncInternal<T>(
         Query query,
-        Serialization.IDeserializer<T> deserializer,
+        Serialization.ICodec<T> codec,
         MappingContext ctx,
         QueryOptions? queryOptions,
         CancellationToken cancel)
     {
         CheckInitialization();
-        return _client.QueryAsyncInternal(query, deserializer, ctx, queryOptions, cancel);
+        return _client.QueryAsyncInternal(query, codec, ctx, queryOptions, cancel);
     }
 
     // Schema DSL

@@ -40,7 +40,7 @@ public class RoundTripTests
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
-        var obj = Deserializer.Generate<T>(ctx).Deserialize(ctx, ref reader);
+        var obj = Codec.Generate<T>(ctx).Deserialize(ctx, ref reader);
         if (reader.Read())
         {
             throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");

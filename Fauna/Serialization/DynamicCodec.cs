@@ -2,23 +2,23 @@ using Fauna.Mapping;
 
 namespace Fauna.Serialization;
 
-internal class DynamicDeserializer : BaseDeserializer<object?>
+internal class DynamicCodec : BaseCodec<object?>
 {
-    public static DynamicDeserializer Singleton { get; } = new();
+    public static DynamicCodec Singleton { get; } = new();
 
-    private readonly ListDeserializer<object?> _list;
-    private readonly PageDeserializer<object?> _page;
-    private readonly DictionaryDeserializer<object?> _dict;
-    private readonly DocumentDeserializer<object> _doc;
-    private readonly DocumentDeserializer<object> _ref;
+    private readonly ListCodec<object?> _list;
+    private readonly PageCodec<object?> _page;
+    private readonly DictionaryCodec<object?> _dict;
+    private readonly DocumentCodec<object> _doc;
+    private readonly DocumentCodec<object> _ref;
 
-    private DynamicDeserializer()
+    private DynamicCodec()
     {
-        _list = new ListDeserializer<object?>(this);
-        _page = new PageDeserializer<object?>(this);
-        _dict = new DictionaryDeserializer<object?>(this);
-        _doc = new DocumentDeserializer<object>();
-        _ref = new DocumentDeserializer<object>();
+        _list = new ListCodec<object?>(this);
+        _page = new PageCodec<object?>(this);
+        _dict = new DictionaryCodec<object?>(this);
+        _doc = new DocumentCodec<object>();
+        _ref = new DocumentCodec<object>();
     }
 
     public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
@@ -41,4 +41,9 @@ internal class DynamicDeserializer : BaseDeserializer<object?>
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}"),
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, object? o)
+    {
+        throw new NotImplementedException();
+    }
 }

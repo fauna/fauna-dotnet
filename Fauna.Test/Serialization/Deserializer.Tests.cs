@@ -7,12 +7,12 @@ using NUnit.Framework;
 namespace Fauna.Test.Serialization;
 
 [TestFixture]
-public class DeserializerTests
+public class CodecTests
 {
     private readonly MappingContext ctx;
     private const string DocumentWithShortWire = @"{""@doc"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""a_short"":{""@int"":""42""}}}";
 
-    public DeserializerTests()
+    public CodecTests()
     {
         var colls = new Dictionary<string, Type> {
             { "MappedColl", typeof(ClassForDocument) }
@@ -21,15 +21,15 @@ public class DeserializerTests
     }
 
     public object? Deserialize(string str) =>
-       DeserializeImpl(str, ctx => Deserializer.Dynamic);
+       DeserializeImpl(str, ctx => Codec.Dynamic);
 
     public T Deserialize<T>(string str) where T : notnull =>
-       DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx));
+       DeserializeImpl(str, ctx => Codec.Generate<T>(ctx));
 
     public T? DeserializeNullable<T>(string str) =>
-        DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx));
+        DeserializeImpl(str, ctx => Codec.GenerateNullable<T>(ctx));
 
-    public T DeserializeImpl<T>(string str, Func<MappingContext, IDeserializer<T>> deserFunc)
+    public T DeserializeImpl<T>(string str, Func<MappingContext, ICodec<T>> deserFunc)
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
@@ -56,9 +56,9 @@ public class DeserializerTests
     [Test]
     public void CastDeserializer()
     {
-        var deser = Deserializer.Generate<string>(ctx);
+        var deser = Codec.Generate<string>(ctx);
         // should cast w/o failing due to covariance.
-        var obj = (IDeserializer<object?>)deser;
+        var obj = (ICodec<object?>)deser;
 
         Assert.AreEqual(deser, obj);
     }

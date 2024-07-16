@@ -4,7 +4,7 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
+internal class DocumentCodec<T> : BaseCodec<T> where T : class
 {
 
     public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -16,6 +16,11 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing into {typeof(NullableDocument<T>)}: {reader.CurrentTokenType}")
         };
+    }
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, T? o)
+    {
+        throw new NotImplementedException();
     }
 
     private T DeserializeDocument(MappingContext context, ref Utf8FaunaReader reader)
@@ -40,7 +45,7 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
                     id = reader.GetString();
                     break;
                 case "name":
-                    name = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
+                    name = DynamicCodec.Singleton.Deserialize(context, ref reader);
                     break;
                 case "coll":
                     coll = reader.GetModule();
@@ -54,7 +59,7 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
                         if (collInfo.Type == typeof(T) || typeof(object) == typeof(T))
                         {
                             // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
-                            return (collInfo.Deserializer.DeserializeDocument(context, id, name != null ? (string)name : null, ref reader) as T)!;
+                            return (collInfo.Codec.DeserializeDocument(context, id, name != null ? (string)name : null, ref reader) as T)!;
                         }
                     }
 
@@ -63,7 +68,7 @@ internal class DocumentDeserializer<T> : BaseDeserializer<T> where T : class
                     ts = reader.GetTime();
                     break;
                 default:
-                    data[fieldName] = DynamicDeserializer.Singleton.Deserialize(context, ref reader);
+                    data[fieldName] = DynamicCodec.Singleton.Deserialize(context, ref reader);
                     break;
             }
         }

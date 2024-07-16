@@ -4,7 +4,7 @@ using Fauna.Types;
 namespace Fauna.Serialization;
 
 
-internal class StringDeserializer : BaseDeserializer<string?>
+internal class StringCodec : BaseCodec<string?>
 {
     public override string? Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -12,9 +12,14 @@ internal class StringDeserializer : BaseDeserializer<string?>
             TokenType.String => reader.GetString(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, string? o)
+    {
+        writer.WriteStringValue(o!);
+    }
 }
 
-internal class ByteDeserializer : BaseDeserializer<byte>
+internal class ByteCodec : BaseCodec<byte>
 {
     public override byte Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -22,9 +27,14 @@ internal class ByteDeserializer : BaseDeserializer<byte>
             TokenType.Int => reader.GetByte(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, byte o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class SByteDeserializer : BaseDeserializer<sbyte>
+internal class SByteCodec : BaseCodec<sbyte>
 {
     public override sbyte Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -32,10 +42,15 @@ internal class SByteDeserializer : BaseDeserializer<sbyte>
             TokenType.Int => reader.GetUnsignedByte(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, sbyte o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
 
-internal class ShortDeserializer : BaseDeserializer<short>
+internal class ShortCodec : BaseCodec<short>
 {
     public override short Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -43,9 +58,14 @@ internal class ShortDeserializer : BaseDeserializer<short>
             TokenType.Int or TokenType.Long => reader.GetShort(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, short o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class UShortDeserializer : BaseDeserializer<ushort>
+internal class UShortCodec : BaseCodec<ushort>
 {
     public override ushort Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -53,9 +73,14 @@ internal class UShortDeserializer : BaseDeserializer<ushort>
             TokenType.Int or TokenType.Long => reader.GetUnsignedShort(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, ushort o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class IntDeserializer : BaseDeserializer<int>
+internal class IntCodec : BaseCodec<int>
 {
     public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -63,9 +88,14 @@ internal class IntDeserializer : BaseDeserializer<int>
             TokenType.Int or TokenType.Long => reader.GetInt(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, int o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class UIntDeserializer : BaseDeserializer<uint>
+internal class UIntCodec : BaseCodec<uint>
 {
     public override uint Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -73,9 +103,14 @@ internal class UIntDeserializer : BaseDeserializer<uint>
             TokenType.Int or TokenType.Long => reader.GetUnsignedInt(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, uint o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class LongDeserializer : BaseDeserializer<long>
+internal class LongCodec : BaseCodec<long>
 {
     public override long Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -83,9 +118,14 @@ internal class LongDeserializer : BaseDeserializer<long>
             TokenType.Int or TokenType.Long => reader.GetLong(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, long o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class FloatDeserializer : BaseDeserializer<float>
+internal class FloatCodec : BaseCodec<float>
 {
     public override float Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -93,9 +133,14 @@ internal class FloatDeserializer : BaseDeserializer<float>
             TokenType.Int or TokenType.Long or TokenType.Double => reader.GetFloat(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, float o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class DoubleDeserializer : BaseDeserializer<double>
+internal class DoubleCodec : BaseCodec<double>
 {
     public override double Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -103,9 +148,14 @@ internal class DoubleDeserializer : BaseDeserializer<double>
             TokenType.Int or TokenType.Long or TokenType.Double => reader.GetDouble(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, double o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class BooleanDeserializer : BaseDeserializer<bool>
+internal class BooleanCodec : BaseCodec<bool>
 {
     public override bool Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -113,9 +163,14 @@ internal class BooleanDeserializer : BaseDeserializer<bool>
             TokenType.True or TokenType.False => reader.GetBoolean(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, bool o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class DateOnlyDeserializer : BaseDeserializer<DateOnly>
+internal class DateOnlyCodec : BaseCodec<DateOnly>
 {
     public override DateOnly Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -123,9 +178,14 @@ internal class DateOnlyDeserializer : BaseDeserializer<DateOnly>
             TokenType.Date => reader.GetDate(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, DateOnly o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class DateTimeDeserializer : BaseDeserializer<DateTime>
+internal class DateTimeCodec : BaseCodec<DateTime>
 {
     public override DateTime Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -133,9 +193,14 @@ internal class DateTimeDeserializer : BaseDeserializer<DateTime>
             TokenType.Time => reader.GetTime(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, DateTime o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class ModuleDeserializer : BaseDeserializer<Module>
+internal class ModuleCodec : BaseCodec<Module>
 {
     public override Module Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
@@ -143,4 +208,9 @@ internal class ModuleDeserializer : BaseDeserializer<Module>
             TokenType.Module => reader.GetModule(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, Module? o)
+    {
+        throw new NotImplementedException();
+    }
 }

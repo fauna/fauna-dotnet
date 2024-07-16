@@ -3,12 +3,12 @@ using Fauna.Serialization;
 
 namespace Fauna.Linq;
 
-internal class MappedDeserializer<I, O> : BaseDeserializer<O>
+internal class MappedCodec<I, O> : BaseCodec<O>
 {
-    private IDeserializer<I> _inner;
+    private ICodec<I> _inner;
     private Func<I, O> _mapper;
 
-    public MappedDeserializer(IDeserializer<I> inner, Func<I, O> mapper)
+    public MappedCodec(ICodec<I> inner, Func<I, O> mapper)
     {
         _inner = inner;
         _mapper = mapper;
@@ -16,13 +16,18 @@ internal class MappedDeserializer<I, O> : BaseDeserializer<O>
 
     public override O Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         _mapper(_inner.Deserialize(context, ref reader));
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, O? o)
+    {
+        throw new NotImplementedException();
+    }
 }
 
-internal class ProjectionDeserializer : BaseDeserializer<object?[]>
+internal class ProjectionCodec : BaseCodec<object?[]>
 {
-    private IDeserializer[] _fields;
+    private ICodec[] _fields;
 
-    public ProjectionDeserializer(IEnumerable<IDeserializer> fields)
+    public ProjectionCodec(IEnumerable<ICodec> fields)
     {
         _fields = fields.ToArray();
     }
@@ -46,6 +51,11 @@ internal class ProjectionDeserializer : BaseDeserializer<object?[]>
         if (reader.CurrentTokenType != TokenType.EndArray) throw UnexpectedToken(reader.CurrentTokenType);
 
         return values;
+    }
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, object?[]? o)
+    {
+        throw new NotImplementedException();
     }
 
     private new static SerializationException UnexpectedToken(TokenType tokenType) =>

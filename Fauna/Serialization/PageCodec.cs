@@ -3,13 +3,13 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
+internal class PageCodec<T> : BaseCodec<Page<T>>
 {
-    private readonly IDeserializer<List<T>> _dataDeserializer;
+    private readonly ICodec<List<T>> _dataCodec;
 
-    public PageDeserializer(IDeserializer<T> elemDeserializer)
+    public PageCodec(ICodec<T> elemCodec)
     {
-        _dataDeserializer = new ListDeserializer<T>(elemDeserializer);
+        _dataCodec = new ListCodec<T>(elemCodec);
     }
 
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -34,7 +34,7 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
 
         if (wrapInPage)
         {
-            data = _dataDeserializer.Deserialize(context, ref reader);
+            data = _dataCodec.Deserialize(context, ref reader);
         }
         else
         {
@@ -46,7 +46,7 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
                 switch (fieldName)
                 {
                     case "data":
-                        data = _dataDeserializer.Deserialize(context, ref reader);
+                        data = _dataCodec.Deserialize(context, ref reader);
                         break;
                     case "after":
                         after = reader.GetString()!;
@@ -59,5 +59,10 @@ internal class PageDeserializer<T> : BaseDeserializer<Page<T>>
             throw new SerializationException($"No page data found while deserializing into {typeof(Page<T>)}");
 
         return new Page<T>(data!, after);
+    }
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, Page<T>? o)
+    {
+        throw new NotImplementedException();
     }
 }

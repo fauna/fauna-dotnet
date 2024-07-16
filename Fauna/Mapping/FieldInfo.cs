@@ -27,7 +27,7 @@ public sealed class FieldInfo
     public bool IsNullable { get; }
 
     private MappingContext _ctx;
-    private IDeserializer? _deserializer;
+    private ICodec? _deserializer;
 
     internal FieldInfo(MappingContext ctx, FieldAttribute attr, PropertyInfo prop)
     {
@@ -41,7 +41,7 @@ public sealed class FieldInfo
         _ctx = ctx;
     }
 
-    internal IDeserializer Deserializer
+    internal ICodec Codec
     {
         get
         {
@@ -49,15 +49,15 @@ public sealed class FieldInfo
             {
                 if (_deserializer is null)
                 {
-                    _deserializer = Fauna.Serialization.Deserializer.Generate(_ctx, Type);
+                    _deserializer = Fauna.Serialization.Codec.Generate(_ctx, Type);
                     if (IsNullable && (!_deserializer.GetType().IsGenericType ||
                                        (_deserializer.GetType().IsGenericType &&
                                         _deserializer.GetType().GetGenericTypeDefinition() !=
-                                        typeof(NullableStructDeserializer<>))))
+                                        typeof(NullableStructCodec<>))))
                     {
-                        var deserType = typeof(NullableDeserializer<>).MakeGenericType(new[] { Type });
+                        var deserType = typeof(NullableCodec<>).MakeGenericType(new[] { Type });
                         var deser = Activator.CreateInstance(deserType, new[] { _deserializer });
-                        _deserializer = (IDeserializer)deser!;
+                        _deserializer = (ICodec)deser!;
                     }
                 }
 

@@ -2,13 +2,13 @@ using Fauna.Mapping;
 
 namespace Fauna.Serialization;
 
-internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T>>
+internal class DictionaryCodec<T> : BaseCodec<Dictionary<string, T>>
 {
-    private readonly IDeserializer<T> _elemDeserializer;
+    private readonly ICodec<T> _elemCodec;
 
-    public DictionaryDeserializer(IDeserializer<T> elemDeserializer)
+    public DictionaryCodec(ICodec<T> elemCodec)
     {
-        _elemDeserializer = elemDeserializer;
+        _elemCodec = elemCodec;
     }
 
     public override Dictionary<string, T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -27,9 +27,26 @@ internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T
 
             var fieldName = reader.GetString()!;
             reader.Read();
-            dict.Add(fieldName, _elemDeserializer.Deserialize(context, ref reader));
+            dict.Add(fieldName, _elemCodec.Deserialize(context, ref reader));
         }
 
         return dict;
+    }
+
+    public override void Serialize(MappingContext context, ref Utf8FaunaWriter writer, Dictionary<string, T>? o)
+    {
+        var shouldEscape = o is not null && Tags.Overlaps(o.Keys);
+        if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
+
+        if (o is not null)
+        {
+            foreach (var (key, value) in o)
+            {
+                writer.WriteFieldName(key);
+                _elemCodec.Serialize(context, writer, value);
+            }
+        }
+
+        if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
     }
 }

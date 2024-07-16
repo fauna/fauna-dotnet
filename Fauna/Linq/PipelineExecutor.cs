@@ -27,14 +27,14 @@ internal interface IPipelineExecutor
     public static IPipelineExecutor Create(
         DataContext ctx,
         Query query,
-        IDeserializer deser,
+        ICodec deser,
         Delegate? proj,
         PipelineMode mode)
     {
         Debug.Assert(mode != PipelineMode.SetLoad);
 
         var innerTy = deser.GetType()
-            .GetGenInst(typeof(IDeserializer<>))!
+            .GetGenInst(typeof(ICodec<>))!
             .GetGenericArguments()[0];
 
         var elemTy = proj is null ?
@@ -59,32 +59,32 @@ internal interface IPipelineExecutor
     public static EnumExecutor<E> CreateEnumExec<I, E>(
         DataContext ctx,
         Query query,
-        IDeserializer<I> deser,
+        ICodec<I> deser,
         Func<I, E>? proj) =>
-        new EnumExecutor<E>(ctx, query, new PageDeserializer<E>(MapDeser(deser, proj)));
+        new EnumExecutor<E>(ctx, query, new PageCodec<E>(MapDeser(deser, proj)));
 
     public static ScalarExecutor<E> CreateScalarExec<I, E>(
         DataContext ctx,
         Query query,
-        IDeserializer<I> deser,
+        ICodec<I> deser,
         Func<I, E>? proj) =>
         new ScalarExecutor<E>(ctx, query, MapDeser(deser, proj));
 
-    private static IDeserializer<E> MapDeser<I, E>(IDeserializer<I> inner, Func<I, E>? proj)
+    private static ICodec<E> MapDeser<I, E>(ICodec<I> inner, Func<I, E>? proj)
     {
         if (proj is not null)
         {
-            return new MappedDeserializer<I, E>(inner, proj);
+            return new MappedCodec<I, E>(inner, proj);
         }
 
         Debug.Assert(typeof(I) == typeof(E));
-        return (IDeserializer<E>)inner;
+        return (ICodec<E>)inner;
     }
 
     public readonly record struct EnumExecutor<E>(
         DataContext Ctx,
         Query Query,
-        PageDeserializer<E> Deser) : IPipelineExecutor
+        PageCodec<E> Deser) : IPipelineExecutor
     {
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(IEnumerable<E>); }
@@ -138,7 +138,7 @@ internal interface IPipelineExecutor
     public readonly record struct ScalarExecutor<E>(
         DataContext Ctx,
         Query Query,
-        IDeserializer<E> Deser) : IPipelineExecutor
+        ICodec<E> Deser) : IPipelineExecutor
     {
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(E); }

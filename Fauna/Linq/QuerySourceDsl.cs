@@ -297,7 +297,7 @@ public partial class QuerySource<T>
     private QuerySource<R> Chain<R>(
         PipelineMode? mode = null,
         Query? q = null,
-        IDeserializer? deser = null,
+        ICodec? deser = null,
         Type? ety = null,
         bool enull = false,
         LambdaExpression? proj = null) =>
@@ -306,7 +306,7 @@ public partial class QuerySource<T>
     private Pipeline CopyPipeline(
         PipelineMode? mode = null,
         Query? q = null,
-        IDeserializer? deser = null,
+        ICodec? deser = null,
         Type? ety = null,
         bool enull = false,
         LambdaExpression? proj = null)
@@ -411,7 +411,7 @@ public partial class QuerySource<T>
 
             return CopyPipeline(
                 q: QH.MethodCall(callee, "map", QH.Expr($".{field.Name}")),
-                deser: field.Deserializer,
+                deser: field.Codec,
                 ety: field.Type);
         }
 
@@ -429,7 +429,7 @@ public partial class QuerySource<T>
             var pquery = QH.Expr("x => ").Concat(QH.Array(accs));
 
             // projected field deserializer
-            var deser = new ProjectionDeserializer(fields.Select(f => f.Deserializer));
+            var deser = new ProjectionCodec(fields.Select(f => f.Codec));
             var ety = typeof(object?[]);
 
             // build mapping lambda expression

@@ -6,43 +6,43 @@ namespace Fauna.Serialization;
 /// <summary>
 /// Represents methods for deserializing objects to and from Fauna's value format.
 /// </summary>
-public static class Deserializer
+public static class Codec
 {
     /// <summary>
     /// The dynamic data deserializer.
     /// </summary>
-    public static IDeserializer<object?> Dynamic => DynamicDeserializer.Singleton;
+    public static ICodec<object?> Dynamic => DynamicCodec.Singleton;
 
-    private static readonly CheckedDeserializer<object> _object = new();
-    private static readonly StringDeserializer _string = new();
-    private static readonly ByteDeserializer _byte = new();
-    private static readonly SByteDeserializer _sbyte = new();
-    private static readonly ShortDeserializer _short = new();
-    private static readonly UShortDeserializer _ushort = new();
-    private static readonly IntDeserializer _int = new();
-    private static readonly UIntDeserializer _uint = new();
-    private static readonly LongDeserializer _long = new();
-    private static readonly FloatDeserializer _float = new();
-    private static readonly DoubleDeserializer _double = new();
-    private static readonly DateOnlyDeserializer _dateOnly = new();
-    private static readonly DateTimeDeserializer _dateTime = new();
-    private static readonly BooleanDeserializer _bool = new();
-    private static readonly ModuleDeserializer _module = new();
-    private static readonly DocumentDeserializer<Document> _doc = new();
-    private static readonly DocumentDeserializer<NamedDocument> _namedDoc = new();
-    private static readonly DocumentDeserializer<Ref> _docRef = new();
-    private static readonly DocumentDeserializer<NamedRef> _namedDocRef = new();
+    private static readonly CheckedCodec<object> _object = new();
+    private static readonly StringCodec _string = new();
+    private static readonly ByteCodec _byte = new();
+    private static readonly SByteCodec _sbyte = new();
+    private static readonly ShortCodec _short = new();
+    private static readonly UShortCodec _ushort = new();
+    private static readonly IntCodec _int = new();
+    private static readonly UIntCodec _uint = new();
+    private static readonly LongCodec _long = new();
+    private static readonly FloatCodec _float = new();
+    private static readonly DoubleCodec _double = new();
+    private static readonly DateOnlyCodec _dateOnly = new();
+    private static readonly DateTimeCodec _dateTime = new();
+    private static readonly BooleanCodec _bool = new();
+    private static readonly ModuleCodec _module = new();
+    private static readonly DocumentCodec<Document> _doc = new();
+    private static readonly DocumentCodec<NamedDocument> _namedDoc = new();
+    private static readonly DocumentCodec<Ref> _docRef = new();
+    private static readonly DocumentCodec<NamedRef> _namedDocRef = new();
 
     /// <summary>
     /// Generates a deserializer for the specified non-nullable .NET type.
     /// </summary>
     /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
     /// <param name="context">The serialization context.</param>
-    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T> Generate<T>(MappingContext context) where T : notnull
+    /// <returns>An <see cref="ICodec{T}"/>.</returns>
+    public static ICodec<T> Generate<T>(MappingContext context) where T : notnull
     {
         var targetType = typeof(T);
-        var deser = (IDeserializer<T>)Generate(context, targetType);
+        var deser = (ICodec<T>)Generate(context, targetType);
         return deser;
     }
 
@@ -51,8 +51,8 @@ public static class Deserializer
     /// </summary>
     /// <param name="context">The serialization context.</param>
     /// <param name="targetType">The type of the object to deserialize to.</typeparam>
-    /// <returns>An <see cref="IDeserializer"/>.</returns>
-    public static IDeserializer Generate(MappingContext context, Type targetType)
+    /// <returns>An <see cref="ICodec"/>.</returns>
+    public static ICodec Generate(MappingContext context, Type targetType)
     {
         if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
@@ -79,11 +79,11 @@ public static class Deserializer
             var args = targetType.GetGenericArguments();
             if (args.Length == 1)
             {
-                var inner = (IDeserializer)Generate(context, args[0]);
-                var deserType = typeof(NullableStructDeserializer<>).MakeGenericType(new[] { args[0] });
+                var inner = (ICodec)Generate(context, args[0]);
+                var deserType = typeof(NullableStructCodec<>).MakeGenericType(new[] { args[0] });
                 var deser = Activator.CreateInstance(deserType, new[] { inner });
 
-                return (IDeserializer)deser!;
+                return (ICodec)deser!;
             }
 
             throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
@@ -93,9 +93,9 @@ public static class Deserializer
         {
             var argTypes = targetType.GetGenericArguments();
             var valueType = argTypes[0];
-            var deserType = typeof(NullableDocumentDeserializer<>).MakeGenericType(new[] { valueType });
+            var deserType = typeof(NullableDocumentCodec<>).MakeGenericType(new[] { valueType });
             var deser = Activator.CreateInstance(deserType);
-            return (IDeserializer)deser!;
+            return (ICodec)deser!;
         }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
@@ -110,10 +110,10 @@ public static class Deserializer
 
             var valueDeserializer = Generate(context, valueType);
 
-            var deserType = typeof(DictionaryDeserializer<>).MakeGenericType(new[] { valueType });
+            var deserType = typeof(DictionaryCodec<>).MakeGenericType(new[] { valueType });
             var deser = Activator.CreateInstance(deserType, new[] { valueDeserializer });
 
-            return (IDeserializer)deser!;
+            return (ICodec)deser!;
         }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
@@ -121,10 +121,10 @@ public static class Deserializer
             var elemType = targetType.GetGenericArguments()[0];
             var elemDeserializer = Generate(context, elemType);
 
-            var deserType = typeof(ListDeserializer<>).MakeGenericType(new[] { elemType });
+            var deserType = typeof(ListCodec<>).MakeGenericType(new[] { elemType });
             var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
 
-            return (IDeserializer)deser!;
+            return (ICodec)deser!;
         }
 
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>))
@@ -132,16 +132,16 @@ public static class Deserializer
             var elemType = targetType.GetGenericArguments()[0];
             var elemDeserializer = Generate(context, elemType);
 
-            var deserType = typeof(PageDeserializer<>).MakeGenericType(new[] { elemType });
+            var deserType = typeof(PageCodec<>).MakeGenericType(new[] { elemType });
             var deser = Activator.CreateInstance(deserType, new[] { elemDeserializer });
 
-            return (IDeserializer)deser!;
+            return (ICodec)deser!;
         }
 
         if (targetType.IsClass && !targetType.IsGenericType)
         {
             var info = context.GetInfo(targetType);
-            return info.Deserializer;
+            return info.Codec;
         }
 
         throw new ArgumentException($"Unsupported deserialization target type {targetType}");
@@ -152,12 +152,12 @@ public static class Deserializer
     /// </summary>
     /// <typeparam name="T">The type of the object to deserialize to.</typeparam>
     /// <param name="context">The serialization context.</param>
-    /// <returns>An <see cref="IDeserializer{T}"/>.</returns>
-    public static IDeserializer<T?> GenerateNullable<T>(MappingContext context)
+    /// <returns>An <see cref="ICodec{T}"/>.</returns>
+    public static ICodec<T?> GenerateNullable<T>(MappingContext context)
     {
         var targetType = typeof(T);
-        var deser = (IDeserializer<T>)Generate(context, targetType);
-        return new NullableDeserializer<T>(deser);
+        var deser = (ICodec<T>)Generate(context, targetType);
+        return new NullableCodec<T>(deser);
     }
 
     /// <summary>
@@ -165,13 +165,13 @@ public static class Deserializer
     /// </summary>
     /// <param name="context">The serialization context.</param>
     /// <param name="targetType">The type of the object to deserialize to.</typeparam>
-    /// <returns>An <see cref="IDeserializer"/>.</returns>
-    public static IDeserializer GenerateNullable(MappingContext context, Type targetType)
+    /// <returns>An <see cref="ICodec"/>.</returns>
+    public static ICodec GenerateNullable(MappingContext context, Type targetType)
     {
-        var inner = (IDeserializer)Generate(context, targetType);
-        var deserType = typeof(NullableDeserializer<>).MakeGenericType(new[] { targetType });
+        var inner = (ICodec)Generate(context, targetType);
+        var deserType = typeof(NullableCodec<>).MakeGenericType(new[] { targetType });
         var deser = Activator.CreateInstance(deserType, new[] { inner });
 
-        return (IDeserializer)deser!;
+        return (ICodec)deser!;
     }
 }

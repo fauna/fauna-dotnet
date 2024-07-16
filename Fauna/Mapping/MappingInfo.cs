@@ -24,7 +24,7 @@ public sealed class MappingInfo
     public IReadOnlyDictionary<string, FieldInfo> FieldsByName { get; }
 
     internal bool ShouldEscapeObject { get; }
-    internal IClassDeserializer Deserializer { get; }
+    internal IClassCodec Codec { get; }
 
     internal MappingInfo(MappingContext ctx, Type ty)
     {
@@ -57,7 +57,7 @@ public sealed class MappingInfo
         Fields = fields.ToImmutableList();
         FieldsByName = byName.ToImmutableDictionary();
 
-        var deserType = typeof(ClassDeserializer<>).MakeGenericType(new[] { ty });
-        Deserializer = (IClassDeserializer)Activator.CreateInstance(deserType, new[] { this })!;
+        var deserType = typeof(ClassCodec<>).MakeGenericType(new[] { ty });
+        Codec = (IClassCodec)Activator.CreateInstance(deserType, new[] { this })!;
     }
 }

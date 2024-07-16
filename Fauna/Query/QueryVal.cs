@@ -31,7 +31,16 @@ public sealed class QueryVal : Query, IQueryFragment
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");
-        Serializer.Serialize(ctx, writer, Unwrap);
+        if (Unwrap is not null)
+        {
+            var info = ctx.GetInfo(Unwrap.GetType());
+            info.Codec.Serialize(ctx, writer, Unwrap);
+        }
+        else
+        {
+            // TODO(lucas): use singleton/null codec
+            Serializer.Serialize(ctx, writer, Unwrap);
+        }
         writer.WriteEndObject();
     }
 
