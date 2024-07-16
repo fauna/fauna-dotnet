@@ -148,7 +148,8 @@ namespace Fauna.Test.Exceptions
         [TestCase(429, "limit_exceeded", typeof(ThrottlingException))]
         [TestCase(440, "time_out", typeof(QueryTimeoutException))]
         [TestCase(500, "internal_error", typeof(ServiceException))]
-        [TestCase(503, "gateway_timeout", typeof(TimeoutException))]
+        [TestCase(503, "time_out", typeof(QueryTimeoutException))]
+        [TestCase(504, "gateway_timeout", typeof(TimeoutException))]
         [TestCase(400, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(401, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(403, "some unhandled code", typeof(QueryRuntimeException))]
@@ -157,6 +158,7 @@ namespace Fauna.Test.Exceptions
         [TestCase(440, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(500, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(503, "some unhandled code", typeof(QueryRuntimeException))]
+        [TestCase(504, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(999, "some unhandled code", typeof(QueryRuntimeException))]
         public void QueryException_All(HttpStatusCode status, string code, Type exceptionType)
         {
