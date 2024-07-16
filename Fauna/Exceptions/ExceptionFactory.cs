@@ -14,8 +14,9 @@ public static class ExceptionFactory
             "abort" => new AbortException(msg, f, ctx),
             "bad_gateway" => new BadGatewayException(msg, f),
             "contended_transaction" => new ContendedTransactionException(msg, f),
-            "forbidden" => new ForbiddenException(msg, f),
-            "invalid_argument" => new QueryRuntimeException(msg, f),
+            "forbidden" => new ForbiddenException(msg, f), 
+            "internal_error" => new ServiceException(msg, f),
+            "invalid_argument" => new QueryRuntimeException(msg, f), 
             "invalid_query" or
                 "invalid_function_definition" or
                 "invalid_identifier" or
@@ -23,12 +24,11 @@ public static class ExceptionFactory
                 "invalid_type" => new QueryCheckException(msg, f),
             "invalid_request" => new InvalidRequestException(msg, f),
             "limit_exceeded" => new ThrottlingException(msg, f),
-            "time_limit_exceeded" => new QueryTimeoutException(msg, f),
-            "time_out" or
-                "gateway_timeout" => new TimeoutException(msg, f),
-            "unauthorized" => new UnauthorizedException(msg, f),
+            "time_out" => new QueryTimeoutException(msg, f),
+            "gateway_timeout" => new TimeoutException(msg, f),
+            "unauthorized" => new UnauthorizedException(msg, f), 
 
-            _ => new ServiceException(msg, f)
+            _ => new QueryRuntimeException(msg, f)
         };
     }
 
