@@ -18,11 +18,7 @@ public static class ExceptionFactory
             "forbidden" => new ForbiddenException(msg, f),
             "internal_error" => new ServiceException(msg, f),
             "invalid_argument" => new QueryRuntimeException(msg, f),
-            "invalid_query" or
-                "invalid_function_definition" or
-                "invalid_identifier" or
-                "invalid_syntax" or
-                "invalid_type" => new QueryCheckException(msg, f),
+            "invalid_query" => new QueryCheckException(msg, f),
             "invalid_request" => new InvalidRequestException(msg, f),
             "limit_exceeded" => new ThrottlingException(msg, f),
             "time_out" => new QueryTimeoutException(msg, f),
