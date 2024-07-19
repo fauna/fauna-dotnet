@@ -13,6 +13,7 @@ namespace Fauna;
 public class Client : BaseClient, IDisposable
 {
     private const string QueryUriPath = "/query/1";
+    private const string StreamUriPath = "/stream/1";
 
     private readonly Configuration _config;
     private readonly IConnection _connection;
@@ -123,6 +124,53 @@ public class Client : BaseClient, IDisposable
                 throw ExceptionFactory.FromQueryFailure(ctx, failure);
             default:
                 throw ExceptionFactory.FromRawResponse(body, httpResponse);
+        }
+    }
+
+    internal override async IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
+        Types.Stream stream,
+        MappingContext ctx,
+        CancellationToken cancel = default)
+    {
+        while (!cancel.IsCancellationRequested)
+        {
+            var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
+            var headers = GetRequestHeaders(finalOptions); // TODO: check this
+
+            using var streamData = new MemoryStream();
+            stream.Serialize(streamData);
+
+            var response = await _connection.OpenStream(StreamUriPath, streamData, headers, cancel);
+
+            await using var streamAsync = await response.Content.ReadAsStreamAsync(cancel);
+            using var reader = new StreamReader(streamAsync);
+            try
+            {
+                // make sure we have a healthy reader
+                reader.Peek();
+            }
+            catch (IOException)
+            {
+                // retry logic handled in the stream
+                continue;
+            }
+
+            while (!reader.EndOfStream && !cancel.IsCancellationRequested)
+            {
+                string? line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                var evt = Event<T>.From(line, ctx);
+                stream.StartTs = evt.TxnTime;
+                LastSeenTxn = evt.TxnTime;
+                StatsCollector?.Add(evt.Stats);
+                yield return evt;
+            }
+
+            reader.Close();
         }
     }
 

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using Fauna.Mapping;
+using Stream = Fauna.Types.Stream;
 
 namespace Fauna;
 
@@ -44,6 +45,15 @@ public abstract class DataContext : BaseClient
     {
         CheckInitialization();
         return _client.QueryAsyncInternal(query, serializer, ctx, queryOptions, cancel);
+    }
+
+    internal override IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
+        Stream stream,
+        MappingContext ctx,
+        CancellationToken cancel = default)
+    {
+        CheckInitialization();
+        return _client.SubscribeStreamInternal<T>(stream, ctx, cancel);
     }
 
     // Schema DSL

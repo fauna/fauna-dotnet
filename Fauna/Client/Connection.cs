@@ -28,11 +28,38 @@ internal class Connection : IConnection
     {
         HttpResponseMessage response;
         {
-
             var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+                .ExecuteAndCaptureAsync(async () =>
+                    await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
                 .ConfigureAwait(false);
+            if (policyResult.Outcome == OutcomeType.Successful)
+            {
+                response = policyResult.Result;
+            }
+            else
+            {
+                throw policyResult.FinalException;
+            }
+        }
 
+        return response;
+    }
+
+    public async Task<HttpResponseMessage> OpenStream(
+        string path,
+        Stream body,
+        Dictionary<string, string> headers,
+        CancellationToken cancellationToken = default)
+    {
+        HttpResponseMessage response;
+        {
+            var policyResult = await _cfg.RetryConfiguration.StreamRetryPolicy
+                .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient
+                    .SendAsync(
+                        CreateHttpRequest(path, body, headers),
+                        HttpCompletionOption.ResponseHeadersRead,
+                        cancellationToken)
+                    .ConfigureAwait(false));
             if (policyResult.Outcome == OutcomeType.Successful)
             {
                 response = policyResult.Result;
@@ -76,6 +103,7 @@ internal class Connection : IConnection
             _cfg.HttpClient.Dispose();
             GC.SuppressFinalize(this);
         }
+
         _disposed = true;
     }
 

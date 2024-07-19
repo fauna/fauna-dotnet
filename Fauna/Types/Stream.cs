@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 namespace Fauna.Types;
 
 /// <summary>
@@ -11,9 +13,25 @@ public sealed class Stream : IEquatable<Stream>
     }
 
     /// <summary>
-    ///     Gets the string value of the stream token.
+    /// Gets the string value of the stream token.
     /// </summary>
-    public string Token { get; }
+    private string Token { get; }
+
+    public long? StartTs { get; set; }
+
+    public void Serialize(System.IO.Stream stream)
+    {
+        var writer = new Utf8JsonWriter(stream);
+        writer.WriteStartObject();
+        writer.WriteString("token", Token);
+        if (StartTs != null)
+        {
+            writer.WriteNumber("start_ts", StartTs.Value);
+        }
+        writer.WriteEndObject();
+        writer.Flush();
+    }
+
 
     /// <summary>
     ///     Determines whether the specified Stream is equal to the current Stream.
