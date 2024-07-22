@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
-using Telerik.JustMock.Helpers;
 using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test.Linq;
