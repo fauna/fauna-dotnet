@@ -148,54 +148,51 @@ public abstract class DataContext : BaseClient
     public interface IFunction : Linq.IQuerySource
     {
         public string Name { get; }
-        public Type ReturnType { get; }
         public object[] Args { get; }
     }
 
-    protected class FunctionCall<T>
+    protected class FunctionCall<T> where T : notnull
     {
-        private readonly string _name;
+
+        public string Name { get; }
         private readonly DataContext _ctx;
 
         public FunctionCall(string name, DataContext ctx)
         {
-            _name = name;
+            Name = name;
             _ctx = ctx;
         }
 
-        public Function<T> Call() => Call(Array.Empty<object>());
+        public T Call() => Call(Array.Empty<object>());
 
-        public Function<T> Call(object a1) => Call(new[] { a1 });
+        public T Call(object a1) => Call(new[] { a1 });
 
-        public Function<T> Call(object a1, object a2) => Call(new[] { a1, a2 });
+        public T Call(object a1, object a2) => Call(new[] { a1, a2 });
 
-        public Function<T> Call(object a1, object a2, object a3) => Call(new[] { a1, a2, a3 });
+        public T Call(object a1, object a2, object a3) => Call(new[] { a1, a2, a3 });
 
-        public Function<T> Call(object[] args) => new(_name, args, _ctx);
+        public T Call(object[] args) => CallAsync(args).Result;
+
+        public async Task<T> CallAsync() => await CallAsync(Array.Empty<object>());
+
+        public async Task<T> CallAsync(object a1) => await CallAsync(new[] { a1 });
+
+        public async Task<T> CallAsync(object a1, object a2) => await CallAsync(new[] { a1, a2 });
+
+        public async Task<T> CallAsync(object a1, object a2, object a3) => await CallAsync(new[] { a1, a2, a3 });
+
+        public async Task<T> CallAsync(object[] args)
+        {
+            var q = Linq.IntermediateQueryHelpers.Function(Name, args);
+            return (await _ctx.QueryAsync<T>(q)).Data;
+        }
 
     }
 
-    protected FunctionCall<T> Fn<T>(string name = "", [CallerMemberName] string callerName = "")
+    protected FunctionCall<T> Fn<T>(string name = "", [CallerMemberName] string callerName = "") where T : notnull
     {
         var fnName = name == "" ? callerName : name;
         return new FunctionCall<T>(fnName, this);
-    }
-
-    public class Function<T> : Linq.QuerySource<T>, IFunction
-    {
-        public string Name { get; }
-
-        public Type ReturnType => typeof(T);
-
-        public object[] Args { get; }
-
-        internal Function(string name, object[] args, DataContext ctx)
-        {
-            Name = name;
-            Args = args;
-            Ctx = ctx;
-            SetQuery<T>(Linq.IntermediateQueryHelpers.Function(this));
-        }
     }
 
     protected Col GetCollection<Col>() where Col : ICollection

@@ -69,8 +69,8 @@ internal static class IntermediateQueryHelpers
     public static Query CollectionIndex(DataContext.IIndex idx) =>
         MethodCall(Expr(idx.Collection.Name), idx.Name, idx.Args.Select(Const));
 
-    public static Query Function(DataContext.IFunction fnc) =>
-        FnCall(fnc.Name, fnc.Args.Select(Const));
+    public static Query Function(string name, object[] args) =>
+        FnCall(name, args.Select(Const));
 
     public static QueryExpr Concat(this Query q1, string str)
     {
