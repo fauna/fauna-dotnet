@@ -31,7 +31,7 @@ public class RoundTripTests
     {
         using var stream = new MemoryStream();
         using var writer = new Utf8FaunaWriter(stream);
-        Serializer.Serialize(ctx, writer, obj);
+        DynamicSerializer.Singleton.Serialize(ctx, writer, obj);
         writer.Flush();
         return Encoding.UTF8.GetString(stream.ToArray());
     }
@@ -40,7 +40,7 @@ public class RoundTripTests
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
-        var obj = Deserializer.Generate<T>(ctx).Deserialize(ctx, ref reader);
+        var obj = Serializer.Generate<T>(ctx).Deserialize(ctx, ref reader);
         if (reader.Read())
         {
             throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");

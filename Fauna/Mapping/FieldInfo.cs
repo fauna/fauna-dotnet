@@ -27,7 +27,7 @@ public sealed class FieldInfo
     public bool IsNullable { get; }
 
     private MappingContext _ctx;
-    private IDeserializer? _deserializer;
+    private ISerializer? _serializer;
 
     internal FieldInfo(MappingContext ctx, FieldAttribute attr, PropertyInfo prop)
     {
@@ -41,27 +41,27 @@ public sealed class FieldInfo
         _ctx = ctx;
     }
 
-    internal IDeserializer Deserializer
+    internal ISerializer Serializer
     {
         get
         {
             lock (_ctx)
             {
-                if (_deserializer is null)
+                if (_serializer is null)
                 {
-                    _deserializer = Fauna.Serialization.Deserializer.Generate(_ctx, Type);
-                    if (IsNullable && (!_deserializer.GetType().IsGenericType ||
-                                       (_deserializer.GetType().IsGenericType &&
-                                        _deserializer.GetType().GetGenericTypeDefinition() !=
-                                        typeof(NullableStructDeserializer<>))))
+                    _serializer = Fauna.Serialization.Serializer.Generate(_ctx, Type);
+                    if (IsNullable && (!_serializer.GetType().IsGenericType ||
+                                       (_serializer.GetType().IsGenericType &&
+                                        _serializer.GetType().GetGenericTypeDefinition() !=
+                                        typeof(NullableStructSerializer<>))))
                     {
-                        var deserType = typeof(NullableDeserializer<>).MakeGenericType(new[] { Type });
-                        var deser = Activator.CreateInstance(deserType, new[] { _deserializer });
-                        _deserializer = (IDeserializer)deser!;
+                        var serType = typeof(NullableSerializer<>).MakeGenericType(new[] { Type });
+                        var ser = Activator.CreateInstance(serType, new[] { _serializer });
+                        _serializer = (ISerializer)ser!;
                     }
                 }
 
-                return _deserializer;
+                return _serializer;
             }
         }
     }

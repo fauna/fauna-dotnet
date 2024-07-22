@@ -1,202 +1,182 @@
 using Fauna.Mapping;
 using Fauna.Types;
-using Module = Fauna.Types.Module;
 
 namespace Fauna.Serialization;
 
 /// <summary>
-/// Represents methods for serializing and deserializing objects to and from Fauna format.
+/// Represents methods for deserializing objects to and from Fauna's value format.
 /// </summary>
 public static class Serializer
 {
+    /// <summary>
+    /// The dynamic data deserializer.
+    /// </summary>
+    public static ISerializer<object?> Dynamic => DynamicSerializer.Singleton;
 
     internal static readonly HashSet<string> Tags = new()
     {
         "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
     };
 
+    private static readonly CheckedSerializer<object> _object = new();
+    private static readonly StringSerializer _string = new();
+    private static readonly ByteSerializer _byte = new();
+    private static readonly SByteSerializer _sbyte = new();
+    private static readonly ShortSerializer _short = new();
+    private static readonly UShortSerializer _ushort = new();
+    private static readonly IntSerializer _int = new();
+    private static readonly UIntSerializer _uint = new();
+    private static readonly LongSerializer _long = new();
+    private static readonly FloatSerializer _float = new();
+    private static readonly DoubleSerializer _double = new();
+    private static readonly DateOnlySerializer _dateOnly = new();
+    private static readonly DateTimeSerializer _dateTime = new();
+    private static readonly BooleanSerializer _bool = new();
+    private static readonly ModuleSerializer _module = new();
+    private static readonly DocumentSerializer<Document> _doc = new();
+    private static readonly DocumentSerializer<NamedDocument> _namedDoc = new();
+    private static readonly DocumentSerializer<Ref> _docRef = new();
+    private static readonly DocumentSerializer<NamedRef> _namedDocRef = new();
+
     /// <summary>
-    /// Serializes an object to a Fauna compatible format.
+    /// Generates a deserializer for the specified non-nullable .NET type.
     /// </summary>
-    /// <param name="ctx">The context for serialization.</param>
-    /// <param name="w">The writer to serialize the object to.</param>
-    /// <param name="o">The object to serialize.</param>
-    /// <exception cref="SerializationException">Thrown when serialization fails.</exception>
-    public static void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
+    /// <typeparam name="T">The type of the object to serialize.</typeparam>
+    /// <param name="context">The serialization context.</param>
+    /// <returns>An <see cref="ISerializer{T}"/>.</returns>
+    public static ISerializer<T> Generate<T>(MappingContext context) where T : notnull
     {
-        SerializeValueInternal(ctx, w, o);
+        var targetType = typeof(T);
+        var deser = (ISerializer<T>)Generate(context, targetType);
+        return deser;
     }
 
-    private static void SerializeValueInternal(MappingContext ctx, Utf8FaunaWriter w, object? o)
+    /// <summary>
+    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// </summary>
+    /// <param name="context">The serialization context.</param>
+    /// <param name="targetType">The type of the object to serialize.</typeparam>
+    /// <returns>An <see cref="ISerializer"/>.</returns>
+    public static ISerializer Generate(MappingContext context, Type targetType)
     {
-        switch (o)
+        if (targetType == typeof(object)) return _object;
+        if (targetType == typeof(string)) return _string;
+        if (targetType == typeof(byte)) return _byte;
+        if (targetType == typeof(sbyte)) return _sbyte;
+        if (targetType == typeof(short)) return _short;
+        if (targetType == typeof(ushort)) return _ushort;
+        if (targetType == typeof(int)) return _int;
+        if (targetType == typeof(uint)) return _uint;
+        if (targetType == typeof(long)) return _long;
+        if (targetType == typeof(float)) return _float;
+        if (targetType == typeof(double)) return _double;
+        if (targetType == typeof(DateOnly)) return _dateOnly;
+        if (targetType == typeof(DateTime)) return _dateTime;
+        if (targetType == typeof(bool)) return _bool;
+        if (targetType == typeof(Module)) return _module;
+        if (targetType == typeof(Document)) return _doc;
+        if (targetType == typeof(NamedDocument)) return _namedDoc;
+        if (targetType == typeof(Ref)) return _docRef;
+        if (targetType == typeof(NamedRef)) return _namedDocRef;
+
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
         {
-            case null:
-                w.WriteNullValue();
-                break;
-            case byte v:
-                w.WriteIntValue(v);
-                break;
-            case sbyte v:
-                w.WriteIntValue(v);
-                break;
-            case ushort v:
-                w.WriteIntValue(v);
-                break;
-            case short v:
-                w.WriteIntValue(v);
-                break;
-            case int v:
-                w.WriteIntValue(v);
-                break;
-            case uint v:
-                w.WriteLongValue(v);
-                break;
-            case long v:
-                w.WriteLongValue(v);
-                break;
-            case float v:
-                w.WriteDoubleValue(v);
-                break;
-            case double v:
-                w.WriteDoubleValue(v);
-                break;
-            case decimal:
-                throw new SerializationException("Decimals are unsupported due to potential loss of precision.");
-            case bool v:
-                w.WriteBooleanValue(v);
-                break;
-            case string v:
-                w.WriteStringValue(v);
-                break;
-            case Module v:
-                w.WriteModuleValue(v);
-                break;
-            case DateTime v:
-                w.WriteTimeValue(v);
-                break;
-            case DateTimeOffset v:
-                w.WriteTimeValue(v);
-                break;
-            case DateOnly v:
-                w.WriteDateValue(v);
-                break;
-            case Ref doc:
-                SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
-                break;
-            case Document doc:
-                SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
-                break;
-            case NullableDocument<Document> doc:
-                switch (doc)
-                {
-                    case NullDocument<Document> d:
-                        SerializeDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<Document> d:
-                        SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case NullableDocument<Ref> doc:
-                switch (doc)
-                {
-                    case NullDocument<Ref> d:
-                        SerializeDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<Ref> d:
-                        SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case NamedRef doc:
-                SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
-                break;
-            case NamedDocument doc:
-                SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
-                break;
-            case NullableDocument<NamedDocument> doc:
-                switch (doc)
-                {
-                    case NullDocument<NamedDocument> d:
-                        SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<NamedDocument> d:
-                        SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case NullableDocument<NamedRef> doc:
-                switch (doc)
-                {
-                    case NullDocument<NamedRef> d:
-                        SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<NamedRef> d:
-                        SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case Dictionary<string, object> d:
-                SerializeIDictionaryInternal(ctx, w, d);
-                break;
-            case IEnumerable<object> e:
-                w.WriteStartArray();
-                foreach (var obj in e)
-                {
-                    SerializeValueInternal(ctx, w, obj);
-                }
-                w.WriteEndArray();
-                break;
-            default:
-                SerializeClassInternal(ctx, w, o);
-                break;
+            var args = targetType.GetGenericArguments();
+            if (args.Length == 1)
+            {
+                var inner = (ISerializer)Generate(context, args[0]);
+                var serType = typeof(NullableStructSerializer<>).MakeGenericType(new[] { args[0] });
+                var ser = Activator.CreateInstance(serType, new[] { inner });
+
+                return (ISerializer)ser!;
+            }
+
+            throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
         }
-    }
 
-
-    private static void SerializeDocumentRefInternal(Utf8FaunaWriter writer, string id, Module coll)
-    {
-        writer.WriteStartRef();
-        writer.WriteString("id", id);
-        writer.WriteModule("coll", coll);
-        writer.WriteEndRef();
-    }
-
-    private static void SerializeNamedDocumentRefInternal(Utf8FaunaWriter writer, string name, Module coll)
-    {
-        writer.WriteStartRef();
-        writer.WriteString("name", name);
-        writer.WriteModule("coll", coll);
-        writer.WriteEndRef();
-    }
-
-
-    private static void SerializeIDictionaryInternal<T>(MappingContext ctx, Utf8FaunaWriter writer, IDictionary<string, T> d)
-    {
-        var shouldEscape = Tags.Overlaps(d.Keys);
-        if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
-        foreach (var (key, value) in d)
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>))
         {
-            writer.WriteFieldName(key);
-            Serialize(ctx, writer, value);
+            var argTypes = targetType.GetGenericArguments();
+            var valueType = argTypes[0];
+            var serType = typeof(NullableDocumentSerializer<>).MakeGenericType(new[] { valueType });
+            var ser = Activator.CreateInstance(serType);
+            return (ISerializer)ser!;
         }
-        if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
+
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+        {
+            var argTypes = targetType.GetGenericArguments();
+            var keyType = argTypes[0];
+            var valueType = argTypes[1];
+
+            if (keyType != typeof(string))
+                throw new ArgumentException(
+                    $"Unsupported Dictionary key type. Key must be of type string, but was a {keyType}");
+
+            var valueDeserializer = Generate(context, valueType);
+
+            var serType = typeof(DictionarySerializer<>).MakeGenericType(new[] { valueType });
+            var ser = Activator.CreateInstance(serType, new[] { valueDeserializer });
+
+            return (ISerializer)ser!;
+        }
+
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
+        {
+            var elemType = targetType.GetGenericArguments()[0];
+            var elemDeserializer = Generate(context, elemType);
+
+            var serType = typeof(ListSerializer<>).MakeGenericType(new[] { elemType });
+            var ser = Activator.CreateInstance(serType, new[] { elemDeserializer });
+
+            return (ISerializer)ser!;
+        }
+
+        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>))
+        {
+            var elemType = targetType.GetGenericArguments()[0];
+            var elemDeserializer = Generate(context, elemType);
+
+            var serType = typeof(PageSerializer<>).MakeGenericType(new[] { elemType });
+            var ser = Activator.CreateInstance(serType, new[] { elemDeserializer });
+
+            return (ISerializer)ser!;
+        }
+
+        if (targetType.IsClass && !targetType.IsGenericType)
+        {
+            var info = context.GetInfo(targetType);
+            return info.ClassSerializer;
+        }
+
+        throw new ArgumentException($"Unsupported deserialization target type {targetType}");
     }
 
-    private static void SerializeClassInternal(MappingContext ctx, Utf8FaunaWriter writer, object obj)
+    /// <summary>
+    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// </summary>
+    /// <typeparam name="T">The type of the object to serialize.</typeparam>
+    /// <param name="context">The serialization context.</param>
+    /// <returns>An <see cref="ISerializer{T}"/>.</returns>
+    public static ISerializer<T?> GenerateNullable<T>(MappingContext context)
     {
-        var t = obj.GetType();
-        var mapping = ctx.GetInfo(t);
-        var shouldEscape = mapping.ShouldEscapeObject;
+        var targetType = typeof(T);
+        var ser = (ISerializer<T>)Generate(context, targetType);
+        return new NullableSerializer<T>(ser);
+    }
 
-        if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
-        foreach (var field in mapping.Fields)
-        {
-            writer.WriteFieldName(field.Name!);
-            var v = field.Property.GetValue(obj);
-            SerializeValueInternal(ctx, writer, v);
-        }
-        if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
+    /// <summary>
+    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// </summary>
+    /// <param name="context">The serialization context.</param>
+    /// <param name="targetType">The type of the object to serialize.</typeparam>
+    /// <returns>An <see cref="ISerializer"/>.</returns>
+    public static ISerializer GenerateNullable(MappingContext context, Type targetType)
+    {
+        var inner = (ISerializer)Generate(context, targetType);
+        var serType = typeof(NullableSerializer<>).MakeGenericType(new[] { targetType });
+        var ser = Activator.CreateInstance(serType, new[] { inner });
+
+        return (ISerializer)ser!;
     }
 }

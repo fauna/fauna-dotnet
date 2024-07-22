@@ -2,13 +2,13 @@ using Fauna.Mapping;
 
 namespace Fauna.Serialization;
 
-internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T>>
+internal class DictionarySerializer<T> : BaseSerializer<Dictionary<string, T>>
 {
-    private readonly IDeserializer<T> _elemDeserializer;
+    private readonly ISerializer<T> _elemSerializer;
 
-    public DictionaryDeserializer(IDeserializer<T> elemDeserializer)
+    public DictionarySerializer(ISerializer<T> elemSerializer)
     {
-        _elemDeserializer = elemDeserializer;
+        _elemSerializer = elemSerializer;
     }
 
     public override Dictionary<string, T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
@@ -27,9 +27,14 @@ internal class DictionaryDeserializer<T> : BaseDeserializer<Dictionary<string, T
 
             var fieldName = reader.GetString()!;
             reader.Read();
-            dict.Add(fieldName, _elemDeserializer.Deserialize(context, ref reader));
+            dict.Add(fieldName, _elemSerializer.Deserialize(context, ref reader));
         }
 
         return dict;
+    }
+
+    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -4,14 +4,14 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal class NullableDocumentDeserializer<T> : BaseDeserializer<NullableDocument<T>> where T : class
+internal class NullableDocumentSerializer<T> : BaseSerializer<NullableDocument<T>> where T : class
 {
-    private static readonly DocumentDeserializer<NullableDocument<Document>> _nullableDoc = new();
-    private static readonly DocumentDeserializer<NullableDocument<NamedDocument>> _nullableNamedDoc = new();
-    private static readonly DocumentDeserializer<NullableDocument<Ref>> _nullabelDocRef = new();
-    private static readonly DocumentDeserializer<NullableDocument<NamedRef>> _nullabelNamedDocRef = new();
+    private static readonly DocumentSerializer<NullableDocument<Document>> _nullableDoc = new();
+    private static readonly DocumentSerializer<NullableDocument<NamedDocument>> _nullableNamedDoc = new();
+    private static readonly DocumentSerializer<NullableDocument<Ref>> _nullabelDocRef = new();
+    private static readonly DocumentSerializer<NullableDocument<NamedRef>> _nullabelNamedDocRef = new();
 
-    public NullableDocumentDeserializer()
+    public NullableDocumentSerializer()
     {
     }
 
@@ -29,12 +29,17 @@ internal class NullableDocumentDeserializer<T> : BaseDeserializer<NullableDocume
         var info = context.GetInfo(typeof(T));
         try
         {
-            var v = info.Deserializer.Deserialize(context, ref reader);
+            var v = info.ClassSerializer.Deserialize(context, ref reader);
             return new NonNullDocument<T>((v as T)!);
         }
         catch (NullDocumentException e)
         {
             return new NullDocument<T>(e.Id, e.Collection, e.Cause);
         }
+    }
+
+    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    {
+        throw new NotImplementedException();
     }
 }

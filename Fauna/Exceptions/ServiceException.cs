@@ -110,23 +110,22 @@ public class AbortException : ServiceException
     /// Retrieves the deserialized data associated with the abort operation as an object.
     /// </summary>
     /// <returns>The deserialized data as an object, or null if no data is available.</returns>
-    public object? GetData() => GetData(Deserializer.Dynamic);
+    public object? GetData() => GetData(Serializer.Dynamic);
 
     /// <summary>
     /// Retrieves the deserialized data associated with the abort operation as a specific type.
     /// </summary>
     /// <typeparam name="T">The type to which the data should be deserialized.</typeparam>
-    /// <param name="deserializer">A deserializer for the abort data.</param>
     /// <returns>The deserialized data as the specified type, or null if no data is available.</returns>
-    public T? GetData<T>() where T : notnull => GetData(Deserializer.Generate<T>(_ctx));
+    public T? GetData<T>() where T : notnull => GetData(Serializer.Generate<T>(_ctx));
 
     /// <summary>
     /// Retrieves the deserialized data associated with the abort operation as a specific type.
     /// </summary>
     /// <typeparam name="T">The type to which the data should be deserialized.</typeparam>
-    /// <param name="deserializer">A deserializer for the abort data.</param>
+    /// <param name="serializer">A serializer for the abort data.</param>
     /// <returns>The deserialized data as the specified type, or null if no data is available.</returns>
-    public T? GetData<T>(IDeserializer<T> deserializer)
+    public T? GetData<T>(ISerializer<T> serializer)
     {
         var typeKey = typeof(T);
         if (_cache.TryGetValue(typeKey, out var cachedData)) return (T?)cachedData;
@@ -140,7 +139,7 @@ public class AbortException : ServiceException
         var reader = new Utf8FaunaReader(abortDataString);
         reader.Read();
 
-        var deserializedResult = deserializer.Deserialize(_ctx, ref reader);
+        var deserializedResult = serializer.Deserialize(_ctx, ref reader);
         _cache[typeKey] = deserializedResult;
         return deserializedResult;
     }

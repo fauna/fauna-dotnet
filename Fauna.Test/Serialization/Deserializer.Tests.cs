@@ -21,15 +21,15 @@ public class DeserializerTests
     }
 
     public object? Deserialize(string str) =>
-       DeserializeImpl(str, ctx => Deserializer.Dynamic);
+       DeserializeImpl(str, ctx => Serializer.Dynamic);
 
     public T Deserialize<T>(string str) where T : notnull =>
-       DeserializeImpl(str, ctx => Deserializer.Generate<T>(ctx));
+       DeserializeImpl(str, ctx => Serializer.Generate<T>(ctx));
 
     public T? DeserializeNullable<T>(string str) =>
-        DeserializeImpl(str, ctx => Deserializer.GenerateNullable<T>(ctx));
+        DeserializeImpl(str, ctx => Serializer.GenerateNullable<T>(ctx));
 
-    public T DeserializeImpl<T>(string str, Func<MappingContext, IDeserializer<T>> deserFunc)
+    public T DeserializeImpl<T>(string str, Func<MappingContext, ISerializer<T>> deserFunc)
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
@@ -56,9 +56,9 @@ public class DeserializerTests
     [Test]
     public void CastDeserializer()
     {
-        var deser = Deserializer.Generate<string>(ctx);
+        var deser = Serializer.Generate<string>(ctx);
         // should cast w/o failing due to covariance.
-        var obj = (IDeserializer<object?>)deser;
+        var obj = (ISerializer<object?>)deser;
 
         Assert.AreEqual(deser, obj);
     }

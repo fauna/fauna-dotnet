@@ -85,13 +85,13 @@ public abstract class QueryResponse
     /// </summary>
     /// <typeparam name="T">The expected data type of the query response.</typeparam>
     /// <param name="ctx">Serialization context for handling response data.</param>
-    /// <param name="deserializer">A deserializer for the success data type.</param>
+    /// <param name="serializer">A serializer for the success data type.</param>
     /// <param name="statusCode">The HTTP status code.</param>
     /// <param name="body">The response body.</param>
     /// <returns>A Task that resolves to a QueryResponse instance.</returns>
     public static QueryResponse? GetFromResponseBody<T>(
         MappingContext ctx,
-        IDeserializer<T> deserializer,
+        ISerializer<T> serializer,
         HttpStatusCode statusCode,
         string body)
     {
@@ -101,7 +101,7 @@ public abstract class QueryResponse
 
             if (statusCode is >= HttpStatusCode.OK and <= (HttpStatusCode)299)
             {
-                return new QuerySuccess<T>(ctx, deserializer, json);
+                return new QuerySuccess<T>(ctx, serializer, json);
             }
 
             return new QueryFailure(statusCode, json);
@@ -133,18 +133,18 @@ public sealed class QuerySuccess<T> : QueryResponse
     /// Initializes a new instance of the <see cref="QuerySuccess{T}"/> class, deserializing the query response into the specified type.
     /// </summary>
     /// <param name="ctx">The serialization context used for deserializing the response data.</param>
-    /// <param name="deserializer">A deserializer for the response data type.</param>
+    /// <param name="serializer">A deserializer for the response data type.</param>
     /// <param name="json">The parsed JSON response body.</param>
     public QuerySuccess(
         MappingContext ctx,
-        IDeserializer<T> deserializer,
+        ISerializer<T> serializer,
         JsonElement json)
         : base(json)
     {
         var dataText = json.GetProperty(DataFieldName).GetRawText();
         var reader = new Utf8FaunaReader(dataText);
         reader.Read();
-        Data = deserializer.Deserialize(ctx, ref reader);
+        Data = serializer.Deserialize(ctx, ref reader);
 
         if (json.TryGetProperty(StaticTypeFieldName, out var elem))
         {

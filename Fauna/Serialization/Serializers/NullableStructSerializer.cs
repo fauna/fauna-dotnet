@@ -2,11 +2,11 @@ using Fauna.Mapping;
 
 namespace Fauna.Serialization;
 
-internal class NullableStructDeserializer<T> : BaseDeserializer<T?> where T : struct
+internal class NullableStructSerializer<T> : BaseSerializer<T?> where T : struct
 {
-    private readonly IDeserializer<T> _inner;
+    private readonly ISerializer<T> _inner;
 
-    public NullableStructDeserializer(IDeserializer<T> inner)
+    public NullableStructSerializer(ISerializer<T> inner)
     {
         _inner = inner;
     }
@@ -19,5 +19,10 @@ internal class NullableStructDeserializer<T> : BaseDeserializer<T?> where T : st
         }
 
         return _inner.Deserialize(context, ref reader);
+    }
+
+    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    {
+        throw new NotImplementedException();
     }
 }
