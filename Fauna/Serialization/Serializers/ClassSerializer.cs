@@ -5,19 +5,19 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal interface IClassDeserializer : IDeserializer
+internal interface IClassSerializer : ISerializer
 {
     public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader);
 }
 
-internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
+internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
 {
     private const string IdField = "id";
     private const string NameField = "name";
 
     private readonly MappingInfo _info;
 
-    public ClassDeserializer(MappingInfo info)
+    public ClassSerializer(MappingInfo info)
     {
         Debug.Assert(info.Type == typeof(T));
         _info = info;
@@ -91,6 +91,11 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
         return (T)instance;
     }
 
+    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    {
+        throw new NotImplementedException();
+    }
+
     private object CreateInstance() => Activator.CreateInstance(_info.Type)!;
 
     private void SetFields(object instance, MappingContext context, ref Utf8FaunaReader reader, TokenType endToken)
@@ -113,7 +118,7 @@ internal class ClassDeserializer<T> : BaseDeserializer<T>, IClassDeserializer
             }
             else if (_info.FieldsByName.TryGetValue(fieldName, out var field))
             {
-                field.Property.SetValue(instance, field.Deserializer.Deserialize(context, ref reader));
+                field.Property.SetValue(instance, field.Serializer.Deserialize(context, ref reader));
             }
             else
             {

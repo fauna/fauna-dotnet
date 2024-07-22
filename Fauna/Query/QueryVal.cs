@@ -31,7 +31,7 @@ public sealed class QueryVal : Query, IQueryFragment
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");
-        Serializer.Serialize(ctx, writer, Unwrap);
+        DynamicSerializer.Singleton.Serialize(ctx, writer, Unwrap);
         writer.WriteEndObject();
     }
 

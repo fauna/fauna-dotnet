@@ -27,14 +27,14 @@ internal interface IPipelineExecutor
     public static IPipelineExecutor Create(
         DataContext ctx,
         Query query,
-        IDeserializer deser,
+        ISerializer ser,
         Delegate? proj,
         PipelineMode mode)
     {
         Debug.Assert(mode != PipelineMode.SetLoad);
 
-        var innerTy = deser.GetType()
-            .GetGenInst(typeof(IDeserializer<>))!
+        var innerTy = ser.GetType()
+            .GetGenInst(typeof(ISerializer<>))!
             .GetGenericArguments()[0];
 
         var elemTy = proj is null ?
@@ -50,7 +50,7 @@ internal interface IPipelineExecutor
         };
 
         var typeArgs = new Type[] { innerTy, elemTy };
-        var args = new object?[] { ctx, query, deser, proj };
+        var args = new object?[] { ctx, query, ser, proj };
         var exec = method.MakeGenericMethod(typeArgs).Invoke(null, args);
 
         return (IPipelineExecutor)exec!;
@@ -59,18 +59,18 @@ internal interface IPipelineExecutor
     public static EnumExecutor<E> CreateEnumExec<I, E>(
         DataContext ctx,
         Query query,
-        IDeserializer<I> deser,
+        ISerializer<I> ser,
         Func<I, E>? proj) =>
-        new EnumExecutor<E>(ctx, query, new PageDeserializer<E>(MapDeser(deser, proj)));
+        new EnumExecutor<E>(ctx, query, new PageSerializer<E>(MapSer(ser, proj)));
 
     public static ScalarExecutor<E> CreateScalarExec<I, E>(
         DataContext ctx,
         Query query,
-        IDeserializer<I> deser,
+        ISerializer<I> ser,
         Func<I, E>? proj) =>
-        new ScalarExecutor<E>(ctx, query, MapDeser(deser, proj));
+        new ScalarExecutor<E>(ctx, query, MapSer(ser, proj));
 
-    private static IDeserializer<E> MapDeser<I, E>(IDeserializer<I> inner, Func<I, E>? proj)
+    private static ISerializer<E> MapSer<I, E>(ISerializer<I> inner, Func<I, E>? proj)
     {
         if (proj is not null)
         {
@@ -78,20 +78,20 @@ internal interface IPipelineExecutor
         }
 
         Debug.Assert(typeof(I) == typeof(E));
-        return (IDeserializer<E>)inner;
+        return (ISerializer<E>)inner;
     }
 
     public readonly record struct EnumExecutor<E>(
         DataContext Ctx,
         Query Query,
-        PageDeserializer<E> Deser) : IPipelineExecutor
+        PageSerializer<E> Ser) : IPipelineExecutor
     {
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(IEnumerable<E>); }
 
         public IAsyncEnumerable<Page<T>> PagedResult<T>(QueryOptions? queryOptions, CancellationToken cancel = default)
         {
-            var pages = Ctx.PaginateAsyncInternal(Query, Deser, queryOptions, cancel);
+            var pages = Ctx.PaginateAsyncInternal(Query, Ser, queryOptions, cancel);
             if (pages is IAsyncEnumerable<Page<T>> ret)
             {
                 return ret;
@@ -138,14 +138,14 @@ internal interface IPipelineExecutor
     public readonly record struct ScalarExecutor<E>(
         DataContext Ctx,
         Query Query,
-        IDeserializer<E> Deser) : IPipelineExecutor
+        ISerializer<E> Ser) : IPipelineExecutor
     {
         public Type ElemType { get => typeof(E); }
         public Type ResType { get => typeof(E); }
 
         public async Task<T> Result<T>(QueryOptions? queryOptions, CancellationToken cancel = default)
         {
-            var qres = await Ctx.QueryAsync(Query, Deser, queryOptions, cancel);
+            var qres = await Ctx.QueryAsync(Query, Ser, queryOptions, cancel);
             if (qres.Data is T ret)
             {
                 return ret;

@@ -8,15 +8,15 @@ namespace Fauna.Linq;
 // TODO(matt) reconcile/merge this behavior with MappingCtx
 internal record struct LookupTable(MappingContext Ctx)
 {
-    public record class Result(string Name, IDeserializer Deserializer, Type Type);
-    private static Result R(string name, IDeserializer deser, Type ty) => new Result(name, deser, ty);
+    public record class Result(string Name, ISerializer Serializer, Type Type);
+    private static Result R(string name, ISerializer ser, Type ty) => new Result(name, ser, ty);
 
     public Result? FieldLookup(PropertyInfo prop, Expression callee)
     {
         if (Ctx.TryGetBaseType(callee.Type, out var info))
         {
             var field = info.Fields.FirstOrDefault(f => f.Property == prop);
-            return field is null ? null : R(field.Name, field.Deserializer, field.Type);
+            return field is null ? null : R(field.Name, field.Serializer, field.Type);
         }
 
         return Table(prop, callee);
@@ -44,9 +44,9 @@ internal record struct LookupTable(MappingContext Ctx)
     private Result? StringTable(MemberInfo member, Expression callee) =>
         member.Name switch
         {
-            "Length" => R("length", Deserializer.Generate<int>(Ctx), typeof(int)),
-            "EndsWith" => R("endsWith", Deserializer.Generate<bool>(Ctx), typeof(int)),
-            "StartsWith" => R("startsWith", Deserializer.Generate<bool>(Ctx), typeof(int)),
+            "Length" => R("length", Serializer.Generate<int>(Ctx), typeof(int)),
+            "EndsWith" => R("endsWith", Serializer.Generate<bool>(Ctx), typeof(int)),
+            "StartsWith" => R("startsWith", Serializer.Generate<bool>(Ctx), typeof(int)),
             _ => null,
         };
 }

@@ -297,34 +297,34 @@ public partial class QuerySource<T>
     private QuerySource<R> Chain<R>(
         PipelineMode? mode = null,
         Query? q = null,
-        IDeserializer? deser = null,
+        ISerializer? ser = null,
         Type? ety = null,
         bool enull = false,
         LambdaExpression? proj = null) =>
-        new QuerySource<R>(Ctx, CopyPipeline(mode, q, deser, ety, enull, proj));
+        new QuerySource<R>(Ctx, CopyPipeline(mode, q, ser, ety, enull, proj));
 
     private Pipeline CopyPipeline(
         PipelineMode? mode = null,
         Query? q = null,
-        IDeserializer? deser = null,
+        ISerializer? ser = null,
         Type? ety = null,
         bool enull = false,
         LambdaExpression? proj = null)
     {
-        if (deser is not null) Debug.Assert(ety is not null);
+        if (ser is not null) Debug.Assert(ety is not null);
 
         var mode0 = mode ?? Pipeline.Mode;
         var q0 = q ?? Pipeline.Query;
 
-        // if ety is not null, reset deser and proj if not provided.
-        var (ety0, enull0, deser0, proj0) = ety is not null ?
-            (ety, enull, deser, proj) :
+        // if ety is not null, reset ser and proj if not provided.
+        var (ety0, enull0, ser0, proj0) = ety is not null ?
+            (ety, enull, ser, proj) :
             (Pipeline.ElemType,
              Pipeline.ElemNullable,
-             Pipeline.ElemDeserializer,
+             Pipeline.ElemSerializer,
              proj ?? Pipeline.ProjectExpr);
 
-        return new Pipeline(mode0, q0, ety0, enull0, deser0, proj0);
+        return new Pipeline(mode0, q0, ety0, enull0, ser0, proj0);
     }
 
     // There is a bug in abort data deserialization if the abort
@@ -411,7 +411,7 @@ public partial class QuerySource<T>
 
             return CopyPipeline(
                 q: QH.MethodCall(callee, "map", QH.Expr($".{field.Name}")),
-                deser: field.Deserializer,
+                ser: field.Serializer,
                 ety: field.Type);
         }
 
@@ -429,7 +429,7 @@ public partial class QuerySource<T>
             var pquery = QH.Expr("x => ").Concat(QH.Array(accs));
 
             // projected field deserializer
-            var deser = new ProjectionDeserializer(fields.Select(f => f.Deserializer));
+            var deser = new ProjectionDeserializer(fields.Select(f => f.Serializer));
             var ety = typeof(object?[]);
 
             // build mapping lambda expression
@@ -441,7 +441,7 @@ public partial class QuerySource<T>
             return CopyPipeline(
                 q: QH.MethodCall(callee, "map", pquery),
                 mode: PipelineMode.Project,
-                deser: deser,
+                ser: deser,
                 ety: ety,
                 proj: plambda);
         }
