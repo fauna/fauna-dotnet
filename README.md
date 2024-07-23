@@ -167,8 +167,8 @@ class PersonDb : DataContext
     }
 
     public PersonCollection Person { get => GetCollection<PersonCollection>(); }
-    public Function<int> AddTwo(int val) => Fn<int>().Call(val);
-    public Function<int> TimesTwo(int val) => Fn<int>("MultiplyByTwo").Call(val);
+    public int AddTwo(int val) => Fn<int>().Call(val);
+    public async Task<int> TimesTwo(int val) => await Fn<int>("MultiplyByTwo").CallAsync(val);
 }
 ```
 

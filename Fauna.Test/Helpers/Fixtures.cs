@@ -1,4 +1,5 @@
 using Fauna.Mapping.Attributes;
+using Fauna.Types;
 using static Fauna.Query;
 
 namespace Fauna.Test;
@@ -22,10 +23,10 @@ public class AuthorDb : DataContext
 
     public AuthorCol Author { get => GetCollection<AuthorCol>(); }
 
-    public Function<int> Add2(int val) => Fn<int>().Call(val);
-    public Function<string> SayHello() => Fn<string>("SayHello").Call();
-    public Function<string> SayHelloArray() => Fn<string>("SayHelloArray").Call();
-    public Function<Author> GetAuthors() => Fn<Author>().Call();
+    public async Task<int> Add2(int val) => await Fn<int>().CallAsync(val);
+    public string SayHello() => Fn<string>("SayHello").Call();
+    public List<string> SayHelloArray() => Fn<List<string>>("SayHelloArray").Call();
+    public async Task<Page<Author>> GetAuthors() => await Fn<Page<Author>>().CallAsync();
 
 }
 

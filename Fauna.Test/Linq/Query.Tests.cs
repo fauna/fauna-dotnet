@@ -581,45 +581,38 @@ public class QueryTests
     }
 
     [Test]
-    public async Task Query_Function_Value_Single()
+    public void Query_Function_Value_Single()
     {
-        var ret = await _db.SayHello().SingleAsync();
+        var ret = _db.SayHello();
         Assert.AreEqual("Hello!", ret);
-    }
-
-    [Test]
-    public async Task Query_Function_Value_List()
-    {
-        var ret = await _db.SayHello().ToListAsync();
-        Assert.AreEqual(new List<string> { "Hello!" }, ret);
     }
 
     [Test]
     public async Task Query_Function_With_Param()
     {
-        var ret = await _db.Add2(8).SingleAsync();
+        var ret = await _db.Add2(8);
         Assert.AreEqual(10, ret);
     }
 
     [Test]
-    public async Task Query_Function_Array()
+    public void Query_Function_Array()
     {
-        var ret = await _db.SayHelloArray().ToListAsync();
+        var ret = _db.SayHelloArray();
         Assert.AreEqual(new List<string> { "Hello!", "Hello!" }, ret);
     }
 
     [Test]
     public async Task Query_Function_Set()
     {
-        var ret = await _db.GetAuthors().Select(x => x.Name).ToListAsync();
-        Assert.AreEqual(new List<string> { "Alice", "Bob" }, ret);
+        var ret = await _db.GetAuthors();
+        Assert.AreEqual(new List<string> { "Alice", "Bob" }, ret.Data.Select(a => a.Name));
     }
 
     [Test]
     public async Task Query_CastTypes()
     {
-        Assert.AreEqual(new[] { 91, 83 }, await _db.GetAuthors().Select(a => (int)a.Score).ToArrayAsync());
-        Assert.AreEqual(new[] { 32.0D, 26.0D }, await _db.GetAuthors().Select(a => (double)a.Age).ToArrayAsync());
-        Assert.AreEqual(new[] { 91L, 83L }, await _db.GetAuthors().Select(a => (long)a.Score).ToArrayAsync());
+        Assert.AreEqual(new[] { 91, 83 }, await _db.Author.Select(a => (int)a.Score).ToArrayAsync());
+        Assert.AreEqual(new[] { 32.0D, 26.0D }, await _db.Author.Select(a => (double)a.Age).ToArrayAsync());
+        Assert.AreEqual(new[] { 91L, 83L }, await _db.Author.Select(a => (long)a.Score).ToArrayAsync());
     }
 }
