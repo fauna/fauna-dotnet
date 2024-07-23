@@ -19,6 +19,7 @@ public sealed class QueryVal : Query, IQueryFragment
     /// <param name="v">The value of the specified type to be represented in the query.</param>
     public QueryVal(object? v)
     {
+
         Unwrap = v;
     }
 
@@ -31,7 +32,8 @@ public sealed class QueryVal : Query, IQueryFragment
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");
-        DynamicSerializer.Singleton.Serialize(ctx, writer, Unwrap);
+        var ser = Unwrap is not null ? Serializer.Generate(ctx, Unwrap.GetType()) : DynamicSerializer.Singleton;
+        ser.Serialize(ctx, writer, Unwrap);
         writer.WriteEndObject();
     }
 

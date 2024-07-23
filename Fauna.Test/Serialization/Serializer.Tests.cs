@@ -15,7 +15,11 @@ public class SerializerTests
     {
         using var stream = new MemoryStream();
         using var writer = new Utf8FaunaWriter(stream);
-        DynamicSerializer.Singleton.Serialize(ctx, writer, obj);
+
+        ISerializer ser = DynamicSerializer.Singleton;
+        if (obj is not null) ser = Serializer.Generate(ctx, obj.GetType());
+        ser.Serialize(ctx, writer, obj);
+
         writer.Flush();
         return Encoding.UTF8.GetString(stream.ToArray());
     }

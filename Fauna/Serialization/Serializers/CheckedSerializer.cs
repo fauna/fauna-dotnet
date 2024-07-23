@@ -16,6 +16,6 @@ internal class CheckedSerializer<T> : BaseSerializer<T>
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        throw new NotImplementedException();
+        DynamicSerializer.Singleton.Serialize(context, writer, o);
     }
 }

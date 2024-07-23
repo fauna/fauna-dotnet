@@ -4,12 +4,12 @@ using Fauna.Types;
 namespace Fauna.Serialization;
 
 /// <summary>
-/// Represents methods for deserializing objects to and from Fauna's value format.
+/// Represents methods for serializing objects to and from Fauna's value format.
 /// </summary>
 public static class Serializer
 {
     /// <summary>
-    /// The dynamic data deserializer.
+    /// The dynamic data serializer.
     /// </summary>
     public static ISerializer<object?> Dynamic => DynamicSerializer.Singleton;
 
@@ -31,6 +31,7 @@ public static class Serializer
     private static readonly DoubleSerializer _double = new();
     private static readonly DateOnlySerializer _dateOnly = new();
     private static readonly DateTimeSerializer _dateTime = new();
+    private static readonly DateTimeOffsetSerializer _dateTimeOffset = new();
     private static readonly BooleanSerializer _bool = new();
     private static readonly ModuleSerializer _module = new();
     private static readonly DocumentSerializer<Document> _doc = new();
@@ -39,7 +40,7 @@ public static class Serializer
     private static readonly DocumentSerializer<NamedRef> _namedDocRef = new();
 
     /// <summary>
-    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// Generates a serializer for the specified non-nullable .NET type.
     /// </summary>
     /// <typeparam name="T">The type of the object to serialize.</typeparam>
     /// <param name="context">The serialization context.</param>
@@ -47,12 +48,12 @@ public static class Serializer
     public static ISerializer<T> Generate<T>(MappingContext context) where T : notnull
     {
         var targetType = typeof(T);
-        var deser = (ISerializer<T>)Generate(context, targetType);
-        return deser;
+        var ser = (ISerializer<T>)Generate(context, targetType);
+        return ser;
     }
 
     /// <summary>
-    /// Generates a deserializer for the specified non-nullable .NET type.
+    /// Generates a serializer for the specified non-nullable .NET type.
     /// </summary>
     /// <param name="context">The serialization context.</param>
     /// <param name="targetType">The type of the object to serialize.</typeparam>
@@ -72,6 +73,7 @@ public static class Serializer
         if (targetType == typeof(double)) return _double;
         if (targetType == typeof(DateOnly)) return _dateOnly;
         if (targetType == typeof(DateTime)) return _dateTime;
+        if (targetType == typeof(DateTimeOffset)) return _dateTimeOffset;
         if (targetType == typeof(bool)) return _bool;
         if (targetType == typeof(Module)) return _module;
         if (targetType == typeof(Document)) return _doc;
@@ -94,7 +96,10 @@ public static class Serializer
             throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
         }
 
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>))
+        if (targetType.IsGenericType && (
+                targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>) ||
+                targetType.GetGenericTypeDefinition() == typeof(NonNullDocument<>) ||
+                targetType.GetGenericTypeDefinition() == typeof(NullDocument<>)))
         {
             var argTypes = targetType.GetGenericArguments();
             var valueType = argTypes[0];
@@ -113,10 +118,10 @@ public static class Serializer
                 throw new ArgumentException(
                     $"Unsupported Dictionary key type. Key must be of type string, but was a {keyType}");
 
-            var valueDeserializer = Generate(context, valueType);
+            var valueSerializer = Generate(context, valueType);
 
             var serType = typeof(DictionarySerializer<>).MakeGenericType(new[] { valueType });
-            var ser = Activator.CreateInstance(serType, new[] { valueDeserializer });
+            var ser = Activator.CreateInstance(serType, new[] { valueSerializer });
 
             return (ISerializer)ser!;
         }
@@ -124,10 +129,10 @@ public static class Serializer
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
         {
             var elemType = targetType.GetGenericArguments()[0];
-            var elemDeserializer = Generate(context, elemType);
+            var elemSerializer = Generate(context, elemType);
 
             var serType = typeof(ListSerializer<>).MakeGenericType(new[] { elemType });
-            var ser = Activator.CreateInstance(serType, new[] { elemDeserializer });
+            var ser = Activator.CreateInstance(serType, new[] { elemSerializer });
 
             return (ISerializer)ser!;
         }
@@ -135,12 +140,17 @@ public static class Serializer
         if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>))
         {
             var elemType = targetType.GetGenericArguments()[0];
-            var elemDeserializer = Generate(context, elemType);
+            var elemSerializer = Generate(context, elemType);
 
             var serType = typeof(PageSerializer<>).MakeGenericType(new[] { elemType });
-            var ser = Activator.CreateInstance(serType, new[] { elemDeserializer });
+            var ser = Activator.CreateInstance(serType, new[] { elemSerializer });
 
             return (ISerializer)ser!;
+        }
+
+        if (targetType.IsGenericType && targetType.Name.Contains("AnonymousType"))
+        {
+            return DynamicSerializer.Singleton;
         }
 
         if (targetType.IsClass && !targetType.IsGenericType)
@@ -153,7 +163,7 @@ public static class Serializer
     }
 
     /// <summary>
-    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// Generates a serializer which returns values of the specified .NET type, or the default if the underlying query value is null.
     /// </summary>
     /// <typeparam name="T">The type of the object to serialize.</typeparam>
     /// <param name="context">The serialization context.</param>
@@ -166,7 +176,7 @@ public static class Serializer
     }
 
     /// <summary>
-    /// Generates a deserializer which returns values of the specified .NET type, or the default if the underlying query value is null.
+    /// Generates a serializer which returns values of the specified .NET type, or the default if the underlying query value is null.
     /// </summary>
     /// <param name="context">The serialization context.</param>
     /// <param name="targetType">The type of the object to serialize.</typeparam>
