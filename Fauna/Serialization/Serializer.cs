@@ -1,3 +1,4 @@
+using System.Collections;
 using Fauna.Mapping;
 using Fauna.Types;
 
@@ -12,6 +13,8 @@ public static class Serializer
     /// The dynamic data serializer.
     /// </summary>
     public static ISerializer<object?> Dynamic => DynamicSerializer.Singleton;
+
+    private static readonly Dictionary<Type, ISerializer> _reg = new();
 
     internal static readonly HashSet<string> Tags = new()
     {
@@ -60,6 +63,7 @@ public static class Serializer
     /// <returns>An <see cref="ISerializer"/>.</returns>
     public static ISerializer Generate(MappingContext context, Type targetType)
     {
+        if (_reg.TryGetValue(targetType, out var s)) return s;
         if (targetType == typeof(object)) return _object;
         if (targetType == typeof(string)) return _string;
         if (targetType == typeof(byte)) return _byte;
@@ -188,5 +192,46 @@ public static class Serializer
         var ser = Activator.CreateInstance(serType, new[] { inner });
 
         return (ISerializer)ser!;
+    }
+
+    /// <summary>
+    /// Registers a serializer for a type. This serializer will take precedence over the default serializer for the that type. 
+    /// </summary>
+    /// <param name="t">The type to associate with the serializer.</param>
+    /// <param name="s">The serializer.</param>
+    /// <exception cref="ArgumentException">Throws if a serializer is already registered for the type.</exception>
+    public static void Register(Type t, ISerializer s)
+    {
+        if (!_reg.TryAdd(t, s)) throw new ArgumentException($"Serializer for type `{t}` already registered");
+    }
+
+    /// <summary>
+    /// Registers a generic serializer. This serializer will take precedence over the default serializer for the that type. 
+    /// </summary>
+    /// <param name="s">The generic serializer.</param>
+    /// <exception cref="ArgumentException">Throws if a serializer is already registered for the type.</exception>
+    public static void Register<T>(ISerializer<T> s)
+    {
+        var success = false;
+        foreach (var i in s.GetType().GetInterfaces())
+        {
+            if (!i.IsGenericType || i.GetGenericTypeDefinition() != typeof(ISerializer<>)) continue;
+
+            var t = i.GetGenericArguments()[0];
+            success = _reg.TryAdd(t, s);
+            if (!success) throw new ArgumentException($"Serializer for type `{t}` already registered");
+            break;
+        }
+
+        if (!success) throw new ArgumentException($"Could not infer associated type for `{s.GetType()}`. Use Register(type, serializer).");
+    }
+
+    /// <summary>
+    /// Deregisters a serializer for a type. If no serializer was registered, no-op.
+    /// </summary>
+    /// <param name="t">The associated type to deregister.</param>
+    public static void Deregister(Type t)
+    {
+        if (_reg.ContainsKey(t)) _reg.Remove(t);
     }
 }

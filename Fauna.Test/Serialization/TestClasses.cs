@@ -1,4 +1,6 @@
+using Fauna.Mapping;
 using Fauna.Mapping.Attributes;
+using Fauna.Serialization;
 using Fauna.Types;
 
 namespace Fauna.Test.Serialization;
@@ -141,4 +143,34 @@ class PersonWithTimeConflict
 class PersonWithDateConflict
 {
     [Field("@date")] public string? Field { get; set; } = "not";
+}
+
+public class IntToStringSerializer : BaseSerializer<int>
+{
+    public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    {
+        return reader.CurrentTokenType switch
+        {
+            TokenType.String => int.Parse(reader.GetString() ?? "0"),
+            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+        };
+    }
+
+    public override void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
+    {
+        switch (o)
+        {
+            case null:
+                w.WriteNullValue();
+                break;
+            case int v:
+                w.WriteStringValue(v.ToString());
+                break;
+            case string v:
+                w.WriteStringValue(v);
+                break;
+            default:
+                throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
+        }
+    }
 }

@@ -277,4 +277,25 @@ public class RoundTripTests
         var serialized = Serialize(deserialized);
         Assert.AreEqual(NamedDocumentRefWire, serialized);
     }
+
+    [Test]
+    public void RegisterDeregisterCustomSerializer()
+    {
+        var s = new IntToStringSerializer();
+        Serializer.Register(s);
+
+        const int i = 42;
+        var ser = Serialize(i);
+        Assert.AreEqual(@"""42""", ser);
+
+        var deser = Deserialize<int>(ser);
+        Assert.AreEqual(i, deser);
+
+        Serializer.Deregister(typeof(int));
+        ser = Serialize(i);
+
+        Assert.AreEqual(@"{""@int"":""42""}", ser);
+        deser = Deserialize<int>(ser);
+        Assert.AreEqual(i, deser);
+    }
 }
