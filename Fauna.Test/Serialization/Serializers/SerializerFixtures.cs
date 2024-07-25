@@ -1,4 +1,5 @@
 using Fauna.Serialization;
+using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Test.Serialization;
 
@@ -18,6 +19,7 @@ public class SerializerFixtures
     private static readonly DateOnlySerializer _date = new();
     private static readonly DateTimeSerializer _time = new();
     private static readonly DateTimeOffsetSerializer _offset = new();
+    private static readonly StreamSerializer _stream = new();
 
     public static object[] TypedSerializerCases =
     {
@@ -575,6 +577,18 @@ public class SerializerFixtures
                 Serializer = _offset,
                 Value = Helpers.NullWire,
                 Throws = "Unexpected token `Null` deserializing with `DateTimeOffsetSerializer`",
+                TestType = Helpers.TestType.Deserialize
+            }
+        },
+
+        // StreamSerializer
+        new object[]
+        {
+            new Helpers.SerializeTest<Stream>
+            {
+                Serializer = _stream,
+                Value = Helpers.StreamWire,
+                Expected = Helpers.StreamVal,
                 TestType = Helpers.TestType.Deserialize
             }
         }

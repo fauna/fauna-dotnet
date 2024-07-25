@@ -62,4 +62,7 @@ public enum TokenType
 
     /// <summary>The token type is the Fauna module.</summary>
     Module,
+
+    /// <summary>The token type is the Fauna stream token.</summary>
+    Stream,
 }

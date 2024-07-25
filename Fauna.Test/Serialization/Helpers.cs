@@ -1,6 +1,7 @@
 using System.Text;
 using Fauna.Mapping;
 using Fauna.Serialization;
+using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Test.Serialization;
 
@@ -33,6 +34,7 @@ public class Helpers
     public const string NullWire = "null";
     public const string TrueWire = "true";
     public const string FalseWire = "false";
+    public const string StreamWire = @"{""@stream"": ""token""}";
 
     public const string DateWire = @"{""@date"":""2023-12-15""}";
     public static DateOnly DateOnlyVal => DateOnly.Parse("2023-12-15");
@@ -59,6 +61,7 @@ public class Helpers
 
         public string? Throws { get; set; }
     }
+    public static Stream StreamVal => new("token");
 
     public static string Serialize(ISerializer s, MappingContext ctx, object? obj)
     {
