@@ -15,7 +15,7 @@ public interface ISerializer
 
 public abstract class BaseSerializer<T> : ISerializer<T>
 {
-    protected string UnexpectedTokenExceptionMessage(TokenType token) => $"Unexpected token `{token}` deserializing with `{GetType()}`";
+    protected string UnexpectedTokenExceptionMessage(TokenType token) => $"Unexpected token `{token}` deserializing with `{GetType().Name}`";
 
     protected string UnsupportedSerializationTypeMessage(Type type) => $"Cannot serialize `{type}` with `{GetType()}`";
 
