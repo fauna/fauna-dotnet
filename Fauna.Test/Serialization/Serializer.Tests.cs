@@ -1,8 +1,8 @@
+using System.Text;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
-using System.Text;
 
 namespace Fauna.Test.Serialization;
 

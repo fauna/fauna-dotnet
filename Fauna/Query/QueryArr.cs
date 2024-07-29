@@ -1,7 +1,7 @@
-﻿using Fauna.Mapping;
-using Fauna.Serialization;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
+using Fauna.Mapping;
+using Fauna.Serialization;
 
 namespace Fauna;
 

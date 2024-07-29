@@ -1,8 +1,8 @@
-using Fauna.Mapping;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Fauna.Mapping;
 
 namespace Fauna;
 
