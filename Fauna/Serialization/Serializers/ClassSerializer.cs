@@ -1,6 +1,6 @@
-using Fauna.Mapping;
 using System.Diagnostics;
 using Fauna.Exceptions;
+using Fauna.Mapping;
 using Fauna.Types;
 
 namespace Fauna.Serialization;

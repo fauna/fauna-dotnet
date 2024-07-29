@@ -1,5 +1,5 @@
-using Fauna.Types;
 using System.Linq.Expressions;
+using Fauna.Types;
 
 namespace Fauna.Linq;
 

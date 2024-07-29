@@ -1,6 +1,6 @@
-using NUnit.Framework;
-using Fauna.Mapping.Attributes;
 using System.Diagnostics.CodeAnalysis;
+using Fauna.Mapping.Attributes;
+using NUnit.Framework;
 using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test.Linq;

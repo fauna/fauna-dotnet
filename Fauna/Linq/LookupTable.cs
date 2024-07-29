@@ -1,7 +1,7 @@
-using Fauna.Mapping;
-using Fauna.Serialization;
 using System.Linq.Expressions;
 using System.Reflection;
+using Fauna.Mapping;
+using Fauna.Serialization;
 
 namespace Fauna.Linq;
 

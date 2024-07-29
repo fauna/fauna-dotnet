@@ -1,9 +1,9 @@
-﻿using Fauna.Constants;
+﻿using System.Globalization;
+using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Linq;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using System.Globalization;
 
 namespace Fauna;
 

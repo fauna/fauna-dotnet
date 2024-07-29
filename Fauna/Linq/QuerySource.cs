@@ -1,5 +1,5 @@
-using Fauna.Types;
 using System.Diagnostics.CodeAnalysis;
+using Fauna.Types;
 
 namespace Fauna.Linq;
 
