@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using NUnit.Framework;
 using static Fauna.Query;
 
 namespace Fauna.Test;

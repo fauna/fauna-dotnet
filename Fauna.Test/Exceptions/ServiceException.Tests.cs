@@ -1,11 +1,11 @@
-﻿using static Fauna.Query;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Test.Helpers;
 using NUnit.Framework;
+using static Fauna.Query;
 
 namespace Fauna.Test.Exceptions
 {

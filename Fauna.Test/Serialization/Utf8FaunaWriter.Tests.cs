@@ -1,8 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;
-using System.Diagnostics.CodeAnalysis;
-using System.Text;
 
 namespace Fauna.Test.Serialization;
 

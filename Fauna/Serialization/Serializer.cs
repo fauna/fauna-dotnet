@@ -1,6 +1,7 @@
 using System.Collections;
 using Fauna.Mapping;
 using Fauna.Types;
+using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Serialization;
 
@@ -18,7 +19,7 @@ public static class Serializer
 
     internal static readonly HashSet<string> Tags = new()
     {
-        "@int", "@long", "@double", "@date", "@time", "@mod", "@ref", "@doc", "@set", "@object"
+        "@int", "@long", "@double", "@date", "@time", "@mod", "@stream", "@ref", "@doc", "@set", "@object"
     };
 
     private static readonly CheckedSerializer<object> _object = new();
@@ -37,6 +38,7 @@ public static class Serializer
     private static readonly DateTimeOffsetSerializer _dateTimeOffset = new();
     private static readonly BooleanSerializer _bool = new();
     private static readonly ModuleSerializer _module = new();
+    private static readonly StreamSerializer _stream = new();
     private static readonly DocumentSerializer<Document> _doc = new();
     private static readonly DocumentSerializer<NamedDocument> _namedDoc = new();
     private static readonly DocumentSerializer<Ref> _docRef = new();
@@ -80,6 +82,7 @@ public static class Serializer
         if (targetType == typeof(DateTimeOffset)) return _dateTimeOffset;
         if (targetType == typeof(bool)) return _bool;
         if (targetType == typeof(Module)) return _module;
+        if (targetType == typeof(Stream)) return _stream;
         if (targetType == typeof(Document)) return _doc;
         if (targetType == typeof(NamedDocument)) return _namedDoc;
         if (targetType == typeof(Ref)) return _docRef;

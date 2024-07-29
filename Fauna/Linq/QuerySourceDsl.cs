@@ -1,10 +1,10 @@
+using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Util;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Linq.Expressions;
 using QH = Fauna.Linq.IntermediateQueryHelpers;
 
 namespace Fauna.Linq;

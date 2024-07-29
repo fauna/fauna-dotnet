@@ -1,6 +1,6 @@
-﻿using Fauna.Mapping;
+﻿using System.Collections.ObjectModel;
+using Fauna.Mapping;
 using Fauna.Serialization;
-using System.Collections.ObjectModel;
 
 namespace Fauna;
 

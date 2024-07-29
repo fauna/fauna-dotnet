@@ -1,5 +1,5 @@
-using Fauna.Serialization;
 using System.Linq.Expressions;
+using Fauna.Serialization;
 
 namespace Fauna.Linq;
 

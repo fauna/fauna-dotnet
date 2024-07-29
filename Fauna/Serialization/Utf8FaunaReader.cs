@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using Fauna.Types;
+using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Serialization;
 
@@ -417,6 +418,17 @@ public ref struct Utf8FaunaReader
     }
 
     /// <summary>
+    /// Retrieves a Stream token string from the current token.
+    /// </summary>
+    /// <returns>A Stream token string of the current token's value.</returns>
+    public Stream GetStream()
+    {
+        ValidateTaggedType(TokenType.Stream);
+
+        return new Stream(_taggedTokenValue!);
+    }
+
+    /// <summary>
     /// Retrieves a DateTime value from the current token.
     /// </summary>
     /// <returns>A DateTime representation of the current token's value.</returns>
@@ -549,6 +561,9 @@ public ref struct Utf8FaunaReader
                         break;
                     case "@mod":
                         HandleTaggedString(TokenType.Module);
+                        break;
+                    case "@stream":
+                        HandleTaggedString(TokenType.Stream);
                         break;
                     case "@object":
                         AdvanceTrue();

@@ -1,8 +1,8 @@
 using System.Runtime.CompilerServices;
 using Fauna.Exceptions;
+using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
-using Fauna.Mapping;
 
 namespace Fauna;
 

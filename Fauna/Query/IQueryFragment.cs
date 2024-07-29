@@ -1,6 +1,6 @@
-﻿using Fauna.Mapping;
+﻿using System.Text;
+using Fauna.Mapping;
 using Fauna.Serialization;
-using System.Text;
 
 namespace Fauna;
 

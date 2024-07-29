@@ -2,6 +2,7 @@ using System.Buffers;
 using System.Globalization;
 using System.Text.Json;
 using Fauna.Types;
+using Stream = System.IO.Stream;
 
 namespace Fauna.Serialization;
 

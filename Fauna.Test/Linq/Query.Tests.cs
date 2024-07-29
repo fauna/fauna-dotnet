@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
+using NUnit.Framework;
 using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test.Linq;
