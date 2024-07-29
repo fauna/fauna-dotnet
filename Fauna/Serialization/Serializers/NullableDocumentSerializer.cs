@@ -40,6 +40,6 @@ internal class NullableDocumentSerializer<T> : BaseSerializer<NullableDocument<T
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        throw new NotImplementedException();
+        DynamicSerializer.Singleton.Serialize(context, writer, o);
     }
 }

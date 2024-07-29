@@ -93,7 +93,7 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        throw new NotImplementedException();
+        DynamicSerializer.Singleton.Serialize(context, writer, o);
     }
 
     private object CreateInstance() => Activator.CreateInstance(_info.Type)!;

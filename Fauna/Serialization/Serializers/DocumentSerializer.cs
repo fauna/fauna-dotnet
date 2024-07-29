@@ -20,7 +20,7 @@ internal class DocumentSerializer<T> : BaseSerializer<T> where T : class
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        throw new NotImplementedException();
+        DynamicSerializer.Singleton.Serialize(context, writer, o);
     }
 
     private T DeserializeDocument(MappingContext context, ref Utf8FaunaReader reader)
