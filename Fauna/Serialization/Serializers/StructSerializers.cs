@@ -9,6 +9,7 @@ internal class StringSerializer : BaseSerializer<string?>
     public override string? Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
+            TokenType.Null => null,
             TokenType.String => reader.GetString(),
             _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
         };
@@ -85,7 +86,7 @@ internal class ShortSerializer : BaseSerializer<short>
     public override short Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
-            TokenType.Int or TokenType.Long => reader.GetShort(),
+            TokenType.Int => reader.GetShort(),
             _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
         };
 
@@ -110,7 +111,7 @@ internal class UShortSerializer : BaseSerializer<ushort>
     public override ushort Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
-            TokenType.Int or TokenType.Long => reader.GetUnsignedShort(),
+            TokenType.Int => reader.GetUnsignedShort(),
             _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
         };
 
@@ -135,7 +136,7 @@ internal class IntSerializer : BaseSerializer<int>
     public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
-            TokenType.Int or TokenType.Long => reader.GetInt(),
+            TokenType.Int => reader.GetInt(),
             _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
         };
 

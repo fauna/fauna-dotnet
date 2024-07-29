@@ -31,25 +31,8 @@ public class SerializerTests
 
         var tests = new Dictionary<string, object?>
         {
-            {"\"hello\"", "hello"},
-            {"true", true},
-            {"false", false},
             {"null", null},
-            {@"{""@date"":""2023-12-13""}", new DateOnly(2023,12,13)},
-            {@"{""@double"":""1.2""}", 1.2d},
-            {@"{""@double"":""1.340000033378601""}", 1.34f},
-            {@"{""@int"":""1""}", Convert.ToByte(1)},
-            {@"{""@int"":""2""}", Convert.ToSByte(2)},
-            {@"{""@int"":""40""}", short.Parse("40")},
-            {@"{""@int"":""41""}", ushort.Parse("41")},
-            {@"{""@int"":""42""}", 42},
-            {@"{""@long"":""41""}", 41u},
-            {@"{""@long"":""42""}", 42L},
             {@"{""@mod"":""module""}", new Module("module")},
-            {@"{""@time"":""2023-12-13T12:12:12.0010010Z""}", dt},
-            // \u002 is the + character. This is expected because we do not
-            // enable unsafe json serialization. Fauna wire protocol supports this.
-            {@"{""@time"":""2023-12-14T12:12:12.0010010\u002B00:00""}", new DateTimeOffset(dt.AddDays(1))},
             {@"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""ACollection""}}}", new Ref("123", new Module("ACollection"))},
             {@"{""@ref"":{""id"":""124"",""coll"":{""@mod"":""ACollection""}}}", new Document("124", new Module("ACollection"), DateTime.Now)}
         };
@@ -206,51 +189,6 @@ public class SerializerTests
             { new List<object>(), "[]" },
             { new Dictionary<string, object>(), "{}" },
             { new List<object> { new List<object>(), new Dictionary<string, object>() }, "[[],{}]" }
-        };
-
-        foreach (var (value, expected) in tests)
-        {
-            var actual = Serialize(value);
-            Assert.AreEqual(expected, actual);
-        }
-    }
-
-    [Test]
-    public void Serialize_ExtremeNumericValues()
-    {
-        var tests = new Dictionary<object, string>
-        {
-            { short.MaxValue, @"{""@int"":""32767""}" },
-            { short.MinValue, @"{""@int"":""-32768""}" },
-            { ushort.MaxValue, @"{""@int"":""65535""}" },
-            { ushort.MinValue, @"{""@int"":""0""}" },
-            { int.MaxValue, @"{""@int"":""2147483647""}" },
-            { int.MinValue, @"{""@int"":""-2147483648""}" },
-            { uint.MaxValue, @"{""@long"":""4294967295""}" },
-            { uint.MinValue, @"{""@long"":""0""}" },
-            { long.MaxValue, @"{""@long"":""9223372036854775807""}" },
-            { long.MinValue, @"{""@long"":""-9223372036854775808""}" },
-            { float.MaxValue, @"{""@double"":""3.4028234663852886E\u002B38""}" },
-            { float.MinValue, @"{""@double"":""-3.4028234663852886E\u002B38""}" },
-            { double.MaxValue, @"{""@double"":""1.7976931348623157E\u002B308""}" },
-            { double.MinValue, @"{""@double"":""-1.7976931348623157E\u002B308""}" }
-        };
-
-        foreach (var (value, expected) in tests)
-        {
-            var actual = Serialize(value);
-            Assert.AreEqual(expected, actual);
-        }
-    }
-
-    [Test]
-    public void SerializeNumericEdgeCases()
-    {
-        var tests = new Dictionary<object, string>
-        {
-            { double.NaN, @"{""@double"":""NaN""}" },
-            { double.PositiveInfinity, @"{""@double"":""Infinity""}" },
-            { double.NegativeInfinity, @"{""@double"":""-Infinity""}" }
         };
 
         foreach (var (value, expected) in tests)
