@@ -86,4 +86,17 @@ public class Helpers
 
         return obj;
     }
+
+    public static T? Deserialize<T>(ISerializer<T> s, MappingContext ctx, string str)
+    {
+        var reader = new Utf8FaunaReader(str);
+        reader.Read();
+        var obj = s.Deserialize(ctx, ref reader);
+        if (reader.Read())
+        {
+            throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
+        }
+
+        return (T?)obj;
+    }
 }

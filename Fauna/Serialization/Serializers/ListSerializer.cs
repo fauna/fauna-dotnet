@@ -1,3 +1,4 @@
+using System.Collections;
 using Fauna.Mapping;
 
 namespace Fauna.Serialization;
@@ -36,8 +37,27 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
         return lst;
     }
 
-    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    public override void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
     {
-        DynamicSerializer.Singleton.Serialize(context, writer, o);
+        if (o is null)
+        {
+            w.WriteNullValue();
+            return;
+        }
+
+        if (o.GetType().IsGenericType &&
+            o.GetType().GetGenericTypeDefinition() == typeof(List<>) ||
+            o.GetType().GetGenericTypeDefinition() == typeof(IEnumerable))
+        {
+            w.WriteStartArray();
+            foreach (object? elem in (IEnumerable)o)
+            {
+                _elemSerializer.Serialize(ctx, w, elem);
+            }
+            w.WriteEndArray();
+            return;
+        }
+
+        throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
     }
 }

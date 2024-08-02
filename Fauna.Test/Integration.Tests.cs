@@ -104,7 +104,7 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_MultiplePagesWithPocoCollection()
     {
-        var items = new List<object>();
+        var items = new List<Person>();
         for (int i = 1; i <= 100; i++)
         {
             items.Add(new Person
@@ -135,7 +135,7 @@ public class IntegrationTests
     [Test]
     public async Task Paginate_IteratorCanBeFlattened()
     {
-        var items = new List<object>();
+        var items = new List<Person>();
         for (int i = 1; i <= 100; i++)
         {
             items.Add(new Person

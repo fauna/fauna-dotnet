@@ -177,8 +177,8 @@ public class RoundTripTests
     public void RoundTripClassAsDocumentIsNotSupported()
     {
         var deserialized = Deserialize<ClassForDocument>(DocumentWire);
-        var serialized = Serialize(deserialized);
-        var expected = @"{""id"":{""@long"":""123""},""user_field"":""user_value""}";
+        string serialized = Serialize(deserialized);
+        const string expected = @"{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}";
         Assert.AreEqual(expected, serialized);
     }
 
