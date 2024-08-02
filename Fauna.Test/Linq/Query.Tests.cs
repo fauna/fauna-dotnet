@@ -615,4 +615,40 @@ public class QueryTests
         Assert.AreEqual(new[] { 32.0D, 26.0D }, await _db.Author.Select(a => (double)a.Age).ToArrayAsync());
         Assert.AreEqual(new[] { 91L, 83L }, await _db.Author.Select(a => (long)a.Score).ToArrayAsync());
     }
+
+
+    [Test]
+    public async Task Query_Collection_Create()
+    {
+        var name = "Dracula";
+        var a = new Book
+        {
+            Name = name,
+        };
+
+        var create = await _db.Book.CreateAsync(a);
+        Assert.AreEqual(name, create.Name);
+        Assert.Greater(create.Id?.Length, 0);
+
+        var get = await _db.Book.SingleAsync(b => b.Id == create.Id);
+        Assert.AreEqual(name, get.Name);
+        Assert.AreEqual(create.Id, get.Id);
+    }
+
+    [Test]
+    public async Task Query_Collection_Create_Many()
+    {
+        var names = new List<string> { "Frankenstein", "Moby-Dick" };
+        var books = names.Select(n => new Book { Name = n });
+        var create = await _db.Book.CreateManyAsync(books);
+        var count = 0;
+        foreach (var book in create)
+        {
+            count++;
+            Assert.Contains(book.Name, names);
+            Assert.IsNotNull(book.Id);
+        }
+
+        Assert.AreEqual(names.Count, count);
+    }
 }

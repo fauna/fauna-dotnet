@@ -29,7 +29,7 @@ internal class NullableDocumentSerializer<T> : BaseSerializer<NullableDocument<T
         var info = context.GetInfo(typeof(T));
         try
         {
-            var v = info.ClassSerializer.Deserialize(context, ref reader);
+            object? v = info.Serializer.Deserialize(context, ref reader);
             return new NonNullDocument<T>((v as T)!);
         }
         catch (NullDocumentException e)

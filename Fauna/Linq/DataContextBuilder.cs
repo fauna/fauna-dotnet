@@ -28,8 +28,6 @@ internal class DataContextBuilder<DB> where DB : DataContext
         foreach (var ty in colTypes)
         {
             colImpls[ty] = (DataContext.ICollection)Activator.CreateInstance(ty)!;
-            var nameAttr = ty.GetCustomAttribute<DataContext.NameAttribute>();
-            var colName = nameAttr?.Name ?? ty.Name;
         }
 
         var db = (DB)Activator.CreateInstance(dbType)!;

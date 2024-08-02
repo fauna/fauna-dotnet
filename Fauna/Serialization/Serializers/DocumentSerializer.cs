@@ -53,13 +53,17 @@ internal class DocumentSerializer<T> : BaseSerializer<T> where T : class
                     // if we encounter a mapped collection, jump to the class deserializer.
                     // NB this relies on the fact that docs on the wire always
                     // start with id and coll.
-                    if (context.TryGetCollection(coll.Name, out var collInfo))
+                    if (context.TryGetCollection(coll.Name, out var info))
                     {
                         // If the user asks for a different type, don't use the saved deserializer.
-                        if (collInfo.Type == typeof(T) || typeof(object) == typeof(T))
+                        if (info.Type == typeof(T) || typeof(object) == typeof(T))
                         {
-                            // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
-                            return (collInfo.ClassSerializer.DeserializeDocument(context, id, name != null ? (string)name : null, ref reader) as T)!;
+                            if (info.Serializer is IClassDocumentSerializer ser)
+                            {
+                                // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
+                                string? nm = name != null ? (string)name : null;
+                                return (ser.DeserializeDocument(context, id, nm, ref reader) as T)!;
+                            }
                         }
                     }
 

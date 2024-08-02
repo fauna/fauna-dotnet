@@ -110,14 +110,14 @@ public class AbortException : ServiceException
     /// Retrieves the deserialized data associated with the abort operation as an object.
     /// </summary>
     /// <returns>The deserialized data as an object, or null if no data is available.</returns>
-    public object? GetData() => GetData(Serializer.Dynamic);
+    public object? GetData() => GetData(SerializerProvider.Dynamic);
 
     /// <summary>
     /// Retrieves the deserialized data associated with the abort operation as a specific type.
     /// </summary>
     /// <typeparam name="T">The type to which the data should be deserialized.</typeparam>
     /// <returns>The deserialized data as the specified type, or null if no data is available.</returns>
-    public T? GetData<T>() where T : notnull => GetData(Serializer.Generate<T>(_ctx));
+    public T? GetData<T>() where T : notnull => GetData(SerializerProvider.Generate<T>(_ctx));
 
     /// <summary>
     /// Retrieves the deserialized data associated with the abort operation as a specific type.

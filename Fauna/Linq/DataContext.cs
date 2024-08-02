@@ -2,7 +2,9 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Fauna.Linq;
 using Fauna.Mapping;
+using QH = Fauna.Linq.IntermediateQueryHelpers;
 
 namespace Fauna;
 
@@ -59,22 +61,60 @@ public abstract class DataContext : BaseClient
         }
     }
 
-    public interface ICollection : Linq.IQuerySource
+    public interface ICollection : IQuerySource
     {
         public string Name { get; }
         public Type DocType { get; }
     }
 
-    public abstract class Collection<Doc> : Linq.QuerySource<Doc>, ICollection
+    public interface ICollection<Doc> where Doc : notnull
+    {
+        public Task<Doc> CreateAsync(Doc data);
+        // public QuerySuccess<Doc> Create(Doc data);
+
+        public Task<IEnumerable<Doc>> CreateManyAsync(IEnumerable<Doc> data);
+        // public IEnumerable<Doc> CreateMany(IEnumerable<Doc> data);
+    }
+
+    public abstract class Collection<Doc> : QuerySource<Doc>, ICollection<Doc>, ICollection where Doc : notnull
     {
         public string Name { get; }
         public Type DocType { get => typeof(Doc); }
 
         public Collection()
         {
-            var nameAttr = this.GetType().GetCustomAttribute<NameAttribute>();
+            var nameAttr = GetType().GetCustomAttribute<NameAttribute>();
             Name = nameAttr?.Name ?? typeof(Doc).Name;
-            SetQuery<Doc>(Linq.IntermediateQueryHelpers.CollectionAll(this));
+            SetQuery<Doc>(QH.CollectionAll(this));
+        }
+
+        // create DSL
+
+        public Doc Create(Doc data)
+        {
+            return CreateAsync(data).Result;
+        }
+
+        public async Task<Doc> CreateAsync(Doc data)
+        {
+            var q = QH.MethodCall(QH.Expr(Name), "create", QH.Const(data));
+            return (await Ctx.QueryAsync<Doc>(q)).Data;
+        }
+
+        public IEnumerable<Doc> CreateMany(IEnumerable<Doc> data)
+        {
+            return CreateManyAsync(data).Result;
+        }
+
+        public async Task<IEnumerable<Doc>> CreateManyAsync(IEnumerable<Doc> data)
+        {
+            var q = QH.MethodCall(
+                QH.Array(data.Select(d => QH.Const(d))),
+                "map",
+                QH.Expr("d => ").Concat(QH.Expr(Name)).Concat(".create(d)")
+            );
+
+            return (await Ctx.QueryAsync<IEnumerable<Doc>>(q)).Data;
         }
 
         // index call DSL

@@ -1,3 +1,4 @@
+using System.Collections;
 using Fauna.Mapping;
 using Fauna.Types;
 
@@ -202,7 +203,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
 
     private void SerializeIDictionaryInternal<T>(MappingContext ctx, Utf8FaunaWriter writer, IDictionary<string, T> d)
     {
-        var shouldEscape = Serializer.Tags.Overlaps(d.Keys);
+        bool shouldEscape = SerializerProvider.Tags.Overlaps(d.Keys);
         if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
         foreach (var (key, value) in d)
         {

@@ -31,7 +31,7 @@ public class ContextValidationTests
 
     class InvalidGenericDb : DataContext
     {
-        public class FooCol<D> : Collection<D> { }
+        public class FooCol<D> : Collection<D> where D : notnull { }
     }
 
     [Test]

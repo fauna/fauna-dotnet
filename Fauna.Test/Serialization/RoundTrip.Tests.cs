@@ -33,7 +33,7 @@ public class RoundTripTests
         using var writer = new Utf8FaunaWriter(stream);
 
         ISerializer ser = DynamicSerializer.Singleton;
-        if (obj is not null) ser = Serializer.Generate(ctx, obj.GetType());
+        if (obj is not null) ser = SerializerProvider.Generate(ctx, obj.GetType());
         ser.Serialize(ctx, writer, obj);
 
         writer.Flush();
@@ -44,7 +44,7 @@ public class RoundTripTests
     {
         var reader = new Utf8FaunaReader(str);
         reader.Read();
-        var obj = Serializer.Generate<T>(ctx).Deserialize(ctx, ref reader);
+        var obj = SerializerProvider.Generate<T>(ctx).Deserialize(ctx, ref reader);
         if (reader.Read())
         {
             throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
@@ -177,8 +177,8 @@ public class RoundTripTests
     public void RoundTripClassAsDocumentIsNotSupported()
     {
         var deserialized = Deserialize<ClassForDocument>(DocumentWire);
-        var serialized = Serialize(deserialized);
-        var expected = @"{""id"":{""@long"":""123""},""user_field"":""user_value""}";
+        string serialized = Serialize(deserialized);
+        const string expected = @"{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}";
         Assert.AreEqual(expected, serialized);
     }
 
@@ -282,7 +282,7 @@ public class RoundTripTests
     public void RegisterDeregisterCustomSerializer()
     {
         var s = new IntToStringSerializer();
-        Serializer.Register(s);
+        SerializerProvider.Register(s);
 
         const int i = 42;
         var ser = Serialize(i);
@@ -291,7 +291,7 @@ public class RoundTripTests
         var deser = Deserialize<int>(ser);
         Assert.AreEqual(i, deser);
 
-        Serializer.Deregister(typeof(int));
+        SerializerProvider.Deregister(typeof(int));
         ser = Serialize(i);
 
         Assert.AreEqual(@"{""@int"":""42""}", ser);

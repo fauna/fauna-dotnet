@@ -44,9 +44,9 @@ internal record struct LookupTable(MappingContext Ctx)
     private Result? StringTable(MemberInfo member, Expression callee) =>
         member.Name switch
         {
-            "Length" => R("length", Serializer.Generate<int>(Ctx), typeof(int)),
-            "EndsWith" => R("endsWith", Serializer.Generate<bool>(Ctx), typeof(int)),
-            "StartsWith" => R("startsWith", Serializer.Generate<bool>(Ctx), typeof(int)),
+            "Length" => R("length", SerializerProvider.Generate<int>(Ctx), typeof(int)),
+            "EndsWith" => R("endsWith", SerializerProvider.Generate<bool>(Ctx), typeof(int)),
+            "StartsWith" => R("startsWith", SerializerProvider.Generate<bool>(Ctx), typeof(int)),
             _ => null,
         };
 }

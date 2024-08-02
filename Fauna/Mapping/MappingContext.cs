@@ -18,7 +18,7 @@ public sealed class MappingContext
     {
         foreach (var col in collections)
         {
-            var info = GetInfo(col.DocType);
+            var info = GetInfo(col.DocType, col.Name);
             _collections[col.Name] = info;
             _baseTypes[col.DocType] = info;
         }
@@ -26,9 +26,9 @@ public sealed class MappingContext
 
     public MappingContext(Dictionary<string, Type> collections)
     {
-        foreach (var (name, ty) in collections)
+        foreach ((string name, Type ty) in collections)
         {
-            _collections[name] = GetInfo(ty);
+            _collections[name] = GetInfo(ty, name);
         }
     }
 
@@ -58,8 +58,9 @@ public sealed class MappingContext
     /// Gets the <see cref="MappingInfo"/> for a given <see cref="Type"/>.
     /// </summary>
     /// <param name="ty">The type to get.</param>
+    /// <param name="colName">The associated collection name, if any</param>
     /// <returns></returns>
-    public MappingInfo GetInfo(Type ty)
+    public MappingInfo GetInfo(Type ty, string? colName = null)
     {
         lock (this)
         {
@@ -71,7 +72,7 @@ public sealed class MappingContext
 
         // MappingInfo caches itself during construction in order to make
         // itself available early for recursive lookup.
-        return new MappingInfo(this, ty);
+        return new MappingInfo(this, ty, colName);
     }
 
     internal void Add(Type ty, MappingInfo info)

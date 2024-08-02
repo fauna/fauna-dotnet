@@ -10,8 +10,6 @@ namespace Fauna.Test.Serialization;
 public class DeserializerTests
 {
     private readonly MappingContext ctx;
-    private const string DocumentWithShortWire = @"{""@doc"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""a_short"":{""@int"":""42""}}}";
-
     public DeserializerTests()
     {
         var colls = new Dictionary<string, Type> {
@@ -21,13 +19,13 @@ public class DeserializerTests
     }
 
     public object? Deserialize(string str) =>
-       DeserializeImpl(str, ctx => Serializer.Dynamic);
+       DeserializeImpl(str, ctx => SerializerProvider.Dynamic);
 
     public T Deserialize<T>(string str) where T : notnull =>
-       DeserializeImpl(str, ctx => Serializer.Generate<T>(ctx));
+       DeserializeImpl(str, ctx => SerializerProvider.Generate<T>(ctx));
 
     public T? DeserializeNullable<T>(string str) =>
-        DeserializeImpl(str, ctx => Serializer.GenerateNullable<T>(ctx));
+        DeserializeImpl(str, ctx => SerializerProvider.GenerateNullable<T>(ctx));
 
     public T DeserializeImpl<T>(string str, Func<MappingContext, ISerializer<T>> deserFunc)
     {
@@ -56,7 +54,7 @@ public class DeserializerTests
     [Test]
     public void CastDeserializer()
     {
-        var deser = Serializer.Generate<string>(ctx);
+        var deser = SerializerProvider.Generate<string>(ctx);
         // should cast w/o failing due to covariance.
         var obj = (ISerializer<object?>)deser;
 
@@ -169,13 +167,6 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeDocumentAsClassWithShort()
-    {
-        var actual = Deserialize<ClassWithShort>(DocumentWithShortWire);
-        Assert.AreEqual((short)42, actual.AShort);
-    }
-
-    [Test]
     public void DeserializeNonNullDocumentGeneric()
     {
         const string given = @"
@@ -253,28 +244,6 @@ public class DeserializerTests
     }
 
     [Test]
-    public void DeserializeDocumentToClass()
-    {
-        const string given = @"
-                             {
-                                 ""@doc"":{
-                                     ""id"":""123"",
-                                     ""coll"":{""@mod"":""MyColl""},
-                                     ""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},
-                                     ""user_field"":""user_value""
-                                 }
-                             }";
-
-        var actual1 = Deserialize<ClassForDocument>(given);
-        Assert.AreEqual("user_value", actual1.UserField);
-        Assert.AreEqual(123, actual1.Id);
-
-        var actual2 = Deserialize<ClassForDocumentWithIdString>(given);
-        Assert.AreEqual("user_value", actual2.UserField);
-        Assert.AreEqual("123", actual2.Id);
-    }
-
-    [Test]
     public void DeserializeDocumentToNonNullDocumentClass()
     {
         const string given = @"
@@ -291,7 +260,7 @@ public class DeserializerTests
         switch (actual)
         {
             case NonNullDocument<ClassForDocument> d:
-                Assert.AreEqual(123, d.Value!.Id);
+                Assert.AreEqual("123", d.Value!.Id);
                 Assert.AreEqual("user_value", d.Value!.UserField);
                 break;
             default:
@@ -364,7 +333,7 @@ public class DeserializerTests
         if (Deserialize(given) is ClassForDocument actual)
         {
             Assert.AreEqual("user_value", actual.UserField);
-            Assert.AreEqual(123, actual.Id);
+            Assert.AreEqual("123", actual.Id);
         }
         else
         {
@@ -820,52 +789,6 @@ public class DeserializerTests
         Assert.AreEqual("Luhrmann2", p.LastName);
         Assert.AreEqual(612, p.Age);
         Assert.IsNull(p.Ignored);
-    }
-
-    [Test]
-    public void DeserializeIntoList()
-    {
-        const string given = @"[""item1"",""item2""]";
-        var expected = new List<object> { "item1", "item2" };
-        var p = Deserialize(given);
-        Assert.AreEqual(expected, p);
-    }
-
-    [Test]
-    public void DeserializeIntoListFromSingleValue()
-    {
-        const string given = @"""item1""";
-        var expected = new List<string> { "item1" };
-        var p = Deserialize<List<string>>(given);
-        Assert.AreEqual(expected, p);
-    }
-
-    [Test]
-    public void DeserializeIntoGenericListWithPrimitive()
-    {
-        const string given = @"[""item1"",""item2""]";
-        var expected = new List<string> { "item1", "item2" };
-        var p = Deserialize<List<string>>(given);
-        Assert.AreEqual(expected, p);
-    }
-
-    [Test]
-    public void DeserializeIntoGenericListWithPocoWithAttributes()
-    {
-        const string given = @"[
-{""first_name"":""Alice"",""last_name"":""Smith"",""age"":{""@int"":""100""}},
-{""first_name"":""Bob"",""last_name"":""Jones"",""age"":{""@int"":""101""}}
-]";
-        var peeps = Deserialize<List<PersonWithAttributes>>(given);
-        var alice = peeps[0];
-        var bob = peeps[1];
-        Assert.AreEqual("Alice", alice.FirstName);
-        Assert.AreEqual("Smith", alice.LastName);
-        Assert.AreEqual(100, alice.Age);
-
-        Assert.AreEqual("Bob", bob.FirstName);
-        Assert.AreEqual("Jones", bob.LastName);
-        Assert.AreEqual(101, bob.Age);
     }
 
     [Test]

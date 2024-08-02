@@ -32,7 +32,7 @@ public sealed class QueryVal : Query, IQueryFragment
     {
         writer.WriteStartObject();
         writer.WriteFieldName("value");
-        var ser = Unwrap is not null ? Serializer.Generate(ctx, Unwrap.GetType()) : DynamicSerializer.Singleton;
+        var ser = Unwrap is not null ? SerializerProvider.Generate(ctx, Unwrap.GetType()) : DynamicSerializer.Singleton;
         ser.Serialize(ctx, writer, Unwrap);
         writer.WriteEndObject();
     }

@@ -7,9 +7,26 @@ namespace Fauna.Test.Serialization;
 
 class Person
 {
-    public string? FirstName { get; set; } = "Baz";
-    public string? LastName { get; set; } = "Luhrmann";
-    public int Age { get; set; } = 61;
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public int Age { get; set; }
+
+    public override bool Equals(object? obj)
+    {
+        var item = obj as Person;
+
+        if (item == null)
+        {
+            return false;
+        }
+
+        return FirstName == item.FirstName && LastName == item.LastName && Age == item.Age;
+    }
+
+    public override int GetHashCode()
+    {
+        return $"{FirstName ?? ""}{LastName ?? ""}{Age}".GetHashCode();
+    }
 }
 
 class NullableInt
@@ -20,7 +37,9 @@ class NullableInt
 [Object]
 class ClassForDocument
 {
-    [Field] public long Id { get; set; }
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
@@ -57,90 +76,86 @@ class PersonWithAttributes
     [Field("last_name")] public string? LastName { get; set; } = "Luhrmann";
     [Field("age")] public int Age { get; set; } = 61;
     public string? Ignored { get; set; }
-}
 
-class ClassWithFieldAttributeAndWithoutObjectAttribute
-{
-    [Field("first_name")] public string? FirstName { get; set; } = "Baz";
-}
-
-[Object]
-class ClassWithPropertyWithoutFieldAttribute
-{
-    public string FirstName { get; set; } = "NotANumber";
-}
-
-class ClassWithoutFieldAttribute
-{
-    public string FirstName { get; set; } = "NotANumber";
-}
-
-class ThingWithStringOverride
-{
-    private const string Name = "TheThing";
-
-    public override string ToString()
+    public override bool Equals(object? obj)
     {
-        return Name;
+        var item = obj as PersonWithAttributes;
+
+        if (item == null)
+        {
+            return false;
+        }
+
+        return FirstName == item.FirstName && LastName == item.LastName && Age == item.Age && Ignored == item.Ignored;
+    }
+
+    public override int GetHashCode()
+    {
+        return $"{FirstName ?? ""}{LastName ?? ""}{Age}{Ignored ?? ""}".GetHashCode();
     }
 }
 
+interface IOnlyField
+{
+    public string? Field { get; set; }
+}
+
 [Object]
-class PersonWithIntConflict
+class PersonWithIntConflict : IOnlyField
 {
     [Field("@int")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithLongConflict
+class PersonWithLongConflict : IOnlyField
 {
     [Field("@long")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithDoubleConflict
+class PersonWithDoubleConflict : IOnlyField
 {
     [Field("@double")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithModConflict
+class PersonWithModConflict : IOnlyField
 {
     [Field("@mod")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithRefConflict
+class PersonWithRefConflict : IOnlyField
 {
     [Field("@ref")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithDocConflict
+class PersonWithDocConflict : IOnlyField
 {
     [Field("@doc")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithObjectConflict
+class PersonWithObjectConflict : IOnlyField
 {
     [Field("@object")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithSetConflict
+class PersonWithSetConflict : IOnlyField
 {
     [Field("@set")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithTimeConflict
+class PersonWithTimeConflict : IOnlyField
 {
     [Field("@time")] public string? Field { get; set; } = "not";
 }
 
 [Object]
-class PersonWithDateConflict
+class PersonWithDateConflict : IOnlyField
 {
     [Field("@date")] public string? Field { get; set; } = "not";
 }

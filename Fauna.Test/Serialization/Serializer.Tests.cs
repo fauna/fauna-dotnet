@@ -17,7 +17,7 @@ public class SerializerTests
         using var writer = new Utf8FaunaWriter(stream);
 
         ISerializer ser = DynamicSerializer.Singleton;
-        if (obj is not null) ser = Serializer.Generate(ctx, obj.GetType());
+        if (obj is not null) ser = SerializerProvider.Generate(ctx, obj.GetType());
         ser.Serialize(ctx, writer, obj);
 
         writer.Flush();
@@ -82,94 +82,6 @@ public class SerializerTests
             var actual = Serialize(test);
             Assert.AreEqual(expected, actual);
         }
-    }
-
-    [Test]
-    public void SerializeList()
-    {
-        var test = new List<object>()
-        {
-            42,
-            "foo bar",
-            new List<object>(),
-            new Dictionary<string, object>()
-        };
-
-        var actual = Serialize(test);
-        Assert.AreEqual(@"[{""@int"":""42""},""foo bar"",[],{}]", actual);
-    }
-
-    [Test]
-    public void SerializeArray()
-    {
-        var test = new object[]
-        {
-            42,
-            "foo bar",
-            new object[] {},
-            new Dictionary<string, object>()
-        };
-
-        var actual = Serialize(test);
-        Assert.AreEqual(@"[{""@int"":""42""},""foo bar"",[],{}]", actual);
-    }
-
-    [Test]
-    public void SerializeClass()
-    {
-        var test = new Person();
-        var actual = Serialize(test);
-        Assert.AreEqual(@"{""firstName"":""Baz"",""lastName"":""Luhrmann"",""age"":{""@int"":""61""}}", actual);
-    }
-
-    [Test]
-    public void SerializeClassWithAttributes()
-    {
-        var test = new PersonWithAttributes();
-        var actual = Serialize(test);
-        Assert.AreEqual(@"{""first_name"":""Baz"",""last_name"":""Luhrmann"",""age"":{""@int"":""61""}}", actual);
-    }
-
-    [Test]
-    public void SerializeClassWithTagConflicts()
-    {
-        var tests = new Dictionary<object, string>()
-        {
-            { new PersonWithDateConflict(), @"{""@object"":{""@date"":""not""}}" },
-            { new PersonWithDocConflict(), @"{""@object"":{""@doc"":""not""}}" },
-            { new PersonWithDoubleConflict(), @"{""@object"":{""@double"":""not""}}" },
-            { new PersonWithIntConflict(), @"{""@object"":{""@int"":""not""}}" },
-            { new PersonWithLongConflict(), @"{""@object"":{""@long"":""not""}}" },
-            { new PersonWithModConflict(), @"{""@object"":{""@mod"":""not""}}" },
-            { new PersonWithObjectConflict(), @"{""@object"":{""@object"":""not""}}" },
-            { new PersonWithRefConflict(), @"{""@object"":{""@ref"":""not""}}" },
-            { new PersonWithSetConflict(), @"{""@object"":{""@set"":""not""}}" },
-            { new PersonWithTimeConflict(), @"{""@object"":{""@time"":""not""}}" }
-        };
-
-        foreach (var (test, expected) in tests)
-        {
-            var actual = Serialize(test);
-            Assert.AreEqual(expected, actual);
-        }
-    }
-
-    [Test]
-    public void SerializeObjectWithFieldAttributeAndWithoutObjectAttribute()
-    {
-        var obj = new ClassWithFieldAttributeAndWithoutObjectAttribute();
-        var expected = "{\"firstName\":\"Baz\"}";
-        var actual = Serialize(obj);
-        Assert.AreEqual(expected, actual);
-    }
-
-    [Test]
-    public void SerializeObjectWithPropertyWithoutFieldAttribute()
-    {
-        var obj = new ClassWithPropertyWithoutFieldAttribute();
-        var expected = "{}";
-        var actual = Serialize(obj);
-        Assert.AreEqual(expected, actual);
     }
 
     [Test]

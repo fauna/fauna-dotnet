@@ -362,13 +362,13 @@ public abstract class BaseClient : IClient
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default)
         where T : notnull =>
-        QueryAsync<T>(query, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
+        QueryAsync<T>(query, SerializerProvider.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
-        QueryAsync<object?>(query, Serializer.Dynamic, queryOptions, cancel);
+        QueryAsync<object?>(query, SerializerProvider.Dynamic, queryOptions, cancel);
 
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
@@ -389,26 +389,26 @@ public abstract class BaseClient : IClient
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default)
         where T : notnull =>
-        PaginateAsync(query, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
+        PaginateAsync(query, SerializerProvider.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Page<T> page,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default)
         where T : notnull =>
-        PaginateAsync(page, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
+        PaginateAsync(page, SerializerProvider.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
-        PaginateAsync(query, Serializer.Dynamic, queryOptions, cancel);
+        PaginateAsync(query, SerializerProvider.Dynamic, queryOptions, cancel);
 
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Page<object?> page,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
-        PaginateAsync(page, Serializer.Dynamic, queryOptions, cancel);
+        PaginateAsync(page, SerializerProvider.Dynamic, queryOptions, cancel);
 
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,

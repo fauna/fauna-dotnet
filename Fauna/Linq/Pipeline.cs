@@ -23,8 +23,8 @@ internal readonly record struct Pipeline(
     {
         var ser = ElemSerializer ??
             (ElemNullable ?
-             Serializer.GenerateNullable(ctx.MappingCtx, ElemType) :
-             Serializer.Generate(ctx.MappingCtx, ElemType));
+             SerializerProvider.GenerateNullable(ctx.MappingCtx, ElemType) :
+             SerializerProvider.Generate(ctx.MappingCtx, ElemType));
 
         var proj = ProjectExpr?.Compile();
 

@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Reflection;
 using Fauna.Mapping.Attributes;
 using Fauna.Serialization;
+using Module = Fauna.Types.Module;
 
 namespace Fauna.Mapping;
 
@@ -24,15 +25,17 @@ public sealed class MappingInfo
     public IReadOnlyDictionary<string, FieldInfo> FieldsByName { get; }
 
     internal bool ShouldEscapeObject { get; }
-    internal IClassSerializer ClassSerializer { get; }
+    internal ISerializer Serializer { get; }
+    internal Module? Collection { get; }
 
-    internal MappingInfo(MappingContext ctx, Type ty)
+    internal MappingInfo(MappingContext ctx, Type ty, string? colName = null)
     {
         ctx.Add(ty, this);
         Type = ty;
+        Collection = colName != null ? new Module(colName) : null;
 
         var objAttr = ty.GetCustomAttribute<ObjectAttribute>();
-        var hasAttributes = objAttr != null;
+        bool hasAttributes = objAttr != null;
         var fields = new List<FieldInfo>();
         var byName = new Dictionary<string, FieldInfo>();
 
@@ -53,11 +56,11 @@ public sealed class MappingInfo
             byName[info.Name] = info;
         }
 
-        ShouldEscapeObject = Serializer.Tags.Overlaps(byName.Values.Select(i => i.Name));
+        ShouldEscapeObject = SerializerProvider.Tags.Overlaps(byName.Values.Select(i => i.Name));
         Fields = fields.ToImmutableList();
         FieldsByName = byName.ToImmutableDictionary();
 
         var serType = typeof(ClassSerializer<>).MakeGenericType(new[] { ty });
-        ClassSerializer = (IClassSerializer)Activator.CreateInstance(serType, new[] { this })!;
+        Serializer = (ISerializer)Activator.CreateInstance(serType, this, Collection != null)!;
     }
 }
