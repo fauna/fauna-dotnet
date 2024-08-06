@@ -270,3 +270,11 @@ public class NetworkException : FaunaException
         ResponseBody = body;
     }
 }
+
+
+/// <summary>
+/// Represents an exception that occurs when the Client exhausts all attempts of the retry policy
+/// </summary>
+public class MaxRetriesException : Exception
+{
+}
