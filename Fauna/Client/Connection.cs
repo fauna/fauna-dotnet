@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using Fauna.Exceptions;
 using Polly;
 
 namespace Fauna;
@@ -28,18 +29,17 @@ internal class Connection : IConnection
     {
         HttpResponseMessage response;
         {
-
             var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+                .ExecuteAndCaptureAsync(async () =>
+                    await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
                 .ConfigureAwait(false);
-
             if (policyResult.Outcome == OutcomeType.Successful)
             {
                 response = policyResult.Result;
             }
             else
             {
-                throw policyResult.FinalException;
+                throw policyResult.FinalException ?? new MaxRetriesException();
             }
         }
 
