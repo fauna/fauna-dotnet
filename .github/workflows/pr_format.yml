@@ -2,7 +2,9 @@ name: Code formatting
 
 on:
   pull_request:
-
+    paths:
+      - '**/*.cs'
+      - '**/*.sln'
 jobs:
   dotnet-format:
 

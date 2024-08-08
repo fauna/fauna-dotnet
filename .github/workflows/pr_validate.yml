@@ -2,7 +2,9 @@ name: Driver tests
 
 on:
   pull_request:
-
+    paths:
+      - '**/*.cs'
+      - '**/*.sln'
 jobs:
   dotnet-test:
 
