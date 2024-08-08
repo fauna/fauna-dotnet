@@ -278,3 +278,15 @@ switch (r.Data)
         break;
 }
 ```
+
+## Streams
+
+Example of creating a [Stream](https://docs.fauna.com/fauna/current/learn/track-changes/streaming/):
+```csharp
+var stream = await client.StreamAsync<Person>(FQL($"Person.all().toStream"));
+await foreach (var person in stream)
+{
+    // handle each stream Event<Person>
+}
+```
+
