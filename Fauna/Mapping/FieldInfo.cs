@@ -49,7 +49,7 @@ public sealed class FieldInfo
             {
                 if (_serializer is null)
                 {
-                    _serializer = Fauna.Serialization.Serializer.Generate(_ctx, Type);
+                    _serializer = Serialization.Serializer.Generate(_ctx, Type);
                     if (IsNullable && (!_serializer.GetType().IsGenericType ||
                                        (_serializer.GetType().IsGenericType &&
                                         _serializer.GetType().GetGenericTypeDefinition() !=

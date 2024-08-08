@@ -5,17 +5,17 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal interface IClassSerializer : ISerializer
+internal interface IClassDocumentSerializer : ISerializer
 {
     public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader);
 }
 
-internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
+internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
 {
     private const string IdField = "id";
     private const string NameField = "name";
-
     private readonly MappingInfo _info;
+    private readonly bool _isDocument;
 
     public ClassSerializer(MappingInfo info)
     {
@@ -23,9 +23,16 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
         _info = info;
     }
 
+    public ClassSerializer(MappingInfo info, bool isDocument)
+    {
+        Debug.Assert(info.Type == typeof(T));
+        _info = info;
+        _isDocument = isDocument;
+    }
+
     public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader)
     {
-        var instance = CreateInstance();
+        object instance = CreateInstance();
         if (id is not null) TrySetId(instance, id);
         if (name is not null) TrySetName(instance, name);
         SetFields(instance, context, ref reader, TokenType.EndDocument);
@@ -48,7 +55,7 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
             string? name = null;
             Module? coll = null;
             string? cause = null;
-            var exists = true;
+            bool exists = true;
 
             while (reader.Read() && reader.CurrentTokenType != TokenType.EndRef)
             {
@@ -56,7 +63,7 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
                     throw new SerializationException(
                         $"Unexpected token while deserializing into DocumentRef: {reader.CurrentTokenType}");
 
-                var fieldName = reader.GetString()!;
+                string fieldName = reader.GetString()!;
                 reader.Read();
                 switch (fieldName)
                 {
@@ -86,14 +93,50 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
             throw new NullDocumentException((id ?? name)!, coll!, cause!);
         }
 
-        var instance = CreateInstance();
+        object instance = CreateInstance();
         SetFields(instance, context, ref reader, endToken);
         return (T)instance;
     }
 
-    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    public override void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
     {
-        DynamicSerializer.Singleton.Serialize(context, writer, o);
+        var skipFields = new HashSet<string>();
+
+        if (_isDocument)
+        {
+            foreach (FieldInfo fi in _info.Fields)
+            {
+                if (fi.Name.ToLowerInvariant() == "id" && fi.Property.GetValue(o) is null) skipFields.Add("id");
+                if (fi.Name.ToLowerInvariant() == "coll" && fi.Property.GetValue(o) is null) skipFields.Add("coll");
+                if (fi.Name.ToLowerInvariant() == "ts" && fi.Property.GetValue(o) is null) skipFields.Add("ts");
+            }
+        }
+
+        SerializeInternal(ctx, w, o, skipFields);
+    }
+
+    private static void SerializeInternal(MappingContext ctx, Utf8FaunaWriter w, object? o, IReadOnlySet<string> skipFields)
+    {
+        if (o == null)
+        {
+            w.WriteNullValue();
+            return;
+        }
+
+        var t = o.GetType();
+        var info = ctx.GetInfo(t);
+        bool shouldEscape = info.ShouldEscapeObject;
+
+        if (shouldEscape) w.WriteStartEscapedObject(); else w.WriteStartObject();
+        foreach (var field in info.Fields)
+        {
+            if (skipFields.Contains(field.Name.ToLowerInvariant())) continue;
+
+            w.WriteFieldName(field.Name);
+            object? v = field.Property.GetValue(o);
+            field.Serializer.Serialize(ctx, w, v);
+        }
+        if (shouldEscape) w.WriteEndEscapedObject(); else w.WriteEndObject();
     }
 
     private object CreateInstance() => Activator.CreateInstance(_info.Type)!;
@@ -105,7 +148,7 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
             if (reader.CurrentTokenType != TokenType.FieldName)
                 throw UnexpectedToken(reader.CurrentTokenType);
 
-            var fieldName = reader.GetString()!;
+            string fieldName = reader.GetString()!;
             reader.Read();
 
             if (fieldName == IdField && reader.CurrentTokenType == TokenType.String)
@@ -129,20 +172,22 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassSerializer
 
     private void TrySetId(object instance, string id)
     {
-        if (_info.FieldsByName.TryGetValue(IdField, out var field))
+        if (!_info.FieldsByName.TryGetValue(IdField, out var field))
         {
-            if (field.Type == typeof(long))
-            {
-                field.Property.SetValue(instance, long.Parse(id));
-            }
-            else if (field.Type == typeof(string))
-            {
-                field.Property.SetValue(instance, id);
-            }
-            else
-            {
-                throw UnexpectedToken(TokenType.String);
-            }
+            return;
+        }
+
+        if (field.Type == typeof(long))
+        {
+            field.Property.SetValue(instance, long.Parse(id));
+        }
+        else if (field.Type == typeof(string))
+        {
+            field.Property.SetValue(instance, id);
+        }
+        else
+        {
+            throw UnexpectedToken(TokenType.String);
         }
     }
 

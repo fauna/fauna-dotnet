@@ -88,79 +88,82 @@ public static class Serializer
         if (targetType == typeof(Ref)) return _docRef;
         if (targetType == typeof(NamedRef)) return _namedDocRef;
 
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
+        if (targetType.IsGenericType)
         {
-            var args = targetType.GetGenericArguments();
-            if (args.Length == 1)
+            if (targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                var inner = (ISerializer)Generate(context, args[0]);
-                var serType = typeof(NullableStructSerializer<>).MakeGenericType(new[] { args[0] });
-                var ser = Activator.CreateInstance(serType, new[] { inner });
+                var args = targetType.GetGenericArguments();
+                if (args.Length == 1)
+                {
+                    var inner = (ISerializer)Generate(context, args[0]);
+                    var serType = typeof(NullableStructSerializer<>).MakeGenericType(new[] { args[0] });
+                    object? ser = Activator.CreateInstance(serType, new[] { inner });
+
+                    return (ISerializer)ser!;
+                }
+
+                throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
+            }
+
+            if (targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>) ||
+                targetType.GetGenericTypeDefinition() == typeof(NonNullDocument<>) ||
+                targetType.GetGenericTypeDefinition() == typeof(NullDocument<>))
+            {
+                var argTypes = targetType.GetGenericArguments();
+                var valueType = argTypes[0];
+                var serType = typeof(NullableDocumentSerializer<>).MakeGenericType(new[] { valueType });
+                object? ser = Activator.CreateInstance(serType);
+                return (ISerializer)ser!;
+            }
+
+            if (targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                var argTypes = targetType.GetGenericArguments();
+                var keyType = argTypes[0];
+                var valueType = argTypes[1];
+
+                if (keyType != typeof(string))
+                    throw new ArgumentException(
+                        $"Unsupported Dictionary key type. Key must be of type string, but was a {keyType}");
+
+                var valueSerializer = Generate(context, valueType);
+
+                var serType = typeof(DictionarySerializer<>).MakeGenericType(new[] { valueType });
+                object? ser = Activator.CreateInstance(serType, new[] { valueSerializer });
 
                 return (ISerializer)ser!;
             }
 
-            throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
+            if (targetType.GetGenericTypeDefinition() == typeof(List<>) || targetType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+            {
+                var elemType = targetType.GetGenericArguments()[0];
+                var elemSerializer = Generate(context, elemType);
+
+                var serType = typeof(ListSerializer<>).MakeGenericType(new[] { elemType });
+                object? ser = Activator.CreateInstance(serType, new[] { elemSerializer });
+
+                return (ISerializer)ser!;
+            }
+
+            if (targetType.GetGenericTypeDefinition() == typeof(Page<>))
+            {
+                var elemType = targetType.GetGenericArguments()[0];
+                var elemSerializer = Generate(context, elemType);
+
+                var serType = typeof(PageSerializer<>).MakeGenericType(new[] { elemType });
+                object? ser = Activator.CreateInstance(serType, new[] { elemSerializer });
+
+                return (ISerializer)ser!;
+            }
+
+            if (targetType.IsGenericType && targetType.Name.Contains("AnonymousType"))
+            {
+                return DynamicSerializer.Singleton;
+            }
         }
 
-        if (targetType.IsGenericType && (
-                targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>) ||
-                targetType.GetGenericTypeDefinition() == typeof(NonNullDocument<>) ||
-                targetType.GetGenericTypeDefinition() == typeof(NullDocument<>)))
-        {
-            var argTypes = targetType.GetGenericArguments();
-            var valueType = argTypes[0];
-            var serType = typeof(NullableDocumentSerializer<>).MakeGenericType(new[] { valueType });
-            var ser = Activator.CreateInstance(serType);
-            return (ISerializer)ser!;
-        }
 
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-        {
-            var argTypes = targetType.GetGenericArguments();
-            var keyType = argTypes[0];
-            var valueType = argTypes[1];
-
-            if (keyType != typeof(string))
-                throw new ArgumentException(
-                    $"Unsupported Dictionary key type. Key must be of type string, but was a {keyType}");
-
-            var valueSerializer = Generate(context, valueType);
-
-            var serType = typeof(DictionarySerializer<>).MakeGenericType(new[] { valueType });
-            var ser = Activator.CreateInstance(serType, new[] { valueSerializer });
-
-            return (ISerializer)ser!;
-        }
-
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(List<>))
-        {
-            var elemType = targetType.GetGenericArguments()[0];
-            var elemSerializer = Generate(context, elemType);
-
-            var serType = typeof(ListSerializer<>).MakeGenericType(new[] { elemType });
-            var ser = Activator.CreateInstance(serType, new[] { elemSerializer });
-
-            return (ISerializer)ser!;
-        }
-
-        if (targetType.IsGenericType && targetType.GetGenericTypeDefinition() == typeof(Page<>))
-        {
-            var elemType = targetType.GetGenericArguments()[0];
-            var elemSerializer = Generate(context, elemType);
-
-            var serType = typeof(PageSerializer<>).MakeGenericType(new[] { elemType });
-            var ser = Activator.CreateInstance(serType, new[] { elemSerializer });
-
-            return (ISerializer)ser!;
-        }
-
-        if (targetType.IsGenericType && targetType.Name.Contains("AnonymousType"))
-        {
-            return DynamicSerializer.Singleton;
-        }
-
-        if (targetType.IsClass && !targetType.IsGenericType)
+        if (targetType.IsClass)
         {
             var info = context.GetInfo(targetType);
             return info.ClassSerializer;
@@ -198,7 +201,7 @@ public static class Serializer
     }
 
     /// <summary>
-    /// Registers a serializer for a type. This serializer will take precedence over the default serializer for the that type. 
+    /// Registers a serializer for a type. This serializer will take precedence over the default serializer for the that type.
     /// </summary>
     /// <param name="t">The type to associate with the serializer.</param>
     /// <param name="s">The serializer.</param>
@@ -209,7 +212,7 @@ public static class Serializer
     }
 
     /// <summary>
-    /// Registers a generic serializer. This serializer will take precedence over the default serializer for the that type. 
+    /// Registers a generic serializer. This serializer will take precedence over the default serializer for the that type.
     /// </summary>
     /// <param name="s">The generic serializer.</param>
     /// <exception cref="ArgumentException">Throws if a serializer is already registered for the type.</exception>
