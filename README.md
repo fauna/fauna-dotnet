@@ -248,7 +248,7 @@ await foreach (var item in client.PaginateAsync(result.Data.Users!).FlattenAsync
 ```
 
 ## Null Documents
-A null document ((NullDoc)[https://docs.fauna.com/fauna/current/reference/fql_reference/types#nulldoc]) can be handled two ways.
+A null document ([NullDoc](https://docs.fauna.com/fauna/current/reference/fql_reference/types#nulldoc)) can be handled two ways.
 
 Option 1, you can let the driver throw an exception and do something with it.
 ```csharp
