@@ -295,7 +295,7 @@ public class IntegrationTests
             await _client.StreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
                 cancellationToken: cts.Token);
         Assert.NotNull(stream);
-        var lonRunningTask = Task.Run(async () =>
+        var longRunningTask = Task.Run(async () =>
         {
             int count = 0;
             while (count < 10)
@@ -308,7 +308,7 @@ public class IntegrationTests
         }, cts.Token);
 
         await Task.Delay(500, cts.Token).ContinueWith(_ => { cts.Cancel(); }, cts.Token);
-        Assert.ThrowsAsync<TaskCanceledException>(async () => await lonRunningTask);
+        Assert.ThrowsAsync<TaskCanceledException>(async () => await longRunningTask);
     }
 
     [Test]
