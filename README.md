@@ -286,7 +286,7 @@ Example of creating a [Stream](https://docs.fauna.com/fauna/current/learn/track-
 var stream = await client.StreamAsync<Person>(FQL($"Person.all().toStream"));
 await foreach (var person in stream)
 {
-    // handle each stream Event<Person>
+    Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
 }
 ```
 

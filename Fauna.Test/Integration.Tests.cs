@@ -38,17 +38,19 @@ public class IntegrationTests
         Fixtures.EmbeddedSetDb(_client);
     }
 
+    [SetUp]
+    [Category("Streaming")]
+    public async Task SetUpStreaming()
+    {
+        await Fixtures.StreamingSandboxSetup(_client);
+    }
+
     [OneTimeTearDown]
     public void TearDown()
     {
         _client.Dispose();
     }
 
-    [Object]
-    private class StreamingSandbox
-    {
-        [Field("foo")] public string? Foo { get; set; }
-    }
 
     [Test]
     public async Task UserDefinedObjectTest()
@@ -285,11 +287,9 @@ public class IntegrationTests
 
 
     [Test]
+    [Category("Streaming")]
     public async Task StreamRequestCancel()
     {
-        await _client.QueryAsync(FQL($"Collection.byName('StreamingSandbox')?.delete()"));
-        await _client.QueryAsync(FQL($"Collection.create({{name: 'StreamingSandbox'}})"));
-
         var cts = new CancellationTokenSource();
         var stream =
             await _client.StreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
@@ -312,7 +312,8 @@ public class IntegrationTests
     }
 
     [Test]
-    public async Task ClientStream()
+    [Category("Streaming")]
+    public async Task CanReadEventsFomStream()
     {
         // setup
         await _client.QueryAsync(FQL($"Collection.byName('StreamingSandbox')?.delete()"));

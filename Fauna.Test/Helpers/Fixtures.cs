@@ -21,6 +21,12 @@ public class Book
     [Field] public string Name { get; set; } = "War and Peace";
 }
 
+[Object]
+public class StreamingSandbox
+{
+    [Field("foo")] public string? Foo { get; set; }
+}
+
 
 public class AuthorDb : DataContext
 {
@@ -102,6 +108,12 @@ public static class Fixtures
             .Wait();
         client.QueryAsync(FQL($"Set.sequence(0,100).forEach(i => EmbeddedSet.create({{num: i}}))")).Wait();
         return client.DataContext<EmbeddedSetDb>();
+    }
+
+    public static async Task StreamingSandboxSetup(Client client)
+    {
+        await client.QueryAsync(FQL($"Collection.byName('StreamingSandbox')?.delete()"));
+        await client.QueryAsync(FQL($"Collection.create({{name: 'StreamingSandbox'}})"));
     }
 
 }

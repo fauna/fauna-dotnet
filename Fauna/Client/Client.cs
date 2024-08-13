@@ -132,11 +132,11 @@ public class Client : BaseClient, IDisposable
         MappingContext ctx,
         CancellationToken cancel = default)
     {
+        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
+        var headers = GetRequestHeaders(finalOptions); // TODO: check this
+
         while (!cancel.IsCancellationRequested)
         {
-            var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
-            var headers = GetRequestHeaders(finalOptions); // TODO: check this
-
             using var streamData = new MemoryStream();
             stream.Serialize(streamData);
 
