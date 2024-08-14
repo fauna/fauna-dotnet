@@ -351,7 +351,7 @@ public class IntegrationTests
                         }
 
                         Assert.NotNull(evt.Data, "should have data");
-                        Assert.NotNull(evt.Data!.Foo, "Foo should be set");
+                        Assert.AreEqual(evt.Data!.Foo, (evt.Type == EventType.Add) ? "bar" : "baz",  "Foo should be set");
                     });
 
                     expectedEvents--;
