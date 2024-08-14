@@ -315,10 +315,6 @@ public class IntegrationTests
     [Category("Streaming")]
     public async Task CanReadEventsFomStream()
     {
-        // setup
-        await _client.QueryAsync(FQL($"Collection.byName('StreamingSandbox')?.delete()"));
-        await _client.QueryAsync(FQL($"Collection.create({{name: 'StreamingSandbox'}})"));
-
         var queries = new[]
         {
             FQL($"StreamingSandbox.create({{ foo: 'bar' }})"),
@@ -381,5 +377,7 @@ public class IntegrationTests
         Task.WaitAll(queryTasks.ToArray(), cts.Token);
 
         Assert.Zero(expectedEvents, "stream handler should process the expected number of events");
+
+        await Task.CompletedTask;
     }
 }
