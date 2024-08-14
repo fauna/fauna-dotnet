@@ -140,21 +140,7 @@ public class Client : BaseClient, IDisposable
             using var streamData = new MemoryStream();
             stream.Serialize(streamData);
 
-            var response = await _connection.OpenStream(StreamUriPath, streamData, headers, cancel);
-
-            await using var streamAsync = await response.Content.ReadAsStreamAsync(cancel);
-            using var reader = new StreamReader(streamAsync);
-            try
-            {
-                // make sure we have a healthy reader
-                reader.Peek();
-            }
-            catch (IOException)
-            {
-                // retry logic handled in the stream
-                continue;
-            }
-
+            var reader = await _connection.OpenStream(StreamUriPath, streamData, headers, cancel);
             while (!reader.EndOfStream && !cancel.IsCancellationRequested)
             {
                 string? line = await reader.ReadLineAsync();
@@ -169,7 +155,6 @@ public class Client : BaseClient, IDisposable
                 StatsCollector?.Add(evt.Stats);
                 yield return evt;
             }
-
             reader.Close();
         }
     }

@@ -45,32 +45,33 @@ internal class Connection : IConnection
         return response;
     }
 
-    public async Task<HttpResponseMessage> OpenStream(
+    public async Task<StreamReader> OpenStream(
         string path,
         Stream body,
         Dictionary<string, string> headers,
         CancellationToken cancellationToken = default)
     {
-        HttpResponseMessage response;
-        {
-            var policyResult = await _cfg.RetryConfiguration.StreamRetryPolicy
-                .ExecuteAndCaptureAsync(async () => await _cfg.HttpClient
+        var policyResult = await _cfg.RetryConfiguration.StreamRetryPolicy
+            .ExecuteAndCaptureAsync(async () =>
+            {
+                var response = await _cfg.HttpClient
                     .SendAsync(
                         CreateHttpRequest(path, body, headers),
                         HttpCompletionOption.ResponseHeadersRead,
                         cancellationToken)
-                    .ConfigureAwait(false));
-            if (policyResult.Outcome == OutcomeType.Successful)
-            {
-                response = policyResult.Result;
-            }
-            else
-            {
-                throw policyResult.FinalException;
-            }
+                    .ConfigureAwait(false);
+                var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
+                var stream = new StreamReader(streamAsync);
+                stream.Peek();
+
+                return stream;
+            });
+        if (policyResult.Outcome == OutcomeType.Successful)
+        {
+            return policyResult.Result;
         }
 
-        return response;
+        throw policyResult.FinalException;
     }
 
     private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)

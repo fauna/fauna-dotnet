@@ -27,7 +27,7 @@ internal interface IConnection : IDisposable
     /// <param name="headers">The headers to include in the request.</param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
     /// <returns>A task that represents the asynchronous operation, which opens the HTTP stream and returns the <see cref="HttpResponseMessage"/>.</returns>
-    Task<HttpResponseMessage> OpenStream(
+    Task<StreamReader> OpenStream(
         string path,
         Stream body,
         Dictionary<string, string> headers,
