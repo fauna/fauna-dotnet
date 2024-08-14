@@ -133,7 +133,7 @@ public class Client : BaseClient, IDisposable
         CancellationToken cancel = default)
     {
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
-        var headers = GetRequestHeaders(finalOptions); // TODO: check this
+        var headers = GetRequestHeaders(finalOptions);
 
         while (!cancel.IsCancellationRequested)
         {
