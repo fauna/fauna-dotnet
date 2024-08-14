@@ -8,7 +8,7 @@ using static Fauna.Constants.ResponseFields;
 namespace Fauna;
 
 
-public enum EventType
+public enum StreamEventType
 {
     Add,
     Update,
@@ -16,14 +16,14 @@ public enum EventType
     Status
 }
 
-public class Event<T> where T : notnull
+public class StreamEvent<T> where T : notnull
 {
-    public EventType Type { get; private init; }
+    public StreamEventType Type { get; private init; }
     public long TxnTime { get; private init; }
     public T? Data { get; private init; }
     public QueryStats Stats { get; private init; }
 
-    public static Event<T> From(string body, MappingContext ctx)
+    public static StreamEvent<T> From(string body, MappingContext ctx)
     {
         var json = JsonSerializer.Deserialize<JsonElement>(body);
 
@@ -33,7 +33,7 @@ public class Event<T> where T : notnull
             throw new FaunaException(err.Value);
         }
 
-        var evt = new Event<T>
+        var evt = new StreamEvent<T>
         {
             TxnTime = GetTxnTime(json),
             Type = GetType(json),
@@ -54,7 +54,7 @@ public class Event<T> where T : notnull
         return elem.TryGetInt64(out long i) ? i : default;
     }
 
-    private static EventType GetType(JsonElement json)
+    private static StreamEventType GetType(JsonElement json)
     {
         if (!json.TryGetProperty("type", out var elem))
         {
@@ -62,12 +62,12 @@ public class Event<T> where T : notnull
         }
 
         string? evtType = elem.Deserialize<string?>();
-        EventType type = evtType switch
+        StreamEventType type = evtType switch
         {
-            "add" => EventType.Add,
-            "update" => EventType.Update,
-            "remove" => EventType.Remove,
-            "status" => EventType.Status,
+            "add" => StreamEventType.Add,
+            "update" => StreamEventType.Update,
+            "remove" => StreamEventType.Remove,
+            "status" => StreamEventType.Status,
             _ => throw new Exception($"Unknown event type: {evtType}")
         };
 

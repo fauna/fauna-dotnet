@@ -22,7 +22,7 @@ public class StreamEnumerable<T> where T : notnull
         _cancel = cancel;
     }
 
-    public async IAsyncEnumerator<Event<T>> GetAsyncEnumerator()
+    public async IAsyncEnumerator<StreamEvent<T>> GetAsyncEnumerator()
     {
         await using var stream = _client.SubscribeStream<T>(
             _stream,

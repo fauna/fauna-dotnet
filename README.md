@@ -284,9 +284,13 @@ switch (r.Data)
 Example of creating a [Stream](https://docs.fauna.com/fauna/current/learn/track-changes/streaming/):
 ```csharp
 var stream = await client.StreamAsync<Person>(FQL($"Person.all().toStream"));
-await foreach (var person in stream)
+await foreach (var evt in stream)
 {
-    Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
+    if (evt.Data != null) // Status events won't have Data
+    {
+        Person person = evt.Data;
+        Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
+    }
 }
 ```
 

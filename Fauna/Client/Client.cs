@@ -127,7 +127,7 @@ public class Client : BaseClient, IDisposable
         }
     }
 
-    internal override async IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
+    internal override async IAsyncEnumerator<StreamEvent<T>> SubscribeStreamInternal<T>(
         Types.Stream stream,
         MappingContext ctx,
         CancellationToken cancel = default)
@@ -163,7 +163,7 @@ public class Client : BaseClient, IDisposable
                     continue;
                 }
 
-                var evt = Event<T>.From(line, ctx);
+                var evt = StreamEvent<T>.From(line, ctx);
                 stream.StartTs = evt.TxnTime;
                 LastSeenTxn = evt.TxnTime;
                 StatsCollector?.Add(evt.Stats);

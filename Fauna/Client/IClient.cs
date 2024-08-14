@@ -508,7 +508,7 @@ public abstract class BaseClient : IClient
     /// <param name="cancel">The cancellation token for the operation.</param>
     /// <returns>An async enumerator of stream events.</returns>
     /// Implementation <seealso cref="Client.SubscribeStreamInternal{T}(Stream, MappingContext, CancellationToken)"/>
-    internal abstract IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
+    internal abstract IAsyncEnumerator<StreamEvent<T>> SubscribeStreamInternal<T>(
         Stream stream,
         MappingContext ctx,
         CancellationToken cancel = default) where T : notnull;
@@ -545,7 +545,7 @@ public abstract class BaseClient : IClient
     /// <param name="ctx">Mapping context for stream.</param?
     /// <param name="cancel">The cancellation token.</param>
     /// <returns>An async enumerator of stream events.</returns>
-    public IAsyncEnumerator<Event<T>> SubscribeStream<T>(
+    public IAsyncEnumerator<StreamEvent<T>> SubscribeStream<T>(
         Stream stream,
         MappingContext ctx,
         CancellationToken cancel = default) where T : notnull

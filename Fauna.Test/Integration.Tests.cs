@@ -341,13 +341,17 @@ public class IntegrationTests
                     {
                         Assert.NotZero(evt.TxnTime, "should have a txn time");
                         Assert.NotZero(evt.Stats.ReadOps, "should have consumed ReadOps");
-                        if (evt.Type is EventType.Status)
+                        if (evt.Type is StreamEventType.Status)
                         {
                             return;
                         }
 
                         Assert.NotNull(evt.Data, "should have data");
-                        Assert.AreEqual(evt.Data!.Foo, (evt.Type == EventType.Add) ? "bar" : "baz",  "Foo should be set");
+                        Assert.AreEqual(
+                            evt.Data!.Foo,
+                            (evt.Type == StreamEventType.Add) ? "bar" : "baz",
+                            "Foo should be set"
+                        );
                     });
 
                     expectedEvents--;
