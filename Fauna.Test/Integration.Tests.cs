@@ -292,7 +292,7 @@ public class IntegrationTests
     {
         var cts = new CancellationTokenSource();
         var stream =
-            await _client.StreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+            await _client.StreamQueryAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
                 cancellationToken: cts.Token);
         Assert.NotNull(stream);
         var longRunningTask = Task.Run(async () =>
@@ -330,9 +330,10 @@ public class IntegrationTests
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                var stream = await _client.StreamAsync<StreamingSandbox>(
+                var stream = await _client.StreamQueryAsync<StreamingSandbox>(
                     FQL($"StreamingSandbox.all().toStream()"),
-                    cancellationToken: cts.Token);
+                    cancellationToken: cts.Token
+                );
                 Assert.NotNull(stream);
 
                 await foreach (var evt in stream)

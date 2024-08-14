@@ -521,7 +521,7 @@ public abstract class BaseClient : IClient
     /// <param name="queryOptions">The options for the query.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a stream of events.</returns>
-    public async Task<StreamEnumerable<T>> StreamAsync<T>(
+    public async Task<StreamEnumerable<T>> StreamQueryAsync<T>(
         Query query,
         QueryOptions? queryOptions = null,
         CancellationToken cancellationToken = default) where T : notnull
