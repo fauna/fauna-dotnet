@@ -292,7 +292,7 @@ public class IntegrationTests
     {
         var cts = new CancellationTokenSource();
         var stream =
-            await _client.StreamQueryAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+            await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
                 cancellationToken: cts.Token);
         Assert.NotNull(stream);
         var longRunningTask = Task.Run(async () =>
@@ -330,7 +330,7 @@ public class IntegrationTests
         {
             Assert.DoesNotThrowAsync(async () =>
             {
-                var stream = await _client.StreamQueryAsync<StreamingSandbox>(
+                var stream = await _client.EventStreamAsync<StreamingSandbox>(
                     FQL($"StreamingSandbox.all().toStream()"),
                     cancellationToken: cts.Token
                 );
@@ -342,7 +342,7 @@ public class IntegrationTests
                     {
                         Assert.NotZero(evt.TxnTime, "should have a txn time");
                         Assert.NotZero(evt.Stats.ReadOps, "should have consumed ReadOps");
-                        if (evt.Type is StreamEventType.Status)
+                        if (evt.Type is EventType.Status)
                         {
                             return;
                         }
@@ -350,7 +350,7 @@ public class IntegrationTests
                         Assert.NotNull(evt.Data, "should have data");
                         Assert.AreEqual(
                             evt.Data!.Foo,
-                            (evt.Type == StreamEventType.Add) ? "bar" : "baz",
+                            (evt.Type == EventType.Add) ? "bar" : "baz",
                             "Foo should be set"
                         );
                     });

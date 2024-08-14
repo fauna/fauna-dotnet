@@ -47,7 +47,7 @@ public abstract class DataContext : BaseClient
         return _client.QueryAsyncInternal(query, serializer, ctx, queryOptions, cancel);
     }
 
-    internal override IAsyncEnumerator<StreamEvent<T>> SubscribeStreamInternal<T>(
+    internal override IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
         Stream stream,
         MappingContext ctx,
         CancellationToken cancel = default)
