@@ -30,7 +30,7 @@ public class Event<T> where T : notnull
         var err = GetError(json);
         if (err != null)
         {
-            throw new FaunaException(err?.Message ?? "Unknown Stream error");
+            throw new FaunaException(err.Value);
         }
 
         var evt = new Event<T>
