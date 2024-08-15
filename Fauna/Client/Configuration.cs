@@ -4,7 +4,7 @@
 /// Configuration is a class used to configure a Fauna <see cref="Client"/>. It encapsulates various settings such as the <see cref="Endpoint"/>,
 /// secret, query timeout, and others.
 /// </summary>
-public record Configuration
+public record class Configuration
 {
     /// <summary>
     /// Whether the <see cref="Client"/> should dispose of the  <see cref="HttpClient"/> on Dispose.
