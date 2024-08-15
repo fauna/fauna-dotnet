@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['faunatype_0',['FaunaType',['../namespace_fauna_1_1_mapping_1_1_attributes.html#adb4d1c4a652093fdcddad9c12ab13569',1,'Fauna::Mapping::Attributes']]]
+  ['pipelinemode_0',['PipelineMode',['../namespace_fauna_1_1_linq.html#ac10c7fce4171dfb86e1f15915e0dd725',1,'Fauna::Linq']]]
 ];

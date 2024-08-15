@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['id_0',['id',['../class_fauna_1_1_types_1_1_document.html#a20033544292af501eddfb36875d8fc82',1,'Fauna.Types.Document.Id'],['../class_fauna_1_1_types_1_1_document_ref.html#a93003a2ea31c230d0e4ca94f1f9bfb95',1,'Fauna.Types.DocumentRef.Id'],['../class_fauna_1_1_types_1_1_null_document.html#ac2fe05faca78ba668403495de328eb42',1,'Fauna.Types.NullDocument.Id']]],
-  ['isnullable_1',['IsNullable',['../class_fauna_1_1_mapping_1_1_field_info.html#a16679416eea0e3d5287c76ac0a23687c',1,'Fauna::Mapping::FieldInfo']]]
+  ['httpclient_0',['HttpClient',['../class_fauna_1_1_configuration.html#a423347ad4ff7c5d71bed0ae8d83ecdfc',1,'Fauna::Configuration']]]
 ];

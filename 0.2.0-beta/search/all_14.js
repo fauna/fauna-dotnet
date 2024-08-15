@@ -1,5 +1,12 @@
 var searchData=
 [
-  ['value_0',['Value',['../class_fauna_1_1_types_1_1_nullable_document.html#a533dc3bff635d79a8bbc0265c0944f62',1,'Fauna::Types::NullableDocument']]],
-  ['values_1',['Values',['../class_fauna_1_1_types_1_1_base_document.html#aa8c7ea856a8f212ee3cfadba8b3fc830',1,'Fauna::Types::BaseDocument']]]
+  ['unauthorizedexception_0',['UnauthorizedException',['../class_fauna_1_1_exceptions_1_1_unauthorized_exception.html',1,'Fauna.Exceptions.UnauthorizedException'],['../class_fauna_1_1_exceptions_1_1_unauthorized_exception.html#a5ded2030cb009507ecae3d9d0a4575b2',1,'Fauna.Exceptions.UnauthorizedException.UnauthorizedException()']]],
+  ['unexpectedtoken_1',['UnexpectedToken',['../class_fauna_1_1_serialization_1_1_base_serializer.html#a25c5416e9c34adcb44b6b48ea124eb3e',1,'Fauna::Serialization::BaseSerializer']]],
+  ['unexpectedtokenexceptionmessage_2',['UnexpectedTokenExceptionMessage',['../class_fauna_1_1_serialization_1_1_base_serializer.html#afa05195a1e716c601f4e20ade41894b8',1,'Fauna::Serialization::BaseSerializer']]],
+  ['unsupportedserializationtypemessage_3',['UnsupportedSerializationTypeMessage',['../class_fauna_1_1_serialization_1_1_base_serializer.html#a1ecc6a9336abf0679953ce8d6661d75f',1,'Fauna::Serialization::BaseSerializer']]],
+  ['unwrap_4',['Unwrap',['../class_fauna_1_1_query_expr.html#a15ecd8bb43a28ae4c53852da41455a37',1,'Fauna.QueryExpr.Unwrap'],['../class_fauna_1_1_query_literal.html#a3f611be6098117cb2a14563627cf5bf6',1,'Fauna.QueryLiteral.Unwrap'],['../class_fauna_1_1_query_val.html#a8cee65a5c9047d781885c6a2bb5f93c3',1,'Fauna.QueryVal.Unwrap']]],
+  ['utf8faunareader_5',['Utf8FaunaReader',['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html',1,'Fauna.Serialization.Utf8FaunaReader'],['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html#a12393dfb40044cd779a83dae18d00a59',1,'Fauna.Serialization.Utf8FaunaReader.Utf8FaunaReader(ReadOnlySequence&lt; byte &gt; bytes)'],['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html#a5091a273d4ba7cf535201c0430bb966b',1,'Fauna.Serialization.Utf8FaunaReader.Utf8FaunaReader(string str)']]],
+  ['utf8faunareader_2ecs_6',['Utf8FaunaReader.cs',['../_utf8_fauna_reader_8cs.html',1,'']]],
+  ['utf8faunawriter_7',['Utf8FaunaWriter',['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html',1,'Fauna.Serialization.Utf8FaunaWriter'],['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html#aebd64b5c3c21ef052921fa27694cbfb1',1,'Fauna.Serialization.Utf8FaunaWriter.Utf8FaunaWriter(IBufferWriter&lt; byte &gt; bufferWriter)'],['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html#a54915e325dc4d021ca046e4ae538672e',1,'Fauna.Serialization.Utf8FaunaWriter.Utf8FaunaWriter(Stream stream)']]],
+  ['utf8faunawriter_2ecs_8',['Utf8FaunaWriter.cs',['../_utf8_fauna_writer_8cs.html',1,'']]]
 ];

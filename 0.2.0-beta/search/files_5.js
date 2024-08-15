@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['faunaexception_2ecs_0',['FaunaException.cs',['../_fauna_exception_8cs.html',1,'']]],
-  ['fieldinfo_2ecs_1',['FieldInfo.cs',['../_field_info_8cs.html',1,'']]],
-  ['fieldname_2ecs_2',['FieldName.cs',['../_field_name_8cs.html',1,'']]]
+  ['endpoints_2ecs_0',['Endpoints.cs',['../_endpoints_8cs.html',1,'']]],
+  ['errorinfo_2ecs_1',['ErrorInfo.cs',['../_error_info_8cs.html',1,'']]],
+  ['exceptionfactory_2ecs_2',['ExceptionFactory.cs',['../_exception_factory_8cs.html',1,'']]],
+  ['expressions_2ecs_3',['Expressions.cs',['../_expressions_8cs.html',1,'']]],
+  ['expressionswitch_2ecs_4',['ExpressionSwitch.cs',['../_expression_switch_8cs.html',1,'']]]
 ];

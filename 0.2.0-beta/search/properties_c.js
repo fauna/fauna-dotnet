@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['ratelimitshit_0',['RateLimitsHit',['../struct_fauna_1_1_query_stats.html#a37502a5c57cdca28bf721f8b7e2ff511',1,'Fauna::QueryStats']]],
-  ['rawjson_1',['RawJson',['../class_fauna_1_1_query_response.html#af0e2d138a2ebbe2fdab5274fd407af4e',1,'Fauna::QueryResponse']]],
-  ['readops_2',['ReadOps',['../struct_fauna_1_1_query_stats.html#adac41034497b8c6ebbca29ae0ea8bc68',1,'Fauna::QueryStats']]],
-  ['responsebody_3',['ResponseBody',['../class_fauna_1_1_exceptions_1_1_protocol_exception.html#abc51ffe41d2b04b15d4cd83d2b94f4b9',1,'Fauna::Exceptions::ProtocolException']]],
-  ['retrypolicy_4',['RetryPolicy',['../class_fauna_1_1_retry_configuration.html#a2706cfa38c57fceced5c19547a488ce0',1,'Fauna::RetryConfiguration']]]
+  ['querycount_0',['QueryCount',['../struct_fauna_1_1_stats.html#a16e80f7d88035fca22c9816f1cf2207d',1,'Fauna::Stats']]],
+  ['querytags_1',['QueryTags',['../class_fauna_1_1_query_options.html#afd61f0ea3def85d6499afff79753333f',1,'Fauna.QueryOptions.QueryTags'],['../class_fauna_1_1_exceptions_1_1_service_exception.html#a0e364c903a5f6734ba12ef675713d6a0',1,'Fauna.Exceptions.ServiceException.QueryTags'],['../class_fauna_1_1_query_response.html#a4a2c8dc169117a771478a73396782372',1,'Fauna.QueryResponse.QueryTags']]],
+  ['querytimems_2',['QueryTimeMs',['../struct_fauna_1_1_stats.html#af83f2ad0ce0af4e252a6465313a76e0e',1,'Fauna.Stats.QueryTimeMs'],['../struct_fauna_1_1_query_stats.html#a40f67dabdf39ebcac87975f78a7d6068',1,'Fauna.QueryStats.QueryTimeMs']]],
+  ['querytimeout_3',['QueryTimeout',['../class_fauna_1_1_query_options.html#a35d12130d23a1187751394d268e6eaf8',1,'Fauna::QueryOptions']]]
 ];

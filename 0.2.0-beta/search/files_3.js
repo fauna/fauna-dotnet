@@ -1,12 +1,8 @@
 var searchData=
 [
-  ['datacontext_2ecs_0',['DataContext.cs',['../_data_context_8cs.html',1,'']]],
-  ['datacontextbuilder_2ecs_1',['DataContextBuilder.cs',['../_data_context_builder_8cs.html',1,'']]],
-  ['deserializer_2ecs_2',['Deserializer.cs',['../_deserializer_8cs.html',1,'']]],
-  ['deserializers_2ecs_3',['Deserializers.cs',['../_deserializers_8cs.html',1,'']]],
-  ['dictionarydeserializer_2ecs_4',['DictionaryDeserializer.cs',['../_dictionary_deserializer_8cs.html',1,'']]],
-  ['document_2ecs_5',['Document.cs',['../_document_8cs.html',1,'']]],
-  ['documentdeserializer_2ecs_6',['DocumentDeserializer.cs',['../_document_deserializer_8cs.html',1,'']]],
-  ['documentref_2ecs_7',['DocumentRef.cs',['../_document_ref_8cs.html',1,'']]],
-  ['dynamicdeserializer_2ecs_8',['DynamicDeserializer.cs',['../_dynamic_deserializer_8cs.html',1,'']]]
+  ['checkedserializer_2ecs_0',['CheckedSerializer.cs',['../_checked_serializer_8cs.html',1,'']]],
+  ['classserializer_2ecs_1',['ClassSerializer.cs',['../_class_serializer_8cs.html',1,'']]],
+  ['client_2ecs_2',['Client.cs',['../_client_8cs.html',1,'']]],
+  ['configuration_2ecs_3',['Configuration.cs',['../_configuration_8cs.html',1,'']]],
+  ['connection_2ecs_4',['Connection.cs',['../_connection_8cs.html',1,'']]]
 ];

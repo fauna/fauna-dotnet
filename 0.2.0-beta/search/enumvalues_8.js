@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['project_0',['Project',['../namespace_fauna_1_1_linq.html#ac10c7fce4171dfb86e1f15915e0dd725a9e727fdd3aec8274f46685441900280d',1,'Fauna::Linq']]]
+  ['query_0',['Query',['../namespace_fauna_1_1_linq.html#ac10c7fce4171dfb86e1f15915e0dd725a66c1b4c7f3dc385b68a9fa903ccd016d',1,'Fauna::Linq']]]
 ];
