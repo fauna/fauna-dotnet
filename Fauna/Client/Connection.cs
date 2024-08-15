@@ -1,4 +1,7 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Collections.Concurrent;
+using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
+using Fauna.Mapping;
 using Polly;
 
 namespace Fauna;
@@ -45,33 +48,83 @@ internal class Connection : IConnection
         return response;
     }
 
-    public async Task<StreamReader> OpenStream(
+    public async IAsyncEnumerable<Event<T>> OpenStream<T>(
         string path,
-        Stream body,
+        Types.Stream stream,
         Dictionary<string, string> headers,
-        CancellationToken cancellationToken = default)
+        MappingContext ctx,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default) where T : notnull
     {
-        var policyResult = await _cfg.RetryConfiguration.StreamRetryPolicy
-            .ExecuteAndCaptureAsync(async () =>
-            {
-                var response = await _cfg.HttpClient
-                    .SendAsync(
-                        CreateHttpRequest(path, body, headers),
-                        HttpCompletionOption.ResponseHeadersRead,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-                var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
-                var stream = new StreamReader(streamAsync);
-                stream.Peek();
+        cancellationToken.ThrowIfCancellationRequested();
 
-                return stream;
-            });
-        if (policyResult.Outcome == OutcomeType.Successful)
+        var listener = new EventListener<T>();
+
+        Task streamTask = _cfg.RetryConfiguration.StreamRetryPolicy.ExecuteAndCaptureAsync(async () =>
         {
-            return policyResult.Result;
+            var streamData = new MemoryStream();
+            stream.Serialize(streamData);
+
+            var response = await _cfg.HttpClient
+                .SendAsync(
+                    CreateHttpRequest(path, streamData, headers),
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+                .ConfigureAwait(false);
+
+            await using var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
+            using var streamReader = new StreamReader(streamAsync);
+
+            while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
+            {
+                string? line = await streamReader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                var evt = Event<T>.From(line, ctx);
+                stream.StartTs = evt.TxnTime;
+                listener.Dispatch(evt);
+            }
+
+            // TRICKY: The loop is only broken if the stream is closed unintentionally.
+            throw new IOException();
+        });
+        await foreach (var evt in listener.Events().WithCancellation(cancellationToken))
+        {
+            yield return evt;
         }
 
-        throw policyResult.FinalException;
+        await streamTask;
+    }
+
+    /// <summary>
+    /// A helper class for handling events in a thread-safe manner.
+    /// </summary>
+    /// <typeparam name="T">The type of event data.</typeparam>
+    private class EventListener<T> where T : notnull
+    {
+        private readonly ConcurrentQueue<Event<T>> _queue = new();
+        private readonly SemaphoreSlim _semaphore = new(0);
+
+        public void Dispatch(Event<T> evt)
+        {
+            _queue.Enqueue(evt);
+            _semaphore.Release();
+        }
+
+        public async IAsyncEnumerable<Event<T>> Events()
+        {
+            while (true)
+            {
+                await _semaphore.WaitAsync();
+                if (_queue.TryDequeue(out var evt))
+                {
+                    yield return evt;
+                }
+            }
+            // ReSharper disable once IteratorNeverReturns
+        }
     }
 
     private HttpRequestMessage CreateHttpRequest(string path, Stream body, Dictionary<string, string> headers)

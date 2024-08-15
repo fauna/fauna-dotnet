@@ -7,10 +7,6 @@ public class StreamEnumerable<T> where T : notnull
     private readonly BaseClient _client;
     private readonly Stream _stream;
     private readonly CancellationToken _cancel;
-    internal long StartTs
-    {
-        set => _stream.StartTs = value;
-    }
 
     internal StreamEnumerable(
         BaseClient client,

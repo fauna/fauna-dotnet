@@ -135,27 +135,17 @@ public class Client : BaseClient, IDisposable
         var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
         var headers = GetRequestHeaders(finalOptions);
 
-        while (!cancel.IsCancellationRequested)
+        await foreach (var evt in _connection.OpenStream<T>(
+                           StreamUriPath,
+                           stream,
+                           headers,
+                           ctx,
+                           cancel))
         {
-            using var streamData = new MemoryStream();
-            stream.Serialize(streamData);
-
-            var reader = await _connection.OpenStream(StreamUriPath, streamData, headers, cancel);
-            while (!reader.EndOfStream && !cancel.IsCancellationRequested)
-            {
-                string? line = await reader.ReadLineAsync();
-                if (string.IsNullOrWhiteSpace(line))
-                {
-                    continue;
-                }
-
-                var evt = Event<T>.From(line, ctx);
-                stream.StartTs = evt.TxnTime;
-                LastSeenTxn = evt.TxnTime;
-                StatsCollector?.Add(evt.Stats);
-                yield return evt;
-            }
-            reader.Close();
+            LastSeenTxn = evt.TxnTime;
+            stream.StartTs = evt.TxnTime;
+            StatsCollector?.Add(evt.Stats);
+            yield return evt;
         }
     }
 
