@@ -12,17 +12,6 @@ git clone docs.git docs-updated.git
 
 cd docs-updated.git
 
-rm index.html
-echo "<section style=\"margin: 20px\">" >> index.html
-echo "<header>Current Version</header>" >> index.html
-echo "<li><a href='https://fauna.github.io/fauna-dotnet/$PACKAGE_VERSION'>$PACKAGE_VERSION</a></li>" >> index.html
-echo "</section>" >> index.html
-
-echo "<section style=\"margin: 20px\">" >> index.html
-echo "<header>All Versions</header>" >> index.html
-git --git-dir "$REPO_GIT_DIR" tag -l --sort=-v:refname | awk '{print "<li><a href=\"https://fauna.github.io/fauna-dotnet/"$0"\">"$0"</a></li>"}' >> index.html
-echo "</section>" >> index.html
-
 mkdir "${PACKAGE_VERSION}"
 cd "${PACKAGE_VERSION}"
 
@@ -55,6 +44,9 @@ BODY_GTM=$(cat ../../repo.git/concourse/scripts/body_gtm.dat)
 sed -i.bak "0,/<body>/{s/<body>/<body>${BODY_GTM}/}" ./index.html
 
 rm ./index.html.bak
+
+echo "Updating 'latest' symlink to point to $PACKAGE_VERSION"
+ln -sfn "$PACKAGE_VERSION" latest
 
 git config --global user.email "nobody@fauna.com"
 git config --global user.name "Fauna, Inc"
