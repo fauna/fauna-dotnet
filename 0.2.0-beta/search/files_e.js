@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['serializationexception_2ecs_0',['SerializationException.cs',['../_serialization_exception_8cs.html',1,'']]],
-  ['serializer_2ecs_1',['Serializer.cs',['../_serializer_8cs.html',1,'']]],
-  ['serviceexception_2ecs_2',['ServiceException.cs',['../_service_exception_8cs.html',1,'']]],
-  ['subqueryswitch_2ecs_3',['SubQuerySwitch.cs',['../_sub_query_switch_8cs.html',1,'']]]
+  ['ref_2ecs_0',['Ref.cs',['../_ref_8cs.html',1,'']]],
+  ['responsefields_2ecs_1',['ResponseFields.cs',['../_response_fields_8cs.html',1,'']]],
+  ['retryconfiguration_2ecs_2',['RetryConfiguration.cs',['../_retry_configuration_8cs.html',1,'']]]
 ];

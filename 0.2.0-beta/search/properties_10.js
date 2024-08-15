@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['value_0',['Value',['../class_fauna_1_1_types_1_1_nullable_document.html#a533dc3bff635d79a8bbc0265c0944f62',1,'Fauna::Types::NullableDocument']]],
-  ['values_1',['Values',['../class_fauna_1_1_types_1_1_base_document.html#aa8c7ea856a8f212ee3cfadba8b3fc830',1,'Fauna::Types::BaseDocument']]]
+  ['unwrap_0',['Unwrap',['../class_fauna_1_1_query_expr.html#a15ecd8bb43a28ae4c53852da41455a37',1,'Fauna.QueryExpr.Unwrap'],['../class_fauna_1_1_query_literal.html#a3f611be6098117cb2a14563627cf5bf6',1,'Fauna.QueryLiteral.Unwrap'],['../class_fauna_1_1_query_val.html#a8cee65a5c9047d781885c6a2bb5f93c3',1,'Fauna.QueryVal.Unwrap']]]
 ];

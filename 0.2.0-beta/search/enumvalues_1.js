@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['date_0',['date',['../namespace_fauna_1_1_mapping_1_1_attributes.html#adb4d1c4a652093fdcddad9c12ab13569a44749712dbec183e983dcd78a7736c41',1,'Fauna.Mapping.Attributes.Date'],['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50a44749712dbec183e983dcd78a7736c41',1,'Fauna.Serialization.Date']]],
-  ['double_1',['double',['../namespace_fauna_1_1_mapping_1_1_attributes.html#adb4d1c4a652093fdcddad9c12ab13569ad909d38d705ce75386dd86e611a82f5b',1,'Fauna.Mapping.Attributes.Double'],['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50ad909d38d705ce75386dd86e611a82f5b',1,'Fauna.Serialization.Double']]]
+  ['endarray_0',['EndArray',['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50a28eba72f5e41e1aa926ed48f93baec15',1,'Fauna::Serialization']]],
+  ['enddocument_1',['EndDocument',['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50ae0cb56712be8fc99060b85201de2bfdd',1,'Fauna::Serialization']]],
+  ['endobject_2',['EndObject',['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50a29b9b2e4070b4e76657e8e74cb4c8191',1,'Fauna::Serialization']]],
+  ['endpage_3',['EndPage',['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50a5cb1ddc6c8dc9eb27d797fdb6ff9f4b0',1,'Fauna::Serialization']]],
+  ['endref_4',['EndRef',['../namespace_fauna_1_1_serialization.html#a564aa46d376b2e193a3c208775e46d50a409cc7a46a863b94814d8d0adf44c92c',1,'Fauna::Serialization']]]
 ];

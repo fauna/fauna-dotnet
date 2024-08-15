@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fragments_0',['fragments',['../struct_fauna_1_1_query_string_handler.html#a1ad3d5751840932e82c6c74bb85bedb0',1,'Fauna::QueryStringHandler']]]
+  ['statscollector_0',['StatsCollector',['../class_fauna_1_1_client.html#a5546f585eb151e197b55333a515c716a',1,'Fauna::Client']]]
 ];
