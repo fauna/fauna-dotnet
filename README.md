@@ -28,6 +28,13 @@ Using the .NET CLI:
 dotnet add package Fauna --prerelease
 ```
 
+## API reference
+
+API reference documentation for the driver is available at
+https://fauna.github.io/fauna-dotnet/. The docs are generated using
+[Doxygen](https://www.doxygen.nl/).
+
+
 ## Basic usage
 
 ```csharp
