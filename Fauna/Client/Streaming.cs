@@ -20,14 +20,14 @@ public class StreamEnumerable<T> where T : notnull
 
     public async IAsyncEnumerator<Event<T>> GetAsyncEnumerator()
     {
-        await using var stream = _client.SubscribeStream<T>(
+        await using var subscribeStream = _client.SubscribeStream<T>(
             _stream,
             _client.MappingCtx,
             _cancel);
 
-        while (!_cancel.IsCancellationRequested && await stream.MoveNextAsync())
+        while (!_cancel.IsCancellationRequested && await subscribeStream.MoveNextAsync())
         {
-            yield return stream.Current;
+            yield return subscribeStream.Current;
         }
     }
 }

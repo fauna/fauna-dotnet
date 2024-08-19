@@ -381,7 +381,7 @@ public class IntegrationTests
         queryTasks = queryTasks.Append(streamTask);
         Task.WaitAll(queryTasks.ToArray(), cts.Token);
 
-        Assert.Zero(expectedEvents, "stream handler should process the expected number of events");
+        Assert.Zero(expectedEvents, "stream handler should process all events");
 
         await Task.CompletedTask;
     }

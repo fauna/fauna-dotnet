@@ -57,45 +57,48 @@ internal class Connection : IConnection
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var listener = new EventListener<T>();
-
-        Task streamTask = _cfg.RetryConfiguration.StreamRetryPolicy.ExecuteAndCaptureAsync(async () =>
+        while (!cancellationToken.IsCancellationRequested)
         {
-            var streamData = new MemoryStream();
-            stream.Serialize(streamData);
-
-            var response = await _cfg.HttpClient
-                .SendAsync(
-                    CreateHttpRequest(path, streamData, headers),
-                    HttpCompletionOption.ResponseHeadersRead,
-                    cancellationToken)
-                .ConfigureAwait(false);
-
-            await using var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
-            using var streamReader = new StreamReader(streamAsync);
-
-            while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
+            var listener = new EventListener<T>();
+            Task streamTask = _cfg.RetryConfiguration.RetryPolicy.ExecuteAndCaptureAsync(async () =>
             {
-                string? line = await streamReader.ReadLineAsync();
-                if (string.IsNullOrWhiteSpace(line))
+                var streamData = new MemoryStream();
+                stream.Serialize(streamData);
+
+                var response = await _cfg.HttpClient
+                    .SendAsync(
+                        CreateHttpRequest(path, streamData, headers),
+                        HttpCompletionOption.ResponseHeadersRead,
+                        cancellationToken)
+                    .ConfigureAwait(false);
+
+                await using var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
+                using var streamReader = new StreamReader(streamAsync);
+
+                while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
                 {
-                    continue;
+                    string? line = await streamReader.ReadLineAsync();
+                    if (string.IsNullOrWhiteSpace(line))
+                    {
+                        continue;
+                    }
+
+                    var evt = Event<T>.From(line, ctx);
+                    stream.StartTs = evt.TxnTime;
+                    listener.Dispatch(evt);
                 }
 
-                var evt = Event<T>.From(line, ctx);
-                stream.StartTs = evt.TxnTime;
-                listener.Dispatch(evt);
+                listener.Close();
+                return response;
+            });
+
+            await foreach (var evt in listener.Events().WithCancellation(cancellationToken))
+            {
+                yield return evt;
             }
 
-            // TRICKY: The loop is only broken if the stream is closed unintentionally.
-            throw new IOException();
-        });
-        await foreach (var evt in listener.Events().WithCancellation(cancellationToken))
-        {
-            yield return evt;
+            await streamTask;
         }
-
-        await streamTask;
     }
 
     /// <summary>
@@ -106,6 +109,7 @@ internal class Connection : IConnection
     {
         private readonly ConcurrentQueue<Event<T>> _queue = new();
         private readonly SemaphoreSlim _semaphore = new(0);
+        private bool _closed;
 
         public void Dispatch(Event<T> evt)
         {
@@ -118,12 +122,25 @@ internal class Connection : IConnection
             while (true)
             {
                 await _semaphore.WaitAsync();
+
+                if (_closed)
+                {
+                    _semaphore.Release();
+                    yield break;
+                }
+
                 if (_queue.TryDequeue(out var evt))
                 {
                     yield return evt;
                 }
+
+                _semaphore.Release();
             }
-            // ReSharper disable once IteratorNeverReturns
+        }
+
+        public void Close()
+        {
+            _closed = true;
         }
     }
 
