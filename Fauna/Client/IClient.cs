@@ -3,6 +3,7 @@ using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
+using Stream = Fauna.Types.Stream;
 
 namespace Fauna;
 
@@ -335,8 +336,8 @@ interface IClient
         ISerializer elemSerializer,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default);
-}
 
+}
 
 /// <summary>
 /// The base class for Client and DataContext.
@@ -495,4 +496,62 @@ public abstract class BaseClient : IClient
             yield return page;
         }
     }
+
+    #region Streaming
+
+    /// <summary>
+    /// Opens the stream with Fauna and returns an enumerator for the stream events.
+    /// </summary>
+    /// <typeparam name="T">The type of event data that will be deserialized from the stream.</typeparam>
+    /// <param name="stream">The stream to subscribe to.</param>
+    /// <param name="ctx">The mapping context to use for deserializing stream events.</param>
+    /// <param name="cancel">The cancellation token for the operation.</param>
+    /// <returns>An async enumerator of stream events.</returns>
+    /// Implementation <seealso cref="Client.SubscribeStreamInternal{T}(Stream, MappingContext, CancellationToken)"/>
+    internal abstract IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
+        Stream stream,
+        MappingContext ctx,
+        CancellationToken cancel = default) where T : notnull;
+
+    /// <summary>
+    /// Retrieves a Stream token from Fauna and returns a StreamEnumerable for the stream events.
+    /// </summary>
+    /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
+    /// <param name="query">The query to create the stream from Fauna.</param>
+    /// <param name="queryOptions">The options for the query.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a stream of events.</returns>
+    public async Task<StreamEnumerable<T>> EventStreamAsync<T>(
+        Query query,
+        QueryOptions? queryOptions = null,
+        CancellationToken cancellationToken = default) where T : notnull
+    {
+        var response = await QueryAsync<Stream>(
+            query,
+            queryOptions,
+            cancellationToken);
+
+        return new StreamEnumerable<T>(
+            this,
+            response.Data,
+            cancellationToken);
+    }
+
+    /// <summary>
+    /// Opens the stream with Fauna and returns an enumerator for the stream events.
+    /// </summary>
+    /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
+    /// <param name="stream">The stream to subscribe to.</param>
+    /// <param name="ctx">Mapping context for stream.</param?
+    /// <param name="cancel">The cancellation token.</param>
+    /// <returns>An async enumerator of stream events.</returns>
+    public IAsyncEnumerator<Event<T>> SubscribeStream<T>(
+        Stream stream,
+        MappingContext ctx,
+        CancellationToken cancel = default) where T : notnull
+    {
+        return SubscribeStreamInternal<T>(stream, ctx, cancel);
+    }
+
+    #endregion
 }

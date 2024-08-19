@@ -1,5 +1,8 @@
+using System.Collections.Immutable;
 using System.Net;
+using System.Net.Sockets;
 using Polly;
+using Polly.Retry;
 
 namespace Fauna;
 
@@ -23,13 +26,16 @@ public class RetryConfiguration
     public RetryConfiguration(int retryCount, TimeSpan maxBackoff)
     {
         RetryPolicy = Policy
-            .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.TooManyRequests)
+            .Handle<HttpRequestException>()
+            .Or<SocketException>()
+            .Or<IOException>()
+            .Or<InvalidOperationException>()
+            .OrResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.TooManyRequests)
             .WaitAndRetryAsync(retryCount, attempt =>
             {
-                var calculated = (int)Math.Floor(Math.Pow(2, attempt));
-                var backoff = calculated > maxBackoff.Seconds ? maxBackoff.Seconds : calculated;
+                int calculated = (int)Math.Floor(Math.Pow(2, attempt));
+                int backoff = calculated > maxBackoff.Seconds ? maxBackoff.Seconds : calculated;
                 return TimeSpan.FromSeconds(backoff);
             });
     }
-
 }

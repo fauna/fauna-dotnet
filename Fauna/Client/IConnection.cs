@@ -1,4 +1,6 @@
-﻿namespace Fauna;
+﻿using Fauna.Mapping;
+
+namespace Fauna;
 
 /// <summary>
 /// Represents an interface for making HTTP requests.
@@ -18,4 +20,22 @@ internal interface IConnection : IDisposable
         Stream body,
         Dictionary<string, string> headers,
         CancellationToken cancel);
+
+    /// <summary>
+    /// Asynchronously sends a POST request to open Stream.
+    /// </summary>
+    /// <param name="path">The path of the resource to send the request to.</param>
+    /// <param name="stream"></param>
+    /// <param name="headers">The headers to include in the request.</param>
+    /// <param name="ctx"></param>
+    /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
+    /// <returns>A task that represents the asynchronous operation, which opens the HTTP stream and returns the <see cref="HttpResponseMessage"/>.</returns>
+    /// Implementation <seealso cref="Connection.OpenStream{T}"/>
+
+    IAsyncEnumerable<Event<T>> OpenStream<T>(
+        string path,
+        Types.Stream stream,
+        Dictionary<string, string> headers,
+        MappingContext ctx,
+        CancellationToken cancellationToken = default) where T : notnull;
 }

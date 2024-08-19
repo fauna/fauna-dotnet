@@ -13,6 +13,7 @@ namespace Fauna;
 public class Client : BaseClient, IDisposable
 {
     private const string QueryUriPath = "/query/1";
+    private const string StreamUriPath = "/stream/1";
 
     private readonly Configuration _config;
     private readonly IConnection _connection;
@@ -123,6 +124,28 @@ public class Client : BaseClient, IDisposable
                 throw ExceptionFactory.FromQueryFailure(ctx, failure);
             default:
                 throw ExceptionFactory.FromRawResponse(body, httpResponse);
+        }
+    }
+
+    internal override async IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
+        Types.Stream stream,
+        MappingContext ctx,
+        CancellationToken cancel = default)
+    {
+        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
+        var headers = GetRequestHeaders(finalOptions);
+
+        await foreach (var evt in _connection.OpenStream<T>(
+                           StreamUriPath,
+                           stream,
+                           headers,
+                           ctx,
+                           cancel))
+        {
+            LastSeenTxn = evt.TxnTime;
+            stream.StartTs = evt.TxnTime;
+            StatsCollector?.Add(evt.Stats);
+            yield return evt;
         }
     }
 

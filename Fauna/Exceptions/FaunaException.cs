@@ -13,5 +13,7 @@ public class FaunaException : Exception
 
     public FaunaException(string message, Exception innerException)
     : base(message, innerException) { }
+
+    public FaunaException(ErrorInfo err) : base(message: err.Message) { }
 }
 

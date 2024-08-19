@@ -38,11 +38,19 @@ public class IntegrationTests
         Fixtures.EmbeddedSetDb(_client);
     }
 
+    [SetUp]
+    [Category("Streaming")]
+    public async Task SetUpStreaming()
+    {
+        await Fixtures.StreamingSandboxSetup(_client);
+    }
+
     [OneTimeTearDown]
     public void TearDown()
     {
         _client.Dispose();
     }
+
 
     [Test]
     public async Task UserDefinedObjectTest()
@@ -275,5 +283,106 @@ public class IntegrationTests
 
         Assert.AreEqual(9, actual);
         Assert.Null(testClient.StatsCollector);
+    }
+
+
+    [Test]
+    [Category("Streaming")]
+    public async Task StreamRequestCancel()
+    {
+        var cts = new CancellationTokenSource();
+        var stream =
+            await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+                cancellationToken: cts.Token);
+        Assert.NotNull(stream);
+        var longRunningTask = Task.Run(async () =>
+        {
+            int count = 0;
+            while (count < 10)
+            {
+                await Task.Delay(250, cts.Token);
+                count++;
+            }
+
+            Assert.Fail();
+        }, cts.Token);
+
+        await Task.Delay(500, cts.Token).ContinueWith(_ => { cts.Cancel(); }, cts.Token);
+        Assert.ThrowsAsync<TaskCanceledException>(async () => await longRunningTask);
+    }
+
+    [Test]
+    [Category("Streaming")]
+    public async Task CanReadEventsFomStream()
+    {
+        var queries = new[]
+        {
+            FQL($"StreamingSandbox.create({{ foo: 'bar' }})"),
+            FQL($"StreamingSandbox.all().forEach(.update({{ foo: 'baz' }}))"),
+            FQL($"StreamingSandbox.all().forEach(.delete())")
+        };
+
+        int expectedEvents = queries.Length + 1; // add one for the status event
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(2)); // prevent runaway test
+
+        // create a task to open the stream and process events
+        var streamTask = Task.Run(() =>
+        {
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                var stream = await _client.EventStreamAsync<StreamingSandbox>(
+                    FQL($"StreamingSandbox.all().toStream()"),
+                    cancellationToken: cts.Token
+                );
+                Assert.NotNull(stream);
+
+                await foreach (var evt in stream)
+                {
+                    Assert.Multiple(() =>
+                    {
+                        Assert.NotZero(evt.TxnTime, "should have a txn time");
+                        Assert.NotZero(evt.Stats.ReadOps, "should have consumed ReadOps");
+                        if (evt.Type is EventType.Status)
+                        {
+                            return;
+                        }
+
+                        Assert.NotNull(evt.Data, "should have data");
+                        Assert.AreEqual(
+                            evt.Data!.Foo,
+                            (evt.Type == EventType.Add) ? "bar" : "baz",
+                            "Foo should be set"
+                        );
+                    });
+
+                    expectedEvents--;
+                    if (expectedEvents > 0)
+                    {
+                        continue;
+                    }
+
+                    TestContext.WriteLine("Seen all events");
+                    break;
+                }
+            });
+        }, cts.Token);
+
+        // invoke queries on a delay to simulate streaming events
+        var queryTasks = queries.Select(
+            (query, index) => Task.Delay((index + 1) * 500, cts.Token)
+                .ContinueWith(
+                    _ =>
+                    {
+                        Assert.DoesNotThrowAsync(async () => { await _client.QueryAsync(query, cancel: cts.Token); },
+                            "Should successfully invoke query");
+                    }, TaskContinuationOptions.ExecuteSynchronously));
+
+        // wait for all tasks
+        queryTasks = queryTasks.Append(streamTask);
+        Task.WaitAll(queryTasks.ToArray(), cts.Token);
+
+        Assert.Zero(expectedEvents, "stream handler should process all events");
+
+        await Task.CompletedTask;
     }
 }
