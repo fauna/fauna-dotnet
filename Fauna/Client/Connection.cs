@@ -77,7 +77,7 @@ internal class Connection : IConnection
 
                 while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
                 {
-                    string? line = await streamReader.ReadLineAsync();
+                    string? line = await streamReader.ReadLineAsync().WaitAsync(cancellationToken);
                     if (string.IsNullOrWhiteSpace(line))
                     {
                         continue;
