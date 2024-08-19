@@ -34,14 +34,9 @@ internal class Connection : IConnection
                 .ExecuteAndCaptureAsync(async () =>
                     await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
                 .ConfigureAwait(false);
-            if (policyResult.Outcome == OutcomeType.Successful)
-            {
-                response = policyResult.Result;
-            }
-            else
-            {
-                throw policyResult.FinalException ?? new MaxRetriesException();
-            }
+            response = policyResult.Outcome == OutcomeType.Successful
+                ? policyResult.Result
+                : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
         }
 
         return response;

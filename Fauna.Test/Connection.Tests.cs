@@ -109,7 +109,9 @@ public class ConnectionTests
         }
         else
         {
-            Assert.ThrowsAsync<MaxRetriesException>(async () => await _client.QueryAsync<int>(_fql));
+            var ex = Assert.ThrowsAsync<QueryRuntimeException>(async () => await _client.QueryAsync<int>(_fql));
+            Assert.IsNotNull(ex);
+            Assert.AreEqual(HttpStatusCode.TooManyRequests, ex!.StatusCode);
         }
     }
 }
