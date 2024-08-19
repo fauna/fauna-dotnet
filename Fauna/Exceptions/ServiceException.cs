@@ -270,4 +270,3 @@ public class NetworkException : FaunaException
         ResponseBody = body;
     }
 }
-

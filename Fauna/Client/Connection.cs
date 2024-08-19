@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using Fauna.Mapping;
 using Polly;
 
 namespace Fauna;

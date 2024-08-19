@@ -30,7 +30,7 @@ public class RetryConfiguration
             .Or<SocketException>()
             .Or<IOException>()
             .Or<InvalidOperationException>()
-            .HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.TooManyRequests)
+            .OrResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.TooManyRequests)
             .WaitAndRetryAsync(retryCount, attempt =>
             {
                 int calculated = (int)Math.Floor(Math.Pow(2, attempt));
