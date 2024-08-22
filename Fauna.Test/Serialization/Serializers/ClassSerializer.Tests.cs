@@ -136,37 +136,19 @@ public class ClassSerializerTests
     }
 
     [Test]
-    public void DuplicateFieldNamesThrowsArgumentException()
+    [TestCase("Fauna.Test.Serialization.ClassWithDupeFields")]
+    [TestCase("Fauna.Test.Serialization.ClassWithFieldNameOverlap")]
+    public void InvalidFieldNamesThrowsArgumentException(string classWithBadFields)
     {
-        try
+        var ex = Assert.Throws<ArgumentException>(() =>
         {
-            var serializer = Serializer.Generate<ClassWithDupeFields>(_ctx);
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(e.GetType(), typeof(ArgumentException));
-            Assert.IsTrue(e.Message.Contains("Duplicate field name"));
-            return;
-        }
+            var badClass = Type.GetType(classWithBadFields);
+            Assert.IsNotNull(badClass, $"Couldn't find Type from class name: {classWithBadFields}");
+            var serializer = Serializer.Generate(_ctx, badClass!);
+        });
 
-        Assert.Fail("Deserialization succeeded unexpectedly.");
-    }
-
-    [Test]
-    public void FieldNameOverlapThrowsArgumentException()
-    {
-        try
-        {
-            var serializer = Serializer.Generate<ClassWithFieldNameOverlap>(_ctx);
-        }
-        catch (Exception e)
-        {
-            Assert.AreEqual(e.GetType(), typeof(ArgumentException));
-            Assert.IsTrue(e.Message.Contains("Duplicate field name"));
-            return;
-        }
-
-        Assert.Fail("Deserialization succeeded unexpectedly.");
+        Assert.IsNotNull(ex);
+        Assert.IsTrue(ex!.Message.Contains("Duplicate field name"));
     }
 
     [Test]
