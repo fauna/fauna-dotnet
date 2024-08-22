@@ -180,18 +180,37 @@ class ClassWithDupeFields
 }
 
 [Object]
+class ClassWithFieldNameOverlap
+{
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+    [Field] public string? user_field { get; set; }
+}
+
+[Object]
 class ClassWithLotsOfFields
 {
     [Field] public string? Id { get; set; }
     [Field] public Module? Coll { get; set; }
     [Field] public DateTime? Ts { get; set; }
-    [Field("string_field")] public string? StringField { get; set; }
-    [Field("int_field")] public int IntField { get; set; }
-    [Field("float_field")] public float FloatField { get; set; }
-    [Field("double_field")] public double DoubleField { get; set; }
-    [Field("bool_field")] public bool BoolField { get; set; }
+    [Field] public DateTime DateTimeField { get; set; }
+    [Field] public DateOnly DateOnlyField { get; set; }
+    [Field] public DateTimeOffset DateTimeOffsetField { get; set; }
+    [Field] public string? StringField { get; set; }
+    [Field] public short ShortField { get; set; }
+    [Field] public ushort UshortField { get; set; }
+    [Field] public int IntField { get; set; }
+    [Field] public uint UintField { get; set; }
+    [Field] public float FloatField { get; set; }
+    [Field] public double DoubleField { get; set; }
+    [Field] public long LongField { get; set; }
+    [Field] public bool BoolField { get; set; }
+    [Field] public byte ByteField { get; set; }
+    [Field] public sbyte SbyteField { get; set; }
     [Field] public int? NullableIntField { get; set; }
-    [Field("other_doc")] public ClassForDocument? OtherDocRef { get; set; }
+    [Field] public ClassForDocument? OtherDocRef { get; set; }
 }
 
 public class IntToStringSerializer : BaseSerializer<int>
