@@ -169,6 +169,31 @@ class PersonWithDateConflict : IOnlyField
     [Field("@date")] public string? Field { get; set; } = "not";
 }
 
+[Object]
+class ClassWithDupeFields
+{
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+    [Field("user_field")] public string? UserField2 { get; set; }
+}
+
+[Object]
+class ClassWithLotsOfFields
+{
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
+    [Field("string_field")] public string? StringField { get; set; }
+    [Field("int_field")] public int IntField { get; set; }
+    [Field("float_field")] public float FloatField { get; set; }
+    [Field("double_field")] public double DoubleField { get; set; }
+    [Field("bool_field")] public bool BoolField { get; set; }
+    [Field] public int? NullableIntField { get; set; }
+    [Field("other_doc")] public ClassForDocument? OtherDocRef { get; set; }
+}
+
 public class IntToStringSerializer : BaseSerializer<int>
 {
     public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader)
