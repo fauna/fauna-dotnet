@@ -34,8 +34,7 @@ interface IClient
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         QueryOptions? queryOptions = null,
-        CancellationToken cancel = default)
-        where T : notnull;
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database.
@@ -165,8 +164,7 @@ interface IClient
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Page<T> page,
         QueryOptions? queryOptions = null,
-        CancellationToken cancel = default)
-        where T : notnull;
+        CancellationToken cancel = default);
 
     /// <summary>
     /// Asynchronously iterates over pages of a Fauna query result, automatically fetching subsequent pages using the 'after' cursor.
@@ -361,8 +359,7 @@ public abstract class BaseClient : IClient
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         QueryOptions? queryOptions = null,
-        CancellationToken cancel = default)
-        where T : notnull =>
+        CancellationToken cancel = default) =>
         QueryAsync<T>(query, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public Task<QuerySuccess<object?>> QueryAsync(
@@ -395,8 +392,7 @@ public abstract class BaseClient : IClient
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Page<T> page,
         QueryOptions? queryOptions = null,
-        CancellationToken cancel = default)
-        where T : notnull =>
+        CancellationToken cancel = default) =>
         PaginateAsync(page, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
     public IAsyncEnumerable<Page<object?>> PaginateAsync(

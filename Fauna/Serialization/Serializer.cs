@@ -50,7 +50,7 @@ public static class Serializer
     /// <typeparam name="T">The type of the object to serialize.</typeparam>
     /// <param name="context">The serialization context.</param>
     /// <returns>An <see cref="ISerializer{T}"/>.</returns>
-    public static ISerializer<T> Generate<T>(MappingContext context) where T : notnull
+    public static ISerializer<T> Generate<T>(MappingContext context)
     {
         var targetType = typeof(T);
         var ser = (ISerializer<T>)Generate(context, targetType);

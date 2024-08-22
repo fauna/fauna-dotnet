@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Fauna.Linq;
 using Fauna.Mapping;
 using Stream = Fauna.Types.Stream;
 
@@ -82,9 +83,38 @@ public abstract class DataContext : BaseClient
 
         public Collection()
         {
-            var nameAttr = this.GetType().GetCustomAttribute<NameAttribute>();
+            var nameAttr = GetType().GetCustomAttribute<NameAttribute>();
             Name = nameAttr?.Name ?? typeof(Doc).Name;
-            SetQuery<Doc>(Linq.IntermediateQueryHelpers.CollectionAll(this));
+            SetQuery<Doc>(IntermediateQueryHelpers.CollectionAll(this));
+        }
+
+        // create DSL
+
+        public Doc Create(Doc data)
+        {
+            return CreateAsync(data).Result;
+        }
+
+        public async Task<Doc> CreateAsync(Doc data)
+        {
+            var q = IntermediateQueryHelpers.MethodCall(IntermediateQueryHelpers.Expr(Name), "create", IntermediateQueryHelpers.Const(data));
+            return (await Ctx.QueryAsync<Doc>(q)).Data;
+        }
+
+        public IEnumerable<Doc> CreateMany(IEnumerable<Doc> data)
+        {
+            return CreateManyAsync(data).Result;
+        }
+
+        public async Task<IEnumerable<Doc>> CreateManyAsync(IEnumerable<Doc> data)
+        {
+            var q = IntermediateQueryHelpers.MethodCall(
+                IntermediateQueryHelpers.Array(data.Select(d => IntermediateQueryHelpers.Const(d))),
+                "map",
+                IntermediateQueryHelpers.Expr("d => ").Concat(IntermediateQueryHelpers.Expr(Name)).Concat(".create(d)")
+            );
+
+            return (await Ctx.QueryAsync<IEnumerable<Doc>>(q)).Data;
         }
 
         // index call DSL
