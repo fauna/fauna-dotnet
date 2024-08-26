@@ -34,6 +34,10 @@ public sealed class Stream : IEquatable<Stream>
         {
             writer.WriteNumber("start_ts", StartTs.Value);
         }
+        if (LastCursor != null)
+        {
+            writer.WriteString("cursor", LastCursor);
+        }
         writer.WriteEndObject();
         writer.Flush();
     }
