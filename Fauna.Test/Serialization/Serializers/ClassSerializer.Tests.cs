@@ -134,4 +134,166 @@ public class ClassSerializerTests
         var deserialized = Helpers.Deserialize(serializer, _ctx, wire);
         Assert.AreEqual(obj.AShort, deserialized!.AShort);
     }
+
+    [Test]
+    [TestCase("Fauna.Test.Serialization.ClassWithDupeFields")]
+    [TestCase("Fauna.Test.Serialization.ClassWithFieldNameOverlap")]
+    public void InvalidFieldNamesThrowsArgumentException(string classWithBadFields)
+    {
+        var ex = Assert.Throws<ArgumentException>(() =>
+        {
+            var badClass = Type.GetType(classWithBadFields);
+            Assert.IsNotNull(badClass, $"Couldn't find Type from class name: {classWithBadFields}");
+            var serializer = Serializer.Generate(_ctx, badClass!);
+        });
+
+        Assert.IsNotNull(ex);
+        Assert.IsTrue(ex!.Message.Contains("Duplicate field name"));
+    }
+
+    [Test]
+    public void ValidateFieldInfoOnSerializerCtx()
+    {
+        var mappingInfo = _ctx.GetInfo(typeof(ClassWithLotsOfFields));
+        Assert.IsNotNull(mappingInfo);
+        Assert.AreEqual(typeof(ClassSerializer<ClassWithLotsOfFields>), mappingInfo.ClassSerializer.GetType());
+        Assert.AreEqual(typeof(ClassWithLotsOfFields), mappingInfo.Type);
+
+        var fields = mappingInfo.FieldsByName;
+        var fieldNames = new List<string>
+        {
+            "id",
+            "coll",
+            "ts",
+            "dateTimeField",
+            "dateOnlyField",
+            "dateTimeOffsetField",
+            "stringField",
+            "shortField",
+            "ushortField",
+            "intField",
+            "uintField",
+            "floatField",
+            "doubleField",
+            "longField",
+            "boolField",
+            "byteField",
+            "sbyteField",
+            "nullableIntField",
+            "otherDocRef"
+        };
+
+        Assert.IsNotNull(fields);
+        Assert.IsNotEmpty(fields);
+        Assert.AreEqual(fieldNames.OrderBy(x => x), fields.Keys.ToList().OrderBy(x => x));
+
+        foreach (var name in fieldNames)
+        {
+            Assert.IsTrue(fields.ContainsKey(name));
+
+            var field = fields[name];
+
+            switch (name)
+            {
+                case "id":
+                    Assert.IsTrue(field.IsNullable);
+                    Assert.AreEqual(typeof(string), field.Type);
+                    Assert.IsInstanceOf<NullableSerializer<string>>(field.Serializer);
+                    break;
+                case "coll":
+                    Assert.IsTrue(field.IsNullable);
+                    Assert.AreEqual(typeof(Module), field.Type);
+                    Assert.IsInstanceOf<NullableSerializer<Module>>(field.Serializer);
+                    break;
+                case "ts":
+                    Assert.IsTrue(field.IsNullable);
+                    Assert.AreEqual(typeof(DateTime?), field.Type);
+                    Assert.IsInstanceOf<NullableStructSerializer<DateTime>>(field.Serializer);
+                    break;
+                case "dateTimeField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(DateTime), field.Type);
+                    Assert.IsInstanceOf<DateTimeSerializer>(field.Serializer);
+                    break;
+                case "dateOnlyField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(DateOnly), field.Type);
+                    Assert.IsInstanceOf<DateOnlySerializer>(field.Serializer);
+                    break;
+                case "dateTimeOffsetField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(DateTimeOffset), field.Type);
+                    Assert.IsInstanceOf<DateTimeOffsetSerializer>(field.Serializer);
+                    break;
+                case "stringField":
+                    Assert.IsTrue(field.IsNullable);
+                    Assert.AreEqual(typeof(string), field.Type);
+                    Assert.IsInstanceOf<NullableSerializer<string>>(field.Serializer);
+                    break;
+                case "shortField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(short), field.Type);
+                    Assert.IsInstanceOf<ShortSerializer>(field.Serializer);
+                    break;
+                case "ushortField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(ushort), field.Type);
+                    Assert.IsInstanceOf<UShortSerializer>(field.Serializer);
+                    break;
+                case "intField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(int), field.Type);
+                    Assert.IsInstanceOf<IntSerializer>(field.Serializer);
+                    break;
+                case "uintField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(uint), field.Type);
+                    Assert.IsInstanceOf<UIntSerializer>(field.Serializer);
+                    break;
+                case "floatField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(float), field.Type);
+                    Assert.IsInstanceOf<FloatSerializer>(field.Serializer);
+                    break;
+                case "doubleField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(double), field.Type);
+                    Assert.IsInstanceOf<DoubleSerializer>(field.Serializer);
+                    break;
+                case "longField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(long), field.Type);
+                    Assert.IsInstanceOf<LongSerializer>(field.Serializer);
+                    break;
+                case "boolField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(bool), field.Type);
+                    Assert.IsInstanceOf<BooleanSerializer>(field.Serializer);
+                    break;
+                case "byteField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(byte), field.Type);
+                    Assert.IsInstanceOf<ByteSerializer>(field.Serializer);
+                    break;
+                case "sbyteField":
+                    Assert.IsFalse(field.IsNullable);
+                    Assert.AreEqual(typeof(sbyte), field.Type);
+                    Assert.IsInstanceOf<SByteSerializer>(field.Serializer);
+                    break;
+                case "nullableIntField":
+                    Assert.IsTrue(field.IsNullable);
+                    Assert.AreEqual(typeof(int?), field.Type);
+                    Assert.IsInstanceOf<NullableStructSerializer<int>>(field.Serializer);
+                    break;
+                case "otherDocRef":
+                    Assert.IsTrue(field.IsNullable);
+                    Assert.AreEqual(typeof(ClassForDocument), field.Type);
+                    Assert.IsInstanceOf<NullableSerializer<ClassForDocument>>(field.Serializer);
+                    break;
+                default:
+                    Assert.Fail($"Unhandled field name: {field.Name}");
+                    break;
+            }
+        }
+    }
 }

@@ -169,6 +169,50 @@ class PersonWithDateConflict : IOnlyField
     [Field("@date")] public string? Field { get; set; } = "not";
 }
 
+[Object]
+class ClassWithDupeFields
+{
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+    [Field("user_field")] public string? UserField2 { get; set; }
+}
+
+[Object]
+class ClassWithFieldNameOverlap
+{
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+    [Field] public string? user_field { get; set; }
+}
+
+[Object]
+class ClassWithLotsOfFields
+{
+    [Field] public string? Id { get; set; }
+    [Field] public Module? Coll { get; set; }
+    [Field] public DateTime? Ts { get; set; }
+    [Field] public DateTime DateTimeField { get; set; }
+    [Field] public DateOnly DateOnlyField { get; set; }
+    [Field] public DateTimeOffset DateTimeOffsetField { get; set; }
+    [Field] public string? StringField { get; set; }
+    [Field] public short ShortField { get; set; }
+    [Field] public ushort UshortField { get; set; }
+    [Field] public int IntField { get; set; }
+    [Field] public uint UintField { get; set; }
+    [Field] public float FloatField { get; set; }
+    [Field] public double DoubleField { get; set; }
+    [Field] public long LongField { get; set; }
+    [Field] public bool BoolField { get; set; }
+    [Field] public byte ByteField { get; set; }
+    [Field] public sbyte SbyteField { get; set; }
+    [Field] public int? NullableIntField { get; set; }
+    [Field] public ClassForDocument? OtherDocRef { get; set; }
+}
+
 public class IntToStringSerializer : BaseSerializer<int>
 {
     public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader)
