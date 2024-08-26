@@ -341,7 +341,7 @@ public class IntegrationTests
                 {
                     Assert.Multiple(() =>
                     {
-                        Assert.NotZero(evt.TxnTime, "should have a txn time");
+                        Assert.IsNotEmpty(evt.Cursor, "should have a cursor");
                         Assert.NotZero(evt.Stats.ReadOps, "should have consumed ReadOps");
                         if (evt.Type is EventType.Status)
                         {

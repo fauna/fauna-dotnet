@@ -81,7 +81,7 @@ internal class Connection : IConnection
                     }
 
                     var evt = Event<T>.From(line, ctx);
-                    stream.StartTs = evt.TxnTime;
+                    stream.LastCursor = evt.Cursor;
                     listener.Dispatch(evt);
                 }
 

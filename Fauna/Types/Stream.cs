@@ -19,6 +19,8 @@ public sealed class Stream : IEquatable<Stream>
 
     public long? StartTs { get; set; }
 
+    public string? LastCursor { get; set; }
+
     public void Serialize(System.IO.Stream stream)
     {
         var writer = new Utf8JsonWriter(stream);
@@ -27,6 +29,10 @@ public sealed class Stream : IEquatable<Stream>
         if (StartTs != null)
         {
             writer.WriteNumber("start_ts", StartTs.Value);
+        }
+        if (LastCursor != null)
+        {
+            writer.WriteString("cursor", LastCursor);
         }
         writer.WriteEndObject();
         writer.Flush();
