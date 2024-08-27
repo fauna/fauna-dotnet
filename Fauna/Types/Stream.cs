@@ -26,13 +26,13 @@ public sealed class Stream : IEquatable<Stream>
         var writer = new Utf8JsonWriter(stream);
         writer.WriteStartObject();
         writer.WriteString("token", Token);
-        if (StartTs != null)
-        {
-            writer.WriteNumber("start_ts", StartTs.Value);
-        }
         if (LastCursor != null)
         {
             writer.WriteString("cursor", LastCursor);
+        }
+        else if (StartTs != null)
+        {
+            writer.WriteNumber("start_ts", StartTs.Value);
         }
         writer.WriteEndObject();
         writer.Flush();
