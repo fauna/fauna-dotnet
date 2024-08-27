@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using Fauna.Core;
 using Fauna.Exceptions;
-using Fauna.Protocol;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;

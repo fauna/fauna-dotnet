@@ -1,9 +1,8 @@
 using System.Runtime.CompilerServices;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Mapping;
-using Fauna.Protocol;
 using Fauna.Serialization;
-using Fauna.Serialization.Serializers;
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 

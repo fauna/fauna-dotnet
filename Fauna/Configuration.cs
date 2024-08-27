@@ -1,4 +1,4 @@
-﻿using Fauna.Protocol;
+﻿using Fauna.Core;
 
 namespace Fauna;
 
@@ -26,7 +26,7 @@ public record class Configuration
     /// <summary>
     /// The endpoint URL of the Fauna server.
     /// </summary>
-    public Uri Endpoint { get; init; } = Constants.Endpoints.Default;
+    public Uri Endpoint { get; init; } = Endpoints.Default;
 
     /// <summary>
     /// Default options for queries sent to Fauna.

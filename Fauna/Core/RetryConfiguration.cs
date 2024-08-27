@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Sockets;
 using Polly;
 
-namespace Fauna.Protocol;
+namespace Fauna.Core;
 
 /// <summary>
 /// A class representing a retry configuration for queries.

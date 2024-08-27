@@ -2,7 +2,7 @@
 using Fauna.Types;
 using Stream = System.IO.Stream;
 
-namespace Fauna.Protocol;
+namespace Fauna.Core;
 
 /// <summary>
 /// Represents an interface for making HTTP requests.

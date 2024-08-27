@@ -1,4 +1,4 @@
-using Fauna.Protocol;
+using Fauna.Core;
 using NUnit.Framework;
 
 namespace Fauna.Test;
@@ -12,7 +12,7 @@ public class ConfigurationTests
         var b = new Configuration("secret");
 
         Assert.AreEqual("secret", b.Secret);
-        Assert.AreEqual(Constants.Endpoints.Default, b.Endpoint);
+        Assert.AreEqual(Endpoints.Default, b.Endpoint);
         Assert.IsTrue(b.DisposeHttpClient);
     }
 
@@ -22,7 +22,7 @@ public class ConfigurationTests
         var b = new Configuration("secret", new HttpClient());
 
         Assert.AreEqual("secret", b.Secret);
-        Assert.AreEqual(Constants.Endpoints.Default, b.Endpoint);
+        Assert.AreEqual(Endpoints.Default, b.Endpoint);
         Assert.IsFalse(b.DisposeHttpClient);
     }
 

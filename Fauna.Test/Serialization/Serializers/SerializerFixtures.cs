@@ -1,4 +1,4 @@
-using Fauna.Serialization.Serializers;
+using Fauna.Serialization;
 using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Test.Serialization;

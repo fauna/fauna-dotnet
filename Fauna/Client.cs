@@ -1,9 +1,8 @@
 ﻿using System.Globalization;
-using Fauna.Constants;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Linq;
 using Fauna.Mapping;
-using Fauna.Protocol;
 using Fauna.Serialization;
 using Fauna.Types;
 using Stream = System.IO.Stream;

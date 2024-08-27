@@ -1,7 +1,7 @@
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 
-namespace Fauna.Protocol;
+namespace Fauna.Core;
 
 public class StreamEnumerable<T> where T : notnull
 {

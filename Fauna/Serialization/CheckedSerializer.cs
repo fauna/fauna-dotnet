@@ -1,7 +1,7 @@
 using Fauna.Exceptions;
 using Fauna.Mapping;
 
-namespace Fauna.Serialization.Serializers;
+namespace Fauna.Serialization;
 
 internal class CheckedSerializer<T> : BaseSerializer<T>
 {

@@ -1,4 +1,4 @@
-using Fauna.Protocol;
+using Fauna.Core;
 
 namespace Fauna.Test.Helpers;
 

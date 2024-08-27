@@ -6,7 +6,7 @@ using Fauna.Types;
 using Polly;
 using Stream = System.IO.Stream;
 
-namespace Fauna.Protocol;
+namespace Fauna.Core;
 
 /// <summary>
 /// A class that handles HTTP requests and retries.

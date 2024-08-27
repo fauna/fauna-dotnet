@@ -1,5 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
-using Fauna.Protocol;
+using Fauna.Core;
 using Fauna.Types;
 using Fauna.Util.Extensions;
 

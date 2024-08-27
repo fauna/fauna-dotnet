@@ -1,4 +1,4 @@
-namespace Fauna.Protocol;
+namespace Fauna.Core;
 
 /// <summary>
 /// Represents the options for customizing Fauna queries.

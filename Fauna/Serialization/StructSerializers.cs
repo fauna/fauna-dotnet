@@ -1,7 +1,7 @@
 using Fauna.Exceptions;
 using Fauna.Mapping;
 
-namespace Fauna.Serialization.Serializers;
+namespace Fauna.Serialization;
 
 
 internal class StringSerializer : BaseSerializer<string?>

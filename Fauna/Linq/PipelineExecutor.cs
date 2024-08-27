@@ -1,9 +1,8 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Fauna.Protocol;
+using Fauna.Core;
 using Fauna.Serialization;
-using Fauna.Serialization.Serializers;
 using Fauna.Types;
 using Fauna.Util.Extensions;
 

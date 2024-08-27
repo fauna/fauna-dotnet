@@ -1,7 +1,7 @@
 using Fauna.Mapping;
 using Stream = Fauna.Types.Stream;
 
-namespace Fauna.Serialization.Serializers;
+namespace Fauna.Serialization;
 
 
 internal class StreamSerializer : BaseSerializer<Stream>

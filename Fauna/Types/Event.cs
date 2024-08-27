@@ -1,9 +1,9 @@
 using System.Text.Json;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Mapping;
-using Fauna.Protocol;
 using Fauna.Serialization;
-using static Fauna.Constants.ResponseFields;
+using static Fauna.Core.ResponseFields;
 
 namespace Fauna.Types;
 
