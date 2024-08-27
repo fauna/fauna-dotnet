@@ -1,5 +1,6 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
+using Fauna.Serialization.Serializers;
 using Fauna.Types;
 using NUnit.Framework;
 

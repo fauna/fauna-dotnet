@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using static Fauna.Constants.ResponseFields;
 
-namespace Fauna;
+namespace Fauna.Protocol;
 
 /// <summary>
 /// Contains detailed information about an error in a query response.

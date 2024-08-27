@@ -1,4 +1,6 @@
-﻿namespace Fauna;
+﻿using Fauna.Protocol;
+
+namespace Fauna;
 
 /// <summary>
 /// Configuration is a class used to configure a Fauna <see cref="Client"/>. It encapsulates various settings such as the <see cref="Endpoint"/>,

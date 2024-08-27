@@ -2,7 +2,7 @@ using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 
-namespace Fauna.Serialization;
+namespace Fauna.Serialization.Serializers;
 
 internal class DocumentSerializer<T> : BaseSerializer<T> where T : class
 {

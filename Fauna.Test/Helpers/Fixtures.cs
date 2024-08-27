@@ -1,4 +1,5 @@
-using Fauna.Mapping.Attributes;
+using Fauna.Linq;
+using Fauna.Mapping;
 using Fauna.Types;
 using static Fauna.Query;
 

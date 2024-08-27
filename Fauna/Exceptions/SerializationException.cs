@@ -1,4 +1,4 @@
-namespace Fauna.Serialization;
+namespace Fauna.Exceptions;
 
 /// <summary>
 /// Represents error that occur during serialization and deserialization of Fauna data.

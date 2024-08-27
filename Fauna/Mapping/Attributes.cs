@@ -1,4 +1,4 @@
-namespace Fauna.Mapping.Attributes;
+namespace Fauna.Mapping;
 
 
 /// <summary>

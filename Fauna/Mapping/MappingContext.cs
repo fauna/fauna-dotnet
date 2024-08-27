@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Fauna.Linq;
 
 namespace Fauna.Mapping;
 

@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using System.Reflection;
-using Fauna.Mapping.Attributes;
 using Fauna.Serialization;
+using Fauna.Serialization.Serializers;
 using Module = Fauna.Types.Module;
 
 namespace Fauna.Mapping;

@@ -1,7 +1,7 @@
 using Fauna.Mapping;
 using Fauna.Types;
 
-namespace Fauna.Serialization;
+namespace Fauna.Serialization.Serializers;
 
 
 internal class ModuleSerializer : BaseSerializer<Module>

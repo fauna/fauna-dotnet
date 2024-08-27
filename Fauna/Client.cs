@@ -3,7 +3,10 @@ using Fauna.Constants;
 using Fauna.Exceptions;
 using Fauna.Linq;
 using Fauna.Mapping;
+using Fauna.Protocol;
 using Fauna.Serialization;
+using Fauna.Types;
+using Stream = System.IO.Stream;
 
 namespace Fauna;
 

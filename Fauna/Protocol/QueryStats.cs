@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using static Fauna.Constants.ResponseFields;
 
-namespace Fauna;
+namespace Fauna.Protocol;
 
 /// <summary>
 /// Contains statistics related to the execution of a query in the Fauna database.

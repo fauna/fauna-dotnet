@@ -1,3 +1,4 @@
+using Fauna.Protocol;
 using NUnit.Framework;
 
 namespace Fauna.Test;

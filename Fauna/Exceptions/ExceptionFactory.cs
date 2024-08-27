@@ -1,5 +1,6 @@
 using System.Net;
 using Fauna.Mapping;
+using Fauna.Protocol;
 
 namespace Fauna.Exceptions;
 

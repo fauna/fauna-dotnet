@@ -2,6 +2,7 @@ using System.Buffers;
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using Fauna.Exceptions;
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 

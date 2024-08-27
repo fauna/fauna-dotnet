@@ -1,6 +1,6 @@
 using Fauna.Mapping;
 
-namespace Fauna.Serialization;
+namespace Fauna.Serialization.Serializers;
 
 internal class NullableSerializer<T> : BaseSerializer<T?>
 {

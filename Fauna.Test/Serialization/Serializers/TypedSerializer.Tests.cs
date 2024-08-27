@@ -1,5 +1,5 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
-using Fauna.Serialization;
 using NUnit.Framework;
 
 namespace Fauna.Test.Serialization;

@@ -1,6 +1,7 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 
-namespace Fauna.Serialization;
+namespace Fauna.Serialization.Serializers;
 
 internal class DictionarySerializer<T> : BaseSerializer<Dictionary<string, T>>
 {

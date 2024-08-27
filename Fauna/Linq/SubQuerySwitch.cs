@@ -1,6 +1,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 using Fauna.Util;
+using Fauna.Util.Extensions;
 using QH = Fauna.Linq.IntermediateQueryHelpers;
 
 namespace Fauna.Linq;

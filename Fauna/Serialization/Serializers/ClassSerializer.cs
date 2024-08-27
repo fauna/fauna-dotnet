@@ -3,7 +3,7 @@ using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 
-namespace Fauna.Serialization;
+namespace Fauna.Serialization.Serializers;
 
 internal interface IClassDocumentSerializer : ISerializer
 {

@@ -1,4 +1,4 @@
-namespace Fauna;
+namespace Fauna.Protocol;
 
 
 public readonly struct Stats

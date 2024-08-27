@@ -1,5 +1,6 @@
 ﻿using Fauna.Mapping;
 using Fauna.Serialization;
+using Fauna.Serialization.Serializers;
 
 namespace Fauna;
 

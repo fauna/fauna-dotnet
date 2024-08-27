@@ -1,7 +1,8 @@
 using System.Collections;
+using Fauna.Exceptions;
 using Fauna.Mapping;
 
-namespace Fauna.Serialization;
+namespace Fauna.Serialization.Serializers;
 
 internal class ListSerializer<T> : BaseSerializer<List<T>>
 {

@@ -4,7 +4,7 @@ using Fauna.Mapping;
 using Fauna.Serialization;
 using static Fauna.Constants.ResponseFields;
 
-namespace Fauna;
+namespace Fauna.Protocol;
 
 /// <summary>
 /// Represents the response from a query executed.
