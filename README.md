@@ -118,7 +118,7 @@ Fauna.Mapping.Attributes and the Fauna.DataContext class provide the ability to 
 You can use attributes to map a POCO class to a Fauna document or object shape:
 
 ```csharp
-using Fauna.Mapping.Attributes;
+using Fauna.Mapping;
 
 [Object]
 class Person
