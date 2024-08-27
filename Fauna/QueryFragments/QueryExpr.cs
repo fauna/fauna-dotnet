@@ -2,7 +2,7 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
 
-namespace Fauna;
+namespace Fauna.QueryFragments;
 
 /// <summary>
 /// Represents an FQL query expression. This class encapsulates a list of IQueryFragment instances, allowing for complex query constructions.

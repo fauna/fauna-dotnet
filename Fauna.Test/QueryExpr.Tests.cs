@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Fauna.QueryFragments;
 using NUnit.Framework;
 using static Fauna.Query;
 

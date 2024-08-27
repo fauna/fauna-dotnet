@@ -2,7 +2,7 @@
 using Fauna.Serialization;
 using Fauna.Serialization.Serializers;
 
-namespace Fauna;
+namespace Fauna.QueryFragments;
 
 /// <summary>
 /// Represents a generic value holder for FQL queries. This class allows embedding values of various types into the query, with support for primitives, POCOs, and other types.

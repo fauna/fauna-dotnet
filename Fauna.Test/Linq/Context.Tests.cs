@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Fauna.Linq;
 using Fauna.Mapping;
 using NUnit.Framework;
 using static Fauna.Test.Helpers.TestClientHelper;

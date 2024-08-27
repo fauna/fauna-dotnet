@@ -2,7 +2,7 @@
 using Fauna.Mapping;
 using Fauna.Serialization;
 
-namespace Fauna;
+namespace Fauna.QueryFragments;
 
 /// <summary>
 /// Represents the base interface for a query fragment used for FQL query construction.

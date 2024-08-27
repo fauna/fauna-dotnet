@@ -1,7 +1,7 @@
 ﻿using Fauna.Mapping;
 using Fauna.Serialization;
 
-namespace Fauna;
+namespace Fauna.QueryFragments;
 
 /// <summary>
 /// Represents a literal part of an FQL query. This class is used for embedding raw string values directly into the query structure.

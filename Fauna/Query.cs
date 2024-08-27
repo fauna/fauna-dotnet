@@ -1,4 +1,5 @@
 using Fauna.Mapping;
+using Fauna.QueryFragments;
 using Fauna.Serialization;
 
 namespace Fauna;

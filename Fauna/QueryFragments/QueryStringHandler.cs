@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Fauna;
+namespace Fauna.QueryFragments;
 
 /// <summary>
 /// Provides a mechanism to build FQL query expressions using interpolated strings. This structure collects fragments and literals to construct complex query expressions.

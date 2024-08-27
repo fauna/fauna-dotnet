@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Protocol;
+using Fauna.QueryFragments;
 using Fauna.Serialization;
 using Fauna.Serialization.Serializers;
 using Fauna.Types;

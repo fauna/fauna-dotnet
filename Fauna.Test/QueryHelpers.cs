@@ -1,5 +1,6 @@
 using System.Text;
 using Fauna.Mapping;
+using Fauna.QueryFragments;
 using Fauna.Serialization;
 
 namespace Fauna.Test;

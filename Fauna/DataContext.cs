@@ -7,7 +7,7 @@ using Fauna.Protocol;
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 
-namespace Fauna.Linq;
+namespace Fauna;
 
 public abstract class DataContext : BaseClient
 {

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using Fauna.Mapping;
 using Fauna.Serialization;
 
-namespace Fauna;
+namespace Fauna.QueryFragments;
 
 internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
 {
