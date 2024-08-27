@@ -1,5 +1,4 @@
-﻿using Fauna.QueryFragments;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace Fauna.Test;
 

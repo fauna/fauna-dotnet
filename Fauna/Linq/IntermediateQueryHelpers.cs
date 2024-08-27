@@ -1,5 +1,3 @@
-using Fauna.QueryFragments;
-
 namespace Fauna.Linq;
 
 internal static class IntermediateQueryHelpers
