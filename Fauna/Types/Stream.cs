@@ -15,7 +15,7 @@ public sealed class Stream : IEquatable<Stream>
     /// <summary>
     /// Gets the string value of the stream token.
     /// </summary>
-    private string Token { get; }
+    internal string Token { get; }
 
     public long? StartTs { get; set; }
 
@@ -33,10 +33,6 @@ public sealed class Stream : IEquatable<Stream>
         else if (StartTs != null)
         {
             writer.WriteNumber("start_ts", StartTs.Value);
-        }
-        if (LastCursor != null)
-        {
-            writer.WriteString("cursor", LastCursor);
         }
         writer.WriteEndObject();
         writer.Flush();
