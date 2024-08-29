@@ -552,6 +552,7 @@ public abstract class BaseClient : IClient
         }
 
         stream.LastCursor = streamOptions?.Cursor;
+        stream.StartTs = streamOptions?.StartTs;
 
         return new StreamEnumerable<T>(
             this,
