@@ -1,4 +1,6 @@
-﻿namespace Fauna;
+﻿using Fauna.Core;
+
+namespace Fauna;
 
 /// <summary>
 /// Configuration is a class used to configure a Fauna <see cref="Client"/>. It encapsulates various settings such as the <see cref="Endpoint"/>,
@@ -24,7 +26,7 @@ public record class Configuration
     /// <summary>
     /// The endpoint URL of the Fauna server.
     /// </summary>
-    public Uri Endpoint { get; init; } = Constants.Endpoints.Default;
+    public Uri Endpoint { get; init; } = Endpoints.Default;
 
     /// <summary>
     /// Default options for queries sent to Fauna.

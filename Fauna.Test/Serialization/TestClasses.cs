@@ -1,5 +1,5 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
-using Fauna.Mapping.Attributes;
 using Fauna.Serialization;
 using Fauna.Types;
 

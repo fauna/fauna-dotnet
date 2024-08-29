@@ -1,4 +1,4 @@
-using static Fauna.Query;
+using Fauna.Core;
 
 namespace Fauna.Test.Helpers;
 

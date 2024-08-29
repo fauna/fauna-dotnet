@@ -1,9 +1,10 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using Fauna.Core;
 using Fauna.Serialization;
 using Fauna.Types;
-using Fauna.Util;
+using Fauna.Util.Extensions;
 
 namespace Fauna.Linq;
 

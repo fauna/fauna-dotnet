@@ -2,9 +2,9 @@ using System.Net;
 using System.Text.Json;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using static Fauna.Constants.ResponseFields;
+using static Fauna.Core.ResponseFields;
 
-namespace Fauna;
+namespace Fauna.Core;
 
 /// <summary>
 /// Represents the response from a query executed.

@@ -1,6 +1,6 @@
 ﻿using Fauna.Types;
 
-namespace Fauna;
+namespace Fauna.Util.Extensions;
 
 /// <summary>
 /// Provides extension methods for pagination.

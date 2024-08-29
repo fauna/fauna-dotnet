@@ -1,5 +1,4 @@
-using System.Buffers;
-using System.Text;
+using Fauna.Exceptions;
 using Fauna.Serialization;
 using Fauna.Types;
 using NUnit.Framework;

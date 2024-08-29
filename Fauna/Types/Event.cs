@@ -1,11 +1,11 @@
-using System.Diagnostics;
 using System.Text.Json;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using static Fauna.Constants.ResponseFields;
+using static Fauna.Core.ResponseFields;
 
-namespace Fauna;
+namespace Fauna.Types;
 
 
 public enum EventType

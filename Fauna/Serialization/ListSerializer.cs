@@ -1,4 +1,5 @@
 using System.Collections;
+using Fauna.Exceptions;
 using Fauna.Mapping;
 
 namespace Fauna.Serialization;

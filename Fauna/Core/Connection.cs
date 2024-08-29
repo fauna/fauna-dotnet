@@ -2,9 +2,11 @@
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using Fauna.Mapping;
+using Fauna.Types;
 using Polly;
+using Stream = System.IO.Stream;
 
-namespace Fauna;
+namespace Fauna.Core;
 
 /// <summary>
 /// A class that handles HTTP requests and retries.

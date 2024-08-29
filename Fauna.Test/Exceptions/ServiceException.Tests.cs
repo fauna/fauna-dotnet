@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Test.Helpers;

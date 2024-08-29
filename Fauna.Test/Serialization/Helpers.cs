@@ -1,4 +1,5 @@
 using System.Text;
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Stream = Fauna.Types.Stream;

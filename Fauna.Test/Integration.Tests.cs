@@ -1,7 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using Fauna.Exceptions;
-using Fauna.Mapping.Attributes;
+using Fauna.Mapping;
 using Fauna.Types;
+using Fauna.Util.Extensions;
 using NUnit.Framework;
 using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;

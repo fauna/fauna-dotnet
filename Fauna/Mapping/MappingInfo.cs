@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using System.Reflection;
-using Fauna.Mapping.Attributes;
 using Fauna.Serialization;
 using Module = Fauna.Types.Module;
 

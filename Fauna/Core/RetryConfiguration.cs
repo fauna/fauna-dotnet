@@ -1,10 +1,8 @@
-using System.Collections.Immutable;
 using System.Net;
 using System.Net.Sockets;
 using Polly;
-using Polly.Retry;
 
-namespace Fauna;
+namespace Fauna.Core;
 
 /// <summary>
 /// A class representing a retry configuration for queries.

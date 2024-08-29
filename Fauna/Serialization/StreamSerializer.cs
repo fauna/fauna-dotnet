@@ -1,5 +1,4 @@
 using Fauna.Mapping;
-using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Serialization;

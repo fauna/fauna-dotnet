@@ -1,7 +1,7 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Fauna.Util;
+namespace Fauna.Util.Extensions;
 
 internal static class TypeExtensions
 {

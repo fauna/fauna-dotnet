@@ -1,4 +1,4 @@
-namespace Fauna.Constants;
+namespace Fauna.Core;
 
 /// <summary>
 /// Represents the endpoints used for accessing Fauna.

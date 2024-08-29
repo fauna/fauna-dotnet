@@ -1,6 +1,4 @@
-using Fauna.Linq;
-
-namespace Fauna;
+namespace Fauna.Linq;
 
 public static class QuerySourceExtensions
 {

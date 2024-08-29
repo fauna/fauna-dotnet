@@ -1,4 +1,4 @@
-namespace Fauna.Constants;
+namespace Fauna.Core;
 
 /// <summary>
 /// Contains constant values for HTTP header names used in Fauna API requests.

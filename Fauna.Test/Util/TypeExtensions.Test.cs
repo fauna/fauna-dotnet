@@ -1,4 +1,4 @@
-using Fauna.Util;
+using Fauna.Util.Extensions;
 using NUnit.Framework;
 
 namespace Fauna.Test.Util

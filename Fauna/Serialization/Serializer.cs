@@ -1,5 +1,5 @@
-using System.Collections;
 using Fauna.Mapping;
+using Fauna.Serialization;
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 

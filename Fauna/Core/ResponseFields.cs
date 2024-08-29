@@ -1,4 +1,4 @@
-namespace Fauna.Constants;
+namespace Fauna.Core;
 
 /// <summary>
 /// Contains constant values for the response field names returned by Fauna API queries.

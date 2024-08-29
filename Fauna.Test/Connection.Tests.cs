@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Moq;
 using Moq.Protected;

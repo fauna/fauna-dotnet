@@ -1,5 +1,4 @@
 using System.Reflection;
-using Fauna.Mapping.Attributes;
 using Fauna.Serialization;
 
 namespace Fauna.Mapping;

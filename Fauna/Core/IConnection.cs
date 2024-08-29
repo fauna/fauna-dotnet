@@ -1,6 +1,8 @@
 ﻿using Fauna.Mapping;
+using Fauna.Types;
+using Stream = System.IO.Stream;
 
-namespace Fauna;
+namespace Fauna.Core;
 
 /// <summary>
 /// Represents an interface for making HTTP requests.

@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
