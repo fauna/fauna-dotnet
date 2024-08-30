@@ -36,7 +36,7 @@ jobs:
       
       - name: Generate baseline code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
-        if: ${{ hashFiles("${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml") != '' }}
+        if: ${{ hashFiles("$GITHUB_WORKSPACE/cc_results/coverage.net8.0.opencover.xml") != '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
           targetdir: "${{ github.workspace }}/report"
@@ -53,7 +53,7 @@ jobs:
 
       - name: Generate code coverage report with delta
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
-        if: ${{ hashFiles("${{ github.workspace }}/history/") != '' }}
+        if: ${{ hashFiles("$GITHUB_WORKSPACE/history/") != '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
           targetdir: "${{ github.workspace }}/report"
@@ -62,7 +62,7 @@ jobs:
 
       - name: Generate code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
-        if: ${{ hashFiles("${{ github.workspace }}/history/") == '' }}
+        if: ${{ hashFiles("$GITHUB_WORKSPACE/history/") == '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
           targetdir: "${{ github.workspace }}/report"
@@ -75,7 +75,7 @@ jobs:
           path: ./report/SummaryGithub.md
       
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ hashFiles("${{ github.workspace }}/history/") != '' }}
+        if: ${{ hashFiles("$GITHUB_WORKSPACE/history/") != '' }}
         with:
           header: test-report
           append: true
