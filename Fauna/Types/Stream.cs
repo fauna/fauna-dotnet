@@ -15,7 +15,7 @@ public sealed class Stream : IEquatable<Stream>
     /// <summary>
     /// Gets the string value of the stream token.
     /// </summary>
-    private string Token { get; }
+    internal string Token { get; }
 
     public long? StartTs { get; set; }
 

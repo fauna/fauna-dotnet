@@ -337,7 +337,6 @@ interface IClient
         ISerializer elemSerializer,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default);
-
 }
 
 /// <summary>
@@ -345,7 +344,9 @@ interface IClient
 /// </summary>
 public abstract class BaseClient : IClient
 {
-    internal BaseClient() { }
+    internal BaseClient()
+    {
+    }
 
     internal abstract MappingContext MappingCtx { get; }
 
@@ -520,21 +521,42 @@ public abstract class BaseClient : IClient
     /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
     /// <param name="query">The query to create the stream from Fauna.</param>
     /// <param name="queryOptions">The options for the query.</param>
+    /// <param name="streamOptions">The options for the stream.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a stream of events.</returns>
     public async Task<StreamEnumerable<T>> EventStreamAsync<T>(
         Query query,
         QueryOptions? queryOptions = null,
+        StreamOptions? streamOptions = null,
         CancellationToken cancellationToken = default) where T : notnull
     {
-        var response = await QueryAsync<Stream>(
-            query,
-            queryOptions,
-            cancellationToken);
+        Stream stream;
+
+        if (streamOptions?.Token is null)
+        {
+            if (streamOptions?.Cursor is not null)
+            {
+                throw new ArgumentException("The 'cursor' configuration can only be used with a stream token.");
+            }
+
+            var response = await QueryAsync<Stream>(
+                query,
+                queryOptions,
+                cancellationToken);
+
+            stream = response.Data;
+        }
+        else
+        {
+            stream = new Stream(streamOptions.Token!);
+        }
+
+        stream.LastCursor = streamOptions?.Cursor;
+        stream.StartTs = streamOptions?.StartTs;
 
         return new StreamEnumerable<T>(
             this,
-            response.Data,
+            stream,
             cancellationToken);
     }
 
@@ -543,7 +565,7 @@ public abstract class BaseClient : IClient
     /// </summary>
     /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
     /// <param name="stream">The stream to subscribe to.</param>
-    /// <param name="ctx">Mapping context for stream.</param?
+    /// <param name="ctx">Mapping context for stream.</param>
     /// <param name="cancel">The cancellation token.</param>
     /// <returns>An async enumerator of stream events.</returns>
     public IAsyncEnumerator<Event<T>> SubscribeStream<T>(
