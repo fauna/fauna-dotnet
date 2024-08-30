@@ -34,14 +34,9 @@ jobs:
         run: dotnet new tool-manifest && dotnet tool install dotnet-reportgenerator-globaltool
       - name: Generate CC report
         run: dotnet reportgenerator "-reports:./Fauna.Test/TestResults/coverage.net8.0.opencover.xml" "-targetdir:./report" "-reporttypes:MarkdownSummaryGithub"
-      - name: Store markdown report as output
-        id: report_md
-        run: |
-          echo "::set-output name=markdown::$(<./report/SummaryGithub.md)"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: test-report
           recreate: true
-          message: |
-            "${{ steps.report_md.outputs.markdown }}"
+          path: ./report/SummaryGithub.md
