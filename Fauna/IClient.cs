@@ -536,7 +536,7 @@ public abstract class BaseClient : IClient
         {
             if (streamOptions?.Cursor is not null)
             {
-                throw new Exception("The 'cursor' configuration can only be used with a stream token.");
+                throw new ArgumentException("The 'cursor' configuration can only be used with a stream token.");
             }
 
             var response = await QueryAsync<Stream>(

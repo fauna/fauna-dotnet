@@ -391,7 +391,7 @@ public class IntegrationTests
     [Category("Streaming")]
     public Task StreamThrowsWithoutToken()
     {
-        var ex = Assert.ThrowsAsync<Exception>(async () =>
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all()"),
                 streamOptions: new StreamOptions { Cursor = "abc1234==" }));
         Assert.AreSame("The 'cursor' configuration can only be used with a stream token.", ex?.Message);
