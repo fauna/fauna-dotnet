@@ -29,13 +29,14 @@ jobs:
       - name: Get baseline code coverage
         run: |
           git fetch
-          git checkout origin/main
+          git checkout ${{ github.event.pull_request.base.ref }}
           dotnet restore
           dotnet build --no-restore
           dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
       
       - name: Generate baseline code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        if: ${{ hashFiles("${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml") != '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
           targetdir: "${{ github.workspace }}/report"
@@ -49,23 +50,33 @@ jobs:
           dotnet restore
           dotnet build --no-restore
           dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
-      
+
       - name: Generate code coverage report with delta
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        if: ${{ hashFiles("${{ github.workspace }}/history/") != '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
           targetdir: "${{ github.workspace }}/report"
           historydir: "${{ github.workspace }}/history"
           reporttypes: 'MarkdownSummaryGithub;MarkdownDeltaSummary'
 
+      - name: Generate code coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        if: ${{ hashFiles("${{ github.workspace }}/history/") == '' }}
+        with:
+          reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
+          targetdir: "${{ github.workspace }}/report"
+          reporttypes: 'MarkdownSummaryGithub'
+
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: test-report
           recreate: true
-          path: ./report/DeltaSummary.md
+          path: ./report/SummaryGithub.md
       
       - uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ hashFiles("${{ github.workspace }}/history/") != '' }}
         with:
           header: test-report
           append: true
-          path: ./report/SummaryGithub.md
+          path: ./report/DeltaSummary.md
