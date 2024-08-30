@@ -29,8 +29,14 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Run tests w/ code coverage
-        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./TestResults/'
+        run: dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./TestResults/'
       - name: Install ReportGenerator
         run: dotnet new tool-manifest && dotnet tool install dotnet-reportgenerator-globaltool
       - name: Generate CC report
-        run: dotnet reportgenerator "-reports:./Fauna.Test/TestResults/coverage.net8.0.opencover.xml" "-targetdir:Fauna.Test/TestResults/Report" "-reporttypes:MarkdownSummaryGithub"
+        run: dotnet reportgenerator "-reports:./Fauna.Test/TestResults/coverage.net8.0.opencover.xml" "-targetdir:./report" "-reporttypes:MarkdownSummaryGithub"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-report
+          recreate: true
+          path: ./report/SummaryGithub.md
