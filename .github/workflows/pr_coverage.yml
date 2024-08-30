@@ -1,0 +1,35 @@
+name: Code coverage
+
+on:
+  pull_request:
+    paths:
+      - '**/*.cs'
+      - '**/*.sln'
+jobs:
+  dotnet-cc:
+
+    runs-on: ubuntu-latest
+
+    services:
+      fauna:
+        image: fauna/faunadb
+        ports:
+          - 8443:8443
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Run tests w/ code coverage
+        run: dotnet test --no-build --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./TestResults/'
+      - name: Install ReportGenerator
+        run: dotnet new tool-manifest && dotnet tool install dotnet-reportgenerator-globaltool
+      - name: Generate CC report
+        run: dotnet reportgenerator "-reports:./Fauna.Test/TestResults/coverage.net8.0.opencover.xml" "-targetdir:Fauna.Test/TestResults/Report" "-reporttypes:MarkdownSummaryGithub"
