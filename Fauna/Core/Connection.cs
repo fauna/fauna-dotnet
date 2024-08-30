@@ -1,7 +1,10 @@
 ﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using Fauna.Exceptions;
 using Fauna.Mapping;
+using Fauna.Serialization;
 using Fauna.Types;
 using Polly;
 using Stream = System.IO.Stream;
@@ -57,44 +60,63 @@ internal class Connection : IConnection
         while (!cancellationToken.IsCancellationRequested)
         {
             var listener = new EventListener<T>();
-            Task streamTask = _cfg.RetryConfiguration.RetryPolicy.ExecuteAndCaptureAsync(async () =>
-            {
-                var streamData = new MemoryStream();
-                stream.Serialize(streamData);
-
-                var response = await _cfg.HttpClient
-                    .SendAsync(
-                        CreateHttpRequest(path, streamData, headers),
-                        HttpCompletionOption.ResponseHeadersRead,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-
-                await using var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
-                using var streamReader = new StreamReader(streamAsync);
-
-                while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
+            Task<PolicyResult<HttpResponseMessage>> streamTask =
+                _cfg.RetryConfiguration.RetryPolicy.ExecuteAndCaptureAsync(async () =>
                 {
-                    string? line = await streamReader.ReadLineAsync().WaitAsync(cancellationToken);
-                    if (string.IsNullOrWhiteSpace(line))
+                    var streamData = new MemoryStream();
+                    stream.Serialize(streamData);
+
+                    var response = await _cfg.HttpClient
+                        .SendAsync(
+                            CreateHttpRequest(path, streamData, headers),
+                            HttpCompletionOption.ResponseHeadersRead,
+                            cancellationToken)
+                        .ConfigureAwait(false);
+
+                    if (!response.IsSuccessStatusCode)
                     {
-                        continue;
+                        // TRICKY: we need to break the events listener loop
+                        listener.Dispatch(null);
+                        return response;
                     }
 
-                    var evt = Event<T>.From(line, ctx);
-                    stream.LastCursor = evt.Cursor;
-                    listener.Dispatch(evt);
-                }
+                    await using var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
+                    using var streamReader = new StreamReader(streamAsync);
 
-                listener.Close();
-                return response;
-            });
+                    while (!streamReader.EndOfStream && !cancellationToken.IsCancellationRequested)
+                    {
+                        string? line = await streamReader.ReadLineAsync().WaitAsync(cancellationToken);
+                        if (string.IsNullOrWhiteSpace(line))
+                        {
+                            continue;
+                        }
+
+                        var evt = Event<T>.From(line, ctx);
+                        stream.LastCursor = evt.Cursor;
+                        listener.Dispatch(evt);
+                    }
+
+                    listener.Close();
+                    return response;
+                });
 
             await foreach (var evt in listener.Events().WithCancellation(cancellationToken))
             {
+                if (evt is null) break;
+
                 yield return evt;
             }
 
             await streamTask;
+            if (streamTask.Result.Result.IsSuccessStatusCode)
+            {
+                continue;
+            }
+
+            var httpResponse = streamTask.Result.Result;
+            string body = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+
+            throw ExceptionFactory.FromRawResponse(body, httpResponse);
         }
     }
 
@@ -104,17 +126,18 @@ internal class Connection : IConnection
     /// <typeparam name="T">The type of event data.</typeparam>
     private class EventListener<T> where T : notnull
     {
-        private readonly ConcurrentQueue<Event<T>> _queue = new();
+        private readonly ConcurrentQueue<Event<T>?> _queue = new();
         private readonly SemaphoreSlim _semaphore = new(0);
         private bool _closed;
 
-        public void Dispatch(Event<T> evt)
+        public void Dispatch(Event<T>? evt)
         {
             _queue.Enqueue(evt);
             _semaphore.Release();
+            if (evt is null) Close();
         }
 
-        public async IAsyncEnumerable<Event<T>> Events()
+        public async IAsyncEnumerable<Event<T>?> Events()
         {
             while (true)
             {
