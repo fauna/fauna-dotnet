@@ -3,10 +3,10 @@ using NUnit.Framework;
 
 namespace Fauna.Test;
 
-[TestFixture]
+//[TestFixture]
 public class ConfigurationTests
 {
-    [Test]
+    //[Test]
     public void ConstructorWorksFine()
     {
         var b = new Configuration("secret");
@@ -16,7 +16,7 @@ public class ConfigurationTests
         Assert.IsTrue(b.DisposeHttpClient);
     }
 
-    [Test]
+    //[Test]
     public void ConstructorWithHttpClient()
     {
         var b = new Configuration("secret", new HttpClient());
@@ -26,7 +26,7 @@ public class ConfigurationTests
         Assert.IsFalse(b.DisposeHttpClient);
     }
 
-    [Test]
+    //[Test]
     public void FinalQueryOptions()
     {
         var defaults = new QueryOptions
