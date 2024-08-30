@@ -30,7 +30,9 @@ jobs:
         run: |
           git fetch
           git checkout origin/main
-          dotnet test --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
+          dotnet restore
+          dotnet build --no-restore
+          dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
       
       - name: Generate baseline code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
@@ -44,7 +46,9 @@ jobs:
         run: |
           git fetch
           git checkout ${{ github.event.pull_request.head.ref }}
-          dotnet test --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
+          dotnet restore
+          dotnet build --no-restore
+          dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
       
       - name: Generate code coverage report with delta
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
