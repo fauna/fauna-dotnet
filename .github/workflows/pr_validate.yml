@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - '**/*.cs'
+      - '**/*.csproj'
       - '**/*.sln'
 jobs:
   dotnet-test:

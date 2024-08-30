@@ -1,0 +1,89 @@
+name: Code coverage
+
+on:
+  pull_request:
+    paths:
+      - '**/*.cs'
+
+jobs:
+  dotnet-cc:
+
+    runs-on: ubuntu-latest
+
+    services:
+      fauna:
+        image: fauna/faunadb
+        ports:
+          - 8443:8443
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get short SHA
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.x
+
+      - name: Get baseline code coverage
+        run: |
+          git fetch
+          git checkout ${{ github.event.pull_request.base.ref }}
+          dotnet restore
+          dotnet build --no-restore
+          dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
+      
+      - name: Generate baseline code coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        if: ${{ hashFiles('**/cc_results/coverage.net8.0.opencover.xml') != '' }}
+        with:
+          reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
+          targetdir: "${{ github.workspace }}/cc_report"
+          historydir: "${{ github.workspace }}/cc_history"
+          reporttypes: 'JsonSummary'
+          tag: '${{ github.event.pull_request.base.ref }}'
+
+      - name: Get code coverage with changes
+        run: |
+          git fetch
+          git checkout ${{ github.event.pull_request.head.ref }}
+          dotnet restore
+          dotnet build --no-restore
+          dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}/cc_results/"
+
+      - name: Generate code coverage report with delta
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        if: ${{ hashFiles('**/cc_history/') != '' }}
+        with:
+          reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
+          targetdir: "${{ github.workspace }}/cc_report"
+          historydir: "${{ github.workspace }}/cc_history"
+          reporttypes: 'MarkdownSummaryGithub;MarkdownDeltaSummary'
+          tag: '${{ steps.vars.outputs.sha_short }}'
+
+      - name: Generate code coverage report
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        if: ${{ hashFiles('**/cc_history/') == '' }}
+        with:
+          reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
+          targetdir: "${{ github.workspace }}/cc_report"
+          reporttypes: 'MarkdownSummaryGithub'
+          tag: '${{ steps.vars.outputs.sha_short }}'
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-report
+          recreate: true
+          path: "${{ github.workspace }}/cc_report/SummaryGithub.md"
+      
+      - uses: marocchino/sticky-pull-request-comment@v2
+        if: ${{ hashFiles('**/cc_report/DeltaSummary.md') != '' }}
+        with:
+          header: test-report
+          append: true
+          path: "${{ github.workspace }}/cc_report/DeltaSummary.md"
