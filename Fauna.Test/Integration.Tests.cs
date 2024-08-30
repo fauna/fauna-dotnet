@@ -401,6 +401,29 @@ public class IntegrationTests
 
     [Test]
     [Category("Streaming")]
+    public Task StreamThrowsWithBadRequest()
+    {
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
+
+        var ex = Assert.ThrowsAsync<FaunaException>(async () =>
+        {
+            var stream = await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+                streamOptions: new StreamOptions { Token = "fake", Cursor = "abc1234==" },
+                cancellationToken: cts.Token);
+
+            await foreach (var _ in stream)
+            {
+                Assert.Fail("Should not process events");
+            }
+        });
+
+        Assert.AreEqual("BadRequest: Bad Request", ex?.Message);
+
+        return Task.CompletedTask;
+    }
+
+    [Test]
+    [Category("Streaming")]
     public async Task CanResumeStreamWithStreamOptions()
     {
         string? token = null;
