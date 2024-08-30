@@ -21,6 +21,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get short SHA
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
         with:
@@ -36,12 +40,13 @@ jobs:
       
       - name: Generate baseline code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
-        if: ${{ hashFiles('$GITHUB_WORKSPACE/cc_results/coverage.net8.0.opencover.xml') != '' }}
+        if: ${{ hashFiles('**/cc_results/coverage.net8.0.opencover.xml') != '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
-          targetdir: "${{ github.workspace }}/report"
-          historydir: "${{ github.workspace }}/history"
+          targetdir: "${{ github.workspace }}/cc_report"
+          historydir: "${{ github.workspace }}/cc_history"
           reporttypes: 'JsonSummary'
+          tag: '${{ github.event.pull_request.base.ref }}'
 
       - name: Get code coverage with changes
         run: |
@@ -53,30 +58,32 @@ jobs:
 
       - name: Generate code coverage report with delta
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
-        if: ${{ hashFiles('$GITHUB_WORKSPACE/history/') != '' }}
+        if: ${{ hashFiles('**/cc_history/') != '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
-          targetdir: "${{ github.workspace }}/report"
-          historydir: "${{ github.workspace }}/history"
+          targetdir: "${{ github.workspace }}/cc_report"
+          historydir: "${{ github.workspace }}/cc_history"
           reporttypes: 'MarkdownSummaryGithub;MarkdownDeltaSummary'
+          tag: '${{ steps.vars.outputs.sha_short }}'
 
       - name: Generate code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
-        if: ${{ hashFiles('$GITHUB_WORKSPACE/history/') == '' }}
+        if: ${{ hashFiles('**/cc_history/') == '' }}
         with:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
-          targetdir: "${{ github.workspace }}/report"
+          targetdir: "${{ github.workspace }}/cc_report"
           reporttypes: 'MarkdownSummaryGithub'
+          tag: '${{ steps.vars.outputs.sha_short }}'
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: test-report
           recreate: true
-          path: ./report/SummaryGithub.md
+          path: "${{ github.workspace }}/cc_report/SummaryGithub.md"
       
       - uses: marocchino/sticky-pull-request-comment@v2
-        if: ${{ hashFiles('$GITHUB_WORKSPACE/history/') != '' }}
+        if: ${{ hashFiles('**/cc_report/DeltaSummary.md') != '' }}
         with:
           header: test-report
           append: true
-          path: ./report/DeltaSummary.md
+          path: "${{ github.workspace }}/cc_report/DeltaSummary.md"
