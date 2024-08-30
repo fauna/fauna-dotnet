@@ -21,6 +21,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Get short SHA
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v4
         with:
@@ -60,7 +64,7 @@ jobs:
           targetdir: "${{ github.workspace }}/cc_report"
           historydir: "${{ github.workspace }}/cc_history"
           reporttypes: 'MarkdownSummaryGithub;MarkdownDeltaSummary'
-          tag: '${{ github.event.pull_request.head.ref }}_${{ github.sha }}'
+          tag: '${{ steps.vars.outputs.sha_short }}'
 
       - name: Generate code coverage report
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
@@ -69,7 +73,7 @@ jobs:
           reports: "${{ github.workspace }}/cc_results/coverage.net8.0.opencover.xml"
           targetdir: "${{ github.workspace }}/cc_report"
           reporttypes: 'MarkdownSummaryGithub'
-          tag: '${{ github.event.pull_request.head.ref }}_${{ github.sha }}'
+          tag: '${{ steps.vars.outputs.sha_short }}'
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
