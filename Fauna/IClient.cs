@@ -521,7 +521,7 @@ public abstract class BaseClient : IClient
     /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
     /// <param name="query">The query to create the stream from Fauna.</param>
     /// <param name="queryOptions">The options for the query.</param>
-    /// <param name="streamOptions"></param>
+    /// <param name="streamOptions">The options for the stream.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a stream of events.</returns>
     public async Task<StreamEnumerable<T>> EventStreamAsync<T>(
