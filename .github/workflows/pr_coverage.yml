@@ -20,10 +20,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 8.x
 
       - name: Restore dependencies
         run: dotnet restore
@@ -31,10 +32,13 @@ jobs:
         run: dotnet build --no-restore
       - name: Run tests w/ code coverage
         run: dotnet test --no-build --framework net8.0 --verbosity normal /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput='./TestResults/'
-      - name: Install ReportGenerator
-        run: dotnet new tool-manifest && dotnet tool install dotnet-reportgenerator-globaltool
+      
       - name: Generate CC report
-        run: dotnet reportgenerator "-reports:./Fauna.Test/TestResults/coverage.net8.0.opencover.xml" "-targetdir:./report" "-reporttypes:MarkdownSummaryGithub"
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.8
+        with:
+          reports: './Fauna.Test/TestResults/coverage.net8.0.opencover.xml'
+          targetdir: './report'
+          reporttypes: 'MarkdownSummaryGithub'
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
