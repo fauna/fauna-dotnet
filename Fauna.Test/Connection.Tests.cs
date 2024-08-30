@@ -55,7 +55,7 @@ public class ConnectionTests
     [Test]
     public async Task TestMockQuery()
     {
-        // ACT
+        // ACT 
         await _client.QueryAsync<int>(_fql);
 
         // ASSERT
