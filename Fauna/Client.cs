@@ -10,7 +10,7 @@ using Stream = System.IO.Stream;
 namespace Fauna;
 
 /// <summary>
-/// Represents a client for interacting with a Fauna.
+/// Represents a client for interacting with a Fauna. 
 /// </summary>
 public class Client : BaseClient, IDisposable
 {
