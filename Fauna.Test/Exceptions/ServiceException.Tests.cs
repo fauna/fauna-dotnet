@@ -107,7 +107,6 @@ namespace Fauna.Test.Exceptions
         [Test]
         [TestCase(400, "invalid_query", typeof(QueryCheckException))]
         [TestCase(400, "unbound_variable", typeof(QueryRuntimeException))]
-        [TestCase(400, "unbound_variable", typeof(QueryRuntimeException))]
         [TestCase(400, "index_out_of_bounds", typeof(QueryRuntimeException))]
         [TestCase(400, "type_mismatch", typeof(QueryRuntimeException))]
         [TestCase(400, "invalid_argument", typeof(QueryRuntimeException))]
@@ -160,6 +159,7 @@ namespace Fauna.Test.Exceptions
         [TestCase(503, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(504, "some unhandled code", typeof(QueryRuntimeException))]
         [TestCase(999, "some unhandled code", typeof(QueryRuntimeException))]
+        [TestCase(null, "some unhandled code", typeof(QueryRuntimeException))]
         public void QueryException_All(HttpStatusCode status, string code, Type exceptionType)
         {
             var jsonDoc =
