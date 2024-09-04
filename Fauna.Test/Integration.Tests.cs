@@ -389,18 +389,6 @@ public class IntegrationTests
 
     [Test]
     [Category("Streaming")]
-    public Task StreamThrowsWithoutToken()
-    {
-        var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
-            await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all()"),
-                streamOptions: new StreamOptions { Cursor = "abc1234==" }));
-        Assert.AreSame("The 'cursor' configuration can only be used with a stream token.", ex?.Message);
-
-        return Task.CompletedTask;
-    }
-
-    [Test]
-    [Category("Streaming")]
     public Task StreamThrowsWithBadRequest()
     {
         var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
@@ -408,7 +396,7 @@ public class IntegrationTests
         var ex = Assert.ThrowsAsync<FaunaException>(async () =>
         {
             var stream = await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
-                streamOptions: new StreamOptions { Token = "fake", Cursor = "abc1234==" },
+                streamOptions: new StreamOptions("fake", "abc1234=="),
                 cancellationToken: cts.Token);
 
             await foreach (var _ in stream)
@@ -478,11 +466,12 @@ public class IntegrationTests
         queryTasks = queryTasks.Append(streamTask);
         Task.WaitAll(queryTasks.ToArray(), cts.Token);
 
+        Assert.NotNull(token, "should have a token");
         Assert.NotNull(cursor, "should have a cursor from the first event");
 
         var stream = await _client.EventStreamAsync<StreamingSandbox>(
             FQL($"StreamingSandbox.all().toStream()"),
-            streamOptions: new StreamOptions { Token = token, Cursor = cursor },
+            streamOptions: new StreamOptions(token!, cursor!),
             cancellationToken: cts.Token
         );
         Assert.NotNull(stream);

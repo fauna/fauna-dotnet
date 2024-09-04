@@ -530,34 +530,24 @@ public abstract class BaseClient : IClient
         StreamOptions? streamOptions = null,
         CancellationToken cancellationToken = default) where T : notnull
     {
-        Stream stream;
+        Stream stream = streamOptions?.Token != null
+            ? new Stream(streamOptions.Token) { LastCursor = streamOptions.Cursor, StartTs = streamOptions.StartTs }
+            : await GetStreamFromQueryAsync(query, queryOptions, cancellationToken);
 
-        if (streamOptions?.Token is null)
-        {
-            if (streamOptions?.Cursor is not null)
-            {
-                throw new ArgumentException("The 'cursor' configuration can only be used with a stream token.");
-            }
+        return new StreamEnumerable<T>(this, stream, cancellationToken);
+    }
 
-            var response = await QueryAsync<Stream>(
-                query,
-                queryOptions,
-                cancellationToken);
-
-            stream = response.Data;
-        }
-        else
-        {
-            stream = new Stream(streamOptions.Token!);
-        }
-
-        stream.LastCursor = streamOptions?.Cursor;
-        stream.StartTs = streamOptions?.StartTs;
-
-        return new StreamEnumerable<T>(
-            this,
-            stream,
+    private async Task<Stream> GetStreamFromQueryAsync(
+        Query query,
+        QueryOptions? queryOptions,
+        CancellationToken cancellationToken)
+    {
+        var response = await QueryAsync<Stream>(
+            query,
+            queryOptions,
             cancellationToken);
+
+        return response.Data;
     }
 
     /// <summary>

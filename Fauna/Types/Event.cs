@@ -60,7 +60,7 @@ public class Event<T> where T : notnull
     {
         if (!json.TryGetProperty(CursorFieldName, out var elem))
         {
-            throw new Exception($"Missing required field: cursor - {json.ToString()}");
+            throw new InvalidDataException($"Missing required field: cursor - {json.ToString()}");
         }
 
         return elem.Deserialize<string>() ?? throw new InvalidOperationException();
