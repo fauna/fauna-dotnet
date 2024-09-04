@@ -75,8 +75,7 @@ internal class Connection : IConnection
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        // TRICKY: we need to break the events listener loop
-                        listener.Dispatch(null);
+                        listener.BreakAndClose();
                         return response;
                     }
 
@@ -130,11 +129,17 @@ internal class Connection : IConnection
         private readonly SemaphoreSlim _semaphore = new(0);
         private bool _closed;
 
-        public void Dispatch(Event<T>? evt)
+        public void Dispatch(Event<T> evt)
         {
             _queue.Enqueue(evt);
             _semaphore.Release();
-            if (evt is null) Close();
+        }
+
+        public void BreakAndClose()
+        {
+            _queue.Enqueue(null);
+            _semaphore.Release();
+            Close();
         }
 
         public async IAsyncEnumerable<Event<T>?> Events()
