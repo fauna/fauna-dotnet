@@ -18,6 +18,11 @@ internal readonly struct ResponseFields
     public const string LastSeenTxnFieldName = "txn_ts";
 
     /// <summary>
+    /// Field name for the stream cursor of the response.
+    /// </summary>
+    public const string CursorFieldName = "cursor";
+
+    /// <summary>
     /// Field name for static type information in the response.
     /// </summary>
     public const string StaticTypeFieldName = "static_type";

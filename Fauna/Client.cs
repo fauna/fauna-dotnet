@@ -145,7 +145,7 @@ public class Client : BaseClient, IDisposable
                            cancel))
         {
             LastSeenTxn = evt.TxnTime;
-            stream.StartTs = evt.TxnTime;
+            stream.LastCursor = evt.Cursor;
             StatsCollector?.Add(evt.Stats);
             yield return evt;
         }

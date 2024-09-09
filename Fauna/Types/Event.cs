@@ -20,6 +20,7 @@ public class Event<T> where T : notnull
 {
     public EventType Type { get; private init; }
     public long TxnTime { get; private init; }
+    public string Cursor { get; private init; } = null!;
     public T? Data { get; private init; }
     public QueryStats Stats { get; private init; }
 
@@ -36,6 +37,7 @@ public class Event<T> where T : notnull
         var evt = new Event<T>
         {
             TxnTime = GetTxnTime(json),
+            Cursor = GetCursor(json),
             Type = GetType(json),
             Stats = GetStats(json),
             Data = GetData(json, ctx),
@@ -53,6 +55,17 @@ public class Event<T> where T : notnull
 
         return elem.TryGetInt64(out long i) ? i : default;
     }
+
+    private static string GetCursor(JsonElement json)
+    {
+        if (!json.TryGetProperty(CursorFieldName, out var elem))
+        {
+            throw new InvalidDataException($"Missing required field: cursor - {json.ToString()}");
+        }
+
+        return elem.Deserialize<string>()!;
+    }
+
 
     private static EventType GetType(JsonElement json)
     {

@@ -341,7 +341,7 @@ public class IntegrationTests
                 {
                     Assert.Multiple(() =>
                     {
-                        Assert.NotZero(evt.TxnTime, "should have a txn time");
+                        Assert.IsNotEmpty(evt.Cursor, "should have a cursor");
                         Assert.NotZero(evt.Stats.ReadOps, "should have consumed ReadOps");
                         if (evt.Type is EventType.Status)
                         {
@@ -385,5 +385,109 @@ public class IntegrationTests
         Assert.Zero(expectedEvents, "stream handler should process all events");
 
         await Task.CompletedTask;
+    }
+
+    [Test]
+    [Category("Streaming")]
+    public Task StreamThrowsWithBadRequest()
+    {
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
+
+        var ex = Assert.ThrowsAsync<FaunaException>(async () =>
+        {
+            var stream = await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+                streamOptions: new StreamOptions("fake", "abc1234=="),
+                cancellationToken: cts.Token);
+
+            await foreach (var _ in stream)
+            {
+                Assert.Fail("Should not process events");
+            }
+        });
+
+        Assert.AreEqual("BadRequest: Bad Request", ex?.Message);
+
+        return Task.CompletedTask;
+    }
+
+    [Test]
+    [Category("Streaming")]
+    public async Task CanResumeStreamWithStreamOptions()
+    {
+        string? token = null;
+        string? cursor = null;
+
+        var queries = new[]
+        {
+            FQL($"StreamingSandbox.create({{ foo: 'bar' }})"),
+            FQL($"StreamingSandbox.all().forEach(.update({{ foo: 'baz' }}))"),
+            FQL($"StreamingSandbox.all().forEach(.delete())")
+        };
+
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
+        cts.Token.ThrowIfCancellationRequested();
+
+        int expectedEvents = queries.Length + 1;
+
+        // create a task to open the stream and process events
+        var streamTask = Task.Run(() =>
+        {
+            Assert.DoesNotThrowAsync(async () =>
+            {
+                var stream = await _client.EventStreamAsync<StreamingSandbox>(
+                    FQL($"StreamingSandbox.all().toStream()"),
+                    cancellationToken: cts.Token
+                );
+                Assert.NotNull(stream);
+                token = stream.Token;
+
+                await foreach (var evt in stream)
+                {
+                    // break after the first received event
+                    cursor = evt.Cursor;
+                    // ReSharper disable once AccessToModifiedClosure
+                    expectedEvents--;
+                    break;
+                }
+            });
+        }, cts.Token);
+
+        // invoke queries on a delay to simulate streaming events
+        var queryTasks = queries.Select(
+            (query, index) => Task.Delay((index + 1) * 500, cts.Token)
+                .ContinueWith(
+                    _ =>
+                    {
+                        Assert.DoesNotThrowAsync(async () => { await _client.QueryAsync(query, cancel: cts.Token); },
+                            "Should successfully invoke query");
+                    }, TaskContinuationOptions.ExecuteSynchronously));
+
+        // wait for all tasks
+        queryTasks = queryTasks.Append(streamTask);
+        Task.WaitAll(queryTasks.ToArray(), cts.Token);
+
+        Assert.NotNull(token, "should have a token");
+        Assert.NotNull(cursor, "should have a cursor from the first event");
+
+        var stream = await _client.EventStreamAsync<StreamingSandbox>(
+            FQL($"StreamingSandbox.all().toStream()"),
+            streamOptions: new StreamOptions(token!, cursor!),
+            cancellationToken: cts.Token
+        );
+        Assert.NotNull(stream);
+
+        await foreach (var evt in stream)
+        {
+            Assert.IsNotEmpty(evt.Cursor, "should have a cursor");
+            expectedEvents--;
+            if (expectedEvents > 0)
+            {
+                continue;
+            }
+
+            break;
+        }
+
+        Assert.Zero(expectedEvents, "stream handler should process all events");
     }
 }

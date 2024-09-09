@@ -9,6 +9,8 @@ public class StreamEnumerable<T> where T : notnull
     private readonly Stream _stream;
     private readonly CancellationToken _cancel;
 
+    public string Token => _stream.Token;
+
     internal StreamEnumerable(
         BaseClient client,
         Stream stream,

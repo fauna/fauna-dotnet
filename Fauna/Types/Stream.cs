@@ -15,16 +15,22 @@ public sealed class Stream : IEquatable<Stream>
     /// <summary>
     /// Gets the string value of the stream token.
     /// </summary>
-    private string Token { get; }
+    internal string Token { get; }
 
     public long? StartTs { get; set; }
+
+    public string? LastCursor { get; set; }
 
     public void Serialize(System.IO.Stream stream)
     {
         var writer = new Utf8JsonWriter(stream);
         writer.WriteStartObject();
         writer.WriteString("token", Token);
-        if (StartTs != null)
+        if (LastCursor != null)
+        {
+            writer.WriteString("cursor", LastCursor);
+        }
+        else if (StartTs != null)
         {
             writer.WriteNumber("start_ts", StartTs.Value);
         }
