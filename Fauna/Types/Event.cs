@@ -71,7 +71,7 @@ public class Event<T> where T : notnull
     {
         if (!json.TryGetProperty("type", out var elem))
         {
-            throw new Exception($"Missing required field: type - {json.ToString()}");
+            throw new InvalidDataException($"Missing required field: type - {json.ToString()}");
         }
 
         string? evtType = elem.Deserialize<string?>();
@@ -81,7 +81,7 @@ public class Event<T> where T : notnull
             "update" => EventType.Update,
             "remove" => EventType.Remove,
             "status" => EventType.Status,
-            _ => throw new Exception($"Unknown event type: {evtType}")
+            _ => throw new InvalidOperationException($"Unknown event type: {evtType}")
         };
 
         return type;
