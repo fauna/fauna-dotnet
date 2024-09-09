@@ -63,7 +63,7 @@ public class Event<T> where T : notnull
             throw new InvalidDataException($"Missing required field: cursor - {json.ToString()}");
         }
 
-        return elem.Deserialize<string>() ?? throw new InvalidOperationException("Failed to deserialize Cursor");
+        return elem.Deserialize<string>()!;
     }
 
 
