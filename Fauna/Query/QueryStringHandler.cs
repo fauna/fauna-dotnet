@@ -35,9 +35,9 @@ public ref struct QueryStringHandler
     /// <param name="value">The value to append.</param>
     public void AppendFormatted(object? value)
     {
-        if (value is QueryExpr expr)
+        if (value is IQueryFragment frag)
         {
-            _fragments.Add(expr);
+            _fragments.Add(frag);
         }
         else
         {

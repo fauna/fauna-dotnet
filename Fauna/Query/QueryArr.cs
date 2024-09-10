@@ -1,36 +1,47 @@
 ﻿using System.Collections;
-using System.Collections.ObjectModel;
 using Fauna.Mapping;
 using Fauna.Serialization;
 
 namespace Fauna;
 
-internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
+internal sealed class QueryArr : Query, IQueryFragment
 {
-    public QueryArr(IEnumerable<T> v)
+    public QueryArr(IEnumerable<object?> v)
     {
         if (v == null)
         {
             throw new ArgumentNullException(nameof(v), "Value cannot be null.");
         }
 
-        Unwrap = new ReadOnlyCollection<T>(v.ToList());
+        Unwrap = v;
     }
 
-    public ReadOnlyCollection<T> Unwrap { get; }
-
-    public int Count => Unwrap.Count;
-
-    public T this[int index] => Unwrap[index];
+    public IEnumerable<object?> Unwrap { get; }
 
     public override void Serialize(MappingContext ctx, Utf8FaunaWriter writer)
     {
-        throw new NotImplementedException();
+        writer.WriteStartObject();
+        writer.WriteFieldName("array");
+        writer.WriteStartArray();
+        foreach (object? t in Unwrap)
+        {
+            if (t is IQueryFragment frag)
+            {
+                frag.Serialize(ctx, writer);
+            }
+            else
+            {
+                var ser = t is not null ? Serializer.Generate(ctx, t.GetType()) : DynamicSerializer.Singleton;
+                ser.Serialize(ctx, writer, t);
+            }
+        }
+        writer.WriteEndArray();
+        writer.WriteEndObject();
     }
 
     public override bool Equals(Query? o)
     {
-        return o is QueryArr<T> other && Unwrap.SequenceEqual(other.Unwrap);
+        return o is QueryArr other && Unwrap.SequenceEqual(other.Unwrap);
     }
 
     public override bool Equals(object? otherObject)
@@ -40,16 +51,7 @@ internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
 
     public override int GetHashCode()
     {
-        unchecked
-        {
-            int hash = 17;
-            for (int i = 0; i < Unwrap.Count; i++)
-            {
-                T item = Unwrap[i];
-                hash = hash * 31 + (item?.GetHashCode() ?? 0);
-            }
-            return hash;
-        }
+        return Unwrap.GetHashCode();
     }
 
     public override string ToString()
@@ -57,13 +59,4 @@ internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
         return $"QueryArr({string.Join(", ", Unwrap)})";
     }
 
-    public IEnumerator<T> GetEnumerator()
-    {
-        return Unwrap.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
 }

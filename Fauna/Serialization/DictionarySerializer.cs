@@ -36,6 +36,29 @@ internal class DictionarySerializer<T> : BaseSerializer<Dictionary<string, T>>
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        DynamicSerializer.Singleton.Serialize(context, writer, o);
+        switch (o)
+        {
+            case null:
+                writer.WriteNullValue();
+                break;
+            case Dictionary<string, T> d:
+                bool shouldEscape = Serializer.Tags.Overlaps(d.Keys);
+                if (shouldEscape) writer.WriteStartEscapedObject();
+                else writer.WriteStartObject();
+                foreach (var (key, value) in d)
+                {
+                    writer.WriteFieldName(key);
+                    _elemSerializer.Serialize(context, writer, value);
+                }
+
+                if (shouldEscape) writer.WriteEndEscapedObject();
+                else writer.WriteEndObject();
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+
+
+
     }
 }

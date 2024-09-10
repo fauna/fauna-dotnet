@@ -142,6 +142,95 @@ public class IntegrationTests
     }
 
     [Test]
+    [Category("serialization")]
+    public async Task ValidateQueryArray()
+    {
+        var q = new List<Query> { FQL($"4 + 2"), FQL($"5 + 2"), FQL($"6 + 2"), };
+        var obj = new QueryArr(q);
+
+        var result = await _client.QueryAsync<List<int>>(FQL($"{obj}"));
+
+        Assert.AreEqual(new List<int> { 6, 7, 8 }, result.Data);
+    }
+
+    [Test]
+    [Category("serialization")]
+    public async Task ValidateQueryObject()
+    {
+        var q = new Dictionary<string, Query>
+        {
+            { "six", FQL($"4 + 2") },
+            { "seven", FQL($"5 + 2") },
+            { "eight", FQL($"6 + 2")},
+        };
+        var obj = new QueryObj(q);
+
+        var result = await _client.QueryAsync<Dictionary<string, int>>(FQL($"{obj}"));
+
+        Assert.AreEqual(new Dictionary<string, int>
+        {
+            { "six", 6 },
+            { "seven", 7 },
+            { "eight", 8 }
+        }, result.Data);
+    }
+
+
+    private class ClassWithQuery
+    {
+        private Query Query { get; }
+
+        public ClassWithQuery(Query query)
+        {
+            Query = query;
+        }
+
+        public override string? ToString() => Query.ToString();
+    }
+
+    [Test]
+    [Category("serialization")]
+    public async Task ValidateQueryObjectWithClass()
+    {
+        var q = new ClassWithQuery(FQL($"4 + 4"));
+        var obj = new QueryObj(q);
+
+        var result = await _client.QueryAsync<int>(FQL($"{obj}"));
+
+        Assert.AreEqual(8, result.Data);
+    }
+
+    [Test]
+    [Category("serialization")]
+    public void ValidateUnwrappedListOfQueriesError()
+    {
+        var q = new List<Query>
+        {
+            FQL($"4 + 2"),
+            FQL($"5 + 2"),
+            FQL($"6 + 2"),
+        };
+
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () => await _client.QueryAsync<List<int>>(FQL($"{q}")));
+        Assert.AreEqual("Use QueryArr to wrap a List<Query>", ex!.Message);
+    }
+
+    [Test]
+    [Category("serialization")]
+    public void ValidateUnwrappedMapOfQueriesError()
+    {
+        var q = new Dictionary<string, Query>
+        {
+            {"six", FQL($"4 + 2") },
+            {"seven", FQL($"5 + 2") },
+            {"eight", FQL($"6 + 2")},
+        };
+
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () => await _client.QueryAsync<Dictionary<string, int>>(FQL($"{q}")));
+        Assert.AreEqual("Use QueryObj to wrap a Dictionary<str, Query>", ex!.Message);
+    }
+
+    [Test]
     public async Task Paginate_IteratorCanBeFlattened()
     {
         var items = new List<Person>();
