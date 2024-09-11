@@ -175,31 +175,6 @@ public class IntegrationTests
         }, result.Data);
     }
 
-
-    private class ClassWithQuery
-    {
-        private Query Query { get; }
-
-        public ClassWithQuery(Query query)
-        {
-            Query = query;
-        }
-
-        public override string? ToString() => Query.ToString();
-    }
-
-    [Test]
-    [Category("serialization")]
-    public async Task ValidateQueryObjectWithClass()
-    {
-        var q = new ClassWithQuery(FQL($"4 + 4"));
-        var obj = new QueryObj(q);
-
-        var result = await _client.QueryAsync<int>(FQL($"{obj}"));
-
-        Assert.AreEqual(8, result.Data);
-    }
-
     [Test]
     public async Task Paginate_IteratorCanBeFlattened()
     {

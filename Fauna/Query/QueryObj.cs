@@ -11,13 +11,13 @@ public sealed class QueryObj : Query, IQueryFragment
     /// <summary>
     /// Gets the value of the specified type represented in the query.
     /// </summary>
-    public object Unwrap { get; }
+    public IDictionary<string, Query> Unwrap { get; }
 
     /// <summary>
     /// Initializes a new instance of the QueryObj class with the specified value.
     /// </summary>
     /// <param name="v">The value of the specified type to be represented in the query.</param>
-    public QueryObj(object v)
+    public QueryObj(IDictionary<string, Query> v)
     {
         Unwrap = v;
     }

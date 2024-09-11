@@ -6,34 +6,22 @@ namespace Fauna;
 
 internal sealed class QueryArr : Query, IQueryFragment
 {
-    public QueryArr(IEnumerable<object?> v)
+    public QueryArr(IEnumerable<Query> v)
     {
-        if (v == null)
-        {
-            throw new ArgumentNullException(nameof(v), "Value cannot be null.");
-        }
-
         Unwrap = v;
     }
 
-    public IEnumerable<object?> Unwrap { get; }
+    public IEnumerable<Query> Unwrap { get; }
 
     public override void Serialize(MappingContext ctx, Utf8FaunaWriter writer)
     {
         writer.WriteStartObject();
         writer.WriteFieldName("array");
         writer.WriteStartArray();
-        foreach (object? t in Unwrap)
+        foreach (Query t in Unwrap)
         {
-            if (t is IQueryFragment frag)
-            {
-                frag.Serialize(ctx, writer);
-            }
-            else
-            {
-                var ser = t is not null ? Serializer.Generate(ctx, t.GetType()) : DynamicSerializer.Singleton;
-                ser.Serialize(ctx, writer, t);
-            }
+            var ser = Serializer.Generate(ctx, t.GetType());
+            ser.Serialize(ctx, writer, t);
         }
         writer.WriteEndArray();
         writer.WriteEndObject();

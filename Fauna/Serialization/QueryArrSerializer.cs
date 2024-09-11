@@ -18,10 +18,8 @@ internal class QueryArrSerializer : BaseSerializer<QueryArr>
             case QueryArr o:
                 writer.WriteStartObject();
                 writer.WriteFieldName("array");
-                writer.WriteStartArray();
                 var ser = Serializer.Generate(context, o.Unwrap.GetType());
                 ser.Serialize(context, writer, o.Unwrap);
-                writer.WriteEndArray();
                 writer.WriteEndObject();
                 break;
             default:
