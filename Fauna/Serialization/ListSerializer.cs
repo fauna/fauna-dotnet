@@ -54,9 +54,6 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
             w.WriteStartArray();
             foreach (object? elem in (IEnumerable)o)
             {
-                if (elem is Query)
-                    throw new ArgumentException("Use QueryArr to wrap a List<Query>");
-
                 _elemSerializer.Serialize(ctx, w, elem);
             }
             w.WriteEndArray();
