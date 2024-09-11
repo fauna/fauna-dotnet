@@ -19,18 +19,8 @@ internal class QueryArrSerializer : BaseSerializer<QueryArr>
                 writer.WriteStartObject();
                 writer.WriteFieldName("array");
                 writer.WriteStartArray();
-                foreach (object? t in o.Unwrap)
-                {
-                    if (t is IQueryFragment frag)
-                    {
-                        frag.Serialize(context, writer);
-                    }
-                    else
-                    {
-                        var ser = t is not null ? Serializer.Generate(context, t.GetType()) : DynamicSerializer.Singleton;
-                        ser.Serialize(context, writer, t);
-                    }
-                }
+                var ser = Serializer.Generate(context, o.Unwrap.GetType());
+                ser.Serialize(context, writer, o.Unwrap);
                 writer.WriteEndArray();
                 writer.WriteEndObject();
                 break;
