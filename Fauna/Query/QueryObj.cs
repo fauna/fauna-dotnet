@@ -4,7 +4,7 @@ using Fauna.Serialization;
 namespace Fauna;
 
 /// <summary>
-/// Represents a generic value holder for FQL queries. This class allows embedding values of various types into the query, with support for primitives, POCOs, and other types.
+/// Represents a dictionary of FQL queries.
 /// </summary>
 public sealed class QueryObj : Query, IQueryFragment
 {
@@ -47,12 +47,7 @@ public sealed class QueryObj : Query, IQueryFragment
     /// <returns>true if the specified object is equal to the current QueryObj; otherwise, false.</returns>
     public override bool Equals(object? o)
     {
-        if (ReferenceEquals(this, o))
-        {
-            return true;
-        }
-
-        return IsEqual(o as QueryObj);
+        return ReferenceEquals(this, o) || IsEqual(o as QueryObj);
     }
 
     /// <summary>
@@ -61,12 +56,9 @@ public sealed class QueryObj : Query, IQueryFragment
     /// <returns>A hash code for the current QueryObj.</returns>
     public override int GetHashCode()
     {
-        var hash = 31;
+        int hash = 31;
 
-        if (Unwrap is not null)
-        {
-            hash *= Unwrap.GetHashCode();
-        }
+        hash *= Unwrap.GetHashCode();
 
         return hash;
     }
@@ -85,17 +77,7 @@ public sealed class QueryObj : Query, IQueryFragment
     /// <returns>true if left and right are equal; otherwise, false.</returns>
     public static bool operator ==(QueryObj left, QueryObj right)
     {
-        if (ReferenceEquals(left, right))
-        {
-            return true;
-        }
-
-        if (left is null || right is null)
-        {
-            return false;
-        }
-
-        return left.Equals(right);
+        return ReferenceEquals(left, right) || left.Equals(right);
     }
 
     /// <summary>
@@ -111,16 +93,6 @@ public sealed class QueryObj : Query, IQueryFragment
 
     private bool IsEqual(QueryObj? o)
     {
-        if (o is null)
-        {
-            return false;
-        }
-
-        if (Unwrap is null)
-        {
-            return (o.Unwrap is null) ? true : false;
-        }
-
-        return Unwrap.Equals(o.Unwrap);
+        return o is not null && Unwrap.Equals(o.Unwrap);
     }
 }
