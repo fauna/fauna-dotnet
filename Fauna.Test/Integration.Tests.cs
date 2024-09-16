@@ -155,6 +155,18 @@ public class IntegrationTests
 
     [Test]
     [Category("serialization")]
+    public async Task ValidateQueryArrayWithQueryVal()
+    {
+        var q = new List<Query> { new QueryVal(6), FQL($"5 + 2"), FQL($"6 + 2"), };
+        var obj = new QueryArr(q);
+
+        var result = await _client.QueryAsync<List<int>>(FQL($"{obj}"));
+
+        Assert.AreEqual(new List<int> { 6, 7, 8 }, result.Data);
+    }
+
+    [Test]
+    [Category("serialization")]
     public async Task ValidateQueryObject()
     {
         var q = new Dictionary<string, Query>

@@ -47,6 +47,7 @@ public static class Serializer
     private static readonly QueryLiteralSerializer _queryLiteral = new();
     private static readonly QueryArrSerializer _queryArr = new();
     private static readonly QueryObjSerializer _queryObj = new();
+    private static readonly QueryValSerializer _queryVal = new();
 
 
     /// <summary>
@@ -97,6 +98,7 @@ public static class Serializer
         if (targetType == typeof(QueryLiteral)) return _queryLiteral;
         if (targetType == typeof(QueryArr)) return _queryArr;
         if (targetType == typeof(QueryObj)) return _queryObj;
+        if (targetType == typeof(QueryVal)) return _queryVal;
 
         if (targetType.IsGenericType)
         {
