@@ -34,57 +34,58 @@ class NullableInt
     public int? Val { get; set; }
 }
 
-[Object]
 class ClassForDocument
 {
-    [Field] public string? Id { get; set; }
-    [Field] public Module? Coll { get; set; }
-    [Field] public DateTime? Ts { get; set; }
+    [Id] public string? Id { get; set; }
+    [Coll] public Module? Coll { get; set; }
+    [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[Object]
+class ClassForDocumentClientGeneratedId
+{
+    [Id(true)] public string? Id { get; set; }
+    [Coll] public Module? Coll { get; set; }
+    [Ts] public DateTime? Ts { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+}
+
 class ClassForUnmapped
 {
-    [Field] public string? Id { get; set; }
-    [Field] public Module? Coll { get; set; }
-    [Field] public DateTime? Ts { get; set; }
+    [Id] public string? Id { get; set; }
+    [Coll] public Module? Coll { get; set; }
+    [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[Object]
 class ClassWithShort
 {
     [Field("a_short")] public short AShort { get; set; }
 }
 
-[Object]
 class ClassForDocumentWithIdString
 {
-    [Field] public string? Id { get; set; }
+    [Id] public string? Id { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[Object]
 class ClassForDocumentWithInvalidId
 {
-    [Field] public bool Id { get; set; }
+    [Id] public bool Id { get; set; }
 }
 
-[Object]
 class ClassForNamedDocument
 {
     [Field("name")] public string? Name { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
-[Object]
 class PersonWithAttributes
 {
     [Field("first_name")] public string? FirstName { get; set; } = "Baz";
     [Field("last_name")] public string? LastName { get; set; } = "Luhrmann";
     [Field("age")] public int Age { get; set; } = 61;
-    public string? Ignored { get; set; }
+    [Ignore] public string? Ignored { get; set; }
 
     public override bool Equals(object? obj)
     {
@@ -109,92 +110,92 @@ interface IOnlyField
     public string? Field { get; set; }
 }
 
-[Object]
+
 class PersonWithIntConflict : IOnlyField
 {
     [Field("@int")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithLongConflict : IOnlyField
 {
     [Field("@long")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithDoubleConflict : IOnlyField
 {
     [Field("@double")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithModConflict : IOnlyField
 {
     [Field("@mod")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithRefConflict : IOnlyField
 {
     [Field("@ref")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithDocConflict : IOnlyField
 {
     [Field("@doc")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithObjectConflict : IOnlyField
 {
     [Field("@object")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithSetConflict : IOnlyField
 {
     [Field("@set")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithTimeConflict : IOnlyField
 {
     [Field("@time")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class PersonWithDateConflict : IOnlyField
 {
     [Field("@date")] public string? Field { get; set; } = "not";
 }
 
-[Object]
+
 class ClassWithDupeFields
 {
-    [Field] public string? Id { get; set; }
-    [Field] public Module? Coll { get; set; }
-    [Field] public DateTime? Ts { get; set; }
+    [Id] public string? Id { get; set; }
+    [Coll] public Module? Coll { get; set; }
+    [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
     [Field("user_field")] public string? UserField2 { get; set; }
 }
 
-[Object]
+
 class ClassWithFieldNameOverlap
 {
-    [Field] public string? Id { get; set; }
-    [Field] public Module? Coll { get; set; }
-    [Field] public DateTime? Ts { get; set; }
+    [Id] public string? Id { get; set; }
+    [Coll] public Module? Coll { get; set; }
+    [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
     [Field] public string? user_field { get; set; }
 }
 
-[Object]
+
 class ClassWithLotsOfFields
 {
-    [Field] public string? Id { get; set; }
-    [Field] public Module? Coll { get; set; }
-    [Field] public DateTime? Ts { get; set; }
+    [Id] public string? Id { get; set; }
+    [Coll] public Module? Coll { get; set; }
+    [Ts] public DateTime? Ts { get; set; }
     [Field] public DateTime DateTimeField { get; set; }
     [Field] public DateOnly DateOnlyField { get; set; }
     [Field] public DateTimeOffset DateTimeOffsetField { get; set; }

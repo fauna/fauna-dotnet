@@ -9,17 +9,15 @@ namespace Fauna.Test.Linq;
 [TestFixture]
 public class ContextTests
 {
-    [Object]
     class Author
     {
-        [Field] public string? Id { get; set; }
+        [Id] public string? Id { get; set; }
         [Field] public string Name { get; set; } = "Alice";
     }
 
-    [Object]
     class Post
     {
-        [Field] public string? Id { get; set; }
+        [Id] public string? Id { get; set; }
     }
 
     class AuthorDb : DataContext

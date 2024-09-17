@@ -5,24 +5,21 @@ using static Fauna.Query;
 
 namespace Fauna.Test;
 
-[Object]
 public class Author
 {
-    [Field] public string? Id { get; set; }
+    [Id] public string? Id { get; set; }
     [Field] public string Name { get; set; } = "Alice";
     [Field] public int Age { get; set; }
     [Field] public long Subscribers { get; set; }
     [Field] public double Score { get; set; }
 }
 
-[Object]
 public class Book
 {
-    [Field] public string? Id { get; set; }
+    [Id] public string? Id { get; set; }
     [Field] public string Name { get; set; } = "War and Peace";
 }
 
-[Object]
 public class StreamingSandbox
 {
     [Field("foo")] public string? Foo { get; set; }
