@@ -1,6 +1,7 @@
 using System.Collections;
 using Fauna.Exceptions;
 using Fauna.Mapping;
+using ArgumentException = System.ArgumentException;
 
 namespace Fauna.Serialization;
 

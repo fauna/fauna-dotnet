@@ -13,6 +13,9 @@ internal class DynamicSerializer : BaseSerializer<object?>
     private readonly DictionarySerializer<object?> _dict;
     private readonly DocumentSerializer<object> _doc;
     private readonly DocumentSerializer<object> _ref;
+    private readonly QuerySerializer _query;
+
+
 
     private DynamicSerializer()
     {
@@ -21,6 +24,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
         _dict = new DictionarySerializer<object?>(this);
         _doc = new DocumentSerializer<object>();
         _ref = new DocumentSerializer<object>();
+        _query = new QuerySerializer();
     }
 
     public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
@@ -115,6 +119,9 @@ internal class DynamicSerializer : BaseSerializer<object?>
                 break;
             case Document doc:
                 SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
+                break;
+            case Query q:
+                _query.Serialize(ctx, w, q);
                 break;
             case NullableDocument<Document> doc:
                 switch (doc)

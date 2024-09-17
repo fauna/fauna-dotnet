@@ -1,5 +1,4 @@
 using Fauna.Mapping;
-using Fauna.Serialization;
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
 
@@ -43,6 +42,13 @@ public static class Serializer
     private static readonly DocumentSerializer<NamedDocument> _namedDoc = new();
     private static readonly DocumentSerializer<Ref> _docRef = new();
     private static readonly DocumentSerializer<NamedRef> _namedDocRef = new();
+    private static readonly QuerySerializer _query = new();
+    private static readonly QueryExprSerializer _queryExpr = new();
+    private static readonly QueryLiteralSerializer _queryLiteral = new();
+    private static readonly QueryArrSerializer _queryArr = new();
+    private static readonly QueryObjSerializer _queryObj = new();
+    private static readonly QueryValSerializer _queryVal = new();
+
 
     /// <summary>
     /// Generates a serializer for the specified non-nullable .NET type.
@@ -87,6 +93,12 @@ public static class Serializer
         if (targetType == typeof(NamedDocument)) return _namedDoc;
         if (targetType == typeof(Ref)) return _docRef;
         if (targetType == typeof(NamedRef)) return _namedDocRef;
+        if (targetType == typeof(Query)) return _query;
+        if (targetType == typeof(QueryExpr)) return _queryExpr;
+        if (targetType == typeof(QueryLiteral)) return _queryLiteral;
+        if (targetType == typeof(QueryArr)) return _queryArr;
+        if (targetType == typeof(QueryObj)) return _queryObj;
+        if (targetType == typeof(QueryVal)) return _queryVal;
 
         if (targetType.IsGenericType)
         {

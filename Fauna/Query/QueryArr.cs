@@ -1,69 +1,83 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
-using Fauna.Mapping;
+﻿using Fauna.Mapping;
 using Fauna.Serialization;
 
 namespace Fauna;
 
-internal sealed class QueryArr<T> : Query, IQueryFragment, IEnumerable<T>
+/// <summary>
+/// Represents an array of FQL queries.
+/// </summary>
+internal sealed class QueryArr : Query, IQueryFragment
 {
-    public QueryArr(IEnumerable<T> v)
-    {
-        if (v == null)
-        {
-            throw new ArgumentNullException(nameof(v), "Value cannot be null.");
-        }
+    /// <summary>
+    /// Gets the value of the specified type represented in the query.
+    /// </summary>
+    public IEnumerable<Query> Unwrap { get; }
 
-        Unwrap = new ReadOnlyCollection<T>(v.ToList());
+    /// <summary>
+    /// Initializes a new instance of the QueryArr class with the specified value.
+    /// </summary>
+    /// <param name="v">The value of the specified type to be represented in the query.</param>
+    public QueryArr(IEnumerable<Query> v)
+    {
+        Unwrap = v;
     }
 
-    public ReadOnlyCollection<T> Unwrap { get; }
 
-    public int Count => Unwrap.Count;
-
-    public T this[int index] => Unwrap[index];
-
+    /// <summary>
+    /// Serializes the query value.
+    /// </summary>
+    /// <param name="ctx">The serialization context.</param>
+    /// <param name="writer">The writer to serialize the query value to.</param>
     public override void Serialize(MappingContext ctx, Utf8FaunaWriter writer)
     {
-        throw new NotImplementedException();
+        writer.WriteStartObject();
+        writer.WriteFieldName("array");
+        writer.WriteStartArray();
+        foreach (Query t in Unwrap)
+        {
+            var ser = Serializer.Generate(ctx, t.GetType());
+            ser.Serialize(ctx, writer, t);
+        }
+        writer.WriteEndArray();
+        writer.WriteEndObject();
     }
 
+    /// <summary>
+    /// Determines whether the specified QueryArr is equal to the current QueryArr.
+    /// </summary>
+    /// <param name="o">The QueryArr to compare with the current QueryArr.</param>
+    /// <returns>true if the specified QueryArr is equal to the current QueryArr; otherwise, false.</returns>
     public override bool Equals(Query? o)
     {
-        return o is QueryArr<T> other && Unwrap.SequenceEqual(other.Unwrap);
+        return o is QueryArr other && Unwrap.SequenceEqual(other.Unwrap);
     }
 
+    /// <summary>
+    /// Determines whether the specified object is equal to the current QueryArr.
+    /// </summary>
+    /// <param name="otherObject">The object to compare with the current QueryArr.</param>
+    /// <returns>true if the specified object is equal to the current QueryArr; otherwise, false.</returns>
     public override bool Equals(object? otherObject)
     {
-        return Equals(otherObject as Query);
+        return Equals(otherObject as QueryArr);
     }
 
+    /// <summary>
+    /// The default hash function.
+    /// </summary>
+    /// <returns>A hash code for the current QueryArr.</returns>
     public override int GetHashCode()
     {
-        unchecked
-        {
-            int hash = 17;
-            for (int i = 0; i < Unwrap.Count; i++)
-            {
-                T item = Unwrap[i];
-                hash = hash * 31 + (item?.GetHashCode() ?? 0);
-            }
-            return hash;
-        }
+        return Unwrap.GetHashCode();
     }
 
+    /// <summary>
+    /// Returns a string that represents the current QueryArr.
+    /// </summary>
+    /// <returns>A string that represents the current QueryArr.</returns>
     public override string ToString()
     {
         return $"QueryArr({string.Join(", ", Unwrap)})";
     }
 
-    public IEnumerator<T> GetEnumerator()
-    {
-        return Unwrap.GetEnumerator();
-    }
-
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
 }
