@@ -15,19 +15,11 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
     private const string IdField = "id";
     private const string NameField = "name";
     private readonly MappingInfo _info;
-    private readonly bool _isDocument;
 
     public ClassSerializer(MappingInfo info)
     {
         Debug.Assert(info.Type == typeof(T));
         _info = info;
-    }
-
-    public ClassSerializer(MappingInfo info, bool isDocument)
-    {
-        Debug.Assert(info.Type == typeof(T));
-        _info = info;
-        _isDocument = isDocument;
     }
 
     public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader)
@@ -100,22 +92,10 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
 
     public override void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
     {
-        var skipFields = new HashSet<string>();
-
-        if (_isDocument)
-        {
-            foreach (FieldInfo fi in _info.Fields)
-            {
-                if (fi.Name.ToLowerInvariant() == "id" && fi.Property.GetValue(o) is null) skipFields.Add("id");
-                if (fi.Name.ToLowerInvariant() == "coll" && fi.Property.GetValue(o) is null) skipFields.Add("coll");
-                if (fi.Name.ToLowerInvariant() == "ts" && fi.Property.GetValue(o) is null) skipFields.Add("ts");
-            }
-        }
-
-        SerializeInternal(ctx, w, o, skipFields);
+        SerializeInternal(ctx, w, o);
     }
 
-    private static void SerializeInternal(MappingContext ctx, Utf8FaunaWriter w, object? o, IReadOnlySet<string> skipFields)
+    private static void SerializeInternal(MappingContext ctx, Utf8FaunaWriter w, object? o)
     {
         if (o == null)
         {
@@ -130,10 +110,20 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
         if (shouldEscape) w.WriteStartEscapedObject(); else w.WriteStartObject();
         foreach (var field in info.Fields)
         {
-            if (skipFields.Contains(field.Name.ToLowerInvariant())) continue;
+            if (field.FieldType is FieldType.ServerGeneratedId or FieldType.Ts or FieldType.Coll)
+            {
+                continue;
+            }
+
+            object? v = field.Property.GetValue(o);
+            if (field.FieldType is FieldType.ClientGeneratedId && v == null)
+            {
+                // The field is a client generated ID but set to null, so assume they're doing something
+                // other than creating the object.
+                continue;
+            }
 
             w.WriteFieldName(field.Name);
-            object? v = field.Property.GetValue(o);
             field.Serializer.Serialize(ctx, w, v);
         }
         if (shouldEscape) w.WriteEndEscapedObject(); else w.WriteEndObject();

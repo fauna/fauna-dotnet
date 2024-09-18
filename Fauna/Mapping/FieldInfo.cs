@@ -16,6 +16,9 @@ public sealed class FieldInfo
     /// The property info of an associated class.
     /// </summary>
     public PropertyInfo Property { get; }
+
+    public FieldType FieldType { get; }
+
     /// <summary>
     /// The <see cref="Type"/> that the field should deserialize into.
     /// </summary>
@@ -28,12 +31,13 @@ public sealed class FieldInfo
     private MappingContext _ctx;
     private ISerializer? _serializer;
 
-    internal FieldInfo(MappingContext ctx, FieldAttribute attr, PropertyInfo prop)
+    internal FieldInfo(MappingContext ctx, FieldAttribute attr, PropertyInfo prop, FieldType fieldType)
     {
         var nullCtx = new NullabilityInfoContext();
         var nullInfo = nullCtx.Create(prop);
 
-        Name = attr.Name ?? FieldName.Canonical(prop.Name);
+        Name = attr._name ?? FieldName.Canonical(prop.Name);
+        FieldType = fieldType;
         Property = prop;
         Type = prop.PropertyType;
         IsNullable = nullInfo.WriteState is NullabilityState.Nullable;

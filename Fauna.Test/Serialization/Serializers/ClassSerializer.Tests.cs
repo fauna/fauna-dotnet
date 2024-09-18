@@ -78,25 +78,12 @@ public class ClassSerializerTests
         }
     }
 
+
     [Test]
-    public void SerializeMappedClassSkipsNullIdCollTs()
+    public void SerializeMappedClassSkipsIdCollTs()
     {
         var serializer = Serializer.Generate<ClassForDocument>(_ctx);
         const string wire = @"{""user_field"":""foo""}";
-        var obj = new ClassForDocument
-        {
-            UserField = "foo"
-        };
-
-        string serialized = Helpers.Serialize(serializer, _ctx, obj);
-        Assert.AreEqual(wire, serialized);
-    }
-
-    [Test]
-    public void SerializeMappedClassDoesNotSkipNonNullIdCollTs()
-    {
-        var serializer = Serializer.Generate<ClassForDocument>(_ctx);
-        const string wire = @"{""id"":""123"",""coll"":{""@mod"":""MappedColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""foo""}";
         var obj = new ClassForDocument
         {
             Id = "123",
@@ -110,12 +97,30 @@ public class ClassSerializerTests
     }
 
     [Test]
-    public void SerializeUnmappedClassDoesNotSkipNullIdCollTs()
+    public void SerializeMappedClassDoesNotSkipClientGeneratedId()
+    {
+        var serializer = Serializer.Generate<ClassForDocumentClientGeneratedId>(_ctx);
+        const string wire = @"{""id"":""123"",""user_field"":""foo""}";
+        var obj = new ClassForDocumentClientGeneratedId
+        {
+            Id = "123",
+            UserField = "foo"
+        };
+
+        string serialized = Helpers.Serialize(serializer, _ctx, obj);
+        Assert.AreEqual(wire, serialized);
+    }
+
+    [Test]
+    public void SerializeUnmappedClassSkipsIdCollTs()
     {
         var serializer = Serializer.Generate<ClassForUnmapped>(_ctx);
-        const string wire = @"{""id"":null,""coll"":null,""ts"":null,""user_field"":""foo""}";
+        const string wire = @"{""user_field"":""foo""}";
         var obj = new ClassForUnmapped
         {
+            Id = "123",
+            Coll = new Module("MappedColl"),
+            Ts = DateTime.Parse("2023-12-15T01:01:01.0010010Z"),
             UserField = "foo"
         };
 

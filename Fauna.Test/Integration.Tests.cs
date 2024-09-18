@@ -15,7 +15,6 @@ public class IntegrationTests
     [AllowNull]
     private static Client _client = null!;
 
-    [Object]
     private class Person
     {
         [Field("first_name")]
@@ -26,7 +25,6 @@ public class IntegrationTests
         public int Age { get; set; }
     }
 
-    [Object]
     private class EmbeddedSets
     {
         [Field("set")] public Page<EmbeddedSet>? Set { get; set; }

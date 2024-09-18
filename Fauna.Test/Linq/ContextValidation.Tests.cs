@@ -9,16 +9,14 @@ namespace Fauna.Test.Linq;
 [TestFixture]
 public class ContextValidationTests
 {
-    [Object]
     class Foo
     {
-        [Field] public string? Id { get; set; }
+        [Id] public string? Id { get; set; }
     }
 
-    [Object]
     class Bar
     {
-        [Field] public string? Id { get; set; }
+        [Id] public string? Id { get; set; }
     }
 
     [AllowNull]

@@ -117,14 +117,19 @@ Fauna.Mapping.Attributes and the Fauna.DataContext class provide the ability to 
 
 You can use attributes to map a POCO class to a Fauna document or object shape:
 
+`[Id]`: Should only be used once per class and be associated with a field named `Id` that represents the Fauna document ID. It's not encoded unless the isClientGenerated flag is true.
+`[Ts]`: Should only be used once per class and be associated with a field named `Ts` that represents the timestamp of a document. It's not encoded.
+`[Coll]`: Typically goes unmodeled. Should only be used once per class and be associated with a field named `Coll` that represents the collection field of a document. It will never be encoded.
+`[Field]`: Can be associated with any field to override its name in Fauna.
+`[Ignore]`: Can be used to ignore fields during encoding and decoding.
+
 ```csharp
 using Fauna.Mapping;
 
-[Object]
 class Person
 {
     // Property names are automatically converted to camelCase.
-    [Field]
+    [Id]
     public string? Id { get; set; }
 
     // Manually specify a name by providing a string.
@@ -134,7 +139,6 @@ class Person
     [Field("last_name")]
     public string? LastName { get; set; }
 
-    [Field]
     public int Age { get; set; }
 }
 ```
@@ -233,7 +237,6 @@ await foreach (var item in client.PaginateAsync<Person>(query).FlattenAsync())
 
 Example of a query that returns an object with an embedded Set:
 ```csharp
-[Object]
 class MyResult
 {
     [Field("users")]

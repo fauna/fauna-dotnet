@@ -33,20 +33,16 @@ public sealed class MappingInfo
         Type = ty;
         Collection = colName != null ? new Module(colName) : null;
 
-        var objAttr = ty.GetCustomAttribute<ObjectAttribute>();
-        bool hasAttributes = objAttr != null;
         var fields = new List<FieldInfo>();
         var byName = new Dictionary<string, FieldInfo>();
 
         foreach (var prop in ty.GetProperties())
         {
-            var attr = hasAttributes ?
-                prop.GetCustomAttribute<FieldAttribute>() :
-                new FieldAttribute();
+            if (prop.GetCustomAttribute<IgnoreAttribute>() != null) continue;
 
-            if (attr is null) continue;
-
-            var info = new FieldInfo(ctx, attr, prop);
+            var attr = prop.GetCustomAttribute<FieldAttribute>() ?? new FieldAttribute();
+            var fieldType = GetFieldType(prop);
+            var info = new FieldInfo(ctx, attr, prop, fieldType);
 
             if (byName.ContainsKey(info.Name))
                 throw new ArgumentException($"Duplicate field name {info.Name} in {ty}");
@@ -60,6 +56,27 @@ public sealed class MappingInfo
         FieldsByName = byName.ToImmutableDictionary();
 
         var serType = typeof(ClassSerializer<>).MakeGenericType(new[] { ty });
-        ClassSerializer = (ISerializer)Activator.CreateInstance(serType, this, Collection != null)!;
+        ClassSerializer = (ISerializer)Activator.CreateInstance(serType, this)!;
+    }
+
+    private FieldType GetFieldType(PropertyInfo propertyInfo)
+    {
+        var idAttr = propertyInfo.GetCustomAttribute<IdAttribute>();
+        if (idAttr != null)
+        {
+            return idAttr._isClientGenerated ? FieldType.ClientGeneratedId : FieldType.ServerGeneratedId;
+        }
+
+        if (propertyInfo.GetCustomAttribute<TsAttribute>() != null)
+        {
+            return FieldType.Ts;
+        }
+
+        if (propertyInfo.GetCustomAttribute<CollAttribute>() != null)
+        {
+            return FieldType.Coll;
+        }
+
+        return FieldType.Field;
     }
 }
