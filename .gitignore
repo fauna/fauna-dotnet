@@ -75,3 +75,6 @@ msbuild.wrn
 # code coverage
 dotnet-tools.json
 Fauna.Test/TestResults
+
+# Fauna CLI
+.fauna-*
