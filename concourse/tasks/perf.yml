@@ -9,6 +9,7 @@ image_resource:
 params:
   FAUNA_ENDPOINT:
   FAUNA_SECRET:
+  FAUNA_ENVIRONMENT:
 
 inputs:
   - name: repo.git

@@ -52,6 +52,7 @@ jobs:
         params:
           FAUNA_ENDPOINT: https://db.fauna-dev.com
           FAUNA_SECRET: ((dev-driver-perf-test-key))
+          FAUNA_ENVIRONMENT: dev
         on_success:
           put: perf-notify
           params:
