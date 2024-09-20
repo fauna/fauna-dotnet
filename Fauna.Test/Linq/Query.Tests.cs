@@ -17,7 +17,7 @@ public class QueryTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
+        _client = GetLocalhostClient();
         _db = Fixtures.AuthorDb(_client);
     }
 

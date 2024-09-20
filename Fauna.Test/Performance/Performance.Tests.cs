@@ -24,7 +24,7 @@ public class PerformanceTests
         var secret = Environment.GetEnvironmentVariable("FAUNA_SECRET") ?? "secret";
         var endpoint = Environment.GetEnvironmentVariable("FAUNA_ENDPOINT") ?? "http://localhost:8443";
 
-        _client = NewTestClient(secret, endpoint, true);
+        _client = GetTestClient(secret, endpoint, true);
     }
 
     [SetUp]
@@ -76,6 +76,6 @@ public class PerformanceTests
 
         _stopwatch.Stop();
 
-        MetricsHandler.RecordMetric(name, (int)_stopwatch.ElapsedMilliseconds, (int)_client.StatsCollector!.Read().QueryTimeMs);
+        MetricsHandler.RecordMetrics(name, (int)_stopwatch.ElapsedMilliseconds, (int)_client.StatsCollector!.Read().QueryTimeMs);
     }
 }

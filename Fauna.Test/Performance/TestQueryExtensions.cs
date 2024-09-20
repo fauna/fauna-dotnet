@@ -12,6 +12,13 @@ internal static class TestQueryExtensions
     /// <returns>A <see cref="QueryExpr"/> representing the composite query</returns>
     public static Query GetCompositedQueryFromParts(this List<string> queryParts)
     {
-        return new QueryExpr(queryParts.Select(x => new QueryLiteral(x)).ToArray());
+        var handler = new QueryStringHandler(0, 0);
+
+        foreach (var part in queryParts)
+        {
+            handler.AppendLiteral(part);
+        }
+
+        return Query.FQL(ref handler);
     }
 }

@@ -44,7 +44,7 @@ public class ContextTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
+        _client = GetLocalhostClient();
     }
 
     [OneTimeTearDown]

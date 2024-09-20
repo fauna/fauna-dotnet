@@ -4,12 +4,12 @@ namespace Fauna.Test.Helpers;
 
 public static class TestClientHelper
 {
-    public static Client NewTestClient(string secret = "secret", bool hasStatsCollector = true)
+    public static Client GetLocalhostClient(string secret = "secret", bool hasStatsCollector = true)
     {
-        return NewTestClient(secret, "http://localhost:8443", hasStatsCollector);
+        return GetTestClient(secret, "http://localhost:8443", hasStatsCollector);
     }
 
-    public static Client NewTestClient(string secret, string endpoint, bool hasStatsCollector)
+    public static Client GetTestClient(string secret, string endpoint, bool hasStatsCollector)
     {
         var cfg = new Configuration(secret)
         {

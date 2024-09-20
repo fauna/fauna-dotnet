@@ -23,7 +23,7 @@ namespace Fauna.Test.Exceptions
         [OneTimeSetUp]
         public void SetUp()
         {
-            _c = TestClientHelper.NewTestClient();
+            _c = TestClientHelper.GetLocalhostClient();
         }
 
         [OneTimeTearDown]
@@ -80,7 +80,7 @@ namespace Fauna.Test.Exceptions
         [Test]
         public void UnauthorizedException_Basic()
         {
-            using var badClient = TestClientHelper.NewTestClient("invalid");
+            using var badClient = TestClientHelper.GetLocalhostClient("invalid");
             var q = FQL($"42");
             var e = Assert.ThrowsAsync<UnauthorizedException>(async () => await badClient.QueryAsync(q));
             Assert.NotNull(e);

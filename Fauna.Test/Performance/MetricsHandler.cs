@@ -1,3 +1,4 @@
+using System.Reflection;
 using MathNet.Numerics.Statistics;
 using StatsdClient;
 
@@ -10,12 +11,12 @@ internal class TestTimings
     public int QueryTimeMs { get; init; }
     public int OverheadMs { get; init; }
 
-    public TestTimings(int roundTripMs, int queryTimeMs)
+    public TestTimings(int roundTripMs, int queryTimeMs, int overheadMs)
     {
         CreatedAt = DateTime.UtcNow;
         RoundTripMs = roundTripMs;
         QueryTimeMs = queryTimeMs;
-        OverheadMs = roundTripMs - queryTimeMs;
+        OverheadMs = overheadMs;
     }
 }
 
@@ -50,8 +51,6 @@ internal class MetricsHandler
             // Configure the Datadog Agent metrics endpoint on localhost
             var config = new StatsdConfig
             {
-                StatsdServerName = "127.0.0.1",
-                StatsdPort = 8125,
                 Prefix = "driver.perf"
             };
 
@@ -68,15 +67,15 @@ internal class MetricsHandler
     /// any pagination/deserialization</param>
     /// <param name="queryTimeMs">The query time in milliseconds as reported by Fauna in the
     /// <see cref="Core.QueryStats"/> from the response</param>
-    public static void RecordMetric(string queryName, int roundTripMs, int queryTimeMs)
+    public static void RecordMetrics(string queryName, int roundTripMs, int queryTimeMs)
     {
         var overhead = roundTripMs - queryTimeMs;
 
         if (SendToDatadog)
         {
-            DogStatsd.Gauge($"{queryName}.round_trip", roundTripMs, tags: GetMetricsTags());
-            DogStatsd.Gauge($"{queryName}.query_time", queryTimeMs, tags: GetMetricsTags());
-            DogStatsd.Gauge($"{queryName}.overhead", overhead, tags: GetMetricsTags());
+            DogStatsd.Histogram($"{queryName}.latency", roundTripMs, tags: GetMetricsTags());
+            DogStatsd.Histogram($"{queryName}.fauna.latency", queryTimeMs, tags: GetMetricsTags());
+            DogStatsd.Histogram($"{queryName}.overhead.latency", overhead, tags: GetMetricsTags());
             DogStatsd.Flush();
         }
         else
@@ -87,7 +86,7 @@ internal class MetricsHandler
                 MetricsCollector.Add(queryName, value);
             }
 
-            value.Add(new TestTimings(roundTripMs, queryTimeMs));
+            value.Add(new TestTimings(roundTripMs, queryTimeMs, overhead));
         }
     }
 
@@ -96,7 +95,7 @@ internal class MetricsHandler
     /// </summary>
     public static void WriteMetricsToFile()
     {
-        File.WriteAllLines(RawStatsFilename, new[] { "ts,metric,roundTrip,queryTime,diff" });
+        File.WriteAllLines(RawStatsFilename, new[] { "ts,metric,roundTrip,queryTime,diff,tags" });
         File.WriteAllLines(
             StatsBlockFilename,
             new[] {
@@ -115,7 +114,8 @@ internal class MetricsHandler
                         test.Key,
                         testRun.RoundTripMs.ToString(),
                         testRun.QueryTimeMs.ToString(),
-                        testRun.OverheadMs.ToString()
+                        testRun.OverheadMs.ToString(),
+                        string.Join(';', GetMetricsTags())
                     };
 
                     return string.Join(',', tokens);
@@ -141,7 +141,8 @@ internal class MetricsHandler
     {
         var env = Environment.GetEnvironmentVariable("FAUNA_ENVIRONMENT") ?? "test";
         var lang = "dotnet";
+        var version = Assembly.GetAssembly(typeof(Query))!.GetName().Version ?? new Version(0, 0, 1);
 
-        return new[] { $"env:{env}", $"driver_lang:{lang}" };
+        return new[] { $"env:{env}", $"driver_lang:{lang}", $"version:{version.ToString(3)}" };
     }
 }
