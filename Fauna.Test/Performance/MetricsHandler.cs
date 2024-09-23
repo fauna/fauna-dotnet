@@ -26,8 +26,9 @@ internal class TestTimings
 /// </summary>
 internal class MetricsHandler
 {
-    private const string RawStatsFilename = "rawstats.csv";
-    private const string StatsBlockFilename = "stats.txt";
+    private static readonly string s_unique = Environment.GetEnvironmentVariable("LOG_UNIQUE") ?? "";
+    private static readonly string s_rawStatsFilename = $"rawstats_{s_unique}.csv";
+    private static readonly string s_statsBlockFilename = $"stats_{s_unique}.txt";
 
     public static Dictionary<string, List<TestTimings>> MetricsCollector { get; } = new Dictionary<string, List<TestTimings>>();
 
@@ -95,9 +96,9 @@ internal class MetricsHandler
     /// </summary>
     public static void WriteMetricsToFile()
     {
-        File.WriteAllLines(RawStatsFilename, new[] { "ts,metric,roundTrip,queryTime,diff,tags" });
+        File.WriteAllLines(s_rawStatsFilename, new[] { "ts,metric,roundTrip,queryTime,diff,tags" });
         File.WriteAllLines(
-            StatsBlockFilename,
+            s_statsBlockFilename,
             new[] {
                 $"{"TEST", -35}{"P50", 9}{"P95", 9}{"P99", 9}{"STDDEV", 9}",
                 $"{new string('-', 71)}"
@@ -122,14 +123,14 @@ internal class MetricsHandler
                 }
             );
 
-            File.AppendAllLines(RawStatsFilename, lines);
+            File.AppendAllLines(s_rawStatsFilename, lines);
 
             double p50 = Math.Round(ArrayStatistics.MedianInplace(test.Value.Select(x => (double)x.OverheadMs).ToArray()), 2);
             double p95 = Math.Round(ArrayStatistics.PercentileInplace(test.Value.Select(x => (double)x.OverheadMs).ToArray(), 95), 2);
             double p99 = Math.Round(ArrayStatistics.PercentileInplace(test.Value.Select(x => (double)x.OverheadMs).ToArray(), 99), 2);
             double stddev = Math.Round(ArrayStatistics.StandardDeviation(test.Value.Select(x => (double)x.OverheadMs).ToArray()), 2);
 
-            File.AppendAllLines(StatsBlockFilename, new[] { $"{test.Key,-35}{p50,9}{p95,9}{p99,9}{stddev,9}" });
+            File.AppendAllLines(s_statsBlockFilename, new[] { $"{test.Key,-35}{p50,9}{p95,9}{p99,9}{stddev,9}" });
         }
     }
 
