@@ -3,11 +3,11 @@
 set -eou
 
 # For differenatiating output files
-LOG_UNIQUE=$(date +%s%3N)
+export LOG_UNIQUE=$(date +%s%3N)
 
 # Install fauna-shell
-apt update
-apt install -y npm
+apt update -q
+apt install -y -q npm
 npm install -g fauna-shell
 
 cd repo.git
