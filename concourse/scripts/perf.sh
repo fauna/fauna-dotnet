@@ -6,9 +6,9 @@ set -eou
 export LOG_UNIQUE=$(date +%s%3N)
 
 # Install fauna-shell
-apt update -q
-apt install -y -q npm
-npm install -q -g fauna-shell
+apt update -qq
+apt install -y -qq npm
+npm install --silent -g fauna-shell
 
 cd repo.git
 
@@ -29,7 +29,7 @@ echo '_(non-query time in milliseconds)_' >> ../slack-message/perf-stats
 echo '```' >> ../slack-message/perf-stats
 cat ./Fauna.Test/bin/Debug/net8.0/stats_$LOG_UNIQUE.txt >> ../slack-message/perf-stats
 echo '```' >> ../slack-message/perf-stats
-echo "_<$CONCOURSE_URL|Concourse job>_" > ../slack-message/perf-stats
+echo "_<$CONCOURSE_URL|Concourse job>_" >> ../slack-message/perf-stats
 
 # Run teardown.sh to delete the test collections
 pushd Fauna.Test/Performance/setup
