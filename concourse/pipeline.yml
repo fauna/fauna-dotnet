@@ -6,6 +6,15 @@ resource_types:
       repository: cfcommunity/slack-notification-resource
 
 resources:
+  - name: self-config
+    type: git
+    icon: github
+    source:
+      uri: https://github.com/fauna/fauna-dotnet
+      branch: main
+      paths:
+        - concourse/pipeline.yml
+
   - name: notify
     type: slack-notification
     source:
@@ -38,6 +47,14 @@ resources:
       interval: 6h
 
 jobs:
+  - name: set-self
+    plan:
+      - get: self-config
+        trigger: true
+
+      - set_pipeline: self
+        file: self-config/concourse/pipeline.yml
+
   - name: perf-tests-dev
     serial: true
     public: false
