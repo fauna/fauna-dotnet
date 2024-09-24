@@ -33,7 +33,7 @@ public class IntegrationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
+        _client = GetLocalhostClient();
         Fixtures.EmbeddedSetDb(_client);
     }
 
@@ -320,7 +320,7 @@ public class IntegrationTests
     [Test]
     public async Task NullableStatsCollector()
     {
-        var testClient = NewTestClient(hasStatsCollector: false);
+        var testClient = GetLocalhostClient(hasStatsCollector: false);
 
         var query = FQL($"4+5");
         var result = await testClient.QueryAsync<int>(query);

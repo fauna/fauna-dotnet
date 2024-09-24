@@ -25,7 +25,7 @@ public class ContextValidationTests
     [OneTimeSetUp]
     public void SetUp()
     {
-        _client = NewTestClient();
+        _client = GetLocalhostClient();
     }
 
     class InvalidGenericDb : DataContext

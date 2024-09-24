@@ -1,0 +1,21 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: mcr.microsoft.com/dotnet/sdk
+    tag: 8.0-noble
+
+params:
+  FAUNA_ENDPOINT:
+  FAUNA_SECRET:
+  FAUNA_ENVIRONMENT:
+
+inputs:
+  - name: repo.git
+
+outputs:
+  - name: slack-message
+
+run:
+  path: ./repo.git/concourse/scripts/perf.sh

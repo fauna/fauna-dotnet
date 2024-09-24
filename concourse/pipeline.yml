@@ -11,6 +11,12 @@ resources:
     source:
       url: ((slack-webhook))
 
+  - name: perf-notify
+    type: slack-notification
+    source:
+      # webhook for #notify-driver-perf channel
+      url: ((driver-perf-slack-url))
+
   - name: repo.git
     type: git
     icon: github
@@ -26,7 +32,32 @@ resources:
       branch: gh-pages
       private_key: ((github-ssh-key))
 
+  - name: dev-tests-trigger
+    type: time
+    source:
+      interval: 6h
+
 jobs:
+  - name: perf-tests-dev
+    serial: true
+    public: false
+    plan:
+      - get: dev-tests-trigger
+        trigger: true
+
+      - get: repo.git
+
+      - task: run-perf
+        file: repo.git/concourse/tasks/perf.yml
+        params:
+          FAUNA_ENDPOINT: https://db.fauna-dev.com
+          FAUNA_SECRET: ((dev-driver-perf-test-key))
+          FAUNA_ENVIRONMENT: dev
+        on_success:
+          put: perf-notify
+          params:
+            text_file: slack-message/perf-stats
+
   - name: release
     serial: true
     public: false
