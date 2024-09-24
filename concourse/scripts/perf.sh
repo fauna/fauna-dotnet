@@ -29,7 +29,7 @@ echo '_(non-query time in milliseconds)_' >> ../slack-message/perf-stats
 echo '```' >> ../slack-message/perf-stats
 cat ./Fauna.Test/bin/Debug/net8.0/stats_$LOG_UNIQUE.txt >> ../slack-message/perf-stats
 echo '```' >> ../slack-message/perf-stats
-echo "_<http://concourse.faunadb.net/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|Concourse job>_" > ../slack-message/perf-stats
+echo "_<$CONCOURSE_URL|Concourse job>_" > ../slack-message/perf-stats
 
 # Run teardown.sh to delete the test collections
 pushd Fauna.Test/Performance/setup

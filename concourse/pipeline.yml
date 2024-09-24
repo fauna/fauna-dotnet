@@ -70,6 +70,7 @@ jobs:
           FAUNA_ENDPOINT: https://db.fauna-dev.com
           FAUNA_SECRET: ((dev-driver-perf-test-key))
           FAUNA_ENVIRONMENT: dev
+          CONCOURSE_URL: http://concourse.faunadb.net/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
         on_success:
           put: perf-notify
           params:
