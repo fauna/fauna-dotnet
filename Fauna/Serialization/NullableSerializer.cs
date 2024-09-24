@@ -23,6 +23,6 @@ internal class NullableSerializer<T> : BaseSerializer<T?>
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        DynamicSerializer.Singleton.Serialize(context, writer, o);
+        _inner.Serialize(context, writer, (T?)o);
     }
 }

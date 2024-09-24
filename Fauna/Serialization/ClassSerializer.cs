@@ -82,7 +82,12 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
                 throw new SerializationException("Cannot deserialize refs into classes.");
             }
 
-            throw new NullDocumentException((id ?? name)!, coll!, cause!);
+            if (id != null)
+            {
+                throw new NullDocumentException(id, null, coll!, cause!);
+            }
+
+            throw new NullDocumentException(null, name, coll!, cause!);
         }
 
         object instance = CreateInstance();

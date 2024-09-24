@@ -64,6 +64,6 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        DynamicSerializer.Singleton.Serialize(context, writer, o);
+        throw new NotImplementedException();
     }
 }
