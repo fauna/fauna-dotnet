@@ -294,7 +294,7 @@ switch (r.Data)
 The driver supports [Event Streaming](https://docs.fauna.com/fauna/current/learn/track-changes/streaming/).
 
 To start and subscribe to an event stream, pass a
-query that produces a stream token to `EventStreamAsync`:
+query that produces a stream token to `EventStreamAsync()`:
 
 ```csharp
 var stream = await client.EventStreamAsync<Person>(FQL($"Person.all().toStream"));
