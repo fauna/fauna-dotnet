@@ -37,7 +37,7 @@ public class BaseDocument : IReadOnlyDictionary<string, object?>
     /// <param name="coll">The collection to which the document belongs.</param>
     /// <param name="ts">The timestamp of the document.</param>
     /// <param name="data">Initial data for the document in key-value pairs.</param>
-    public BaseDocument(Module coll, DateTime ts, Dictionary<string, object?> data)
+    public BaseDocument(Module coll, DateTime ts, IDictionary<string, object?> data)
     {
         Ts = ts;
         Collection = coll;

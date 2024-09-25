@@ -253,7 +253,7 @@ public class IntegrationTests
         var q = FQL($"Collection.byName('Fake')");
         var e = Assert.ThrowsAsync<NullDocumentException>(async () => await _client.QueryAsync<NamedDocument>(q));
         Assert.NotNull(e);
-        Assert.AreEqual("Fake", e!.Id);
+        Assert.AreEqual("Fake", e!.Name);
         Assert.AreEqual("Collection", e.Collection.Name);
         Assert.AreEqual("not found", e.Cause);
     }
@@ -266,7 +266,7 @@ public class IntegrationTests
         switch (r.Data)
         {
             case NullDocument<NamedDocument> d:
-                Assert.AreEqual("Fake", d.Id);
+                Assert.AreEqual("Fake", d.Name);
                 Assert.AreEqual("Collection", d.Collection.Name);
                 Assert.AreEqual("not found", d.Cause);
                 break;

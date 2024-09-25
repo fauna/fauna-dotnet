@@ -27,7 +27,12 @@ public class NullDocument<T> : NullableDocument<T>
     /// <summary>
     /// The ID of the null document.
     /// </summary>
-    public string Id { get; }
+    public string? Id { get; }
+
+    /// <summary>
+    /// The Name of the null document if it's a named document.
+    /// </summary>
+    public string? Name { get; }
 
     /// <summary>
     /// The Collection.
@@ -39,9 +44,17 @@ public class NullDocument<T> : NullableDocument<T>
     /// </summary>
     public string Cause { get; }
 
-    public NullDocument(string id, Module collection, string cause) : base(default)
+    /// <summary>
+    /// Whether the NullDocument is Named.
+    /// </summary>
+    public bool IsNamed { get; }
+
+    public NullDocument(string? id, string? name, Module collection, string cause) : base(default)
     {
+        if (id != null && name != null) throw new ArgumentException("Provide an id or a name, but not both.");
+
         Id = id;
+        Name = name;
         Collection = collection;
         Cause = cause;
     }

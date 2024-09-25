@@ -1,3 +1,4 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 
@@ -15,6 +16,16 @@ internal class ModuleSerializer : BaseSerializer<Module>
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
-        DynamicSerializer.Singleton.Serialize(context, writer, o);
+        switch (o)
+        {
+            case null:
+                writer.WriteNullValue();
+                break;
+            case Module module:
+                writer.WriteModuleValue(module);
+                break;
+            default:
+                throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
+        }
     }
 }

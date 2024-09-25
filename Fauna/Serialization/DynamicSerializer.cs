@@ -11,10 +11,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
     private readonly ListSerializer<object?> _list;
     private readonly PageSerializer<object?> _page;
     private readonly DictionarySerializer<object?> _dict;
-    private readonly DocumentSerializer<object> _doc;
-    private readonly DocumentSerializer<object> _ref;
     private readonly QuerySerializer _query;
-
 
 
     private DynamicSerializer()
@@ -22,8 +19,6 @@ internal class DynamicSerializer : BaseSerializer<object?>
         _list = new ListSerializer<object?>(this);
         _page = new PageSerializer<object?>(this);
         _dict = new DictionarySerializer<object?>(this);
-        _doc = new DocumentSerializer<object>();
-        _ref = new DocumentSerializer<object>();
         _query = new QuerySerializer();
     }
 
@@ -33,8 +28,8 @@ internal class DynamicSerializer : BaseSerializer<object?>
             TokenType.StartObject => _dict.Deserialize(context, ref reader),
             TokenType.StartArray => _list.Deserialize(context, ref reader),
             TokenType.StartPage => _page.Deserialize(context, ref reader),
-            TokenType.StartRef => _ref.Deserialize(context, ref reader),
-            TokenType.StartDocument => _doc.Deserialize(context, ref reader),
+            TokenType.StartRef => DeserializeRefInternal(context, ref reader),
+            TokenType.StartDocument => DeserializeDocumentInternal(context, ref reader),
             TokenType.String => reader.GetString(),
             TokenType.Int => reader.GetInt(),
             TokenType.Long => reader.GetLong(),
@@ -48,6 +43,109 @@ internal class DynamicSerializer : BaseSerializer<object?>
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}"),
         };
 
+    private static object DeserializeRefInternal(MappingContext context, ref Utf8FaunaReader reader)
+    {
+        reader.Read();
+
+        if (reader.CurrentTokenType != TokenType.FieldName)
+            throw new SerializationException(
+                $"Unexpected token while deserializing @ref: {reader.CurrentTokenType}");
+
+        string fieldName = reader.GetString()!;
+        reader.Read();
+
+        switch (fieldName)
+        {
+            case "id":
+                try
+                {
+                    return RefSerializer.Deserialize(reader.GetString(), context, ref reader);
+                }
+                catch (NullDocumentException e)
+                {
+                    return new NullDocument<Document>(e.Id, null, e.Collection, e.Cause);
+                }
+
+            case "name":
+                try
+                {
+                    return NamedRefSerializer.Deserialize(reader.GetString(), context, ref reader);
+                }
+                catch (NullDocumentException e)
+                {
+                    return new NullDocument<NamedDocument>(null, e.Name, e.Collection, e.Cause);
+                }
+
+            default:
+                throw new SerializationException($"Unexpected field while deserializing @ref: {fieldName}");
+        }
+    }
+
+    private static object DeserializeDocumentInternal(MappingContext context, ref Utf8FaunaReader reader)
+    {
+        var builder = new InternalDocument();
+        while (reader.Read() && reader.CurrentTokenType != TokenType.EndDocument)
+        {
+            if (reader.CurrentTokenType != TokenType.FieldName)
+                throw new SerializationException(
+                    $"Unexpected token while deserializing @doc: {reader.CurrentTokenType}");
+
+            string fieldName = reader.GetString()!;
+
+            reader.Read();
+
+            try
+            {
+                switch (fieldName)
+                {
+                    // Relies on ordering for doc fields.
+                    case "id":
+                        builder.Id = reader.GetString();
+                        break;
+                    case "name":
+                        builder.Name = reader.GetString();
+                        break;
+                    case "coll":
+                        builder.Coll = reader.GetModule();
+
+                        // if we encounter a mapped collection, jump to the class deserializer.
+                        // NB this relies on the fact that docs on the wire always
+                        // start with id and coll.
+                        if (context.TryGetCollection(builder.Coll.Name, out var info))
+                        {
+                            if (info.ClassSerializer is IClassDocumentSerializer ser)
+                            {
+                                // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
+                                return ser.DeserializeDocument(context, builder.Id, builder.Name, ref reader);
+                            }
+                        }
+
+                        if (builder.Id is not null)
+                        {
+                            return DocumentSerializer.Deserialize(builder, context, ref reader,
+                                EndTokenFor(TokenType.StartDocument));
+                        }
+
+                        if (builder.Name is not null)
+                        {
+                            return NamedDocumentSerializer.Deserialize(builder, context, ref reader,
+                                EndTokenFor(TokenType.StartDocument));
+                        }
+
+                        break;
+                    default:
+                        throw new SerializationException($"Unexpected field while deserializing @doc: {fieldName}");
+                }
+            }
+            catch (NullDocumentException e)
+            {
+                return new NullDocument<object?>(e.Id, e.Name, e.Collection, e.Cause);
+            }
+        }
+
+        throw new SerializationException("Unsupported document");
+    }
+
     /// <summary>
     /// Serializes an object to a Fauna compatible format.
     /// </summary>
@@ -57,182 +155,13 @@ internal class DynamicSerializer : BaseSerializer<object?>
     /// <exception cref="SerializationException">Thrown when serialization fails.</exception>
     public override void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
     {
-        SerializeValueInternal(ctx, w, o);
-    }
-
-    private void SerializeValueInternal(MappingContext ctx, Utf8FaunaWriter w, object? o)
-    {
-        switch (o)
+        if (o == null)
         {
-            case null:
-                w.WriteNullValue();
-                break;
-            case byte v:
-                w.WriteIntValue(v);
-                break;
-            case sbyte v:
-                w.WriteIntValue(v);
-                break;
-            case ushort v:
-                w.WriteIntValue(v);
-                break;
-            case short v:
-                w.WriteIntValue(v);
-                break;
-            case int v:
-                w.WriteIntValue(v);
-                break;
-            case uint v:
-                w.WriteLongValue(v);
-                break;
-            case long v:
-                w.WriteLongValue(v);
-                break;
-            case float v:
-                w.WriteDoubleValue(v);
-                break;
-            case double v:
-                w.WriteDoubleValue(v);
-                break;
-            case decimal:
-                throw new SerializationException("Decimals are unsupported due to potential loss of precision.");
-            case bool v:
-                w.WriteBooleanValue(v);
-                break;
-            case string v:
-                w.WriteStringValue(v);
-                break;
-            case Module v:
-                w.WriteModuleValue(v);
-                break;
-            case DateTime v:
-                w.WriteTimeValue(v);
-                break;
-            case DateTimeOffset v:
-                w.WriteTimeValue(v);
-                break;
-            case DateOnly v:
-                w.WriteDateValue(v);
-                break;
-            case Ref doc:
-                SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
-                break;
-            case Document doc:
-                SerializeDocumentRefInternal(w, doc.Id, doc.Collection);
-                break;
-            case Query q:
-                _query.Serialize(ctx, w, q);
-                break;
-            case NullableDocument<Document> doc:
-                switch (doc)
-                {
-                    case NullDocument<Document> d:
-                        SerializeDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<Document> d:
-                        SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case NullableDocument<Ref> doc:
-                switch (doc)
-                {
-                    case NullDocument<Ref> d:
-                        SerializeDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<Ref> d:
-                        SerializeDocumentRefInternal(w, d.Value!.Id, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case NamedRef doc:
-                SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
-                break;
-            case NamedDocument doc:
-                SerializeNamedDocumentRefInternal(w, doc.Name, doc.Collection);
-                break;
-            case NullableDocument<NamedDocument> doc:
-                switch (doc)
-                {
-                    case NullDocument<NamedDocument> d:
-                        SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<NamedDocument> d:
-                        SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case NullableDocument<NamedRef> doc:
-                switch (doc)
-                {
-                    case NullDocument<NamedRef> d:
-                        SerializeNamedDocumentRefInternal(w, d.Id, d.Collection);
-                        break;
-                    case NonNullDocument<NamedRef> d:
-                        SerializeNamedDocumentRefInternal(w, d.Value!.Name, d.Value!.Collection);
-                        break;
-                }
-                break;
-            case Dictionary<string, object> d:
-                SerializeIDictionaryInternal(ctx, w, d);
-                break;
-            case IEnumerable<object> e:
-                w.WriteStartArray();
-                foreach (var obj in e)
-                {
-                    SerializeValueInternal(ctx, w, obj);
-                }
-                w.WriteEndArray();
-                break;
-            default:
-                SerializeClassInternal(ctx, w, o);
-                break;
+            w.WriteNullValue();
+            return;
         }
-    }
 
-
-    private void SerializeDocumentRefInternal(Utf8FaunaWriter writer, string id, Module coll)
-    {
-        writer.WriteStartRef();
-        writer.WriteString("id", id);
-        writer.WriteModule("coll", coll);
-        writer.WriteEndRef();
-    }
-
-    private void SerializeNamedDocumentRefInternal(Utf8FaunaWriter writer, string name, Module coll)
-    {
-        writer.WriteStartRef();
-        writer.WriteString("name", name);
-        writer.WriteModule("coll", coll);
-        writer.WriteEndRef();
-    }
-
-
-    private void SerializeIDictionaryInternal<T>(MappingContext ctx, Utf8FaunaWriter writer, IDictionary<string, T> d)
-    {
-        var shouldEscape = Serializer.Tags.Overlaps(d.Keys);
-        if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
-        foreach (var (key, value) in d)
-        {
-            writer.WriteFieldName(key);
-            Serialize(ctx, writer, value);
-        }
-        if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
-    }
-
-    private void SerializeClassInternal(MappingContext ctx, Utf8FaunaWriter writer, object obj)
-    {
-        var t = obj.GetType();
-        var mapping = ctx.GetInfo(t);
-        var shouldEscape = mapping.ShouldEscapeObject;
-
-        if (shouldEscape) writer.WriteStartEscapedObject(); else writer.WriteStartObject();
-        foreach (var field in mapping.Fields)
-        {
-            writer.WriteFieldName(field.Name!);
-            var v = field.Property.GetValue(obj);
-            SerializeValueInternal(ctx, writer, v);
-        }
-        if (shouldEscape) writer.WriteEndEscapedObject(); else writer.WriteEndObject();
+        var ser = Serializer.Generate(ctx, o.GetType());
+        ser.Serialize(ctx, w, o);
     }
 }

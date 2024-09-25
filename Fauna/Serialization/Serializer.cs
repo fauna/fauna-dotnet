@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Fauna.Mapping;
 using Fauna.Types;
 using Stream = Fauna.Types.Stream;
@@ -21,33 +22,33 @@ public static class Serializer
         "@int", "@long", "@double", "@date", "@time", "@mod", "@stream", "@ref", "@doc", "@set", "@object"
     };
 
-    private static readonly CheckedSerializer<object> _object = new();
-    private static readonly StringSerializer _string = new();
-    private static readonly ByteSerializer _byte = new();
-    private static readonly SByteSerializer _sbyte = new();
-    private static readonly ShortSerializer _short = new();
-    private static readonly UShortSerializer _ushort = new();
-    private static readonly IntSerializer _int = new();
-    private static readonly UIntSerializer _uint = new();
-    private static readonly LongSerializer _long = new();
-    private static readonly FloatSerializer _float = new();
-    private static readonly DoubleSerializer _double = new();
-    private static readonly DateOnlySerializer _dateOnly = new();
-    private static readonly DateTimeSerializer _dateTime = new();
-    private static readonly DateTimeOffsetSerializer _dateTimeOffset = new();
-    private static readonly BooleanSerializer _bool = new();
-    private static readonly ModuleSerializer _module = new();
-    private static readonly StreamSerializer _stream = new();
-    private static readonly DocumentSerializer<Document> _doc = new();
-    private static readonly DocumentSerializer<NamedDocument> _namedDoc = new();
-    private static readonly DocumentSerializer<Ref> _docRef = new();
-    private static readonly DocumentSerializer<NamedRef> _namedDocRef = new();
-    private static readonly QuerySerializer _query = new();
-    private static readonly QueryExprSerializer _queryExpr = new();
-    private static readonly QueryLiteralSerializer _queryLiteral = new();
-    private static readonly QueryArrSerializer _queryArr = new();
-    private static readonly QueryObjSerializer _queryObj = new();
-    private static readonly QueryValSerializer _queryVal = new();
+    private static readonly DynamicSerializer s_object = DynamicSerializer.Singleton;
+    private static readonly StringSerializer s_string = new();
+    private static readonly ByteSerializer s_byte = new();
+    private static readonly SByteSerializer s_sbyte = new();
+    private static readonly ShortSerializer s_short = new();
+    private static readonly UShortSerializer s_ushort = new();
+    private static readonly IntSerializer s_int = new();
+    private static readonly UIntSerializer s_uint = new();
+    private static readonly LongSerializer s_long = new();
+    private static readonly FloatSerializer s_float = new();
+    private static readonly DoubleSerializer s_double = new();
+    private static readonly DateOnlySerializer s_dateOnly = new();
+    private static readonly DateTimeSerializer s_dateTime = new();
+    private static readonly DateTimeOffsetSerializer s_dateTimeOffset = new();
+    private static readonly BooleanSerializer s_bool = new();
+    private static readonly ModuleSerializer s_module = new();
+    private static readonly StreamSerializer s_stream = new();
+    private static readonly DocumentSerializer s_doc = new();
+    private static readonly NamedDocumentSerializer s_namedDoc = new();
+    private static readonly RefSerializer s_docRef = new();
+    private static readonly NamedRefSerializer s_namedRef = new();
+    private static readonly QuerySerializer s_query = new();
+    private static readonly QueryExprSerializer s_queryExpr = new();
+    private static readonly QueryLiteralSerializer s_queryLiteral = new();
+    private static readonly QueryArrSerializer s_queryArr = new();
+    private static readonly QueryObjSerializer s_queryObj = new();
+    private static readonly QueryValSerializer s_queryVal = new();
 
 
     /// <summary>
@@ -72,33 +73,40 @@ public static class Serializer
     public static ISerializer Generate(MappingContext context, Type targetType)
     {
         if (_reg.TryGetValue(targetType, out var s)) return s;
-        if (targetType == typeof(object)) return _object;
-        if (targetType == typeof(string)) return _string;
-        if (targetType == typeof(byte)) return _byte;
-        if (targetType == typeof(sbyte)) return _sbyte;
-        if (targetType == typeof(short)) return _short;
-        if (targetType == typeof(ushort)) return _ushort;
-        if (targetType == typeof(int)) return _int;
-        if (targetType == typeof(uint)) return _uint;
-        if (targetType == typeof(long)) return _long;
-        if (targetType == typeof(float)) return _float;
-        if (targetType == typeof(double)) return _double;
-        if (targetType == typeof(DateOnly)) return _dateOnly;
-        if (targetType == typeof(DateTime)) return _dateTime;
-        if (targetType == typeof(DateTimeOffset)) return _dateTimeOffset;
-        if (targetType == typeof(bool)) return _bool;
-        if (targetType == typeof(Module)) return _module;
-        if (targetType == typeof(Stream)) return _stream;
-        if (targetType == typeof(Document)) return _doc;
-        if (targetType == typeof(NamedDocument)) return _namedDoc;
-        if (targetType == typeof(Ref)) return _docRef;
-        if (targetType == typeof(NamedRef)) return _namedDocRef;
-        if (targetType == typeof(Query)) return _query;
-        if (targetType == typeof(QueryExpr)) return _queryExpr;
-        if (targetType == typeof(QueryLiteral)) return _queryLiteral;
-        if (targetType == typeof(QueryArr)) return _queryArr;
-        if (targetType == typeof(QueryObj)) return _queryObj;
-        if (targetType == typeof(QueryVal)) return _queryVal;
+
+        if (IsAnonymousType(targetType))
+        {
+            var info = context.GetInfo(targetType);
+            return info.ClassSerializer;
+        }
+
+        if (targetType == typeof(object)) return s_object;
+        if (targetType == typeof(string)) return s_string;
+        if (targetType == typeof(byte)) return s_byte;
+        if (targetType == typeof(sbyte)) return s_sbyte;
+        if (targetType == typeof(short)) return s_short;
+        if (targetType == typeof(ushort)) return s_ushort;
+        if (targetType == typeof(int)) return s_int;
+        if (targetType == typeof(uint)) return s_uint;
+        if (targetType == typeof(long)) return s_long;
+        if (targetType == typeof(float)) return s_float;
+        if (targetType == typeof(double)) return s_double;
+        if (targetType == typeof(DateOnly)) return s_dateOnly;
+        if (targetType == typeof(DateTime)) return s_dateTime;
+        if (targetType == typeof(DateTimeOffset)) return s_dateTimeOffset;
+        if (targetType == typeof(bool)) return s_bool;
+        if (targetType == typeof(Module)) return s_module;
+        if (targetType == typeof(Stream)) return s_stream;
+        if (targetType == typeof(Document)) return s_doc;
+        if (targetType == typeof(NamedDocument)) return s_namedDoc;
+        if (targetType == typeof(Ref)) return s_docRef;
+        if (targetType == typeof(NamedRef)) return s_namedRef;
+        if (targetType == typeof(Query)) return s_query;
+        if (targetType == typeof(QueryExpr)) return s_queryExpr;
+        if (targetType == typeof(QueryLiteral)) return s_queryLiteral;
+        if (targetType == typeof(QueryArr)) return s_queryArr;
+        if (targetType == typeof(QueryObj)) return s_queryObj;
+        if (targetType == typeof(QueryVal)) return s_queryVal;
 
         if (targetType.IsGenericType)
         {
@@ -123,8 +131,9 @@ public static class Serializer
             {
                 var argTypes = targetType.GetGenericArguments();
                 var valueType = argTypes[0];
+                var valueSerializer = Generate(context, valueType);
                 var serType = typeof(NullableDocumentSerializer<>).MakeGenericType(new[] { valueType });
-                object? ser = Activator.CreateInstance(serType);
+                object? ser = Activator.CreateInstance(serType, valueSerializer);
                 return (ISerializer)ser!;
             }
 
@@ -251,5 +260,12 @@ public static class Serializer
     public static void Deregister(Type t)
     {
         if (_reg.ContainsKey(t)) _reg.Remove(t);
+    }
+
+    private static bool IsAnonymousType(this Type type)
+    {
+        bool hasCompilerGeneratedAttribute = type.GetCustomAttributes(typeof(CompilerGeneratedAttribute), false).Any();
+        bool nameContainsAnonymousType = type?.FullName?.Contains("AnonymousType") ?? false;
+        return hasCompilerGeneratedAttribute && nameContainsAnonymousType;
     }
 }

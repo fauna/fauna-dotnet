@@ -31,7 +31,7 @@ public sealed class NamedDocument : BaseDocument
     /// <param name="coll">The module to which the document belongs.</param>
     /// <param name="ts">The timestamp of the document.</param>
     /// <param name="data">Additional data on the document.</param>
-    public NamedDocument(string name, Module coll, DateTime ts, Dictionary<string, object?> data) : base(coll, ts, data)
+    public NamedDocument(string name, Module coll, DateTime ts, IDictionary<string, object?> data) : base(coll, ts, data)
     {
         Name = name;
     }

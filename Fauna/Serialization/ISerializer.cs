@@ -16,6 +16,20 @@ public interface ISerializer
 
 public abstract class BaseSerializer<T> : ISerializer<T>
 {
+
+    protected static TokenType EndTokenFor(TokenType start)
+    {
+        return start switch
+        {
+            TokenType.StartObject => TokenType.EndObject,
+            TokenType.StartArray => TokenType.EndArray,
+            TokenType.StartPage => TokenType.EndPage,
+            TokenType.StartRef => TokenType.EndRef,
+            TokenType.StartDocument => TokenType.EndDocument,
+            _ => throw new ArgumentOutOfRangeException(nameof(start), start, null)
+        };
+    }
+
     protected string UnexpectedTokenExceptionMessage(TokenType token) => $"Unexpected token `{token}` deserializing with `{GetType().Name}`";
 
     protected string UnsupportedSerializationTypeMessage(Type type) => $"Cannot serialize `{type}` with `{GetType()}`";
