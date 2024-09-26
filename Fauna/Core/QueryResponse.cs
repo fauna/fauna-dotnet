@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using static Fauna.Core.ResponseFields;
@@ -161,7 +162,7 @@ public sealed class QueryFailure : QueryResponse
     public HttpStatusCode StatusCode { get; init; }
     public string ErrorCode { get; init; } = "";
     public string Message { get; init; } = "";
-    public object? ConstraintFailures { get; init; }
+    public ConstraintFailure[]? ConstraintFailures { get; init; }
     public object? Abort { get; init; }
 
     /// <summary>
@@ -177,6 +178,7 @@ public sealed class QueryFailure : QueryResponse
         var info = elem.Deserialize<ErrorInfo>();
         ErrorCode = info.Code ?? "";
         Message = info.Message ?? "";
+
         ConstraintFailures = info.ConstraintFailures;
         Abort = info.Abort;
     }

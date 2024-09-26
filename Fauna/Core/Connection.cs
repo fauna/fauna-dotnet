@@ -115,7 +115,7 @@ internal class Connection : IConnection
             var httpResponse = streamTask.Result.Result;
             string body = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
 
-            throw ExceptionFactory.FromRawResponse(body, httpResponse);
+            throw ExceptionHandler.FromRawResponse(body, httpResponse);
         }
     }
 

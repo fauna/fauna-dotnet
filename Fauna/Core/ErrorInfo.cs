@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Fauna.Exceptions;
 using static Fauna.Core.ResponseFields;
 
 namespace Fauna.Core;
@@ -24,7 +25,7 @@ public readonly struct ErrorInfo
     /// The constraint failures that occurred during the query.
     /// </summary>
     [JsonPropertyName(Error_ConstraintFailuresFieldName)]
-    public object? ConstraintFailures { get; init; }
+    public ConstraintFailure[] ConstraintFailures { get; init; }
 
     /// <summary>
     /// The information about an abort operation within a transaction.
