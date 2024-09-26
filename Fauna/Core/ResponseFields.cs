@@ -116,6 +116,21 @@ internal readonly struct ResponseFields
     public const string Error_ConstraintFailuresFieldName = "constraint_failures";
 
     /// <summary>
+    /// Field name for the message in constraint failures.
+    /// </summary>
+    public const string Error_ConstraintFailuresMessageFieldName = "message";
+
+    /// <summary>
+    /// Field name for the name in constraint failures.
+    /// </summary>
+    public const string Error_ConstraintFailuresNameFieldName = "name";
+
+    /// <summary>
+    /// Field name for the paths in constraint failures.
+    /// </summary>
+    public const string Error_ConstraintFailuresPathsFieldName = "paths";
+
+    /// <summary>
     /// Field name for information about an abort operation within a transaction.
     /// </summary>
     public const string Error_AbortFieldName = "abort";

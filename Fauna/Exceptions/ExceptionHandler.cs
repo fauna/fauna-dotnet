@@ -4,7 +4,7 @@ using Fauna.Mapping;
 
 namespace Fauna.Exceptions;
 
-public static class ExceptionFactory
+public static class ExceptionHandler
 {
     public static Exception FromQueryFailure(MappingContext ctx, QueryFailure f)
     {
@@ -16,15 +16,15 @@ public static class ExceptionFactory
             "abort" => new AbortException(msg, f, ctx),
             "bad_gateway" => new BadGatewayException(msg, f),
             "contended_transaction" => new ContendedTransactionException(msg, f),
-            "forbidden" => new ForbiddenException(msg, f),
+            "forbidden" => new AuthorizationException(msg, f),
             "internal_error" => new ServiceException(msg, f),
-            "invalid_argument" => new QueryRuntimeException(msg, f),
             "invalid_query" => new QueryCheckException(msg, f),
             "invalid_request" => new InvalidRequestException(msg, f),
             "limit_exceeded" => new ThrottlingException(msg, f),
             "time_out" => new QueryTimeoutException(msg, f),
             "gateway_timeout" => new NetworkException(msg, f.StatusCode, f.Message),
-            "unauthorized" => new UnauthorizedException(msg, f),
+            "unauthorized" => new AuthenticationException(msg, f),
+            "constraint_failure" => new ConstraintFailureException(msg, f),
 
             _ => new QueryRuntimeException(msg, f)
         };

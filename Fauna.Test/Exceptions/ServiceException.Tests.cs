@@ -82,7 +82,7 @@ namespace Fauna.Test.Exceptions
         {
             using var badClient = TestClientHelper.GetLocalhostClient("invalid");
             var q = FQL($"42");
-            var e = Assert.ThrowsAsync<UnauthorizedException>(async () => await badClient.QueryAsync(q));
+            var e = Assert.ThrowsAsync<AuthenticationException>(async () => await badClient.QueryAsync(q));
             Assert.NotNull(e);
             Assert.AreEqual("Unauthorized (unauthorized): Access token required", e!.Message);
             Assert.AreEqual(HttpStatusCode.Unauthorized, e.StatusCode);
@@ -140,9 +140,9 @@ namespace Fauna.Test.Exceptions
         [TestCase(400, "invalid_timestamp_field_access", typeof(QueryRuntimeException))]
         [TestCase(400, "invalid_request", typeof(InvalidRequestException))]
         [TestCase(400, "abort", typeof(AbortException))]
-        [TestCase(400, "constraint_failure", typeof(QueryRuntimeException))]
-        [TestCase(401, "unauthorized", typeof(UnauthorizedException))]
-        [TestCase(403, "forbidden", typeof(ForbiddenException))]
+        [TestCase(400, "constraint_failure", typeof(ConstraintFailureException))]
+        [TestCase(401, "unauthorized", typeof(AuthenticationException))]
+        [TestCase(403, "forbidden", typeof(AuthorizationException))]
         [TestCase(409, "contended_transaction", typeof(ContendedTransactionException))]
         [TestCase(429, "limit_exceeded", typeof(ThrottlingException))]
         [TestCase(440, "time_out", typeof(QueryTimeoutException))]
@@ -164,10 +164,10 @@ namespace Fauna.Test.Exceptions
         {
             var jsonDoc =
                 JsonDocument.Parse(
-                    $"{{\"error\": {{\"code\": \"{code}\", \"message\": \"oops\", \"abort\": \"oops\", \"constraint_failures\": [{{\"message\": \"oops\"}}]}}}}");
+                    $"{{\"error\": {{\"code\": \"{code}\", \"message\": \"oops\", \"abort\": \"oops\", \"constraint_failures\": [{{\"message\": \"oops\",\"name\":\"oopsname\",\"paths\":[[\"oopspath\"]]}}]}}}}");
             var queryFailure = new QueryFailure(status, jsonDoc.RootElement);
 
-            var ex = ExceptionFactory.FromQueryFailure(new MappingContext(), queryFailure);
+            var ex = ExceptionHandler.FromQueryFailure(new MappingContext(), queryFailure);
             Assert.AreEqual(exceptionType, ex.GetType());
             Assert.AreEqual(status, queryFailure.StatusCode);
 

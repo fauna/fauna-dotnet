@@ -123,9 +123,9 @@ public class Client : BaseClient, IDisposable
                 return success;
             case QueryFailure failure:
                 StatsCollector?.Add(res.Stats);
-                throw ExceptionFactory.FromQueryFailure(ctx, failure);
+                throw ExceptionHandler.FromQueryFailure(ctx, failure);
             default:
-                throw ExceptionFactory.FromRawResponse(body, httpResponse);
+                throw ExceptionHandler.FromRawResponse(body, httpResponse);
         }
     }
 
