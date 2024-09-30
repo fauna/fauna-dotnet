@@ -449,7 +449,7 @@ public class IntegrationTests
             }
         });
 
-        Assert.AreEqual("BadRequest: Bad Request", ex?.Message);
+        Assert.AreEqual("Invalid request body: invalid stream value provided", ex?.Message);
 
         return Task.CompletedTask;
     }
