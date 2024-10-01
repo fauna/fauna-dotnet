@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 using Polly;
@@ -73,6 +74,7 @@ internal class Connection : IConnection
                     if (!response.IsSuccessStatusCode)
                     {
                         bc.CompleteAdding();
+                        return response;
                     }
 
                     await using var streamAsync = await response.Content.ReadAsStreamAsync(cancellationToken);
@@ -101,12 +103,15 @@ internal class Connection : IConnection
 
             await streamTask;
             bc.CompleteAdding();
-            if (streamTask.Result.Outcome == OutcomeType.Successful)
+            if (streamTask.Result.Result.IsSuccessStatusCode)
             {
                 continue;
             }
 
-            throw streamTask.Result.FinalException;
+            var httpResponse = streamTask.Result.Result;
+            string body = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+
+            throw ExceptionHandler.FromRawResponse(body, httpResponse);
         }
     }
 
