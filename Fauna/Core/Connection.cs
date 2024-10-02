@@ -35,8 +35,8 @@ internal class Connection : IConnection
         HttpResponseMessage response;
         {
             var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                .ExecuteAndCaptureAsync(async () =>
-                    await _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+                .ExecuteAndCaptureAsync(() =>
+                    _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
                 .ConfigureAwait(false);
             response = policyResult.Outcome == OutcomeType.Successful
                 ? policyResult.Result
