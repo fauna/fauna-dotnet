@@ -20,7 +20,7 @@ public class ConfigurationTests
     public void ConstructorUsesEnvVar()
     {
         Environment.SetEnvironmentVariable("FAUNA_SECRET", "secret");
-        var b = new Configuration(null);
+        var b = new Configuration();
 
         Assert.AreEqual("secret", b.Secret);
         Assert.AreEqual(Endpoints.Default, b.Endpoint);
@@ -34,7 +34,7 @@ public class ConfigurationTests
         Assert.Throws<ArgumentNullException>(() =>
         {
             Environment.SetEnvironmentVariable("FAUNA_SECRET", null);
-            var b = new Configuration(null);
+            var b = new Configuration();
 
         });
         Environment.SetEnvironmentVariable("FAUNA_SECRET", currentVal);

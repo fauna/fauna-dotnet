@@ -41,7 +41,7 @@ public class Client : BaseClient, IDisposable
     /// Initializes a new instance of a Client with the default configuration.
     /// Assumes the environment variable FAUNA_SECRET is set.
     /// </summary>
-    public Client() : this(new Configuration(null)) { }
+    public Client() : this(new Configuration()) { }
 
     /// <summary>
     /// Initializes a new instance of a Client with a secret.
