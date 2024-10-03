@@ -1,4 +1,5 @@
 using Fauna.Mapping;
+using Fauna.Types;
 
 namespace Fauna.Test.Performance;
 
@@ -21,6 +22,9 @@ internal class Product
 
     [Field]
     public bool InStock { get; init; } = false;
+
+    [Field]
+    public Ref? Manufacturer { get; init; }
 }
 
 /// <summary>

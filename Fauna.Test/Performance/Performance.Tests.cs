@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Fauna.Types;
 using Fauna.Util.Extensions;
 using NUnit.Framework;
+using static Fauna.Query;
 using static Fauna.Test.Helpers.TestClientHelper;
 
 namespace Fauna.Test.Performance;
@@ -51,12 +53,55 @@ public class PerformanceTests
     [TestCaseSource(typeof(TestDataParser), nameof(TestDataParser.GetQueriesFromFile))]
     public async Task ExecuteQueryAndCollectStats(string name, List<string> queryParts, bool typed, bool page)
     {
+        var metricName = name;
         var query = queryParts.GetCompositedQueryFromParts();
 
         _stopwatch.Start();
 
         if (typed && page)
         {
+            var singlePage = await _client.QueryAsync<Page<Product>>(query);
+            var after = singlePage.Data.After;
+
+            while (after != null)
+            {
+                foreach (var doc in singlePage.Data.Data)
+                {
+                    var _ = doc.Name;
+                }
+
+                singlePage = await _client.QueryAsync<Page<Product>>(FQL($"Set.paginate({after})"));
+                after = singlePage.Data.After;
+            }
+
+            var stats = _client.StatsCollector!.ReadAndReset();
+            MetricsHandler.RecordMetrics(
+                $"{metricName} (query)",
+                (int)(_stopwatch.ElapsedMilliseconds / stats.QueryCount),
+                (int)(stats.QueryTimeMs / stats.QueryCount)
+            );
+
+            _stopwatch.Restart();
+
+            var pages = _client.PaginateAsync<Product>(query);
+
+            await foreach (var p in pages)
+            {
+                foreach (var doc in p.Data)
+                {
+                    var _ = doc.Name;
+                }
+            }
+
+            stats = _client.StatsCollector!.ReadAndReset();
+            MetricsHandler.RecordMetrics(
+                $"{metricName} (paginate)",
+                (int)(_stopwatch.ElapsedMilliseconds / stats.QueryCount),
+                (int)(stats.QueryTimeMs / stats.QueryCount)
+            );
+
+            _stopwatch.Restart();
+
             var result = _client.PaginateAsync<Product>(query).FlattenAsync();
 
             await foreach (var item in result)
@@ -64,6 +109,13 @@ public class PerformanceTests
                 // We can throw this away - just need to iterate
                 var _ = item.Name;
             }
+
+            stats = _client.StatsCollector!.ReadAndReset();
+            MetricsHandler.RecordMetrics(
+                $"{metricName} (flatten)",
+                (int)(_stopwatch.ElapsedMilliseconds / stats.QueryCount),
+                (int)(stats.QueryTimeMs / stats.QueryCount)
+            );
         }
         else if (typed)
         {
@@ -74,8 +126,13 @@ public class PerformanceTests
             var _ = await _client.QueryAsync(query);
         }
 
-        _stopwatch.Stop();
-
-        MetricsHandler.RecordMetrics(name, (int)_stopwatch.ElapsedMilliseconds, (int)_client.StatsCollector!.Read().QueryTimeMs);
+        if (!page)
+        {
+            MetricsHandler.RecordMetrics(
+                metricName,
+                (int)_stopwatch.ElapsedMilliseconds,
+                (int)_client.StatsCollector!.Read().QueryTimeMs
+            );
+        }
     }
 }

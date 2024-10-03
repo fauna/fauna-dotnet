@@ -67,7 +67,7 @@
       }
     },
     {
-      "name": "create_many_products_page_results",
+      "name": "create_many_products",
       "parts": [
         "Set.sequence(1,100).toArray().map(x => Product.create({",
         "name: \"New Product #{x}\", ",
