@@ -49,8 +49,15 @@ public record class Configuration
     /// </summary>
     /// <param name="secret">The secret key used for authentication.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use.</param>
-    public Configuration(string secret, HttpClient? httpClient = null)
+    public Configuration(string? secret, HttpClient? httpClient = null)
     {
+        if (string.IsNullOrEmpty(secret))
+        {
+            secret = Environment.GetEnvironmentVariable("FAUNA_SECRET") ?? throw new ArgumentNullException(nameof(secret), "Need to set FAUNA_SECRET environment variable or pass a secret as a parameter when creating the Client.");
+        }
+
+        Secret = secret;
+
         if (httpClient is null)
         {
             HttpClient = new HttpClient
@@ -63,7 +70,5 @@ public record class Configuration
         {
             HttpClient = httpClient;
         }
-
-        Secret = secret;
     }
 }

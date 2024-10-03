@@ -17,6 +17,30 @@ public class ConfigurationTests
     }
 
     [Test]
+    public void ConstructorUsesEnvVar()
+    {
+        Environment.SetEnvironmentVariable("FAUNA_SECRET", "secret");
+        var b = new Configuration(null);
+
+        Assert.AreEqual("secret", b.Secret);
+        Assert.AreEqual(Endpoints.Default, b.Endpoint);
+        Assert.IsTrue(b.DisposeHttpClient);
+    }
+
+    [Test]
+    public void ConstructorThrowsWithNullSecret()
+    {
+        string? currentVal = Environment.GetEnvironmentVariable("FAUNA_SECRET");
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            Environment.SetEnvironmentVariable("FAUNA_SECRET", null);
+            var b = new Configuration(null);
+
+        });
+        Environment.SetEnvironmentVariable("FAUNA_SECRET", currentVal);
+    }
+
+    [Test]
     public void ConstructorWithHttpClient()
     {
         var b = new Configuration("secret", new HttpClient());
