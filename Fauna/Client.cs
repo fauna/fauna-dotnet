@@ -38,6 +38,12 @@ public class Client : BaseClient, IDisposable
     public long LastSeenTxn { get; private set; }
 
     /// <summary>
+    /// Initializes a new instance of a Client with the default configuration.
+    /// Assumes the environment variable FAUNA_SECRET is set.
+    /// </summary>
+    public Client() : this(new Configuration()) { }
+
+    /// <summary>
     /// Initializes a new instance of a Client with a secret.
     /// </summary>
     /// <param name="secret">The secret key for authentication.</param>
