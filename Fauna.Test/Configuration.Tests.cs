@@ -17,6 +17,27 @@ public class ConfigurationTests
     }
 
     [Test]
+    public void ConstructorWithEndpointEnvVar()
+    {
+        Environment.SetEnvironmentVariable("FAUNA_ENDPOINT", "http://localhost:8443/");
+
+        Configuration config = new Configuration("secret");
+
+        Assert.AreEqual("http://localhost:8443/", config.Endpoint.ToString());
+    }
+
+    [Test]
+    public void ConstructorThrowsWithBadEndpointEnvVar()
+    {
+        Assert.Throws<UriFormatException>((() =>
+        {
+            Environment.SetEnvironmentVariable("FAUNA_ENDPOINT", "bad.endpoint");
+
+            Configuration unused = new Configuration();
+        }));
+    }
+
+    [Test]
     public void ConstructorUsesEnvVar()
     {
         Environment.SetEnvironmentVariable("FAUNA_SECRET", "secret");
