@@ -26,7 +26,7 @@ public record class Configuration
     /// <summary>
     /// The endpoint URL of the Fauna server.
     /// </summary>
-    public Uri Endpoint { get; init; } = Endpoints.Default;
+    public Uri Endpoint { get; init; } = Endpoints.GetFaunaEndpoint();
 
     /// <summary>
     /// Default options for queries sent to Fauna.
