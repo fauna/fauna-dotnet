@@ -4,6 +4,7 @@ using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
+using static Fauna.Query;
 using Stream = Fauna.Types.Stream;
 
 namespace Fauna;
@@ -337,6 +338,30 @@ interface IClient
         ISerializer elemSerializer,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default);
+
+    /// <summary>
+    /// Asynchronously executes a specified FQL query against the Fauna database and returns the typed result.
+    /// </summary>
+    /// <typeparam name="T">The type of the result expected from the query, corresponding to the structure of the FQL query's expected response.</typeparam>
+    /// <param name="reference">The reference to load.</param>
+    /// <param name="cancel">A cancellation token to use</param>
+    /// <returns>A Task representing the asynchronous operation, which upon completion contains the result of the query execution as <see cref="QuerySuccess{T}"/>.</returns>
+    /// <exception cref="AuthenticationException">Thrown when authentication fails due to invalid credentials or other authentication issues.</exception>
+    /// <exception cref="AuthorizationException">Thrown when the client lacks sufficient permissions to execute the query.</exception>
+    /// <exception cref="QueryCheckException">Thrown when the query has syntax errors or is otherwise malformed.</exception>
+    /// <exception cref="QueryRuntimeException">Thrown when runtime errors occur during query execution, such as invalid arguments or operational failures.</exception>
+    /// <exception cref="AbortException">Thrown when the FQL `abort` function is called within the query, containing the data provided during the abort operation.</exception>
+    /// <exception cref="InvalidRequestException">Thrown for improperly formatted requests or requests that Fauna cannot process.</exception>
+    /// <exception cref="ContendedTransactionException">Thrown when a transaction is aborted due to concurrent modification or contention issues.</exception>
+    /// <exception cref="ThrottlingException">Thrown when the query exceeds established rate limits for the Fauna service.</exception>
+    /// <exception cref="QueryTimeoutException">Thrown when the query execution time exceeds the specified or default timeout period.</exception>
+    /// <exception cref="ServiceException">Thrown in response to internal Fauna service errors, indicating issues on the server side.</exception>
+    /// <exception cref="FaunaException">Thrown for unexpected or miscellaneous errors not covered by the other specific exception types.</exception>
+    /// <exception cref="NullDocumentException">Thrown when the provided reference does not exist.</exception>
+    public Task<T> LoadRefAsync<T>(
+        BaseRef<T> reference,
+        CancellationToken cancel = default)
+        where T : notnull;
 }
 
 /// <summary>
@@ -453,6 +478,20 @@ public abstract class BaseClient : IClient
         var elemObjSer = (ISerializer<object?>)elemSerializer;
         var serializer = new PageSerializer<object?>(elemObjSer);
         return PaginateAsyncInternal(page, serializer, queryOptions, cancel);
+    }
+
+    public async Task<T> LoadRefAsync<T>(
+        BaseRef<T> reference,
+        CancellationToken cancel = default) where T : notnull
+    {
+        if (reference.IsLoaded)
+        {
+            return reference.Get();
+        }
+
+        var q = FQL($"{reference}");
+        var res = await QueryAsync(q, Serializer.Generate<BaseRef<T>>(MappingCtx), null, cancel);
+        return res.Data.Get();
     }
 
     #endregion
