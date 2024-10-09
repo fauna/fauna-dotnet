@@ -94,4 +94,40 @@ public class E2ELinqTest
         Assert.AreEqual(new Module("E2ELinqTest_Author"), ex.Collection);
         Assert.AreEqual("not found", ex.Cause);
     }
+
+
+    [Test]
+    public async Task E2ELinq_LoadRef()
+    {
+        var res = await s_db.Book
+            .Where(b => b.Name == "War and Peace")
+            .SingleAsync();
+        var author = await s_db.LoadRefAsync(res.Author);
+        Assert.AreEqual("Leo Tolstoy", author.Name);
+    }
+
+
+    [Test]
+    public void E2ELinq_LoadRefThrows()
+    {
+        var col = new Module("E2ELinqTest_Author");
+        var input = new Ref<object>("123", col);
+        var ex = Assert.ThrowsAsync<NullDocumentException>(async () => await s_db.LoadRefAsync(input))!;
+        Assert.AreEqual("123", ex.Id);
+        Assert.AreEqual(col, ex.Collection);
+        Assert.AreEqual("not found", ex.Cause);
+    }
+
+    [Test]
+    public async Task E2ELinq_LoadsLoadedRef()
+    {
+        var res = await s_db.Book
+            .Where(b => b.Name == "War and Peace")
+            .SingleAsync();
+        var author = await s_db.LoadRefAsync(res.Author);
+        var r = new Ref<E2ELinqTestDb.E2ELinqTestAuthor>(res.Author.Id, res.Author.Collection, author);
+        Assert.True(r.IsLoaded);
+        var author2 = await s_db.LoadRefAsync(r);
+        Assert.AreSame(author, author2);
+    }
 }
