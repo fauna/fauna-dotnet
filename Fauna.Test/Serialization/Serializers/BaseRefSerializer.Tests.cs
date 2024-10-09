@@ -1,4 +1,3 @@
-
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;

@@ -1,4 +1,3 @@
-
 namespace Fauna.Types;
 
 public class BaseRefBuilder<T>
