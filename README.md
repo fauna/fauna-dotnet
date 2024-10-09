@@ -48,7 +48,9 @@ class Basics
     {
         try
         {
-            var client = new Client("secret");
+            // The client's authentication secret
+            // defaults to the `FAUNA_SECRET` env var.
+            var client = new Client();
 
             var hi = "Hello, Fauna!";
 
@@ -90,7 +92,7 @@ class Basics
 The FQL template DSL supports arbitrary composition of subqueries along with values.
 
 ```csharp
-var client = new Client("secret");
+var client = new Client();
 
 var predicate = args[0] switch {
     "first" => FQL($".first_name == {args[1]}"),
@@ -117,11 +119,11 @@ Fauna.Mapping.Attributes and the Fauna.DataContext class provide the ability to 
 
 You can use attributes to map a POCO class to a Fauna document or object shape:
 
-`[Id]`: Should only be used once per class  on a field that represents the Fauna document ID. It's not encoded unless the isClientGenerated flag is true.
-`[Ts]`: Should only be used once per class on a field that represents the timestamp of a document. It's not encoded.
-`[Collection]`: Typically goes unmodeled. Should only be used once per class on a field that represents the collection field of a document. It will never be encoded.
-`[Field]`: Can be associated with any field to override its name in Fauna.
-`[Ignore]`: Can be used to ignore fields during encoding and decoding.
+* `[Id]`: Should only be used once per class  on a field that represents the Fauna document ID. It's not encoded unless the isClientGenerated flag is true.
+* `[Ts]`: Should only be used once per class on a field that represents the timestamp of a document. It's not encoded.
+* `[Collection]`: Typically goes unmodeled. Should only be used once per class on a field that represents the collection field of a document. It will never be encoded.
+* `[Field]`: Can be associated with any field to override its name in Fauna.
+* `[Ignore]`: Can be used to ignore fields during encoding and decoding.
 
 ```csharp
 using Fauna.Mapping;
