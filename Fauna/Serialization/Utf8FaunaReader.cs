@@ -633,13 +633,13 @@ public ref struct Utf8FaunaReader
     /// <summary>
     /// Method <c>HandleTaggedString</c> is used to advance through a JSON object that represents a tagged type with a
     /// a string value. For example:
-    /// 
+    ///
     /// * Given { "@int": "123" }
     /// * Read JSON until JsonTokenType.PropertyName and you've determined it's an int
     /// * Call HandleTaggedString(TokenType.Int)
     /// * The underlying JSON reader is advanced until JsonTokenType.EndObject
     /// * Access the int via GetInt()
-    /// 
+    ///
     /// </summary>
     private void HandleTaggedString(TokenType token)
     {

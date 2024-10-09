@@ -20,20 +20,26 @@ public class IgnoreAttribute : Attribute
 
 }
 
+public abstract class BaseFieldAttribute : Attribute
+{
+    public readonly string? Name;
+    public FieldType Type;
+
+    protected BaseFieldAttribute(string? name, FieldType type)
+    {
+        Name = name;
+        Type = type;
+    }
+}
+
 /// <summary>
 /// Attribute used to specify fields on a Fauna document or struct.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class FieldAttribute : Attribute
+public class FieldAttribute : BaseFieldAttribute
 {
-    internal readonly string? _name;
-
-    public FieldAttribute() { }
-
-    public FieldAttribute(string name)
-    {
-        _name = name;
-    }
+    public FieldAttribute() : base(null, FieldType.Field) { }
+    public FieldAttribute(string name) : base(name, FieldType.Field) { }
 }
 
 /// <summary>
@@ -41,16 +47,14 @@ public class FieldAttribute : Attribute
 /// serialization unless isClientGenerated is set to true.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class IdAttribute : Attribute
+public class IdAttribute : BaseFieldAttribute
 {
-    internal readonly bool _isClientGenerated;
+    private const string FieldName = "id";
 
-    public IdAttribute() { }
+    public IdAttribute() : base(FieldName, FieldType.ServerGeneratedId) { }
 
     public IdAttribute(bool isClientGenerated)
-    {
-        _isClientGenerated = isClientGenerated;
-    }
+        : base(FieldName, isClientGenerated ? FieldType.ClientGeneratedId : FieldType.ServerGeneratedId) { }
 }
 
 /// <summary>
@@ -58,9 +62,11 @@ public class IdAttribute : Attribute
 /// during serialization.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class CollAttribute : Attribute
+public class CollectionAttribute : BaseFieldAttribute
 {
-    public CollAttribute() { }
+    private const string FieldName = "coll";
+
+    public CollectionAttribute() : base(FieldName, FieldType.Coll) { }
 
 }
 
@@ -69,7 +75,9 @@ public class CollAttribute : Attribute
 /// serialization.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class TsAttribute : Attribute
+public class TsAttribute : BaseFieldAttribute
 {
-    public TsAttribute() { }
+    private const string FieldName = "ts";
+
+    public TsAttribute() : base(FieldName, FieldType.Ts) { }
 }

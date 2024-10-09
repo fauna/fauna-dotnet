@@ -117,9 +117,9 @@ Fauna.Mapping.Attributes and the Fauna.DataContext class provide the ability to 
 
 You can use attributes to map a POCO class to a Fauna document or object shape:
 
-`[Id]`: Should only be used once per class and be associated with a field named `Id` that represents the Fauna document ID. It's not encoded unless the isClientGenerated flag is true.
-`[Ts]`: Should only be used once per class and be associated with a field named `Ts` that represents the timestamp of a document. It's not encoded.
-`[Coll]`: Typically goes unmodeled. Should only be used once per class and be associated with a field named `Coll` that represents the collection field of a document. It will never be encoded.
+`[Id]`: Should only be used once per class  on a field that represents the Fauna document ID. It's not encoded unless the isClientGenerated flag is true.
+`[Ts]`: Should only be used once per class on a field that represents the timestamp of a document. It's not encoded.
+`[Collection]`: Typically goes unmodeled. Should only be used once per class on a field that represents the collection field of a document. It will never be encoded.
 `[Field]`: Can be associated with any field to override its name in Fauna.
 `[Ignore]`: Can be used to ignore fields during encoding and decoding.
 
@@ -263,30 +263,29 @@ A null document ([NullDoc](https://docs.fauna.com/fauna/current/reference/fql_re
 Option 1, you can let the driver throw an exception and do something with it.
 ```csharp
 try {
-    await client.QueryAsync<NamedDocument>(FQL($"Collection.byName('Fake')"))
+    await client.QueryAsync<SomeCollDoc>(FQL($"SomeColl.byId('123')"))
 } catch (NullDocumentException e) {
-    Console.WriteLine(e.Id); // "Fake"
-    Console.WriteLine(e.Collection.Name); // "Collection"
+    Console.WriteLine(e.Id); // "123"
+    Console.WriteLine(e.Collection.Name); // "SomeColl"
     Console.WriteLine(e.Cause); // "not found"
 }
 ```
 
-Option 2, you wrap your expected type in a NullableDocument<>. You can wrap Document, NamedDocument, DocumentRef, NamedDocumentRef, and POCOs.
+Option 2, you wrap your expected type in a Ref<> or NamedRef<>. Supported types are Dictionary<string,object> and POCOs.
 ```csharp
 var q = FQL($"Collection.byName('Fake')");
-var r = await client.QueryAsync<NullableDocument<NamedDocument>>(q);
-switch (r.Data)
-{
-    case NullDocument<NamedDocument> d:
-        // Handle the null document case
-        Console.WriteLine(d.Id); // "Fake"
-        Console.WriteLine(d.Collection.Name); // "Collection"
-        Console.WriteLine(d.Cause); // "not found"
-        break;
-    case NonNullDocument<NamedDocument> d:
-        var doc = d.Value!; // NamedDocument
-        break;
+var r = (await client.QueryAsync<NamedRef<Dictionary<string,object>>>(q)).Data;
+if (r.Data.Exists) {
+    Console.WriteLine(d.Id); // "Fake"
+    Console.WriteLine(d.Collection.Name); // "Collection"
+    var doc = r.Get(); // A dictionary with id, coll, ts, and any user-defined fields.
+} else {
+    Console.WriteLine(d.Name); // "Fake"
+    Console.WriteLine(d.Collection.Name); // "Collection"
+    Console.WriteLine(d.Cause); // "not found"
+    r.Get() // this throws a NullDocumentException
 }
+
 ```
 
 ## Event Streaming

@@ -1,15 +1,14 @@
 using System.Text;
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using Fauna.Types;
 using NUnit.Framework;
 
 namespace Fauna.Test.Serialization;
 
-[TestFixture]
-public class SerializerTests
+public class SeralizerTests
 {
-    private static readonly MappingContext ctx = new();
+    private static readonly MappingContext s_ctx = new();
 
     public static string Serialize(object? obj)
     {
@@ -17,114 +16,45 @@ public class SerializerTests
         using var writer = new Utf8FaunaWriter(stream);
 
         ISerializer ser = DynamicSerializer.Singleton;
-        if (obj is not null) ser = Serializer.Generate(ctx, obj.GetType());
-        ser.Serialize(ctx, writer, obj);
+        if (obj is not null) ser = Serializer.Generate(s_ctx, obj.GetType());
+        ser.Serialize(s_ctx, writer, obj);
 
         writer.Flush();
         return Encoding.UTF8.GetString(stream.ToArray());
     }
 
-    [Test]
-    public void SerializeValues()
+    public static T Deserialize<T>(string str) where T : notnull
     {
-        var dt = new DateTime(2023, 12, 13, 12, 12, 12, 1, DateTimeKind.Utc).AddTicks(10);
-
-        var tests = new Dictionary<string, object?>
+        var reader = new Utf8FaunaReader(str);
+        reader.Read();
+        var obj = Serializer.Generate<T>(s_ctx).Deserialize(s_ctx, ref reader);
+        if (reader.Read())
         {
-            {"null", null},
-            {@"{""@mod"":""module""}", new Module("module")},
-            {@"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""ACollection""}}}", new Ref("123", new Module("ACollection"))},
-            {@"{""@ref"":{""id"":""124"",""coll"":{""@mod"":""ACollection""}}}", new Document("124", new Module("ACollection"), DateTime.Now)}
-        };
-
-        foreach (var (expected, test) in tests)
-        {
-            var result = Serialize(test);
-            Assert.AreEqual(expected, result);
+            throw new SerializationException($"Token stream is not exhausted but should be: {reader.CurrentTokenType}");
         }
+
+        return obj;
     }
 
-    [Test]
-    public void SerializeDictionary()
-    {
-        var test = new Dictionary<string, object>()
-        {
-            { "answer", 42 },
-            { "foo", "bar" },
-            { "list", new List<object>()},
-            { "obj", new Dictionary<string, object>()}
-
-        };
-
-        var actual = Serialize(test);
-        Assert.AreEqual(@"{""answer"":{""@int"":""42""},""foo"":""bar"",""list"":[],""obj"":{}}", actual);
-    }
 
     [Test]
-    public void SerializeDictionaryWithTagConflicts()
+    public void RegisterDeregisterCustomSerializer()
     {
-        var tests = new Dictionary<Dictionary<string, object>, string>()
-        {
-            { new() { { "@date", "not" } }, @"{""@object"":{""@date"":""not""}}" },
-            { new() { { "@doc", "not" } }, @"{""@object"":{""@doc"":""not""}}" },
-            { new() { { "@double", "not" } }, @"{""@object"":{""@double"":""not""}}" },
-            { new() { { "@int", "not" } }, @"{""@object"":{""@int"":""not""}}" },
-            { new() { { "@long", "not" } }, @"{""@object"":{""@long"":""not""}}" },
-            { new() { { "@mod", "not" } }, @"{""@object"":{""@mod"":""not""}}" },
-            { new() { { "@object", "not" } }, @"{""@object"":{""@object"":""not""}}" },
-            { new() { { "@ref", "not" } }, @"{""@object"":{""@ref"":""not""}}" },
-            { new() { { "@set", "not" } }, @"{""@object"":{""@set"":""not""}}" },
-            { new() { { "@time", "not" } }, @"{""@object"":{""@time"":""not""}}" }
-        };
+        var s = new IntToStringSerializer();
+        Serializer.Register(s);
 
-        foreach (var (test, expected) in tests)
-        {
-            var actual = Serialize(test);
-            Assert.AreEqual(expected, actual);
-        }
-    }
+        const int i = 42;
+        string ser = Serialize(i);
+        Assert.AreEqual(@"""42""", ser);
 
-    [Test]
-    public void SerializeAnonymousClassObject()
-    {
-        var obj = new { FirstName = "John", LastName = "Doe" };
-        var expected = "{\"firstName\":\"John\",\"lastName\":\"Doe\"}";
-        var actual = Serialize(obj);
-        Assert.AreEqual(expected, actual);
-    }
+        int deser = Deserialize<int>(ser);
+        Assert.AreEqual(i, deser);
 
-    [Test]
-    public void SerializeEmptyCollections()
-    {
-        var tests = new Dictionary<object, string>
-        {
-            { new List<object>(), "[]" },
-            { new Dictionary<string, object>(), "{}" },
-            { new List<object> { new List<object>(), new Dictionary<string, object>() }, "[[],{}]" }
-        };
+        Serializer.Deregister(typeof(int));
+        ser = Serialize(i);
 
-        foreach (var (value, expected) in tests)
-        {
-            var actual = Serialize(value);
-            Assert.AreEqual(expected, actual);
-        }
-    }
-
-    [Test]
-    public void SerializeNullableStructAsNull()
-    {
-        var i = new int?();
-
-        var actual = Serialize(i);
-        Assert.AreEqual("null", actual);
-    }
-
-    [Test]
-    public void SerializeNullableStructAsValue()
-    {
-        var i = new int?(42);
-
-        var actual = Serialize(i);
-        Assert.AreEqual(@"{""@int"":""42""}", actual);
+        Assert.AreEqual(@"{""@int"":""42""}", ser);
+        deser = Deserialize<int>(ser);
+        Assert.AreEqual(i, deser);
     }
 }

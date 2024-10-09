@@ -7,9 +7,9 @@ namespace Fauna.Test.Serialization;
 
 class Person
 {
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public int Age { get; set; }
+    public string? FirstName { get; init; }
+    public string? LastName { get; init; }
+    public int Age { get; init; }
 
     public override bool Equals(object? obj)
     {
@@ -29,15 +29,10 @@ class Person
     }
 }
 
-class NullableInt
-{
-    public int? Val { get; set; }
-}
-
 class ClassForDocument
 {
     [Id] public string? Id { get; set; }
-    [Coll] public Module? Coll { get; set; }
+    [Collection] public Module? Coll { get; set; }
     [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
@@ -45,15 +40,24 @@ class ClassForDocument
 class ClassForDocumentClientGeneratedId
 {
     [Id(true)] public string? Id { get; set; }
-    [Coll] public Module? Coll { get; set; }
+    [Collection] public Module? Coll { get; set; }
     [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
 
+class ClassForDocumentWithSpecialNames
+{
+    [Id] public string? TheId { get; set; }
+    [Collection] public Module? TheCollection { get; set; }
+    [Ts] public DateTime? TheTs { get; set; }
+    [Field("user_field")] public string? UserField { get; set; }
+}
+
+
 class ClassForUnmapped
 {
     [Id] public string? Id { get; set; }
-    [Coll] public Module? Coll { get; set; }
+    [Collection] public Module? Coll { get; set; }
     [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
 }
@@ -174,7 +178,7 @@ class PersonWithDateConflict : IOnlyField
 class ClassWithDupeFields
 {
     [Id] public string? Id { get; set; }
-    [Coll] public Module? Coll { get; set; }
+    [Collection] public Module? Coll { get; set; }
     [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
     [Field("user_field")] public string? UserField2 { get; set; }
@@ -184,7 +188,7 @@ class ClassWithDupeFields
 class ClassWithFieldNameOverlap
 {
     [Id] public string? Id { get; set; }
-    [Coll] public Module? Coll { get; set; }
+    [Collection] public Module? Coll { get; set; }
     [Ts] public DateTime? Ts { get; set; }
     [Field("user_field")] public string? UserField { get; set; }
     [Field] public string? user_field { get; set; }
@@ -194,7 +198,7 @@ class ClassWithFieldNameOverlap
 class ClassWithLotsOfFields
 {
     [Id] public string? Id { get; set; }
-    [Coll] public Module? Coll { get; set; }
+    [Collection] public Module? Coll { get; set; }
     [Ts] public DateTime? Ts { get; set; }
     [Field] public DateTime DateTimeField { get; set; }
     [Field] public DateOnly DateOnlyField { get; set; }

@@ -1,23 +1,53 @@
+using Fauna.Exceptions;
+using Fauna.Linq;
+
 namespace Fauna.Types;
+
 
 /// <summary>
 /// Represents a document ref.
 /// </summary>
-public class Ref
+public class Ref<T> : BaseRef<T>
 {
-    public Ref(string id, Module collection)
-    {
-        Id = id;
-        Collection = collection;
-    }
-
     /// <summary>
-    /// Gets the string value of the ref id.
+    /// Gets the string value of the ref ID.
     /// </summary>
     public string Id { get; }
 
-    /// <summary>
-    /// Gets the collection to which the ref belongs.
-    /// </summary>
-    public Module Collection { get; }
+    public Ref(string id, DataContext.ICollection col) : base(col)
+    {
+        Id = id;
+    }
+
+    public Ref(string id, DataContext.ICollection col, T doc) : base(col, doc)
+    {
+        Id = id;
+    }
+
+    public Ref(string id, DataContext.ICollection col, string cause) : base(col, cause)
+    {
+        Id = id;
+    }
+
+    public Ref(string id, Module col) : base(col)
+    {
+        Id = id;
+    }
+
+    public Ref(string id, Module col, string cause) : base(col, cause)
+    {
+        Id = id;
+    }
+
+    public Ref(string id, Module col, T doc) : base(col, doc)
+    {
+        Id = id;
+    }
+
+    public override T Get()
+    {
+        if (!IsLoaded) throw new UnloadedRefException();
+        if (Exists.HasValue && !Exists.Value) throw new NullDocumentException(Id, null, Collection, Cause ?? "");
+        return Doc!;
+    }
 }

@@ -31,13 +31,13 @@ public sealed class FieldInfo
     private MappingContext _ctx;
     private ISerializer? _serializer;
 
-    internal FieldInfo(MappingContext ctx, FieldAttribute attr, PropertyInfo prop, FieldType fieldType)
+    internal FieldInfo(MappingContext ctx, BaseFieldAttribute attr, PropertyInfo prop)
     {
         var nullCtx = new NullabilityInfoContext();
         var nullInfo = nullCtx.Create(prop);
 
-        Name = attr._name ?? FieldName.Canonical(prop.Name);
-        FieldType = fieldType;
+        Name = attr.Name ?? FieldName.Canonical(prop.Name);
+        FieldType = attr.Type;
         Property = prop;
         Type = prop.PropertyType;
         IsNullable = nullInfo.WriteState is NullabilityState.Nullable;

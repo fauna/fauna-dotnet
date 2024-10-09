@@ -27,6 +27,9 @@
       <Link>setup/fauna/%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Types\" />
+  </ItemGroup>
   <PropertyGroup>
     <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>

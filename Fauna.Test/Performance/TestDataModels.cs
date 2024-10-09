@@ -24,7 +24,7 @@ internal class Product
     public bool InStock { get; init; } = false;
 
     [Field]
-    public Ref? Manufacturer { get; init; }
+    public Ref<Manufacturer>? Manufacturer { get; init; }
 }
 
 /// <summary>

@@ -39,10 +39,6 @@ public static class Serializer
     private static readonly BooleanSerializer s_bool = new();
     private static readonly ModuleSerializer s_module = new();
     private static readonly StreamSerializer s_stream = new();
-    private static readonly DocumentSerializer s_doc = new();
-    private static readonly NamedDocumentSerializer s_namedDoc = new();
-    private static readonly RefSerializer s_docRef = new();
-    private static readonly NamedRefSerializer s_namedRef = new();
     private static readonly QuerySerializer s_query = new();
     private static readonly QueryExprSerializer s_queryExpr = new();
     private static readonly QueryLiteralSerializer s_queryLiteral = new();
@@ -97,10 +93,6 @@ public static class Serializer
         if (targetType == typeof(bool)) return s_bool;
         if (targetType == typeof(Module)) return s_module;
         if (targetType == typeof(Stream)) return s_stream;
-        if (targetType == typeof(Document)) return s_doc;
-        if (targetType == typeof(NamedDocument)) return s_namedDoc;
-        if (targetType == typeof(Ref)) return s_docRef;
-        if (targetType == typeof(NamedRef)) return s_namedRef;
         if (targetType == typeof(Query)) return s_query;
         if (targetType == typeof(QueryExpr)) return s_queryExpr;
         if (targetType == typeof(QueryLiteral)) return s_queryLiteral;
@@ -125,17 +117,6 @@ public static class Serializer
                 throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
             }
 
-            if (targetType.GetGenericTypeDefinition() == typeof(NullableDocument<>) ||
-                targetType.GetGenericTypeDefinition() == typeof(NonNullDocument<>) ||
-                targetType.GetGenericTypeDefinition() == typeof(NullDocument<>))
-            {
-                var argTypes = targetType.GetGenericArguments();
-                var valueType = argTypes[0];
-                var valueSerializer = Generate(context, valueType);
-                var serType = typeof(NullableDocumentSerializer<>).MakeGenericType(new[] { valueType });
-                object? ser = Activator.CreateInstance(serType, valueSerializer);
-                return (ISerializer)ser!;
-            }
 
             if (targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
@@ -173,6 +154,39 @@ public static class Serializer
 
                 var serType = typeof(PageSerializer<>).MakeGenericType(new[] { elemType });
                 object? ser = Activator.CreateInstance(serType, new[] { elemSerializer });
+
+                return (ISerializer)ser!;
+            }
+
+            if (targetType.GetGenericTypeDefinition() == typeof(BaseRef<>))
+            {
+                var docType = targetType.GetGenericArguments()[0];
+                var docSerializer = Generate(context, docType);
+
+                var serType = typeof(BaseRefSerializer<>).MakeGenericType(new[] { docType });
+                object? ser = Activator.CreateInstance(serType, new[] { docSerializer });
+
+                return (ISerializer)ser!;
+            }
+
+            if (targetType.GetGenericTypeDefinition() == typeof(Ref<>))
+            {
+                var docType = targetType.GetGenericArguments()[0];
+                var docSerializer = Generate(context, docType);
+
+                var serType = typeof(RefSerializer<>).MakeGenericType(new[] { docType });
+                object? ser = Activator.CreateInstance(serType, new[] { docSerializer });
+
+                return (ISerializer)ser!;
+            }
+
+            if (targetType.GetGenericTypeDefinition() == typeof(NamedRef<>))
+            {
+                var docType = targetType.GetGenericArguments()[0];
+                var docSerializer = Generate(context, docType);
+
+                var serType = typeof(NamedRefSerializer<>).MakeGenericType(new[] { docType });
+                object? ser = Activator.CreateInstance(serType, new[] { docSerializer });
 
                 return (ISerializer)ser!;
             }

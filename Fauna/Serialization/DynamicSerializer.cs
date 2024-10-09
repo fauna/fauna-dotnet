@@ -11,7 +11,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
     private readonly ListSerializer<object?> _list;
     private readonly PageSerializer<object?> _page;
     private readonly DictionarySerializer<object?> _dict;
-    private readonly QuerySerializer _query;
+    private readonly BaseRefSerializer<Dictionary<string, object>> _docref;
 
 
     private DynamicSerializer()
@@ -19,7 +19,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
         _list = new ListSerializer<object?>(this);
         _page = new PageSerializer<object?>(this);
         _dict = new DictionarySerializer<object?>(this);
-        _query = new QuerySerializer();
+        _docref = new BaseRefSerializer<Dictionary<string, object>>(_dict);
     }
 
     public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
@@ -28,7 +28,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
             TokenType.StartObject => _dict.Deserialize(context, ref reader),
             TokenType.StartArray => _list.Deserialize(context, ref reader),
             TokenType.StartPage => _page.Deserialize(context, ref reader),
-            TokenType.StartRef => DeserializeRefInternal(context, ref reader),
+            TokenType.StartRef => _docref.Deserialize(context, ref reader),
             TokenType.StartDocument => DeserializeDocumentInternal(context, ref reader),
             TokenType.String => reader.GetString(),
             TokenType.Int => reader.GetInt(),
@@ -43,47 +43,9 @@ internal class DynamicSerializer : BaseSerializer<object?>
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}"),
         };
 
-    private static object DeserializeRefInternal(MappingContext context, ref Utf8FaunaReader reader)
+    private object DeserializeDocumentInternal(MappingContext context, ref Utf8FaunaReader reader)
     {
-        reader.Read();
-
-        if (reader.CurrentTokenType != TokenType.FieldName)
-            throw new SerializationException(
-                $"Unexpected token while deserializing @ref: {reader.CurrentTokenType}");
-
-        string fieldName = reader.GetString()!;
-        reader.Read();
-
-        switch (fieldName)
-        {
-            case "id":
-                try
-                {
-                    return RefSerializer.Deserialize(reader.GetString(), context, ref reader);
-                }
-                catch (NullDocumentException e)
-                {
-                    return new NullDocument<Document>(e.Id, null, e.Collection, e.Cause);
-                }
-
-            case "name":
-                try
-                {
-                    return NamedRefSerializer.Deserialize(reader.GetString(), context, ref reader);
-                }
-                catch (NullDocumentException e)
-                {
-                    return new NullDocument<NamedDocument>(null, e.Name, e.Collection, e.Cause);
-                }
-
-            default:
-                throw new SerializationException($"Unexpected field while deserializing @ref: {fieldName}");
-        }
-    }
-
-    private static object DeserializeDocumentInternal(MappingContext context, ref Utf8FaunaReader reader)
-    {
-        var builder = new InternalDocument();
+        var builder = new BaseRefBuilder<Dictionary<string, object>>();
         while (reader.Read() && reader.CurrentTokenType != TokenType.EndDocument)
         {
             if (reader.CurrentTokenType != TokenType.FieldName)
@@ -94,56 +56,38 @@ internal class DynamicSerializer : BaseSerializer<object?>
 
             reader.Read();
 
-            try
+            switch (fieldName)
             {
-                switch (fieldName)
-                {
-                    // Relies on ordering for doc fields.
-                    case "id":
-                        builder.Id = reader.GetString();
-                        break;
-                    case "name":
-                        builder.Name = reader.GetString();
-                        break;
-                    case "coll":
-                        builder.Coll = reader.GetModule();
+                // Relies on ordering for doc fields.
+                case "id":
+                    builder.Id = reader.GetString();
+                    break;
+                case "name":
+                    builder.Name = reader.GetString();
+                    break;
+                case "coll":
+                    builder.Collection = reader.GetModule();
 
-                        // if we encounter a mapped collection, jump to the class deserializer.
-                        // NB this relies on the fact that docs on the wire always
-                        // start with id and coll.
-                        if (context.TryGetCollection(builder.Coll.Name, out var info))
+                    // if we encounter a mapped collection, jump to the class deserializer.
+                    // NB this relies on the fact that docs on the wire always start with id and coll.
+                    if (context.TryGetCollection(builder.Collection.Name, out var info) && info.ClassSerializer is IPartialDocumentSerializer ser)
+                    {
+                        return new BaseRefBuilder<object>
                         {
-                            if (info.ClassSerializer is IClassDocumentSerializer ser)
-                            {
-                                // This assumes ordering on the wire. If name is not null and we're here, then it's a named document so name is a string.
-                                return ser.DeserializeDocument(context, builder.Id, builder.Name, ref reader);
-                            }
-                        }
+                            Id = builder.Id,
+                            Name = builder.Name,
+                            Collection = builder.Collection,
+                            Doc = ser.DeserializeDocument(context, builder.Id, builder.Name, builder.Collection,
+                                ref reader)
+                        }.Build();
+                    }
 
-                        if (builder.Id is not null)
-                        {
-                            return DocumentSerializer.Deserialize(builder, context, ref reader,
-                                EndTokenFor(TokenType.StartDocument));
-                        }
-
-                        if (builder.Name is not null)
-                        {
-                            return NamedDocumentSerializer.Deserialize(builder, context, ref reader,
-                                EndTokenFor(TokenType.StartDocument));
-                        }
-
-                        break;
-                    default:
-                        throw new SerializationException($"Unexpected field while deserializing @doc: {fieldName}");
-                }
-            }
-            catch (NullDocumentException e)
-            {
-                return new NullDocument<object?>(e.Id, e.Name, e.Collection, e.Cause);
+                    builder.Doc = (Dictionary<string, object>?)_dict.DeserializeDocument(context, builder.Id, builder.Name, builder.Collection, ref reader);
+                    break;
             }
         }
 
-        throw new SerializationException("Unsupported document");
+        return builder.Build();
     }
 
     /// <summary>
