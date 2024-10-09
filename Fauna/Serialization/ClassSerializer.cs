@@ -5,15 +5,11 @@ using Fauna.Types;
 
 namespace Fauna.Serialization;
 
-internal interface IClassDocumentSerializer : ISerializer
-{
-    public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader);
-}
-
-internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
+internal class ClassSerializer<T> : BaseSerializer<T>, IPartialDocumentSerializer
 {
     private const string IdField = "id";
     private const string NameField = "name";
+    private const string CollField = "coll";
     private readonly MappingInfo _info;
 
     public ClassSerializer(MappingInfo info)
@@ -22,11 +18,12 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
         _info = info;
     }
 
-    public object DeserializeDocument(MappingContext context, string? id, string? name, ref Utf8FaunaReader reader)
+    public object DeserializeDocument(MappingContext context, string? id, string? name, Module? coll, ref Utf8FaunaReader reader)
     {
         object instance = CreateInstance();
         if (id is not null) TrySetId(instance, id);
         if (name is not null) TrySetName(instance, name);
+        if (coll is not null) TrySetColl(instance, coll);
         SetFields(instance, context, ref reader, TokenType.EndDocument);
         return instance;
     }
@@ -53,7 +50,7 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
             {
                 if (reader.CurrentTokenType != TokenType.FieldName)
                     throw new SerializationException(
-                        $"Unexpected token while deserializing into DocumentRef: {reader.CurrentTokenType}");
+                        $"Unexpected token while deserializing into Ref: {reader.CurrentTokenType}");
 
                 string fieldName = reader.GetString()!;
                 reader.Read();
@@ -193,6 +190,21 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IClassDocumentSerializer
             if (field.Type == typeof(string))
             {
                 field.Property.SetValue(instance, name);
+            }
+            else
+            {
+                throw UnexpectedToken(TokenType.String);
+            }
+        }
+    }
+
+    private void TrySetColl(object instance, Module coll)
+    {
+        if (_info.FieldsByName.TryGetValue(CollField, out var field))
+        {
+            if (field.Type == typeof(Module))
+            {
+                field.Property.SetValue(instance, coll);
             }
             else
             {

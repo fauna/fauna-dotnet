@@ -40,9 +40,8 @@ public sealed class MappingInfo
         {
             if (prop.GetCustomAttribute<IgnoreAttribute>() != null) continue;
 
-            var attr = prop.GetCustomAttribute<FieldAttribute>() ?? new FieldAttribute();
-            var fieldType = GetFieldType(prop);
-            var info = new FieldInfo(ctx, attr, prop, fieldType);
+            var attr = prop.GetCustomAttribute<BaseFieldAttribute>() ?? new FieldAttribute();
+            var info = new FieldInfo(ctx, attr, prop);
 
             if (byName.ContainsKey(info.Name))
                 throw new ArgumentException($"Duplicate field name {info.Name} in {ty}");
@@ -57,26 +56,5 @@ public sealed class MappingInfo
 
         var serType = typeof(ClassSerializer<>).MakeGenericType(new[] { ty });
         ClassSerializer = (ISerializer)Activator.CreateInstance(serType, this)!;
-    }
-
-    private FieldType GetFieldType(PropertyInfo propertyInfo)
-    {
-        var idAttr = propertyInfo.GetCustomAttribute<IdAttribute>();
-        if (idAttr != null)
-        {
-            return idAttr._isClientGenerated ? FieldType.ClientGeneratedId : FieldType.ServerGeneratedId;
-        }
-
-        if (propertyInfo.GetCustomAttribute<TsAttribute>() != null)
-        {
-            return FieldType.Ts;
-        }
-
-        if (propertyInfo.GetCustomAttribute<CollAttribute>() != null)
-        {
-            return FieldType.Coll;
-        }
-
-        return FieldType.Field;
     }
 }

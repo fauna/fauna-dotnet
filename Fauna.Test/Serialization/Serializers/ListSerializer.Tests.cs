@@ -93,4 +93,19 @@ public class ListSerializerTests
         var deserialized = Helpers.Deserialize(serializer, s_ctx, wire);
         Assert.AreEqual(list, deserialized);
     }
+
+    [Test]
+    public void RoundTripEmptyArray()
+    {
+        var serializer = Serializer.Generate<List<object>>(s_ctx);
+
+        const string wire = "[]";
+        var list = new List<object>();
+
+        var deserialized = Helpers.Deserialize(serializer, s_ctx, wire);
+        Assert.AreEqual(list, deserialized);
+
+        string serialized = Helpers.Serialize(serializer, s_ctx, deserialized);
+        Assert.AreEqual(wire, serialized);
+    }
 }

@@ -1,3 +1,4 @@
+using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
@@ -8,6 +9,8 @@ namespace Fauna.Test.Serialization;
 public class ClassSerializerTests
 {
     private readonly MappingContext _ctx;
+    private const string DocumentWire = @"{""@doc"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""ts"":{""@time"":""2023-12-15T01:01:01.0010010Z""},""user_field"":""user_value""}}";
+    private const string NullDocumentWire = @"{""@ref"":{""id"":""123"",""coll"":{""@mod"":""MyColl""},""exists"":false,""cause"":""not found""}}";
 
     public ClassSerializerTests()
     {
@@ -18,7 +21,7 @@ public class ClassSerializerTests
     }
 
     [Test]
-    public void RoundTripListClassWithoutAttributes()
+    public void RoundTripClassWithoutAttributes()
     {
         var serializer = Serializer.Generate<Person>(_ctx);
 
@@ -112,6 +115,26 @@ public class ClassSerializerTests
     }
 
     [Test]
+    public void DeserializeClassWithSpecialIdAndCollName()
+    {
+        var serializer = Serializer.Generate<ClassForDocumentWithSpecialNames>(_ctx);
+        var expected = new ClassForDocumentWithSpecialNames
+        {
+            TheId = "123",
+            TheCollection = new Module("MyColl"),
+            TheTs = DateTime.Parse("2023-12-15T01:01:01.0010010Z"),
+            UserField = "user_value"
+        };
+
+        var actual = Helpers.Deserialize(serializer, _ctx, DocumentWire);
+        Assert.NotNull(actual);
+        Assert.AreEqual(expected.TheId, actual!.TheId);
+        Assert.AreEqual(expected.TheCollection, actual.TheCollection);
+        Assert.AreEqual(expected.TheTs, actual.TheTs);
+        Assert.AreEqual(expected.UserField, actual.UserField);
+    }
+
+    [Test]
     public void SerializeUnmappedClassSkipsIdCollTs()
     {
         var serializer = Serializer.Generate<ClassForUnmapped>(_ctx);
@@ -149,11 +172,32 @@ public class ClassSerializerTests
         {
             var badClass = Type.GetType(classWithBadFields);
             Assert.IsNotNull(badClass, $"Couldn't find Type from class name: {classWithBadFields}");
-            var serializer = Serializer.Generate(_ctx, badClass!);
+            Serializer.Generate(_ctx, badClass!);
         });
 
         Assert.IsNotNull(ex);
         Assert.IsTrue(ex!.Message.Contains("Duplicate field name"));
+    }
+
+    [Test]
+    public void DeserializeNullDocumentClassThrowsWithoutWrapper()
+    {
+        var serializer = Serializer.Generate<ClassForDocument>(_ctx);
+        var e = Assert.Throws<NullDocumentException>(() => Helpers.Deserialize(serializer, _ctx, NullDocumentWire));
+        Assert.NotNull(e);
+        Assert.AreEqual("123", e!.Id);
+        Assert.AreEqual("MyColl", e.Collection.Name);
+        Assert.AreEqual("not found", e.Cause);
+        Assert.AreEqual("Document 123 in collection MyColl is null: not found", e.Message);
+    }
+
+    [Test]
+    public void RoundTripClassAsDocumentIsNotSupported()
+    {
+        var serializer = Serializer.Generate<ClassForDocument>(_ctx);
+        var deserialized = Helpers.Deserialize(serializer, _ctx, DocumentWire);
+        string serialized = Helpers.Serialize(serializer, _ctx, deserialized);
+        Assert.AreNotEqual(DocumentWire, serialized);
     }
 
     [Test]
