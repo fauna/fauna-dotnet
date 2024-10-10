@@ -1,4 +1,4 @@
-# The Official .NET Driver for [Fauna](https://fauna.com/)
+# Official .NET Driver for [Fauna v10](https://fauna.com/) (current - beta)
 
 > [!CAUTION]
 > This driver is currently in beta and should not be used for production workloads.
