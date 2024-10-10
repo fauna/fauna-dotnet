@@ -1,0 +1,125 @@
+\doxysection{Sub\+Query\+Switch.\+cs}
+\hypertarget{_sub_query_switch_8cs_source}{}\label{_sub_query_switch_8cs_source}\index{Fauna/Linq/SubQuerySwitch.cs@{Fauna/Linq/SubQuerySwitch.cs}}
+\mbox{\hyperlink{_sub_query_switch_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Linq.Expressions;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System.Reflection;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_util}{Fauna.Util}};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00004}00004\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_util_1_1_extensions}{Fauna.Util.Extensions}};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00005}00005\ \textcolor{keyword}{using\ }\mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}\ =\ \mbox{\hyperlink{namespace_fauna}{Fauna}}.\mbox{\hyperlink{namespace_fauna_1_1_linq}{Linq}}.\mbox{\hyperlink{class_fauna_1_1_linq_1_1_intermediate_query_helpers}{IntermediateQueryHelpers}};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00007}00007\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_linq}{Fauna.Linq}};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00008}00008\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00009}00009\ \textcolor{keyword}{internal}\ \textcolor{keyword}{class\ }SubQuerySwitch\ :\ DefaultExpressionSwitch<Query>}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00011}00011\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ LookupTable\ \_lookup;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{public}\ SubQuerySwitch(LookupTable\ lookup)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00014}00014\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00015}00015\ \ \ \ \ \ \ \ \ \_lookup\ =\ lookup;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00016}00016\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00018}00018\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ ApplyDefault(Expression?\ expr)\ =>}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ IQuerySource.Fail(expr);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00021}00021\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ ConstantExpr(ConstantExpression\ expr)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00022}00022\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00023}00023\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ expr.Value\ \textcolor{keywordflow}{switch}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00024}00024\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ DataContext.ICollection\ col\ =>\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.CollectionAll(col),}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ DataContext.IIndex\ idx\ =>\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.CollectionIndex(idx),}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \_\ =>\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Const(expr.Value)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00028}00028\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00029}00029\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00031}00031\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ LambdaExpr(LambdaExpression\ expr)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00032}00032\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ var\ ps\ =\ expr.Parameters;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00034}00034\ \ \ \ \ \ \ \ \ var\ pinner\ =\ \textcolor{keywordtype}{string}.Join(\textcolor{stringliteral}{"{},\ "{}},\ ps.Select(p\ =>\ p.Name));}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00035}00035\ \ \ \ \ \ \ \ \ var\ param\ =\ ps.Count()\ ==\ 1\ ?\ pinner\ :\ \$\textcolor{stringliteral}{"{}(\{pinner\})"{}};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00036}00036\ \ \ \ \ \ \ \ \ var\ arrow\ =\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Expr(\$\textcolor{stringliteral}{"{}\{param\}\ =>"{}});}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00037}00037\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ arrow.Concat(\mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Parens(Apply(expr.Body)));}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00039}00039\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00041}00041\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ ParameterExpr(ParameterExpression\ expr)\ =>\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Expr(expr.Name!);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00043}00043\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ BinaryExpr(BinaryExpression\ expr)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00044}00044\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00045}00045\ \ \ \ \ \ \ \ \ var\ op\ =\ expr.NodeType\ \textcolor{keywordflow}{switch}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00046}00046\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Add\ =>\ \textcolor{stringliteral}{"{}+"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00048}00048\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.AddChecked\ =>\ \textcolor{stringliteral}{"{}+"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00049}00049\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.And\ =>\ \textcolor{stringliteral}{"{}\&"{}},\ \textcolor{comment}{//\ bitwise}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.AndAlso\ =>\ \textcolor{stringliteral}{"{}\&\&"{}},\ \textcolor{comment}{//\ boolean}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ ExpressionType.ArrayIndex\ =>\ ,}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Coalesce\ =>\ \textcolor{stringliteral}{"{}??"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00053}00053\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Divide\ =>\ \textcolor{stringliteral}{"{}/"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Equal\ =>\ \textcolor{stringliteral}{"{}=="{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.ExclusiveOr\ =>\ \textcolor{stringliteral}{"{}\string^"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.GreaterThan\ =>\ \textcolor{stringliteral}{"{}>"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.GreaterThanOrEqual\ =>\ \textcolor{stringliteral}{"{}>="{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.LeftShift\ =>\ \textcolor{stringliteral}{"{}<<"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.LessThan\ =>\ \textcolor{stringliteral}{"{}<"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.LessThanOrEqual\ =>\ \textcolor{stringliteral}{"{}<="{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00061}00061\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Modulo\ =>\ \textcolor{stringliteral}{"{}\%"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00062}00062\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Multiply\ =>\ \textcolor{stringliteral}{"{}*"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.MultiplyChecked\ =>\ \textcolor{stringliteral}{"{}*"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00064}00064\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.NotEqual\ =>\ \textcolor{stringliteral}{"{}!="{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Or\ =>\ \textcolor{stringliteral}{"{}|"{}},\ \textcolor{comment}{//\ bitwise}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.OrElse\ =>\ \textcolor{stringliteral}{"{}||"{}},\ \textcolor{comment}{//\ boolean}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00067}00067\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Power\ =>\ \textcolor{stringliteral}{"{}**"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.RightShift\ =>\ \textcolor{stringliteral}{"{}>>"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.Subtract\ =>\ \textcolor{stringliteral}{"{}-\/"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ ExpressionType.SubtractChecked\ =>\ \textcolor{stringliteral}{"{}-\/"{}},}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \_\ =>\ \textcolor{keywordflow}{throw}\ IQuerySource.Fail(expr)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ var\ lhs\ =\ Apply(expr.Left);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ var\ rhs\ =\ Apply(expr.Right);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00077}00077\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Parens(\mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Op(lhs,\ op,\ rhs));}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00078}00078\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00080}00080\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ CallExpr(MethodCallExpression\ expr)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00081}00081\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00082}00082\ \ \ \ \ \ \ \ \ var\ (callee,\ args,\ ext)\ =\ Expressions.GetCalleeAndArgs(expr);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00083}00083\ \ \ \ \ \ \ \ \ var\ name\ =\ \_lookup.MethodLookup(expr.Method,\ callee)?.Name;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ is\ \textcolor{keyword}{null})\ \textcolor{keywordflow}{throw}\ IQuerySource.Fail(expr);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00085}00085\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.MethodCall(Apply(callee),\ name,\ ApplyAll(args));}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00086}00086\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00087}00087\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00088}00088\ \ \ \ \ \textcolor{keyword}{protected}\ \textcolor{keyword}{override}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ MemberAccessExpr(MemberExpression\ expr)}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00089}00089\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00090}00090\ \ \ \ \ \ \ \ \ var\ callee\ =\ expr.Expression;}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (callee\ is\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00092}00092\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ var\ val\ =\ Expression.Lambda(expr).Compile().DynamicInvoke();}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Const(val);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00095}00095\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}\ (callee.Type.IsClosureType())}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00097}00097\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ var\ val\ =\ Expression.Lambda(expr).Compile().DynamicInvoke();}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Const(val);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00100}00100\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00101}00101\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00102}00102\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (Apply(callee))}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00103}00103\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00104}00104\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ \mbox{\hyperlink{class_fauna_1_1_query_val}{QueryVal}}\ v:}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00105}00105\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ c\ =\ Expression.Constant(v.Unwrap);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00106}00106\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ access\ =\ Expression.PropertyOrField(c,\ expr.Member.Name);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00107}00107\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ val\ =\ Expression.Lambda(access).Compile().DynamicInvoke();}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00108}00108\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.Const(val);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00109}00109\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ var\ q:}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ var\ name\ =\ expr.Member\ is\ PropertyInfo\ prop\ ?}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_lookup.FieldLookup(prop,\ callee)?.Name\ :}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{null};}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00114}00114\ }
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (name\ is\ \textcolor{keyword}{null})\ \textcolor{keywordflow}{throw}\ IQuerySource.Fail(expr);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \mbox{\hyperlink{_query_source_dsl_8cs_a510e82cd531f3fac6d7ac0f2c7ee4e75}{QH}}.FieldAccess(q,\ name);}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00117}00117\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00118}00118\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_sub_query_switch_8cs_source_l00119}00119\ \}}
+
+\end{DoxyCode}

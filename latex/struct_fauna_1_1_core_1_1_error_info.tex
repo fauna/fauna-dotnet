@@ -1,0 +1,89 @@
+\doxysection{Fauna.\+Core.\+Error\+Info Struct Reference}
+\hypertarget{struct_fauna_1_1_core_1_1_error_info}{}\label{struct_fauna_1_1_core_1_1_error_info}\index{Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}}
+
+
+Contains detailed information about an error in a query response.  
+
+
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+string? \mbox{\hyperlink{struct_fauna_1_1_core_1_1_error_info_ac70a5efe8781648bf3d433e2b549350d}{Code}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The error code when a query fails. \end{DoxyCompactList}\item 
+string? \mbox{\hyperlink{struct_fauna_1_1_core_1_1_error_info_a07ed88423498414dc4b14c36c99e4f24}{Message}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The detailed message describing the cause of the error. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_constraint_failure}{Constraint\+Failure}}\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{struct_fauna_1_1_core_1_1_error_info_acd4483dd8e34c93168b72f0a7ab4570c}{Constraint\+Failures}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The constraint failures that occurred during the query. \end{DoxyCompactList}\item 
+object? \mbox{\hyperlink{struct_fauna_1_1_core_1_1_error_info_a6f8153d0d7c41dfdfe65b5678d18b773}{Abort}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The information about an abort operation within a transaction. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains detailed information about an error in a query response. 
+
+Definition at line \mbox{\hyperlink{_error_info_8cs_source_l00010}{10}} of file \mbox{\hyperlink{_error_info_8cs_source}{Error\+Info.\+cs}}.
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{struct_fauna_1_1_core_1_1_error_info_a6f8153d0d7c41dfdfe65b5678d18b773}\index{Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}!Abort@{Abort}}
+\index{Abort@{Abort}!Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}}
+\doxysubsubsection{\texorpdfstring{Abort}{Abort}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_core_1_1_error_info_a6f8153d0d7c41dfdfe65b5678d18b773} 
+object? Fauna.\+Core.\+Error\+Info.\+Abort\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The information about an abort operation within a transaction. 
+
+
+
+Definition at line \mbox{\hyperlink{_error_info_8cs_source_l00034}{34}} of file \mbox{\hyperlink{_error_info_8cs_source}{Error\+Info.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_core_1_1_error_info_ac70a5efe8781648bf3d433e2b549350d}\index{Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}!Code@{Code}}
+\index{Code@{Code}!Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}}
+\doxysubsubsection{\texorpdfstring{Code}{Code}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_core_1_1_error_info_ac70a5efe8781648bf3d433e2b549350d} 
+string? Fauna.\+Core.\+Error\+Info.\+Code\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The error code when a query fails. 
+
+
+
+Definition at line \mbox{\hyperlink{_error_info_8cs_source_l00016}{16}} of file \mbox{\hyperlink{_error_info_8cs_source}{Error\+Info.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_core_1_1_error_info_acd4483dd8e34c93168b72f0a7ab4570c}\index{Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}!ConstraintFailures@{ConstraintFailures}}
+\index{ConstraintFailures@{ConstraintFailures}!Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}}
+\doxysubsubsection{\texorpdfstring{ConstraintFailures}{ConstraintFailures}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_core_1_1_error_info_acd4483dd8e34c93168b72f0a7ab4570c} 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_constraint_failure}{Constraint\+Failure}} \mbox{[}$\,$\mbox{]} Fauna.\+Core.\+Error\+Info.\+Constraint\+Failures\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The constraint failures that occurred during the query. 
+
+
+
+Definition at line \mbox{\hyperlink{_error_info_8cs_source_l00028}{28}} of file \mbox{\hyperlink{_error_info_8cs_source}{Error\+Info.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_core_1_1_error_info_a07ed88423498414dc4b14c36c99e4f24}\index{Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}!Message@{Message}}
+\index{Message@{Message}!Fauna.Core.ErrorInfo@{Fauna.Core.ErrorInfo}}
+\doxysubsubsection{\texorpdfstring{Message}{Message}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_core_1_1_error_info_a07ed88423498414dc4b14c36c99e4f24} 
+string? Fauna.\+Core.\+Error\+Info.\+Message\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The detailed message describing the cause of the error. 
+
+
+
+Definition at line \mbox{\hyperlink{_error_info_8cs_source_l00022}{22}} of file \mbox{\hyperlink{_error_info_8cs_source}{Error\+Info.\+cs}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Core/\mbox{\hyperlink{_error_info_8cs}{Error\+Info.\+cs}}\end{DoxyCompactItemize}

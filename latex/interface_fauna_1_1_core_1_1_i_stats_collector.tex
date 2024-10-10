@@ -1,0 +1,79 @@
+\doxysection{Fauna.\+Core.\+IStats\+Collector Interface Reference}
+\hypertarget{interface_fauna_1_1_core_1_1_i_stats_collector}{}\label{interface_fauna_1_1_core_1_1_i_stats_collector}\index{Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}}
+Inheritance diagram for Fauna.\+Core.\+IStats\+Collector\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_fauna_1_1_core_1_1_i_stats_collector}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_a42df7f5f66a3f609573b504e40ef7687}{Add}} (\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}} stats)
+\begin{DoxyCompactList}\small\item\em Add the \doxylink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats} to the current counts. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}} \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_a129f12130d12ee9d15d46227d95ec5f2}{Read}} ()
+\begin{DoxyCompactList}\small\item\em Return the collected \doxylink{struct_fauna_1_1_core_1_1_stats}{Stats}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}} \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_ac4f7f6e6fb05e11bf936aea7d75fc6ca}{Read\+And\+Reset}} ()
+\begin{DoxyCompactList}\small\item\em Return the collected \doxylink{struct_fauna_1_1_core_1_1_stats}{Stats} and Reset counts. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{_stats_collector_8cs_source_l00020}{20}} of file \mbox{\hyperlink{_stats_collector_8cs_source}{Stats\+Collector.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interface_fauna_1_1_core_1_1_i_stats_collector_a42df7f5f66a3f609573b504e40ef7687}\index{Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}!Add@{Add}}
+\index{Add@{Add}!Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}}
+\doxysubsubsection{\texorpdfstring{Add()}{Add()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_core_1_1_i_stats_collector_a42df7f5f66a3f609573b504e40ef7687} 
+void Fauna.\+Core.\+IStats\+Collector.\+Add (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}}}]{stats}{}\end{DoxyParamCaption})}
+
+
+
+Add the \doxylink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats} to the current counts. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em stats} & \doxylink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_a44cc6a97822da493063cdb0fea2f8137}{Fauna.\+Core.\+Stats\+Collector}}.
+
+\Hypertarget{interface_fauna_1_1_core_1_1_i_stats_collector_a129f12130d12ee9d15d46227d95ec5f2}\index{Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}!Read@{Read}}
+\index{Read@{Read}!Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}}
+\doxysubsubsection{\texorpdfstring{Read()}{Read()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_core_1_1_i_stats_collector_a129f12130d12ee9d15d46227d95ec5f2} 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}} Fauna.\+Core.\+IStats\+Collector.\+Read (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Return the collected \doxylink{struct_fauna_1_1_core_1_1_stats}{Stats}. 
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_a129a191f98a2fb792a9bbf95839f11d5}{Fauna.\+Core.\+Stats\+Collector}}.
+
+\Hypertarget{interface_fauna_1_1_core_1_1_i_stats_collector_ac4f7f6e6fb05e11bf936aea7d75fc6ca}\index{Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}!ReadAndReset@{ReadAndReset}}
+\index{ReadAndReset@{ReadAndReset}!Fauna.Core.IStatsCollector@{Fauna.Core.IStatsCollector}}
+\doxysubsubsection{\texorpdfstring{ReadAndReset()}{ReadAndReset()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_core_1_1_i_stats_collector_ac4f7f6e6fb05e11bf936aea7d75fc6ca} 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}} Fauna.\+Core.\+IStats\+Collector.\+Read\+And\+Reset (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Return the collected \doxylink{struct_fauna_1_1_core_1_1_stats}{Stats} and Reset counts. 
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_ad691d9a6763164fd4f1668d889283408}{Fauna.\+Core.\+Stats\+Collector}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Core/\mbox{\hyperlink{_stats_collector_8cs}{Stats\+Collector.\+cs}}\end{DoxyCompactItemize}

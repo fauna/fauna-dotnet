@@ -1,0 +1,68 @@
+\doxysection{Attributes.\+cs}
+\hypertarget{_attributes_8cs_source}{}\label{_attributes_8cs_source}\index{Fauna/Mapping/Attributes.cs@{Fauna/Mapping/Attributes.cs}}
+\mbox{\hyperlink{_attributes_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00001}\mbox{\hyperlink{namespace_fauna_1_1_mapping}{00001}}\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_mapping}{Fauna.Mapping}};}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00007}00007\ [AttributeUsage(AttributeTargets.Class)]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00008}00008\ [Obsolete(\textcolor{stringliteral}{"{}Object\ attribute\ is\ no\ longer\ used\ and\ will\ not\ influence\ serialization."{}})]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00009}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_object_attribute}{00009}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_object_attribute}{ObjectAttribute}}\ :\ Attribute}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00011}00011\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00016}00016\ [AttributeUsage(AttributeTargets.Property)]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00017}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ignore_attribute}{00017}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ignore_attribute}{IgnoreAttribute}}\ :\ Attribute}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00018}00018\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00019}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ignore_attribute_a275a70f14903402295a62c1688b78585}{00019}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ignore_attribute_a275a70f14903402295a62c1688b78585}{IgnoreAttribute}}()\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00021}00021\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00023}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{00023}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{abstract}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{BaseFieldAttribute}}\ :\ Attribute}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00024}00024\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00025}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_a016be275db1bfb176351ce07dcaf4319}{00025}}\ \ \ \ \ \textcolor{keyword}{public}\ readonly\ \textcolor{keywordtype}{string}?\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_a016be275db1bfb176351ce07dcaf4319}{Name}};}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00026}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_aaef046d14f4eb1824d552eea63afedde}{00026}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_aaef046d14f4eb1824d552eea63afedde}{Type}};}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00028}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_a1730b02e91eb142a324af40943d222a0}{00028}}\ \ \ \ \ \textcolor{keyword}{protected}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_a1730b02e91eb142a324af40943d222a0}{BaseFieldAttribute}}(\textcolor{keywordtype}{string}?\ name,\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}\ type)}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00029}00029\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00030}00030\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_a016be275db1bfb176351ce07dcaf4319}{Name}}\ =\ name;}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00031}00031\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute_aaef046d14f4eb1824d552eea63afedde}{Type}}\ =\ type;}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00032}00032\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00033}00033\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00038}00038\ [AttributeUsage(AttributeTargets.Property)]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00039}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute}{00039}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute}{FieldAttribute}}\ :\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{BaseFieldAttribute}}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00040}00040\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00041}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute_a3ea78c81982ac626f40b992a7f157368}{00041}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute_a3ea78c81982ac626f40b992a7f157368}{FieldAttribute}}()\ :\ base(null,\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6f16a5f8ff5d75ab84c018adacdfcbb7}{Field}})\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00042}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute_a98699f7e60a8684b324ffebe42bb8bbf}{00042}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute_a98699f7e60a8684b324ffebe42bb8bbf}{FieldAttribute}}(\textcolor{keywordtype}{string}\ name)\ :\ base(name,\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6f16a5f8ff5d75ab84c018adacdfcbb7}{Field}})\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00043}00043\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00049}00049\ [AttributeUsage(AttributeTargets.Property)]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00050}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute}{00050}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute}{IdAttribute}}\ :\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{BaseFieldAttribute}}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00051}00051\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00052}00052\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ FieldName\ =\ \textcolor{stringliteral}{"{}id"{}};}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00053}00053\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00054}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute_a01f9d1d5700032c0a5ad65a1ab89bbdf}{00054}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute_a01f9d1d5700032c0a5ad65a1ab89bbdf}{IdAttribute}}()\ :\ base(FieldName,\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aead92f9f61cb0996c2991d2c8bf272162a}{ServerGeneratedId}})\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00056}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute_ae48ef0e602f33bb9e16c27f0c2aea7d1}{00056}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute_ae48ef0e602f33bb9e16c27f0c2aea7d1}{IdAttribute}}(\textcolor{keywordtype}{bool}\ isClientGenerated)}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ :\ base(FieldName,\ isClientGenerated\ ?\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea262614acb323cca83f55d1fe1d5de332}{ClientGeneratedId}}\ :\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aead92f9f61cb0996c2991d2c8bf272162a}{ServerGeneratedId}})\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00058}00058\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00059}00059\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00064}00064\ [AttributeUsage(AttributeTargets.Property)]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00065}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_collection_attribute}{00065}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_collection_attribute}{CollectionAttribute}}\ :\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{BaseFieldAttribute}}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00066}00066\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00067}00067\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ FieldName\ =\ \textcolor{stringliteral}{"{}coll"{}};}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00069}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_collection_attribute_a40e3e515290950a24c8a8c9f7e3ec0b4}{00069}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_collection_attribute_a40e3e515290950a24c8a8c9f7e3ec0b4}{CollectionAttribute}}()\ :\ base(FieldName,\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea9a557bb14d1daf432595d548d5cdc415}{Coll}})\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00070}00070\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00071}00071\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00072}00072\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00077}00077\ [AttributeUsage(AttributeTargets.Property)]}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00078}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ts_attribute}{00078}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ts_attribute}{TsAttribute}}\ :\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{BaseFieldAttribute}}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00079}00079\ \{}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00080}00080\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ FieldName\ =\ \textcolor{stringliteral}{"{}ts"{}};}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00081}00081\ }
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00082}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ts_attribute_a029527312aa64533ecdae5bb548833ca}{00082}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ts_attribute_a029527312aa64533ecdae5bb548833ca}{TsAttribute}}()\ :\ base(FieldName,\ \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{FieldType}}.\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6a2389c404bc1b338fb35293fd4c19d3}{Ts}})\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_attributes_8cs_source_l00083}00083\ \}}
+
+\end{DoxyCode}

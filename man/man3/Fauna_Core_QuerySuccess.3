@@ -1,0 +1,121 @@
+.TH "Fauna.Core.QuerySuccess< T >" 3 "Version 0.3.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Core.QuerySuccess< T > \- Represents a successful query response\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFauna\&.Core\&.QueryResponse\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBQuerySuccess\fP (\fBMappingContext\fP ctx, \fBISerializer\fP< T > serializer, JsonElement json)"
+.br
+.RI "Initializes a new instance of the \fBQuerySuccess<T>\fP class, deserializing the query response into the specified type\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "T \fBData\fP\fR [get]\fP"
+.br
+.RI "Gets the deserialized data from the query response\&. "
+.ti -1c
+.RI "string? \fBStaticType\fP\fR [get]\fP"
+.br
+.RI "Gets the static type information from the query response, if available\&. "
+.in -1c
+
+Properties inherited from \fBFauna\&.Core\&.QueryResponse\fP
+.in +1c
+.ti -1c
+.RI "JsonElement \fBRawJson\fP\fR [get]\fP"
+.br
+.ti -1c
+.RI "long \fBLastSeenTxn\fP\fR [get]\fP"
+.br
+.RI "Gets the last transaction seen by this query\&. "
+.ti -1c
+.RI "long \fBSchemaVersion\fP\fR [get]\fP"
+.br
+.RI "Gets the schema version\&. "
+.ti -1c
+.RI "string \fBSummary\fP = ''\fR [get]\fP"
+.br
+.RI "Gets a summary of the query execution\&. "
+.ti -1c
+.RI "Dictionary< string, string > \fBQueryTags\fP = new()\fR [get]\fP"
+.br
+.RI "Gets a dictionary of query tags, providing additional context about the query\&. "
+.ti -1c
+.RI "\fBQueryStats\fP \fBStats\fP\fR [get]\fP"
+.br
+.RI "Gets the statistics related to the query execution\&. "
+.in -1c
+.SS "Additional Inherited Members"
+
+
+Static Public Member Functions inherited from \fBFauna\&.Core\&.QueryResponse\fP
+.in +1c
+.ti -1c
+.RI "static ? \fBQueryResponse\fP \fBGetFromResponseBody< T >\fP (\fBMappingContext\fP ctx, \fBISerializer\fP< T > serializer, HttpStatusCode statusCode, string body)"
+.br
+.RI "Asynchronously parses the HTTP response message to create a \fBQueryResponse\fP instance\&. "
+.in -1c
+
+Package Functions inherited from \fBFauna\&.Core\&.QueryResponse\fP
+.SH "Detailed Description"
+.PP 
+Represents a successful query response\&. 
+
+
+.PP
+\fBTemplate Parameters\fP
+.RS 4
+\fIT\fP The type of data expected in the query result\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB121\fP of file \fBQueryResponse\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "\fBFauna\&.Core\&.QuerySuccess\fP< T >\&.\fBQuerySuccess\fP (\fBMappingContext\fP ctx, \fBISerializer\fP< T > serializer, JsonElement json)"
+
+.PP
+Initializes a new instance of the \fBQuerySuccess<T>\fP class, deserializing the query response into the specified type\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIctx\fP The serialization context used for deserializing the response data\&.
+.br
+\fIserializer\fP A deserializer for the response data type\&.
+.br
+\fIjson\fP The parsed JSON response body\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB139\fP of file \fBQueryResponse\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "T \fBFauna\&.Core\&.QuerySuccess\fP< T >\&.Data\fR [get]\fP"
+
+.PP
+Gets the deserialized data from the query response\&. 
+.PP
+Definition at line \fB126\fP of file \fBQueryResponse\&.cs\fP\&.
+.SS "string? \fBFauna\&.Core\&.QuerySuccess\fP< T >\&.StaticType\fR [get]\fP"
+
+.PP
+Gets the static type information from the query response, if available\&. 
+.PP
+Definition at line \fB131\fP of file \fBQueryResponse\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

@@ -1,0 +1,990 @@
+\doxysection{Fauna.\+Linq.\+IQuery\+Source\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Interface Template Reference}
+\hypertarget{interface_fauna_1_1_linq_1_1_i_query_source}{}\label{interface_fauna_1_1_linq_1_1_i_query_source}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+Inheritance diagram for Fauna.\+Linq.\+IQuery\+Source\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.221374cm]{interface_fauna_1_1_linq_1_1_i_query_source}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+IAsync\+Enumerable$<$ Page$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a252f02c4c25555173e95a0ae03736491}{Paginate\+Async}} (\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\item 
+IAsync\+Enumerable$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a3a2f7ecb6bfd4149b9cb0600130d5441}{To\+Async\+Enumerable}} (Cancellation\+Token cancel=default)
+\item 
+IEnumerable$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aebb96a9c5d309397895a6e7b044fd732}{To\+Enumerable}} ()
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a394e807a6a677dbb858cfa3705b275fc}{Distinct}} ()
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_addcf7617349d5827a1c16b8b9c24ea9b}{Order}} ()
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_abaa81a220872f2e3003c742e254f04cd}{Order\+By$<$ K $>$}} (Expression$<$ Func$<$ T, K $>$ $>$ key\+Selector)
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ab134fe862405e01a309e24fb625ae51e}{Order\+Descending}} ()
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a3ac7364dac3a110f3baf946cc5978e08}{Order\+By\+Descending$<$ K $>$}} (Expression$<$ Func$<$ T, K $>$ $>$ key\+Selector)
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a7366609d401d26592d4cc80b1c52f91c}{Reverse}} ()
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ R $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aab6b6f24739021a16a3585ff19b85960}{Select$<$ R $>$}} (Expression$<$ Func$<$ T, R $>$ $>$ selector)
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a8caf009c6a75594242b32943f0eb1576}{Skip}} (int count)
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a513c23d6f18bc246716ccb093bb9b711}{Take}} (int count)
+\item 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a2988559cfef02746a2e47aba716014bc}{Where}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+bool \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a01d20bacccfa37e44233cc5d17f01958}{All}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ bool $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ab8eaf4db2e8b4e3fe5f88a43f10e848a}{All\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+bool \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a3543a82b5d5f8368fcf1a042904ea145}{Any}} ()
+\item 
+Task$<$ bool $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_afd54139024541eb98e1983adfed7b52d}{Any\+Async}} (Cancellation\+Token cancel=default)
+\item 
+bool \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aedc8577c696c5356f7cda33499b4c62b}{Any}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ bool $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a482249bd3b7c63acf39a1b0c8f0c5615}{Any\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+int \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a5e6ca1162a65b47f4fc822f4bfa4765b}{Count}} ()
+\item 
+Task$<$ int $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aed3b5ead65c3916873a089fa6a617a07}{Count\+Async}} (Cancellation\+Token cancel=default)
+\item 
+int \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a4ed5368a9ba594c49c3b78f3dc97793f}{Count}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ int $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a488045702287118d16e5e5242c7712d7}{Count\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ad290836ce6a2a2612db275b3b450fe46}{First}} ()
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a39bf74badec039f8f0f2edf4a0208a83}{First\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a7b828bd62de9b384ccf32248f365c74f}{First}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a513376176ab3c2c3238cbb6cc907e311}{First\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_af9aa36d863c20cfb7957417e9eaa6930}{First\+Or\+Default}} ()
+\item 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a20ed7fc18a4cdb42829787000b5875af}{First\+Or\+Default\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a44bc9209520899f0c2bed4a5f24b95c1}{First\+Or\+Default}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ace60b5bfa40652701816a90df851ba59}{First\+Or\+Default\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ae7256a33e11263d4b09d42bb4bcebc1d}{Last}} ()
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a0758709c4698e8f6dff674e296b868e7}{Last\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a5db7a911eb000e6672f70593c3ecd12c}{Last}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a3025e0aa4f91d800ec83655725f07db4}{Last\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a36f0633188756424cde175d0852de61e}{Last\+Or\+Default}} ()
+\item 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aa29697cc777adfbff5a5aff665dfdc29}{Last\+Or\+Default\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_af28c2531d13c4c8243d373fd4f941fc2}{Last\+Or\+Default}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_afaaa73546e60720774e747c324ce7652}{Last\+Or\+Default\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+long \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a655d8a1eff077248921bcc4a683bc3bc}{Long\+Count}} ()
+\item 
+Task$<$ long $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ac43f54f021f8ca80d5148caa0a5234f5}{Long\+Count\+Async}} (Cancellation\+Token cancel=default)
+\item 
+long \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a19e4bcc3bb2ecba0d06844fee3f0f90b}{Long\+Count}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ long $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a1117db02116c21dcd553d66dca9b149d}{Long\+Count\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a811b086445f699c46e43c4b59f4b664d}{Max}} ()
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a8819533e514ec7d6120e7e9455bc7cc3}{Max\+Async}} (Cancellation\+Token cancel=default)
+\item 
+R \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a2e82eb768d656278f2c82a958c803547}{Max$<$ R $>$}} (Expression$<$ Func$<$ T, R $>$ $>$ selector)
+\item 
+Task$<$ R $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a75beb20309984e0bf948ae2d691ea1e7}{Max\+Async$<$ R $>$}} (Expression$<$ Func$<$ T, R $>$ $>$ selector, Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a100ae5b685755781b9e265951482a147}{Min}} ()
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_acb64e37c8cae3971473ac9203ed6a81d}{Min\+Async}} (Cancellation\+Token cancel=default)
+\item 
+R \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ad1ec9bb522d460833090ee8e11df8dfa}{Min$<$ R $>$}} (Expression$<$ Func$<$ T, R $>$ $>$ selector)
+\item 
+Task$<$ R $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a672249ed07773eb8e6ef9cebabe14253}{Min\+Async$<$ R $>$}} (Expression$<$ Func$<$ T, R $>$ $>$ selector, Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_af1678dc5caef46b5e9c763a10deb6b14}{Single}} ()
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ac2dac5d2b899367046cafbc6e67ee171}{Single\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a73db65fb3f7283be33d56e5d399cef27}{Single}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a61dff8ec374224e6ebe28bdcf846c33d}{Single\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ae9085a45341f0d8c963cefd149c36f71}{Single\+Or\+Default}} ()
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a90334a446992f666892f954a2c11188d}{Single\+Or\+Default\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ada891929e59282c7a0d1ae1fd956fa58}{Single\+Or\+Default}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate)
+\item 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ad44e84bc222caa0a8b45ebd04d7d7aaf}{Single\+Or\+Default\+Async}} (Expression$<$ Func$<$ T, bool $>$ $>$ predicate, Cancellation\+Token cancel=default)
+\item 
+int \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a060f01978b9fc3b9b632a8d4272cbde4}{Sum}} (Expression$<$ Func$<$ T, int $>$ $>$ selector)
+\item 
+Task$<$ int $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a79b92ed20324ea75e4e6b7ea1681705b}{Sum\+Async}} (Expression$<$ Func$<$ T, int $>$ $>$ selector, Cancellation\+Token cancel=default)
+\item 
+long \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a3edd927c9d8c2ec9dd4e515c61c3cb0d}{Sum}} (Expression$<$ Func$<$ T, long $>$ $>$ selector)
+\item 
+Task$<$ long $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aa3494c5a421855cb86b278a36a78ac62}{Sum\+Async}} (Expression$<$ Func$<$ T, long $>$ $>$ selector, Cancellation\+Token cancel=default)
+\item 
+double \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ab99f5a3ad6c53eed1c649dadd1502cf2}{Sum}} (Expression$<$ Func$<$ T, double $>$ $>$ selector)
+\item 
+Task$<$ double $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_afad96e2b0fedc4be853e0ad1d6e2f234}{Sum\+Async}} (Expression$<$ Func$<$ T, double $>$ $>$ selector, Cancellation\+Token cancel=default)
+\item 
+double \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a3410096d445903426a5025c2cffe995d}{Average}} (Expression$<$ Func$<$ T, double $>$ $>$ selector)
+\item 
+Task$<$ double $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a783897d67ee524084923bc1f719107bc}{Average\+Async}} (Expression$<$ Func$<$ T, double $>$ $>$ selector, Cancellation\+Token cancel=default)
+\item 
+List$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ad964392c4644f0f747459dcf68daa8c1}{To\+List}} ()
+\item 
+Task$<$ List$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ab4ed053b2c1cc633da22d9a253a54049}{To\+List\+Async}} (Cancellation\+Token cancel=default)
+\item 
+T\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a506f5c3bc0d10b6e00df7d5815a0a5a6}{To\+Array}} ()
+\item 
+Task$<$ T\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a1abf1c86a49a91881770a8d192de51b0}{To\+Array\+Async}} (Cancellation\+Token cancel=default)
+\item 
+Hash\+Set$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_aab9bf7e752cd54acbb31477119254f2f}{To\+Hash\+Set}} ()
+\item 
+Task$<$ Hash\+Set$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a9848f5f7d614ba824d00977caeb2ddb7}{To\+Hash\+Set\+Async}} (Cancellation\+Token cancel=default)
+\item 
+Hash\+Set$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a34a69661db42a454142f082065aa8d51}{To\+Hash\+Set}} (IEquality\+Comparer$<$ T $>$? comparer)
+\item 
+Task$<$ Hash\+Set$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_af91ee374db38c522c80efa06d6ab4f1c}{To\+Hash\+Set\+Async}} (IEquality\+Comparer$<$ T $>$? comparer, Cancellation\+Token cancel=default)
+\item 
+Dictionary$<$ K, V $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a757cd4784daf4dd91a89db2b46ac6219}{To\+Dictionary$<$ K, V $>$}} (Func$<$ T, K $>$ get\+Key, Func$<$ T, V $>$ get\+Value)
+\item 
+Task$<$ Dictionary$<$ K, V $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a8d91a1c95ccff5100b0c177f4fb19390}{To\+Dictionary\+Async$<$ K, V $>$}} (Func$<$ T, K $>$ get\+Key, Func$<$ T, V $>$ get\+Value, Cancellation\+Token cancel=default)
+\item 
+Dictionary$<$ K, V $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a22e5aeb90b45bbb7d1ebbd1f48f9ce1e}{To\+Dictionary$<$ K, V $>$}} (Func$<$ T, K $>$ get\+Key, Func$<$ T, V $>$ get\+Value, IEquality\+Comparer$<$ K $>$? comparer)
+\item 
+Task$<$ Dictionary$<$ K, V $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_ab99cd23f322a5ac7856d3e17461a006c}{To\+Dictionary\+Async$<$ K, V $>$}} (Func$<$ T, K $>$ get\+Key, Func$<$ T, V $>$ get\+Value, IEquality\+Comparer$<$ K $>$? comparer, Cancellation\+Token cancel=default)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{_i_query_source_8cs_source_l00020}{20}} of file \mbox{\hyperlink{_i_query_source_8cs_source}{IQuery\+Source.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a01d20bacccfa37e44233cc5d17f01958}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!All@{All}}
+\index{All@{All}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{All()}{All()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a01d20bacccfa37e44233cc5d17f01958} 
+bool \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.All (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa12ea84f100830d5417544c3d3f4ac40}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa12ea84f100830d5417544c3d3f4ac40}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ab8eaf4db2e8b4e3fe5f88a43f10e848a}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!AllAsync@{AllAsync}}
+\index{AllAsync@{AllAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{AllAsync()}{AllAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ab8eaf4db2e8b4e3fe5f88a43f10e848a} 
+Task$<$ bool $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.All\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a157baa772e661379c14cd6f63318e9bd}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a157baa772e661379c14cd6f63318e9bd}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a3543a82b5d5f8368fcf1a042904ea145}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Any@{Any}}
+\index{Any@{Any}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Any()}{Any()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a3543a82b5d5f8368fcf1a042904ea145} 
+bool \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Any (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2df85b2cc738ac0018668a8157a4000c}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2df85b2cc738ac0018668a8157a4000c}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aedc8577c696c5356f7cda33499b4c62b}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Any@{Any}}
+\index{Any@{Any}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Any()}{Any()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aedc8577c696c5356f7cda33499b4c62b} 
+bool \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Any (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a407fda956ffcf7e2f807fa7882e1e514}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a407fda956ffcf7e2f807fa7882e1e514}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_afd54139024541eb98e1983adfed7b52d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!AnyAsync@{AnyAsync}}
+\index{AnyAsync@{AnyAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{AnyAsync()}{AnyAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_afd54139024541eb98e1983adfed7b52d} 
+Task$<$ bool $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Any\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af9e2dfb6d414c893e96737369f7df82d}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af9e2dfb6d414c893e96737369f7df82d}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a482249bd3b7c63acf39a1b0c8f0c5615}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!AnyAsync@{AnyAsync}}
+\index{AnyAsync@{AnyAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{AnyAsync()}{AnyAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a482249bd3b7c63acf39a1b0c8f0c5615} 
+Task$<$ bool $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Any\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae031b77a7a40302dea328b5b69315116}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae031b77a7a40302dea328b5b69315116}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a3410096d445903426a5025c2cffe995d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Average@{Average}}
+\index{Average@{Average}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Average()}{Average()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a3410096d445903426a5025c2cffe995d} 
+double \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Average (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, double $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a11da54e4ed5a86eaf9b9f39185c7b9f6}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a11da54e4ed5a86eaf9b9f39185c7b9f6}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a783897d67ee524084923bc1f719107bc}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!AverageAsync@{AverageAsync}}
+\index{AverageAsync@{AverageAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{AverageAsync()}{AverageAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a783897d67ee524084923bc1f719107bc} 
+Task$<$ double $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Average\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, double $>$ $>$}]{selector}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a3c92da19ff35696420cf3578e7d3b1ee}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a3c92da19ff35696420cf3578e7d3b1ee}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a5e6ca1162a65b47f4fc822f4bfa4765b}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Count@{Count}}
+\index{Count@{Count}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Count()}{Count()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a5e6ca1162a65b47f4fc822f4bfa4765b} 
+int \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a8e74513e2269ac8f22873a9d456e7349}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a8e74513e2269ac8f22873a9d456e7349}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a4ed5368a9ba594c49c3b78f3dc97793f}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Count@{Count}}
+\index{Count@{Count}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Count()}{Count()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a4ed5368a9ba594c49c3b78f3dc97793f} 
+int \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Count (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_afd91f98a12837fc7c3b900cdf24f159e}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_afd91f98a12837fc7c3b900cdf24f159e}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aed3b5ead65c3916873a089fa6a617a07}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!CountAsync@{CountAsync}}
+\index{CountAsync@{CountAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{CountAsync()}{CountAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aed3b5ead65c3916873a089fa6a617a07} 
+Task$<$ int $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Count\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a050001f4d4bf0be82488c164d718ddfd}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a050001f4d4bf0be82488c164d718ddfd}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a488045702287118d16e5e5242c7712d7}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!CountAsync@{CountAsync}}
+\index{CountAsync@{CountAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{CountAsync()}{CountAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a488045702287118d16e5e5242c7712d7} 
+Task$<$ int $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Count\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a513683cd043b4b471d6844601a869173}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a513683cd043b4b471d6844601a869173}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a394e807a6a677dbb858cfa3705b275fc}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Distinct@{Distinct}}
+\index{Distinct@{Distinct}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Distinct()}{Distinct()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a394e807a6a677dbb858cfa3705b275fc} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Distinct (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac18066f45bb38cb3100d704265e8b46c}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac18066f45bb38cb3100d704265e8b46c}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ad290836ce6a2a2612db275b3b450fe46}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!First@{First}}
+\index{First@{First}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{First()}{First()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ad290836ce6a2a2612db275b3b450fe46} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ad2db38327bfa866826f343face54d551}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ad2db38327bfa866826f343face54d551}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a7b828bd62de9b384ccf32248f365c74f}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!First@{First}}
+\index{First@{First}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{First()}{First()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a7b828bd62de9b384ccf32248f365c74f} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6776b537cf5f2fcd2f7f167f1ef53851}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6776b537cf5f2fcd2f7f167f1ef53851}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a39bf74badec039f8f0f2edf4a0208a83}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!FirstAsync@{FirstAsync}}
+\index{FirstAsync@{FirstAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FirstAsync()}{FirstAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a39bf74badec039f8f0f2edf4a0208a83} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a25861d9025ff9f97a9d4343edff3b0e5}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a25861d9025ff9f97a9d4343edff3b0e5}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a513376176ab3c2c3238cbb6cc907e311}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!FirstAsync@{FirstAsync}}
+\index{FirstAsync@{FirstAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FirstAsync()}{FirstAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a513376176ab3c2c3238cbb6cc907e311} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2cb652dd6e7630820cb44acb7e46fb73}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2cb652dd6e7630820cb44acb7e46fb73}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_af9aa36d863c20cfb7957417e9eaa6930}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!FirstOrDefault@{FirstOrDefault}}
+\index{FirstOrDefault@{FirstOrDefault}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FirstOrDefault()}{FirstOrDefault()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_af9aa36d863c20cfb7957417e9eaa6930} 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First\+Or\+Default (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_afe092b791e35a5440ee7500383d15f6f}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_afe092b791e35a5440ee7500383d15f6f}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a44bc9209520899f0c2bed4a5f24b95c1}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!FirstOrDefault@{FirstOrDefault}}
+\index{FirstOrDefault@{FirstOrDefault}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FirstOrDefault()}{FirstOrDefault()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a44bc9209520899f0c2bed4a5f24b95c1} 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First\+Or\+Default (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6269cbbb368a4dff20344c37b2e6faed}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6269cbbb368a4dff20344c37b2e6faed}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a20ed7fc18a4cdb42829787000b5875af}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!FirstOrDefaultAsync@{FirstOrDefaultAsync}}
+\index{FirstOrDefaultAsync@{FirstOrDefaultAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FirstOrDefaultAsync()}{FirstOrDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a20ed7fc18a4cdb42829787000b5875af} 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First\+Or\+Default\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a472dbbfd4f6d9a6e646ac71430f37186}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a472dbbfd4f6d9a6e646ac71430f37186}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ace60b5bfa40652701816a90df851ba59}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!FirstOrDefaultAsync@{FirstOrDefaultAsync}}
+\index{FirstOrDefaultAsync@{FirstOrDefaultAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{FirstOrDefaultAsync()}{FirstOrDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ace60b5bfa40652701816a90df851ba59} 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.First\+Or\+Default\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a09e728801e111800fa9e4f7411b0bfe1}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a09e728801e111800fa9e4f7411b0bfe1}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ae7256a33e11263d4b09d42bb4bcebc1d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Last@{Last}}
+\index{Last@{Last}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Last()}{Last()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ae7256a33e11263d4b09d42bb4bcebc1d} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ab7d314b5a5140f94431b909e1e02731d}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ab7d314b5a5140f94431b909e1e02731d}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a5db7a911eb000e6672f70593c3ecd12c}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Last@{Last}}
+\index{Last@{Last}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Last()}{Last()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a5db7a911eb000e6672f70593c3ecd12c} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae09933466c423f706fabc102c01dc047}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae09933466c423f706fabc102c01dc047}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a0758709c4698e8f6dff674e296b868e7}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LastAsync@{LastAsync}}
+\index{LastAsync@{LastAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LastAsync()}{LastAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a0758709c4698e8f6dff674e296b868e7} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6a2814420baf124bf50ad8f46778c7e2}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6a2814420baf124bf50ad8f46778c7e2}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a3025e0aa4f91d800ec83655725f07db4}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LastAsync@{LastAsync}}
+\index{LastAsync@{LastAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LastAsync()}{LastAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a3025e0aa4f91d800ec83655725f07db4} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a5b8999362149fd4d7b581ea94d0466eb}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a5b8999362149fd4d7b581ea94d0466eb}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a36f0633188756424cde175d0852de61e}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LastOrDefault@{LastOrDefault}}
+\index{LastOrDefault@{LastOrDefault}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LastOrDefault()}{LastOrDefault()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a36f0633188756424cde175d0852de61e} 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last\+Or\+Default (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a9fff8f3d6f586ab5e475eadae55e3c88}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a9fff8f3d6f586ab5e475eadae55e3c88}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_af28c2531d13c4c8243d373fd4f941fc2}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LastOrDefault@{LastOrDefault}}
+\index{LastOrDefault@{LastOrDefault}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LastOrDefault()}{LastOrDefault()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_af28c2531d13c4c8243d373fd4f941fc2} 
+T? \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last\+Or\+Default (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_addd8697ca1301b3b3ef070ab4ee7c65b}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_addd8697ca1301b3b3ef070ab4ee7c65b}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aa29697cc777adfbff5a5aff665dfdc29}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LastOrDefaultAsync@{LastOrDefaultAsync}}
+\index{LastOrDefaultAsync@{LastOrDefaultAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LastOrDefaultAsync()}{LastOrDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aa29697cc777adfbff5a5aff665dfdc29} 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last\+Or\+Default\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_acb32b4aa59ed8353e87d2882fe7f0b74}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_acb32b4aa59ed8353e87d2882fe7f0b74}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_afaaa73546e60720774e747c324ce7652}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LastOrDefaultAsync@{LastOrDefaultAsync}}
+\index{LastOrDefaultAsync@{LastOrDefaultAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LastOrDefaultAsync()}{LastOrDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_afaaa73546e60720774e747c324ce7652} 
+Task$<$ T?$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Last\+Or\+Default\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aae2ca49fc8a098d6cdb4f88128e28169}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aae2ca49fc8a098d6cdb4f88128e28169}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a655d8a1eff077248921bcc4a683bc3bc}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LongCount@{LongCount}}
+\index{LongCount@{LongCount}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LongCount()}{LongCount()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a655d8a1eff077248921bcc4a683bc3bc} 
+long \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Long\+Count (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ad2a3c3b6d82ab31ad142d73e958af5e6}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ad2a3c3b6d82ab31ad142d73e958af5e6}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a19e4bcc3bb2ecba0d06844fee3f0f90b}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LongCount@{LongCount}}
+\index{LongCount@{LongCount}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LongCount()}{LongCount()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a19e4bcc3bb2ecba0d06844fee3f0f90b} 
+long \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Long\+Count (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa683fd138d2e981e7f246fe4e6ca8904}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa683fd138d2e981e7f246fe4e6ca8904}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ac43f54f021f8ca80d5148caa0a5234f5}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LongCountAsync@{LongCountAsync}}
+\index{LongCountAsync@{LongCountAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LongCountAsync()}{LongCountAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ac43f54f021f8ca80d5148caa0a5234f5} 
+Task$<$ long $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Long\+Count\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac887b05990052df98fced79a07f1751d}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac887b05990052df98fced79a07f1751d}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a1117db02116c21dcd553d66dca9b149d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!LongCountAsync@{LongCountAsync}}
+\index{LongCountAsync@{LongCountAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{LongCountAsync()}{LongCountAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a1117db02116c21dcd553d66dca9b149d} 
+Task$<$ long $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Long\+Count\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af664db7512909fc5c497b79dfc749115}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af664db7512909fc5c497b79dfc749115}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a811b086445f699c46e43c4b59f4b664d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Max@{Max}}
+\index{Max@{Max}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Max()}{Max()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a811b086445f699c46e43c4b59f4b664d} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Max (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6e5fc9b2c882b23b08006da042e6bba6}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6e5fc9b2c882b23b08006da042e6bba6}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a2e82eb768d656278f2c82a958c803547}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Max$<$ R $>$@{Max$<$ R $>$}}
+\index{Max$<$ R $>$@{Max$<$ R $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Max$<$ R $>$()}{Max< R >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a2e82eb768d656278f2c82a958c803547} 
+R \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a811b086445f699c46e43c4b59f4b664d}{Max}}$<$ R $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, R $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_afa27eb7bc5903c6c2376ac995cc34f5e}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_afa27eb7bc5903c6c2376ac995cc34f5e}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a8819533e514ec7d6120e7e9455bc7cc3}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!MaxAsync@{MaxAsync}}
+\index{MaxAsync@{MaxAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{MaxAsync()}{MaxAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a8819533e514ec7d6120e7e9455bc7cc3} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Max\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aec463aa09add0a2f88b1a0b5c7e72bdb}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aec463aa09add0a2f88b1a0b5c7e72bdb}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a75beb20309984e0bf948ae2d691ea1e7}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!MaxAsync$<$ R $>$@{MaxAsync$<$ R $>$}}
+\index{MaxAsync$<$ R $>$@{MaxAsync$<$ R $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{MaxAsync$<$ R $>$()}{MaxAsync< R >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a75beb20309984e0bf948ae2d691ea1e7} 
+Task$<$ R $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a8819533e514ec7d6120e7e9455bc7cc3}{Max\+Async}}$<$ R $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, R $>$ $>$}]{selector}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa41d2a6fa0b5b991747c2b035a18acb0}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa41d2a6fa0b5b991747c2b035a18acb0}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a100ae5b685755781b9e265951482a147}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Min@{Min}}
+\index{Min@{Min}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Min()}{Min()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a100ae5b685755781b9e265951482a147} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Min (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af4a09a78365fa97474123255a1816c9c}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af4a09a78365fa97474123255a1816c9c}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ad1ec9bb522d460833090ee8e11df8dfa}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Min$<$ R $>$@{Min$<$ R $>$}}
+\index{Min$<$ R $>$@{Min$<$ R $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Min$<$ R $>$()}{Min< R >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ad1ec9bb522d460833090ee8e11df8dfa} 
+R \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_a100ae5b685755781b9e265951482a147}{Min}}$<$ R $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, R $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a599f515a512dbe9b16a625c1cf41ff66}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a599f515a512dbe9b16a625c1cf41ff66}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_acb64e37c8cae3971473ac9203ed6a81d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!MinAsync@{MinAsync}}
+\index{MinAsync@{MinAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{MinAsync()}{MinAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_acb64e37c8cae3971473ac9203ed6a81d} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Min\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a3b55db575366474079b11f9bc6c02295}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a3b55db575366474079b11f9bc6c02295}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a672249ed07773eb8e6ef9cebabe14253}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!MinAsync$<$ R $>$@{MinAsync$<$ R $>$}}
+\index{MinAsync$<$ R $>$@{MinAsync$<$ R $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{MinAsync$<$ R $>$()}{MinAsync< R >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a672249ed07773eb8e6ef9cebabe14253} 
+Task$<$ R $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source_acb64e37c8cae3971473ac9203ed6a81d}{Min\+Async}}$<$ R $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, R $>$ $>$}]{selector}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a705a2a6ac5366f5368acf580fdbac247}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a705a2a6ac5366f5368acf580fdbac247}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_addcf7617349d5827a1c16b8b9c24ea9b}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Order@{Order}}
+\index{Order@{Order}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Order()}{Order()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_addcf7617349d5827a1c16b8b9c24ea9b} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Order (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa639d8200d0c4ee2dbaedf3c64305b3c}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aa639d8200d0c4ee2dbaedf3c64305b3c}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_abaa81a220872f2e3003c742e254f04cd}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!OrderBy$<$ K $>$@{OrderBy$<$ K $>$}}
+\index{OrderBy$<$ K $>$@{OrderBy$<$ K $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{OrderBy$<$ K $>$()}{OrderBy< K >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_abaa81a220872f2e3003c742e254f04cd} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Order\+By$<$ K $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, K $>$ $>$}]{key\+Selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae8d9cb42dd4019c020040e784b92765d}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae8d9cb42dd4019c020040e784b92765d}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a3ac7364dac3a110f3baf946cc5978e08}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!OrderByDescending$<$ K $>$@{OrderByDescending$<$ K $>$}}
+\index{OrderByDescending$<$ K $>$@{OrderByDescending$<$ K $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{OrderByDescending$<$ K $>$()}{OrderByDescending< K >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a3ac7364dac3a110f3baf946cc5978e08} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Order\+By\+Descending$<$ K $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, K $>$ $>$}]{key\+Selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a57359f59994cbf2c46de8cacb69cff0f}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a57359f59994cbf2c46de8cacb69cff0f}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ab134fe862405e01a309e24fb625ae51e}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!OrderDescending@{OrderDescending}}
+\index{OrderDescending@{OrderDescending}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{OrderDescending()}{OrderDescending()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ab134fe862405e01a309e24fb625ae51e} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Order\+Descending (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a876a6ff621aaeec039f20f5bd8bfb6fc}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a876a6ff621aaeec039f20f5bd8bfb6fc}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a252f02c4c25555173e95a0ae03736491}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!PaginateAsync@{PaginateAsync}}
+\index{PaginateAsync@{PaginateAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{PaginateAsync()}{PaginateAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a252f02c4c25555173e95a0ae03736491} 
+IAsync\+Enumerable$<$ Page$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Paginate\+Async (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}?}]{query\+Options}{ = {\ttfamily null}, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2af63132c0e047cb4660e25284427e16}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a7366609d401d26592d4cc80b1c52f91c}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Reverse@{Reverse}}
+\index{Reverse@{Reverse}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Reverse()}{Reverse()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a7366609d401d26592d4cc80b1c52f91c} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Reverse (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6a9b601e9d9b7c27f995f7691e2ef969}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6a9b601e9d9b7c27f995f7691e2ef969}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aab6b6f24739021a16a3585ff19b85960}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Select$<$ R $>$@{Select$<$ R $>$}}
+\index{Select$<$ R $>$@{Select$<$ R $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Select$<$ R $>$()}{Select< R >()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aab6b6f24739021a16a3585ff19b85960} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ R $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Select$<$ R $>$ (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, R $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af7054b85a6b3534e85d7e3f73f8faa34}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af7054b85a6b3534e85d7e3f73f8faa34}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_af1678dc5caef46b5e9c763a10deb6b14}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Single@{Single}}
+\index{Single@{Single}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Single()}{Single()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_af1678dc5caef46b5e9c763a10deb6b14} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a50d2503530b6d2bf135ad19c8d349d7d}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a50d2503530b6d2bf135ad19c8d349d7d}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a73db65fb3f7283be33d56e5d399cef27}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Single@{Single}}
+\index{Single@{Single}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Single()}{Single()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a73db65fb3f7283be33d56e5d399cef27} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac1187624f20d49af014d1e56ba2faa41}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac1187624f20d49af014d1e56ba2faa41}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ac2dac5d2b899367046cafbc6e67ee171}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SingleAsync@{SingleAsync}}
+\index{SingleAsync@{SingleAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SingleAsync()}{SingleAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ac2dac5d2b899367046cafbc6e67ee171} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aba52472064f7bb50c76638d89ac4ed8e}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aba52472064f7bb50c76638d89ac4ed8e}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a61dff8ec374224e6ebe28bdcf846c33d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SingleAsync@{SingleAsync}}
+\index{SingleAsync@{SingleAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SingleAsync()}{SingleAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a61dff8ec374224e6ebe28bdcf846c33d} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_adcef53174636e61a12a5e1c8c40e395a}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_adcef53174636e61a12a5e1c8c40e395a}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ae9085a45341f0d8c963cefd149c36f71}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SingleOrDefault@{SingleOrDefault}}
+\index{SingleOrDefault@{SingleOrDefault}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SingleOrDefault()}{SingleOrDefault()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ae9085a45341f0d8c963cefd149c36f71} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single\+Or\+Default (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a653c4563b58baefefb234529eae98824}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a653c4563b58baefefb234529eae98824}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ada891929e59282c7a0d1ae1fd956fa58}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SingleOrDefault@{SingleOrDefault}}
+\index{SingleOrDefault@{SingleOrDefault}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SingleOrDefault()}{SingleOrDefault()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ada891929e59282c7a0d1ae1fd956fa58} 
+T \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single\+Or\+Default (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a3af2769b9931d1c2eb1c82949fd27feb}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a3af2769b9931d1c2eb1c82949fd27feb}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a90334a446992f666892f954a2c11188d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SingleOrDefaultAsync@{SingleOrDefaultAsync}}
+\index{SingleOrDefaultAsync@{SingleOrDefaultAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SingleOrDefaultAsync()}{SingleOrDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a90334a446992f666892f954a2c11188d} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single\+Or\+Default\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a78518f9497b0c4a94befcd2c01c9c1ad}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a78518f9497b0c4a94befcd2c01c9c1ad}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ad44e84bc222caa0a8b45ebd04d7d7aaf}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SingleOrDefaultAsync@{SingleOrDefaultAsync}}
+\index{SingleOrDefaultAsync@{SingleOrDefaultAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SingleOrDefaultAsync()}{SingleOrDefaultAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ad44e84bc222caa0a8b45ebd04d7d7aaf} 
+Task$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Single\+Or\+Default\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a24ba32cc1493cab02f746a828e9baad5}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a24ba32cc1493cab02f746a828e9baad5}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a8caf009c6a75594242b32943f0eb1576}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Skip@{Skip}}
+\index{Skip@{Skip}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Skip()}{Skip()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a8caf009c6a75594242b32943f0eb1576} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Skip (\begin{DoxyParamCaption}\item[{int}]{count}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a705b1d434a72172709a7f19d3e05072e}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a705b1d434a72172709a7f19d3e05072e}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ab99f5a3ad6c53eed1c649dadd1502cf2}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Sum@{Sum}}
+\index{Sum@{Sum}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Sum()}{Sum()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ab99f5a3ad6c53eed1c649dadd1502cf2} 
+double \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Sum (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, double $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a32e28e5cbc936a7911f22a4e5b0dcc5e}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a32e28e5cbc936a7911f22a4e5b0dcc5e}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a060f01978b9fc3b9b632a8d4272cbde4}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Sum@{Sum}}
+\index{Sum@{Sum}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Sum()}{Sum()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a060f01978b9fc3b9b632a8d4272cbde4} 
+int \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Sum (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, int $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ab2651f05eee3d4006dc50d562c50a2d4}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ab2651f05eee3d4006dc50d562c50a2d4}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a3edd927c9d8c2ec9dd4e515c61c3cb0d}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Sum@{Sum}}
+\index{Sum@{Sum}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Sum()}{Sum()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a3edd927c9d8c2ec9dd4e515c61c3cb0d} 
+long \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Sum (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, long $>$ $>$}]{selector}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af67ffd7390c671208b58cae7b8387f01}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_af67ffd7390c671208b58cae7b8387f01}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_afad96e2b0fedc4be853e0ad1d6e2f234}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SumAsync@{SumAsync}}
+\index{SumAsync@{SumAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SumAsync()}{SumAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_afad96e2b0fedc4be853e0ad1d6e2f234} 
+Task$<$ double $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Sum\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, double $>$ $>$}]{selector}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac9e194b99f4addffd2fd960149831fbc}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ac9e194b99f4addffd2fd960149831fbc}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a79b92ed20324ea75e4e6b7ea1681705b}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SumAsync@{SumAsync}}
+\index{SumAsync@{SumAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SumAsync()}{SumAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a79b92ed20324ea75e4e6b7ea1681705b} 
+Task$<$ int $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Sum\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, int $>$ $>$}]{selector}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a4a9d18b9dd5f563acb351352220b0b05}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a4a9d18b9dd5f563acb351352220b0b05}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aa3494c5a421855cb86b278a36a78ac62}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!SumAsync@{SumAsync}}
+\index{SumAsync@{SumAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{SumAsync()}{SumAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aa3494c5a421855cb86b278a36a78ac62} 
+Task$<$ long $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Sum\+Async (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, long $>$ $>$}]{selector}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2414312901884b1989067a455a863163}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a2414312901884b1989067a455a863163}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a513c23d6f18bc246716ccb093bb9b711}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Take@{Take}}
+\index{Take@{Take}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Take()}{Take()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a513c23d6f18bc246716ccb093bb9b711} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Take (\begin{DoxyParamCaption}\item[{int}]{count}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ab8e51abacef93dc6168001df00a6aea3}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ab8e51abacef93dc6168001df00a6aea3}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a506f5c3bc0d10b6e00df7d5815a0a5a6}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToArray@{ToArray}}
+\index{ToArray@{ToArray}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToArray()}{ToArray()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a506f5c3bc0d10b6e00df7d5815a0a5a6} 
+T\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Array (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a46fc5fc77393842c3b669a216ef65015}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a46fc5fc77393842c3b669a216ef65015}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a1abf1c86a49a91881770a8d192de51b0}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToArrayAsync@{ToArrayAsync}}
+\index{ToArrayAsync@{ToArrayAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToArrayAsync()}{ToArrayAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a1abf1c86a49a91881770a8d192de51b0} 
+Task$<$ T\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Array\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a92047ce86a910055262a36e1d1f5ed48}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a92047ce86a910055262a36e1d1f5ed48}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a3a2f7ecb6bfd4149b9cb0600130d5441}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToAsyncEnumerable@{ToAsyncEnumerable}}
+\index{ToAsyncEnumerable@{ToAsyncEnumerable}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToAsyncEnumerable()}{ToAsyncEnumerable()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a3a2f7ecb6bfd4149b9cb0600130d5441} 
+IAsync\+Enumerable$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Async\+Enumerable (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae3c575021f36c25dcb991264e714749a}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ae3c575021f36c25dcb991264e714749a}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a757cd4784daf4dd91a89db2b46ac6219}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToDictionary$<$ K, V $>$@{ToDictionary$<$ K, V $>$}}
+\index{ToDictionary$<$ K, V $>$@{ToDictionary$<$ K, V $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToDictionary$<$ K, V $>$()}{ToDictionary< K, V >()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a757cd4784daf4dd91a89db2b46ac6219} 
+Dictionary$<$ K, V $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Dictionary$<$ K, V $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, K $>$}]{get\+Key}{, }\item[{Func$<$ T, V $>$}]{get\+Value}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aad3b2ce859d07555561091729f9612d0}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_aad3b2ce859d07555561091729f9612d0}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em K} : {\em notnull}]\end{description}
+\end{Desc}
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a22e5aeb90b45bbb7d1ebbd1f48f9ce1e}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToDictionary$<$ K, V $>$@{ToDictionary$<$ K, V $>$}}
+\index{ToDictionary$<$ K, V $>$@{ToDictionary$<$ K, V $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToDictionary$<$ K, V $>$()}{ToDictionary< K, V >()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a22e5aeb90b45bbb7d1ebbd1f48f9ce1e} 
+Dictionary$<$ K, V $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Dictionary$<$ K, V $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, K $>$}]{get\+Key}{, }\item[{Func$<$ T, V $>$}]{get\+Value}{, }\item[{IEquality\+Comparer$<$ K $>$?}]{comparer}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a1d358ec337f86e282842751b74cff699}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a1d358ec337f86e282842751b74cff699}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em K} : {\em notnull}]\end{description}
+\end{Desc}
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a8d91a1c95ccff5100b0c177f4fb19390}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToDictionaryAsync$<$ K, V $>$@{ToDictionaryAsync$<$ K, V $>$}}
+\index{ToDictionaryAsync$<$ K, V $>$@{ToDictionaryAsync$<$ K, V $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToDictionaryAsync$<$ K, V $>$()}{ToDictionaryAsync< K, V >()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a8d91a1c95ccff5100b0c177f4fb19390} 
+Task$<$ Dictionary$<$ K, V $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Dictionary\+Async$<$ K, V $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, K $>$}]{get\+Key}{, }\item[{Func$<$ T, V $>$}]{get\+Value}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a4a6035da0da466d5824705d0a3354ac0}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a4a6035da0da466d5824705d0a3354ac0}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em K} : {\em notnull}]\end{description}
+\end{Desc}
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ab99cd23f322a5ac7856d3e17461a006c}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToDictionaryAsync$<$ K, V $>$@{ToDictionaryAsync$<$ K, V $>$}}
+\index{ToDictionaryAsync$<$ K, V $>$@{ToDictionaryAsync$<$ K, V $>$}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToDictionaryAsync$<$ K, V $>$()}{ToDictionaryAsync< K, V >()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ab99cd23f322a5ac7856d3e17461a006c} 
+Task$<$ Dictionary$<$ K, V $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Dictionary\+Async$<$ K, V $>$ (\begin{DoxyParamCaption}\item[{Func$<$ T, K $>$}]{get\+Key}{, }\item[{Func$<$ T, V $>$}]{get\+Value}{, }\item[{IEquality\+Comparer$<$ K $>$?}]{comparer}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a84daa60f2ddd1429a627ef715d3b2e3d}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a84daa60f2ddd1429a627ef715d3b2e3d}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em K} : {\em notnull}]\end{description}
+\end{Desc}
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aebb96a9c5d309397895a6e7b044fd732}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToEnumerable@{ToEnumerable}}
+\index{ToEnumerable@{ToEnumerable}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToEnumerable()}{ToEnumerable()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aebb96a9c5d309397895a6e7b044fd732} 
+IEnumerable$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Enumerable (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a22700075c469a1be272a89b97c09b194}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a22700075c469a1be272a89b97c09b194}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_aab9bf7e752cd54acbb31477119254f2f}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToHashSet@{ToHashSet}}
+\index{ToHashSet@{ToHashSet}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToHashSet()}{ToHashSet()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_aab9bf7e752cd54acbb31477119254f2f} 
+Hash\+Set$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Hash\+Set (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a1b1bfdc2823eb4d2893c1bcfcc5e7e2e}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a1b1bfdc2823eb4d2893c1bcfcc5e7e2e}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a34a69661db42a454142f082065aa8d51}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToHashSet@{ToHashSet}}
+\index{ToHashSet@{ToHashSet}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToHashSet()}{ToHashSet()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a34a69661db42a454142f082065aa8d51} 
+Hash\+Set$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Hash\+Set (\begin{DoxyParamCaption}\item[{IEquality\+Comparer$<$ T $>$?}]{comparer}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a80d97da1964b72bfaea321929b3b3b94}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a80d97da1964b72bfaea321929b3b3b94}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a9848f5f7d614ba824d00977caeb2ddb7}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToHashSetAsync@{ToHashSetAsync}}
+\index{ToHashSetAsync@{ToHashSetAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToHashSetAsync()}{ToHashSetAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a9848f5f7d614ba824d00977caeb2ddb7} 
+Task$<$ Hash\+Set$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Hash\+Set\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6f3e079a25af53dd3bfc621c2c8a07be}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a6f3e079a25af53dd3bfc621c2c8a07be}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_af91ee374db38c522c80efa06d6ab4f1c}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToHashSetAsync@{ToHashSetAsync}}
+\index{ToHashSetAsync@{ToHashSetAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToHashSetAsync()}{ToHashSetAsync()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_af91ee374db38c522c80efa06d6ab4f1c} 
+Task$<$ Hash\+Set$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+Hash\+Set\+Async (\begin{DoxyParamCaption}\item[{IEquality\+Comparer$<$ T $>$?}]{comparer}{, }\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a181783739366c15bb981cc7f9fcdbedf}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a181783739366c15bb981cc7f9fcdbedf}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ad964392c4644f0f747459dcf68daa8c1}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToList@{ToList}}
+\index{ToList@{ToList}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToList()}{ToList()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ad964392c4644f0f747459dcf68daa8c1} 
+List$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+List (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a9dff0ad0d6d5aafaf504362455267406}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a9dff0ad0d6d5aafaf504362455267406}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_ab4ed053b2c1cc633da22d9a253a54049}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!ToListAsync@{ToListAsync}}
+\index{ToListAsync@{ToListAsync}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{ToListAsync()}{ToListAsync()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_ab4ed053b2c1cc633da22d9a253a54049} 
+Task$<$ List$<$ T $>$ $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.To\+List\+Async (\begin{DoxyParamCaption}\item[{Cancellation\+Token}]{cancel}{ = {\ttfamily default}}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ad231c8fb75bd99e36db6e0692467e2b8}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_ad231c8fb75bd99e36db6e0692467e2b8}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+\Hypertarget{interface_fauna_1_1_linq_1_1_i_query_source_a2988559cfef02746a2e47aba716014bc}\index{Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}!Where@{Where}}
+\index{Where@{Where}!Fauna.Linq.IQuerySource$<$ T $>$@{Fauna.Linq.IQuerySource$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Where()}{Where()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_linq_1_1_i_query_source_a2988559cfef02746a2e47aba716014bc} 
+\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{IQuery\+Source}}$<$ T $>$ \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_i_query_source}{Fauna.\+Linq.\+IQuery\+Source}}$<$ T $>$.Where (\begin{DoxyParamCaption}\item[{Expression$<$ Func$<$ T, bool $>$ $>$}]{predicate}{}\end{DoxyParamCaption})}
+
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a8544cac7ead52657422b75d56ff3117a}{Fauna.\+Linq.\+Query\+Source$<$ T $>$}}, and \mbox{\hyperlink{class_fauna_1_1_linq_1_1_query_source_a8544cac7ead52657422b75d56ff3117a}{Fauna.\+Linq.\+Query\+Source$<$ Doc $>$}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Linq/\mbox{\hyperlink{_i_query_source_8cs}{IQuery\+Source.\+cs}}\end{DoxyCompactItemize}

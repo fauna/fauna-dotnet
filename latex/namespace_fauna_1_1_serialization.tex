@@ -1,0 +1,226 @@
+\doxysection{Fauna.\+Serialization Namespace Reference}
+\hypertarget{namespace_fauna_1_1_serialization}{}\label{namespace_fauna_1_1_serialization}\index{Fauna.Serialization@{Fauna.Serialization}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class {\bfseries Base\+Ref\+Serializer}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Base\+Serializer}}
+\item 
+class {\bfseries Boolean\+Serializer}
+\item 
+class {\bfseries Byte\+Serializer}
+\item 
+class {\bfseries Class\+Serializer}
+\item 
+class {\bfseries Date\+Only\+Serializer}
+\item 
+class {\bfseries Date\+Time\+Offset\+Serializer}
+\item 
+class {\bfseries Date\+Time\+Serializer}
+\item 
+class {\bfseries Dictionary\+Serializer}
+\item 
+class {\bfseries Double\+Serializer}
+\item 
+class {\bfseries Dynamic\+Serializer}
+\item 
+class {\bfseries Float\+Serializer}
+\item 
+class {\bfseries Int\+Serializer}
+\item 
+interface {\bfseries IPartial\+Document\+Serializer}
+\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}
+\item 
+class {\bfseries List\+Serializer}
+\item 
+class {\bfseries Long\+Serializer}
+\item 
+class {\bfseries Module\+Serializer}
+\item 
+class {\bfseries Named\+Ref\+Serializer}
+\item 
+class {\bfseries Nullable\+Serializer}
+\item 
+class {\bfseries Nullable\+Struct\+Serializer}
+\item 
+class {\bfseries Page\+Serializer}
+\item 
+class {\bfseries Query\+Arr\+Serializer}
+\item 
+class {\bfseries Query\+Expr\+Serializer}
+\item 
+class {\bfseries Query\+Literal\+Serializer}
+\item 
+class {\bfseries Query\+Obj\+Serializer}
+\item 
+class {\bfseries Query\+Serializer}
+\item 
+class {\bfseries Query\+Val\+Serializer}
+\item 
+class {\bfseries Ref\+Serializer}
+\item 
+class {\bfseries SByte\+Serializer}
+\item 
+class {\bfseries Serializer}
+\begin{DoxyCompactList}\small\item\em Represents methods for serializing objects to and from \doxylink{namespace_fauna}{Fauna}\textquotesingle{}s value format. \end{DoxyCompactList}\item 
+class {\bfseries Short\+Serializer}
+\item 
+class {\bfseries Stream\+Serializer}
+\item 
+class {\bfseries String\+Serializer}
+\item 
+class {\bfseries UInt\+Serializer}
+\item 
+class {\bfseries UShort\+Serializer}
+\item 
+struct \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}}
+\begin{DoxyCompactList}\small\item\em Represents a reader that provides fast, non-\/cached, forward-\/only access to serialized data. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}}
+\begin{DoxyCompactList}\small\item\em Provides functionality for writing data in a streaming manner to a buffer or a stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} \{ \newline
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a6adf97f83acf6453d4a6a4b1070f3754}{None}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ad34204d72ef88942903d871c12f1cc50}{Start\+Object}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a29b9b2e4070b4e76657e8e74cb4c8191}{End\+Object}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a996340e132bfc11a3480cfd8b1e748e9}{Start\+Array}}
+, \newline
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a28eba72f5e41e1aa926ed48f93baec15}{End\+Array}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a64bfd0e5b16568ed18a424b52abd9894}{Start\+Page}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a5cb1ddc6c8dc9eb27d797fdb6ff9f4b0}{End\+Page}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a1b86e934c3522f579c091374c790d216}{Start\+Ref}}
+, \newline
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a409cc7a46a863b94814d8d0adf44c92c}{End\+Ref}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a5005fecec5456e4aad0048f88dc86a71}{Start\+Document}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ae0cb56712be8fc99060b85201de2bfdd}{End\+Document}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ac5b8d76e52be996ffe6ea3b9a19f1fed}{Field\+Name}}
+, \newline
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a27118326006d3829667a400ad23d5d98}{String}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a1686a6c336b71b36d77354cea19a8b52}{Int}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a8394f0347c184cf156ac5924dccb773b}{Long}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ad909d38d705ce75386dd86e611a82f5b}{Double}}
+, \newline
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a44749712dbec183e983dcd78a7736c41}{Date}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50aa76d4ef5f3f6a672bbfab2865563e530}{Time}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50af827cf462f62848df37c5e1e94a4da74}{True}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50af8320b26d30ab433c5a54546d21f414c}{False}}
+, \newline
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50abbb93ef26e3c101ff11cdd21cab08a94}{Null}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ae55f75a29310d7b60f7ac1d390c8ae42}{Module}}
+, \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50aeae835e83c0494a376229f254f7d3392}{Stream}}
+ \}
+\begin{DoxyCompactList}\small\item\em Enumerates the types of tokens used in \doxylink{namespace_fauna}{Fauna} serialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}\index{Fauna.Serialization@{Fauna.Serialization}!TokenType@{TokenType}}
+\index{TokenType@{TokenType}!Fauna.Serialization@{Fauna.Serialization}}
+\doxysubsubsection{\texorpdfstring{TokenType}{TokenType}}
+{\footnotesize\ttfamily \label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+enum \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Fauna.\+Serialization.\+Token\+Type}}}
+
+
+
+Enumerates the types of tokens used in \doxylink{namespace_fauna}{Fauna} serialization. 
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{None@{None}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!None@{None}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a6adf97f83acf6453d4a6a4b1070f3754}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+None&There is no value. This is the default token type if no data has been read by the T\+:\+Fauna.\+Serialization.\+Utf8\+Fauna\+Reader. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{StartObject@{StartObject}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!StartObject@{StartObject}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ad34204d72ef88942903d871c12f1cc50}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Start\+Object&The token type is the start of a \doxylink{namespace_fauna}{Fauna} object. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EndObject@{EndObject}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!EndObject@{EndObject}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a29b9b2e4070b4e76657e8e74cb4c8191}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+End\+Object&The token type is the end of a \doxylink{namespace_fauna}{Fauna} object. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{StartArray@{StartArray}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!StartArray@{StartArray}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a996340e132bfc11a3480cfd8b1e748e9}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Start\+Array&The token type is the start of a \doxylink{namespace_fauna}{Fauna} array. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EndArray@{EndArray}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!EndArray@{EndArray}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a28eba72f5e41e1aa926ed48f93baec15}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+End\+Array&The token type is the end of a \doxylink{namespace_fauna}{Fauna} array. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{StartPage@{StartPage}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!StartPage@{StartPage}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a64bfd0e5b16568ed18a424b52abd9894}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Start\+Page&The token type is the start of a \doxylink{namespace_fauna}{Fauna} set (a.\+k.\+a. page). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EndPage@{EndPage}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!EndPage@{EndPage}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a5cb1ddc6c8dc9eb27d797fdb6ff9f4b0}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+End\+Page&The token type is the end of a \doxylink{namespace_fauna}{Fauna} set (a.\+k.\+a. page). \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{StartRef@{StartRef}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!StartRef@{StartRef}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a1b86e934c3522f579c091374c790d216}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Start\+Ref&The token type is the start of a \doxylink{namespace_fauna}{Fauna} ref. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EndRef@{EndRef}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!EndRef@{EndRef}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a409cc7a46a863b94814d8d0adf44c92c}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+End\+Ref&The token type is the end of a \doxylink{namespace_fauna}{Fauna} ref. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{StartDocument@{StartDocument}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!StartDocument@{StartDocument}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a5005fecec5456e4aad0048f88dc86a71}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Start\+Document&The token type is the start of a \doxylink{namespace_fauna}{Fauna} document. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{EndDocument@{EndDocument}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!EndDocument@{EndDocument}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ae0cb56712be8fc99060b85201de2bfdd}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+End\+Document&The token type is the end of a \doxylink{namespace_fauna}{Fauna} document. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FieldName@{FieldName}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!FieldName@{FieldName}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ac5b8d76e52be996ffe6ea3b9a19f1fed}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Field\+Name&The token type is a \doxylink{namespace_fauna}{Fauna} property name. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{String@{String}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!String@{String}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a27118326006d3829667a400ad23d5d98}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+String&The token type is a \doxylink{namespace_fauna}{Fauna} string. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Int@{Int}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Int@{Int}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a1686a6c336b71b36d77354cea19a8b52}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Int&The token type is a \doxylink{namespace_fauna}{Fauna} integer. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Long@{Long}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Long@{Long}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a8394f0347c184cf156ac5924dccb773b}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Long&The token type is a \doxylink{namespace_fauna}{Fauna} long. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Double@{Double}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Double@{Double}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ad909d38d705ce75386dd86e611a82f5b}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Double&The token type is a \doxylink{namespace_fauna}{Fauna} double. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Date@{Date}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Date@{Date}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50a44749712dbec183e983dcd78a7736c41}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Date&The token type is a \doxylink{namespace_fauna}{Fauna} date. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Time@{Time}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Time@{Time}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50aa76d4ef5f3f6a672bbfab2865563e530}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Time&The token type is a \doxylink{namespace_fauna}{Fauna} time. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{True@{True}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!True@{True}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50af827cf462f62848df37c5e1e94a4da74}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+True&The token type is the \doxylink{namespace_fauna}{Fauna} literal true. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{False@{False}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!False@{False}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50af8320b26d30ab433c5a54546d21f414c}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+False&The token type is the \doxylink{namespace_fauna}{Fauna} literal false. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Null@{Null}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Null@{Null}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50abbb93ef26e3c101ff11cdd21cab08a94}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Null&The token type is the \doxylink{namespace_fauna}{Fauna} literal null. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Module@{Module}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Module@{Module}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ae55f75a29310d7b60f7ac1d390c8ae42}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Module&The token type is the \doxylink{namespace_fauna}{Fauna} module. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Stream@{Stream}!Fauna.Serialization@{Fauna.Serialization}}\index{Fauna.Serialization@{Fauna.Serialization}!Stream@{Stream}}}\Hypertarget{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50aeae835e83c0494a376229f254f7d3392}\label{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50} 
+Stream&The token type is the \doxylink{namespace_fauna}{Fauna} stream token. \\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{_token_type_8cs_source_l00006}{6}} of file \mbox{\hyperlink{_token_type_8cs_source}{Token\+Type.\+cs}}.
+

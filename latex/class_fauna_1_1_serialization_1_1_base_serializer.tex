@@ -1,0 +1,93 @@
+\doxysection{Fauna.\+Serialization.\+Base\+Serializer\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>} Class Template Reference}
+\hypertarget{class_fauna_1_1_serialization_1_1_base_serializer}{}\label{class_fauna_1_1_serialization_1_1_base_serializer}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+Inheritance diagram for Fauna.\+Serialization.\+Base\+Serializer\texorpdfstring{$<$}{<} T \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_1_1_serialization_1_1_base_serializer}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+T \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_a1fab66a087d03ebfd9ad78b2995d25e0}{Deserialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} context, ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}} reader)
+\item 
+void \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_a651c0244aacb9dc448117e68b5b0b538}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} context, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} writer, object? o)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{Fauna.\+Serialization.\+ISerializer$<$ T $>$}}}
+\begin{DoxyCompactItemize}
+\item 
+new T \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer_ac60f498887ee736e5b47abf52e9ded28}{Deserialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} context, ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}} reader)
+\item 
+object? \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer_a5f764e58b23c292c65381c66f63585f4}{Deserialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} context, ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}} reader)
+\item 
+void \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer_a669f8e528218fc6ac70c4544f3b6d018}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} w, object? o)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+string \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_afa05195a1e716c601f4e20ade41894b8}{Unexpected\+Token\+Exception\+Message}} (\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} token)
+\item 
+string \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_a1ecc6a9336abf0679953ce8d6661d75f}{Unsupported\+Serialization\+Type\+Message}} (Type type)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_a344bc81c6f57496417a8e51ab31a36ed}{End\+Token\+For}} (\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} start)
+\item 
+static \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_serialization_exception}{Serialization\+Exception}} \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_a25c5416e9c34adcb44b6b48ea124eb3e}{Unexpected\+Token}} (\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} token)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{_i_serializer_8cs_source_l00017}{17}} of file \mbox{\hyperlink{_i_serializer_8cs_source}{ISerializer.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fauna_1_1_serialization_1_1_base_serializer_a1fab66a087d03ebfd9ad78b2995d25e0}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}!Deserialize@{Deserialize}}
+\index{Deserialize@{Deserialize}!Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Deserialize()}{Deserialize()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_serialization_1_1_base_serializer_a1fab66a087d03ebfd9ad78b2995d25e0} 
+T \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Fauna.\+Serialization.\+Base\+Serializer}}$<$ T $>$.Deserialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{context}{, }\item[{ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}}}]{reader}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [abstract]}}
+
+\Hypertarget{class_fauna_1_1_serialization_1_1_base_serializer_a344bc81c6f57496417a8e51ab31a36ed}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}!EndTokenFor@{EndTokenFor}}
+\index{EndTokenFor@{EndTokenFor}!Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{EndTokenFor()}{EndTokenFor()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_serialization_1_1_base_serializer_a344bc81c6f57496417a8e51ab31a36ed} 
+static \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Fauna.\+Serialization.\+Base\+Serializer}}$<$ T $>$.End\+Token\+For (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}}}]{start}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+
+
+Definition at line \mbox{\hyperlink{_i_serializer_8cs_source_l00020}{20}} of file \mbox{\hyperlink{_i_serializer_8cs_source}{ISerializer.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_serialization_1_1_base_serializer_a651c0244aacb9dc448117e68b5b0b538}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_serialization_1_1_base_serializer_a651c0244aacb9dc448117e68b5b0b538} 
+void \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Fauna.\+Serialization.\+Base\+Serializer}}$<$ T $>$.Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{context}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}}}]{writer}{, }\item[{object?}]{o}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [abstract]}}
+
+\Hypertarget{class_fauna_1_1_serialization_1_1_base_serializer_a25c5416e9c34adcb44b6b48ea124eb3e}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}!UnexpectedToken@{UnexpectedToken}}
+\index{UnexpectedToken@{UnexpectedToken}!Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{UnexpectedToken()}{UnexpectedToken()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_serialization_1_1_base_serializer_a25c5416e9c34adcb44b6b48ea124eb3e} 
+static \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_serialization_exception}{Serialization\+Exception}} \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Fauna.\+Serialization.\+Base\+Serializer}}$<$ T $>$.Unexpected\+Token (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}}}]{token}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [protected]}}
+
+\Hypertarget{class_fauna_1_1_serialization_1_1_base_serializer_afa05195a1e716c601f4e20ade41894b8}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}!UnexpectedTokenExceptionMessage@{UnexpectedTokenExceptionMessage}}
+\index{UnexpectedTokenExceptionMessage@{UnexpectedTokenExceptionMessage}!Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{UnexpectedTokenExceptionMessage()}{UnexpectedTokenExceptionMessage()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_serialization_1_1_base_serializer_afa05195a1e716c601f4e20ade41894b8} 
+string \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Fauna.\+Serialization.\+Base\+Serializer}}$<$ T $>$.Unexpected\+Token\+Exception\+Message (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}}}]{token}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\Hypertarget{class_fauna_1_1_serialization_1_1_base_serializer_a1ecc6a9336abf0679953ce8d6661d75f}\index{Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}!UnsupportedSerializationTypeMessage@{UnsupportedSerializationTypeMessage}}
+\index{UnsupportedSerializationTypeMessage@{UnsupportedSerializationTypeMessage}!Fauna.Serialization.BaseSerializer$<$ T $>$@{Fauna.Serialization.BaseSerializer$<$ T $>$}}
+\doxysubsubsection{\texorpdfstring{UnsupportedSerializationTypeMessage()}{UnsupportedSerializationTypeMessage()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_serialization_1_1_base_serializer_a1ecc6a9336abf0679953ce8d6661d75f} 
+string \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer}{Fauna.\+Serialization.\+Base\+Serializer}}$<$ T $>$.Unsupported\+Serialization\+Type\+Message (\begin{DoxyParamCaption}\item[{Type}]{type}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Serialization/\mbox{\hyperlink{_i_serializer_8cs}{ISerializer.\+cs}}\end{DoxyCompactItemize}

@@ -1,0 +1,197 @@
+.TH "Fauna.QueryLiteral" 3 "Version 0.3.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.QueryLiteral \- Represents a literal part of an FQL query\&. This class is used for embedding raw string values directly into the query structure\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFauna\&.IQueryFragment\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBQueryLiteral\fP (string v)"
+.br
+.RI "Initializes a new instance of the \fBQueryLiteral\fP class with the specified value\&. "
+.ti -1c
+.RI "override string \fBToString\fP ()"
+.br
+.RI "Returns a string that represents the current \fBQueryLiteral\fP\&. "
+.ti -1c
+.RI "void \fBSerialize\fP (\fBMappingContext\fP ctx, \fBUtf8FaunaWriter\fP writer)"
+.br
+.RI "Serializes the query literal\&. "
+.ti -1c
+.RI "override bool \fBEquals\fP (object? other)"
+.br
+.RI "Determines whether the specified object is equal to the current \fBQueryLiteral\fP\&. "
+.ti -1c
+.RI "override int \fBGetHashCode\fP ()"
+.br
+.RI "The default hash function\&. "
+.in -1c
+
+Public Member Functions inherited from \fBFauna\&.IQueryFragment\fP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static bool \fBoperator==\fP (\fBQueryLiteral\fP left, \fBQueryLiteral\fP right)"
+.br
+.RI "Determines whether two specified instances of \fBQueryLiteral\fP are equal\&. "
+.ti -1c
+.RI "static bool \fBoperator!=\fP (\fBQueryLiteral\fP left, \fBQueryLiteral\fP right)"
+.br
+.RI "Determines whether two specified instances of \fBQueryLiteral\fP are not equal\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string \fBUnwrap\fP\fR [get]\fP"
+.br
+.RI "Gets the string value of the query literal\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a literal part of an FQL query\&. This class is used for embedding raw string values directly into the query structure\&. 
+.PP
+Definition at line \fB9\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Fauna\&.QueryLiteral\&.QueryLiteral (string v)"
+
+.PP
+Initializes a new instance of the \fBQueryLiteral\fP class with the specified value\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIv\fP The string value to be represented as a query literal\&.
+.RE
+.PP
+\fBExceptions\fP
+.RS 4
+\fIArgumentNullException\fP Thrown when the value is null\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB16\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override bool Fauna\&.QueryLiteral\&.Equals (object? other)"
+
+.PP
+Determines whether the specified object is equal to the current \fBQueryLiteral\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIother\fP The object to compare with the current \fBQueryLiteral\fP\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if the specified object is equal to the current \fBQueryLiteral\fP; otherwise, false\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB55\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SS "override int Fauna\&.QueryLiteral\&.GetHashCode ()"
+
+.PP
+The default hash function\&. 
+.PP
+\fBReturns\fP
+.RS 4
+A hash code for the current \fBQueryLiteral\fP\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB81\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SS "static bool Fauna\&.QueryLiteral\&.operator!= (\fBQueryLiteral\fP left, \fBQueryLiteral\fP right)\fR [static]\fP"
+
+.PP
+Determines whether two specified instances of \fBQueryLiteral\fP are not equal\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIleft\fP The first \fBQueryLiteral\fP to compare\&.
+.br
+\fIright\fP The second \fBQueryLiteral\fP to compare\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if left and right are not equal; otherwise, false\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB103\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SS "static bool Fauna\&.QueryLiteral\&.operator== (\fBQueryLiteral\fP left, \fBQueryLiteral\fP right)\fR [static]\fP"
+
+.PP
+Determines whether two specified instances of \fBQueryLiteral\fP are equal\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIleft\fP The first \fBQueryLiteral\fP to compare\&.
+.br
+\fIright\fP The second \fBQueryLiteral\fP to compare\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if left and right are equal; otherwise, false\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB92\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SS "void Fauna\&.QueryLiteral\&.Serialize (\fBMappingContext\fP ctx, \fBUtf8FaunaWriter\fP writer)"
+
+.PP
+Serializes the query literal\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIctx\fP The serialization context\&.
+.br
+\fIwriter\fP The writer to serialize the query literal to\&.
+.RE
+.PP
+
+.PP
+Implements \fBFauna\&.IQueryFragment\fP\&.
+.PP
+Definition at line \fB45\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SS "override string Fauna\&.QueryLiteral\&.ToString ()"
+
+.PP
+Returns a string that represents the current \fBQueryLiteral\fP\&. 
+.PP
+\fBReturns\fP
+.RS 4
+A string that represents the current \fBQueryLiteral\fP\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB35\fP of file \fBQueryLiteral\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "string Fauna\&.QueryLiteral\&.Unwrap\fR [get]\fP"
+
+.PP
+Gets the string value of the query literal\&. 
+.PP
+Definition at line \fB29\fP of file \fBQueryLiteral\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

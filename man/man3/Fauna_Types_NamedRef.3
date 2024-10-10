@@ -1,0 +1,148 @@
+.TH "Fauna.Types.NamedRef< T >" 3 "Version 0.3.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Types.NamedRef< T > \- Represents a document ref that has a 'name' instead of an 'id'\&. For example, a Role document reference is represented as a \fBNamedRef\fP\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFauna\&.Types\&.BaseRef< T >\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBNamedRef\fP (string name, \fBDataContext\&.ICollection\fP col)"
+.br
+.ti -1c
+.RI "\fBNamedRef\fP (string name, \fBDataContext\&.ICollection\fP col, T doc)"
+.br
+.ti -1c
+.RI "\fBNamedRef\fP (string name, \fBDataContext\&.ICollection\fP col, string cause)"
+.br
+.ti -1c
+.RI "\fBNamedRef\fP (string name, \fBModule\fP col)"
+.br
+.ti -1c
+.RI "\fBNamedRef\fP (string name, \fBModule\fP col, string cause)"
+.br
+.ti -1c
+.RI "\fBNamedRef\fP (string name, \fBModule\fP col, T doc)"
+.br
+.ti -1c
+.RI "override T \fBGet\fP ()"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBFauna\&.Types\&.BaseRef< T >\fP
+.in +1c
+.ti -1c
+.RI "\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col, T doc)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col, string cause)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBModule\fP coll)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBModule\fP coll, T doc)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBModule\fP coll, string cause)"
+.br
+.ti -1c
+.RI "T \fBGet\fP ()"
+.br
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string \fBName\fP\fR [get]\fP"
+.br
+.RI "Gets the string value of the ref name\&. "
+.in -1c
+
+Properties inherited from \fBFauna\&.Types\&.BaseRef< T >\fP
+.in +1c
+.ti -1c
+.RI "string? \fBCause\fP\fR [get]\fP"
+.br
+.RI "Gets the cause when exists is false\&. Is null unless IsLoaded is true and Exists is false\&. "
+.ti -1c
+.RI "\fBModule\fP \fBCollection\fP\fR [get]\fP"
+.br
+.RI "Gets the collection to which the ref belongs\&. "
+.ti -1c
+.RI "bool? \fBExists\fP\fR [get]\fP"
+.br
+.RI "Gets a boolean indicating whether the doc exists\&. Is null unless IsLoaded is true\&. "
+.ti -1c
+.RI "bool \fBIsLoaded\fP = false\fR [get]\fP"
+.br
+.RI "Gets a boolean indicating whether the document represented by the ref has been loaded\&. "
+.in -1c
+.SS "Additional Inherited Members"
+
+
+Protected Attributes inherited from \fBFauna\&.Types\&.BaseRef< T >\fP
+.in +1c
+.ti -1c
+.RI "readonly? T \fBDoc\fP"
+.br
+.RI "Gets the materialized document represented by the \fBRef\fP\&. Is null unless IsLoaded is true and Exists is true\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a document ref that has a 'name' instead of an 'id'\&. For example, a Role document reference is represented as a \fBNamedRef\fP\&. 
+.PP
+Definition at line \fB11\fP of file \fBNamedRef\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "\fBFauna\&.Types\&.NamedRef\fP< T >\&.\fBNamedRef\fP (string name, \fBDataContext\&.ICollection\fP col)"
+
+.PP
+Definition at line \fB18\fP of file \fBNamedRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.NamedRef\fP< T >\&.\fBNamedRef\fP (string name, \fBDataContext\&.ICollection\fP col, T doc)"
+
+.PP
+Definition at line \fB23\fP of file \fBNamedRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.NamedRef\fP< T >\&.\fBNamedRef\fP (string name, \fBDataContext\&.ICollection\fP col, string cause)"
+
+.PP
+Definition at line \fB28\fP of file \fBNamedRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.NamedRef\fP< T >\&.\fBNamedRef\fP (string name, \fBModule\fP col)"
+
+.PP
+Definition at line \fB33\fP of file \fBNamedRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.NamedRef\fP< T >\&.\fBNamedRef\fP (string name, \fBModule\fP col, string cause)"
+
+.PP
+Definition at line \fB38\fP of file \fBNamedRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.NamedRef\fP< T >\&.\fBNamedRef\fP (string name, \fBModule\fP col, T doc)"
+
+.PP
+Definition at line \fB43\fP of file \fBNamedRef\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override T \fBFauna\&.Types\&.NamedRef\fP< T >\&.Get ()"
+
+.PP
+Definition at line \fB48\fP of file \fBNamedRef\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "string \fBFauna\&.Types\&.NamedRef\fP< T >\&.Name\fR [get]\fP"
+
+.PP
+Gets the string value of the ref name\&. 
+.PP
+Definition at line \fB16\fP of file \fBNamedRef\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

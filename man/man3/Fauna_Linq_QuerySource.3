@@ -1,0 +1,614 @@
+.TH "Fauna.Linq.QuerySource< T >" 3 "Version 0.3.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Linq.QuerySource< T >
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFauna\&.Linq\&.IQuerySource< T >\fP, QuerySource, and \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "IAsyncEnumerable< Page< T > > \fBPaginateAsync\fP (\fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "IAsyncEnumerable< T > \fBToAsyncEnumerable\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "IEnumerable< T > \fBToEnumerable\fP ()"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBDistinct\fP ()"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBOrder\fP ()"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBOrderBy< K >\fP (Expression< Func< T, K > > keySelector)"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBOrderByDescending< K >\fP (Expression< Func< T, K > > keySelector)"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBOrderDescending\fP ()"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBReverse\fP ()"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< R > \fBSelect< R >\fP (Expression< Func< T, R > > selector)"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBSkip\fP (int count)"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBTake\fP (int count)"
+.br
+.ti -1c
+.RI "\fBIQuerySource\fP< T > \fBWhere\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "bool \fBAll\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< bool > \fBAllAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "bool \fBAny\fP ()"
+.br
+.ti -1c
+.RI "Task< bool > \fBAnyAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "bool \fBAny\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< bool > \fBAnyAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "int \fBCount\fP ()"
+.br
+.ti -1c
+.RI "Task< int > \fBCountAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "int \fBCount\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< int > \fBCountAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBFirst\fP ()"
+.br
+.ti -1c
+.RI "Task< T > \fBFirstAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBFirst\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< T > \fBFirstAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T? \fBFirstOrDefault\fP ()"
+.br
+.ti -1c
+.RI "Task< T?> \fBFirstOrDefaultAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T? \fBFirstOrDefault\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< T?> \fBFirstOrDefaultAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBLast\fP ()"
+.br
+.ti -1c
+.RI "Task< T > \fBLastAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBLast\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< T > \fBLastAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T? \fBLastOrDefault\fP ()"
+.br
+.ti -1c
+.RI "Task< T?> \fBLastOrDefaultAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T? \fBLastOrDefault\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< T?> \fBLastOrDefaultAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "long \fBLongCount\fP ()"
+.br
+.ti -1c
+.RI "Task< long > \fBLongCountAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "long \fBLongCount\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< long > \fBLongCountAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBMax\fP ()"
+.br
+.ti -1c
+.RI "Task< T > \fBMaxAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "R \fBMax< R >\fP (Expression< Func< T, R > > selector)"
+.br
+.ti -1c
+.RI "Task< R > \fBMaxAsync< R >\fP (Expression< Func< T, R > > selector, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBMin\fP ()"
+.br
+.ti -1c
+.RI "Task< T > \fBMinAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "R \fBMin< R >\fP (Expression< Func< T, R > > selector)"
+.br
+.ti -1c
+.RI "Task< R > \fBMinAsync< R >\fP (Expression< Func< T, R > > selector, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "double \fBAverage\fP (Expression< Func< T, double > > selector)"
+.br
+.ti -1c
+.RI "Task< double > \fBAverageAsync\fP (Expression< Func< T, double > > selector, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBSingle\fP ()"
+.br
+.ti -1c
+.RI "Task< T > \fBSingleAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBSingle\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< T > \fBSingleAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBSingleOrDefault\fP ()"
+.br
+.ti -1c
+.RI "Task< T > \fBSingleOrDefaultAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T \fBSingleOrDefault\fP (Expression< Func< T, bool > > predicate)"
+.br
+.ti -1c
+.RI "Task< T > \fBSingleOrDefaultAsync\fP (Expression< Func< T, bool > > predicate, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "int \fBSum\fP (Expression< Func< T, int > > selector)"
+.br
+.ti -1c
+.RI "Task< int > \fBSumAsync\fP (Expression< Func< T, int > > selector, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "long \fBSum\fP (Expression< Func< T, long > > selector)"
+.br
+.ti -1c
+.RI "Task< long > \fBSumAsync\fP (Expression< Func< T, long > > selector, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "double \fBSum\fP (Expression< Func< T, double > > selector)"
+.br
+.ti -1c
+.RI "Task< double > \fBSumAsync\fP (Expression< Func< T, double > > selector, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "List< T > \fBToList\fP ()"
+.br
+.ti -1c
+.RI "async Task< List< T > > \fBToListAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "T[] \fBToArray\fP ()"
+.br
+.ti -1c
+.RI "async Task< T[]> \fBToArrayAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "HashSet< T > \fBToHashSet\fP ()"
+.br
+.ti -1c
+.RI "Task< HashSet< T > > \fBToHashSetAsync\fP (CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "HashSet< T > \fBToHashSet\fP (IEqualityComparer< T >? comparer)"
+.br
+.ti -1c
+.RI "async Task< HashSet< T > > \fBToHashSetAsync\fP (IEqualityComparer< T >? comparer, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "Dictionary< K, V > \fBToDictionary< K, V >\fP (Func< T, K > getKey, Func< T, V > getValue)"
+.br
+.ti -1c
+.RI "Task< Dictionary< K, V > > \fBToDictionaryAsync< K, V >\fP (Func< T, K > getKey, Func< T, V > getValue, CancellationToken cancel=default)"
+.br
+.ti -1c
+.RI "Dictionary< K, V > \fBToDictionary< K, V >\fP (Func< T, K > getKey, Func< T, V > getValue, IEqualityComparer< K >? comparer)"
+.br
+.ti -1c
+.RI "async Task< Dictionary< K, V > > \fBToDictionaryAsync< K, V >\fP (Func< T, K > getKey, Func< T, V > getValue, IEqualityComparer< K >? comparer, CancellationToken cancel=default)"
+.br
+.in -1c
+
+Public Member Functions inherited from \fBFauna\&.Linq\&.IQuerySource< T >\fP
+.SH "Detailed Description"
+.PP 
+Definition at line \fB5\fP of file \fBQuerySourceToCollections\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "bool \fBFauna\&.Linq\&.QuerySource\fP< T >\&.All (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< bool > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.AllAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "bool \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Any ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "bool \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Any (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< bool > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.AnyAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< bool > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.AnyAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "double \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Average (Expression< Func< T, double > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< double > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.AverageAsync (Expression< Func< T, double > > selector, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "int \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Count ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "int \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Count (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< int > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.CountAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< int > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.CountAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Distinct ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB20\fP of file \fBQuerySourceDsl\&.cs\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.First ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.First (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.FirstAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.FirstAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T? \fBFauna\&.Linq\&.QuerySource\fP< T >\&.FirstOrDefault ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T? \fBFauna\&.Linq\&.QuerySource\fP< T >\&.FirstOrDefault (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T?> \fBFauna\&.Linq\&.QuerySource\fP< T >\&.FirstOrDefaultAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T?> \fBFauna\&.Linq\&.QuerySource\fP< T >\&.FirstOrDefaultAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Last ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Last (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LastAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LastAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T? \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LastOrDefault ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T? \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LastOrDefault (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T?> \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LastOrDefaultAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T?> \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LastOrDefaultAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "long \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LongCount ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "long \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LongCount (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< long > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LongCountAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< long > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.LongCountAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Max ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "R \fBFauna\&.Linq\&.QuerySource\fP< T >\&.\fBMax\fP< R > (Expression< Func< T, R > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.MaxAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< R > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.\fBMaxAsync\fP< R > (Expression< Func< T, R > > selector, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Min ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "R \fBFauna\&.Linq\&.QuerySource\fP< T >\&.\fBMin\fP< R > (Expression< Func< T, R > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.MinAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< R > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.\fBMinAsync\fP< R > (Expression< Func< T, R > > selector, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Order ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB26\fP of file \fBQuerySourceDsl\&.cs\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.OrderBy< K > (Expression< Func< T, K > > keySelector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB32\fP of file \fBQuerySourceDsl\&.cs\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.OrderByDescending< K > (Expression< Func< T, K > > keySelector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB38\fP of file \fBQuerySourceDsl\&.cs\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.OrderDescending ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB44\fP of file \fBQuerySourceDsl\&.cs\fP\&.
+.SS "IAsyncEnumerable< Page< T > > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.PaginateAsync (\fBQueryOptions\fP? queryOptions = \fRnull\fP, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB38\fP of file \fBQuerySource\&.cs\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Reverse ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "\fBIQuerySource\fP< R > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Select< R > (Expression< Func< T, R > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB53\fP of file \fBQuerySourceDsl\&.cs\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Single ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Single (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SingleAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SingleAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SingleOrDefault ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SingleOrDefault (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SingleOrDefaultAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SingleOrDefaultAsync (Expression< Func< T, bool > > predicate, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Skip (int count)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "double \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Sum (Expression< Func< T, double > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "int \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Sum (Expression< Func< T, int > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "long \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Sum (Expression< Func< T, long > > selector)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< double > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SumAsync (Expression< Func< T, double > > selector, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< int > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SumAsync (Expression< Func< T, int > > selector, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< long > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.SumAsync (Expression< Func< T, long > > selector, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Take (int count)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "T[] \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToArray ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "async Task< T[]> \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToArrayAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "IAsyncEnumerable< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToAsyncEnumerable (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Dictionary< K, V > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToDictionary< K, V > (Func< T, K > getKey, Func< T, V > getValue)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+\fBType Constraints\fP
+.TP
+\fIK\fP : \fInotnull\fP
+.SS "Dictionary< K, V > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToDictionary< K, V > (Func< T, K > getKey, Func< T, V > getValue, IEqualityComparer< K >? comparer)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+\fBType Constraints\fP
+.TP
+\fIK\fP : \fInotnull\fP
+.SS "Task< Dictionary< K, V > > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToDictionaryAsync< K, V > (Func< T, K > getKey, Func< T, V > getValue, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+\fBType Constraints\fP
+.TP
+\fIK\fP : \fInotnull\fP
+.SS "async Task< Dictionary< K, V > > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToDictionaryAsync< K, V > (Func< T, K > getKey, Func< T, V > getValue, IEqualityComparer< K >? comparer, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+\fBType Constraints\fP
+.TP
+\fIK\fP : \fInotnull\fP
+.PP
+Definition at line \fB38\fP of file \fBQuerySourceToCollections\&.cs\fP\&.
+.SS "IEnumerable< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToEnumerable ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "HashSet< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToHashSet ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "HashSet< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToHashSet (IEqualityComparer< T >? comparer)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "Task< HashSet< T > > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToHashSetAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "async Task< HashSet< T > > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToHashSetAsync (IEqualityComparer< T >? comparer, CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB24\fP of file \fBQuerySourceToCollections\&.cs\fP\&.
+.SS "List< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToList ()"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.SS "async Task< List< T > > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.ToListAsync (CancellationToken cancel = \fRdefault\fP)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+.PP
+Definition at line \fB8\fP of file \fBQuerySourceToCollections\&.cs\fP\&.
+.SS "\fBIQuerySource\fP< T > \fBFauna\&.Linq\&.QuerySource\fP< T >\&.Where (Expression< Func< T, bool > > predicate)"
+
+.PP
+Implements \fBFauna\&.Linq\&.IQuerySource< T >\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

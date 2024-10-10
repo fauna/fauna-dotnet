@@ -1,0 +1,178 @@
+\doxysection{Fauna.\+Configuration Class Reference}
+\hypertarget{class_fauna_1_1_configuration}{}\label{class_fauna_1_1_configuration}\index{Fauna.Configuration@{Fauna.Configuration}}
+
+
+\doxylink{class_fauna_1_1_configuration}{Configuration} is a class used to configure a \doxylink{namespace_fauna}{Fauna} \doxylink{class_fauna_1_1_client}{Client}. It encapsulates various settings such as the \doxylink{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}{Endpoint}, secret, query timeout, and others.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_configuration_a7bb17ca9c8f8f323a29800439eeef5f5}{Configuration}} ()
+\item 
+\mbox{\hyperlink{class_fauna_1_1_configuration_a622f6d7fed94432d2c960b50f6560c6e}{Configuration}} (string secret, \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{Http\+Client}}? http\+Client=null)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_configuration}{Configuration} record with the specified secret key. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{class_fauna_1_1_configuration_a97862ebc360b777aa17bbf20033c74d4}{Dispose\+Http\+Client}} = true\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Whether the \doxylink{class_fauna_1_1_client}{Client} should dispose of the \doxylink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{Http\+Client} on Dispose. \end{DoxyCompactList}\item 
+Http\+Client \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{Http\+Client}} = new Http\+Client \{ Timeout = Time\+Span.\+From\+Seconds(5) \}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The HTTP \doxylink{class_fauna_1_1_client}{Client} to use for requests. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}{Secret}} = Environment.\+Get\+Environment\+Variable("{}FAUNA\+\_\+\+SECRET"{}) ?? string.\+Empty\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The secret key used for authentication. \end{DoxyCompactList}\item 
+Uri \mbox{\hyperlink{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}{Endpoint}} = Endpoints.\+Get\+Fauna\+Endpoint()\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The endpoint URL of the \doxylink{namespace_fauna}{Fauna} server. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? \mbox{\hyperlink{class_fauna_1_1_configuration_a1629157a309f63727d65d6da62e81268}{Default\+Query\+Options}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Default options for queries sent to \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration}{Retry\+Configuration}} \mbox{\hyperlink{class_fauna_1_1_configuration_a1653cacae741b8362dfcb453133a7ab3}{Retry\+Configuration}} = new(3, Time\+Span.\+From\+Seconds(20))\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The retry configuration to apply to requests. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector}{IStats\+Collector}}? \mbox{\hyperlink{class_fauna_1_1_configuration_ab04409b18aad1ba47b860fb6ff5b923e}{Stats\+Collector}} = new \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector}{Stats\+Collector}}()\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Stats\+Collector for the client. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\doxylink{class_fauna_1_1_configuration}{Configuration} is a class used to configure a \doxylink{namespace_fauna}{Fauna} \doxylink{class_fauna_1_1_client}{Client}. It encapsulates various settings such as the \doxylink{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}{Endpoint}, secret, query timeout, and others. 
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00009}{9}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_fauna_1_1_configuration_a7bb17ca9c8f8f323a29800439eeef5f5}\index{Fauna.Configuration@{Fauna.Configuration}!Configuration@{Configuration}}
+\index{Configuration@{Configuration}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{Configuration()}{Configuration()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a7bb17ca9c8f8f323a29800439eeef5f5} 
+Fauna.\+Configuration.\+Configuration (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00047}{47}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_a622f6d7fed94432d2c960b50f6560c6e}\index{Fauna.Configuration@{Fauna.Configuration}!Configuration@{Configuration}}
+\index{Configuration@{Configuration}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{Configuration()}{Configuration()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a622f6d7fed94432d2c960b50f6560c6e} 
+Fauna.\+Configuration.\+Configuration (\begin{DoxyParamCaption}\item[{string}]{secret}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{Http\+Client}}?}]{http\+Client}{ = {\ttfamily null}}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{class_fauna_1_1_configuration}{Configuration} record with the specified secret key. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em secret} & The secret key used for authentication.\\
+\hline
+{\em http\+Client} & The \doxylink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{Http\+Client} to use.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00060}{60}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_fauna_1_1_configuration_a1629157a309f63727d65d6da62e81268}\index{Fauna.Configuration@{Fauna.Configuration}!DefaultQueryOptions@{DefaultQueryOptions}}
+\index{DefaultQueryOptions@{DefaultQueryOptions}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{DefaultQueryOptions}{DefaultQueryOptions}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a1629157a309f63727d65d6da62e81268} 
+\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? Fauna.\+Configuration.\+Default\+Query\+Options = null\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Default options for queries sent to \doxylink{namespace_fauna}{Fauna}. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00034}{34}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_a97862ebc360b777aa17bbf20033c74d4}\index{Fauna.Configuration@{Fauna.Configuration}!DisposeHttpClient@{DisposeHttpClient}}
+\index{DisposeHttpClient@{DisposeHttpClient}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{DisposeHttpClient}{DisposeHttpClient}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a97862ebc360b777aa17bbf20033c74d4} 
+bool Fauna.\+Configuration.\+Dispose\+Http\+Client = true\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Whether the \doxylink{class_fauna_1_1_client}{Client} should dispose of the \doxylink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{Http\+Client} on Dispose. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00014}{14}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}\index{Fauna.Configuration@{Fauna.Configuration}!Endpoint@{Endpoint}}
+\index{Endpoint@{Endpoint}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{Endpoint}{Endpoint}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510} 
+Uri Fauna.\+Configuration.\+Endpoint = Endpoints.\+Get\+Fauna\+Endpoint()\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The endpoint URL of the \doxylink{namespace_fauna}{Fauna} server. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00029}{29}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}\index{Fauna.Configuration@{Fauna.Configuration}!HttpClient@{HttpClient}}
+\index{HttpClient@{HttpClient}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{HttpClient}{HttpClient}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc} 
+Http\+Client Fauna.\+Configuration.\+Http\+Client = new Http\+Client \{ Timeout = Time\+Span.\+From\+Seconds(5) \}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The HTTP \doxylink{class_fauna_1_1_client}{Client} to use for requests. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00019}{19}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_a1653cacae741b8362dfcb453133a7ab3}\index{Fauna.Configuration@{Fauna.Configuration}!RetryConfiguration@{RetryConfiguration}}
+\index{RetryConfiguration@{RetryConfiguration}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{RetryConfiguration}{RetryConfiguration}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a1653cacae741b8362dfcb453133a7ab3} 
+\mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration}{Retry\+Configuration}} Fauna.\+Configuration.\+Retry\+Configuration = new(3, Time\+Span.\+From\+Seconds(20))\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The retry configuration to apply to requests. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00039}{39}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}\index{Fauna.Configuration@{Fauna.Configuration}!Secret@{Secret}}
+\index{Secret@{Secret}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{Secret}{Secret}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8} 
+string Fauna.\+Configuration.\+Secret = Environment.\+Get\+Environment\+Variable("{}FAUNA\+\_\+\+SECRET"{}) ?? string.\+Empty\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+The secret key used for authentication. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00024}{24}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_configuration_ab04409b18aad1ba47b860fb6ff5b923e}\index{Fauna.Configuration@{Fauna.Configuration}!StatsCollector@{StatsCollector}}
+\index{StatsCollector@{StatsCollector}!Fauna.Configuration@{Fauna.Configuration}}
+\doxysubsubsection{\texorpdfstring{StatsCollector}{StatsCollector}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_configuration_ab04409b18aad1ba47b860fb6ff5b923e} 
+\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector}{IStats\+Collector}}? Fauna.\+Configuration.\+Stats\+Collector = new \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector}{Stats\+Collector}}()\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Stats\+Collector for the client. 
+
+
+
+Definition at line \mbox{\hyperlink{_configuration_8cs_source_l00045}{45}} of file \mbox{\hyperlink{_configuration_8cs_source}{Configuration.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\mbox{\hyperlink{_configuration_8cs}{Configuration.\+cs}}\end{DoxyCompactItemize}

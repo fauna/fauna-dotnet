@@ -1,0 +1,34 @@
+\doxysection{Retry\+Configuration.\+cs}
+\hypertarget{_retry_configuration_8cs_source}{}\label{_retry_configuration_8cs_source}\index{Fauna/Core/RetryConfiguration.cs@{Fauna/Core/RetryConfiguration.cs}}
+\mbox{\hyperlink{_retry_configuration_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Net;}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }System.Net.Sockets;}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }Polly;}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00005}00005\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_core}{Fauna.Core}};}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00010}\mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration}{00010}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration}{RetryConfiguration}}}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00016}\mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration_aea6b744ea4739dfe753c74d1fde1c8d4}{00016}}\ \ \ \ \ \textcolor{keyword}{public}\ AsyncPolicy<HttpResponseMessage>\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration_aea6b744ea4739dfe753c74d1fde1c8d4}{RetryPolicy}}\ \{\ \textcolor{keyword}{get};\ \textcolor{keyword}{set};\ \}}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00024}\mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration_a5b8a9aa7ca0f2ffe13a7efa2311a9984}{00024}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration_a5b8a9aa7ca0f2ffe13a7efa2311a9984}{RetryConfiguration}}(\textcolor{keywordtype}{int}\ retryCount,\ TimeSpan\ maxBackoff)}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00025}00025\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00026}00026\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration_aea6b744ea4739dfe753c74d1fde1c8d4}{RetryPolicy}}\ =\ Policy}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ .Handle<HttpRequestException>()}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00028}00028\ \ \ \ \ \ \ \ \ \ \ \ \ .Or<SocketException>()}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ .Or<IOException>()}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00030}00030\ \ \ \ \ \ \ \ \ \ \ \ \ .Or<InvalidOperationException>()}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00031}00031\ \ \ \ \ \ \ \ \ \ \ \ \ .OrResult<HttpResponseMessage>(r\ =>\ r.StatusCode\ ==\ HttpStatusCode.TooManyRequests)}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ .WaitAndRetryAsync(retryCount,\ attempt\ =>}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ calculated\ =\ (int)Math.Floor(Math.Pow(2,\ attempt));}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ backoff\ =\ calculated\ >\ maxBackoff.Seconds\ ?\ maxBackoff.Seconds\ :\ calculated;}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ TimeSpan.FromSeconds(backoff);}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00037}00037\ \ \ \ \ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00038}00038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_retry_configuration_8cs_source_l00039}00039\ \}}
+
+\end{DoxyCode}

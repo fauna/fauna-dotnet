@@ -1,0 +1,50 @@
+\doxysection{Fauna.\+Serialization.\+ISerializer\texorpdfstring{$<$}{<} out T \texorpdfstring{$>$}{>} Interface Template Reference}
+\hypertarget{interface_fauna_1_1_serialization_1_1_i_serializer}{}\label{interface_fauna_1_1_serialization_1_1_i_serializer}\index{Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}}
+Inheritance diagram for Fauna.\+Serialization.\+ISerializer\texorpdfstring{$<$}{<} out T \texorpdfstring{$>$}{>}\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{interface_fauna_1_1_serialization_1_1_i_serializer}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+new T \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer_ac60f498887ee736e5b47abf52e9ded28}{Deserialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} context, ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}} reader)
+\item 
+object? \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer_a5f764e58b23c292c65381c66f63585f4}{Deserialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} context, ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}} reader)
+\item 
+void \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer_a669f8e528218fc6ac70c4544f3b6d018}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} w, object? o)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{_i_serializer_8cs_source_l00011}{11}} of file \mbox{\hyperlink{_i_serializer_8cs_source}{ISerializer.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interface_fauna_1_1_serialization_1_1_i_serializer_ac60f498887ee736e5b47abf52e9ded28}\index{Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}!Deserialize@{Deserialize}}
+\index{Deserialize@{Deserialize}!Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}}
+\doxysubsubsection{\texorpdfstring{Deserialize()}{Deserialize()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_serialization_1_1_i_serializer_ac60f498887ee736e5b47abf52e9ded28} 
+new T \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{Fauna.\+Serialization.\+ISerializer}}$<$ out T $>$.Deserialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{context}{, }\item[{ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}}}]{reader}{}\end{DoxyParamCaption})}
+
+\Hypertarget{interface_fauna_1_1_serialization_1_1_i_serializer_a5f764e58b23c292c65381c66f63585f4}\index{Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}!Deserialize@{Deserialize}}
+\index{Deserialize@{Deserialize}!Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}}
+\doxysubsubsection{\texorpdfstring{Deserialize()}{Deserialize()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_serialization_1_1_i_serializer_a5f764e58b23c292c65381c66f63585f4} 
+object? \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{Fauna.\+Serialization.\+ISerializer}}$<$ out T $>$.Deserialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{context}{, }\item[{ref \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader}}}]{reader}{}\end{DoxyParamCaption})}
+
+\Hypertarget{interface_fauna_1_1_serialization_1_1_i_serializer_a669f8e528218fc6ac70c4544f3b6d018}\index{Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!Fauna.Serialization.ISerializer$<$ out T $>$@{Fauna.Serialization.ISerializer$<$ out T $>$}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_serialization_1_1_i_serializer_a669f8e528218fc6ac70c4544f3b6d018} 
+void \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{Fauna.\+Serialization.\+ISerializer}}$<$ out T $>$.Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{ctx}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}}}]{w}{, }\item[{object?}]{o}{}\end{DoxyParamCaption})}
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Serialization/\mbox{\hyperlink{_i_serializer_8cs}{ISerializer.\+cs}}\end{DoxyCompactItemize}

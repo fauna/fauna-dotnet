@@ -1,0 +1,71 @@
+\doxysection{Mapping\+Context.\+cs}
+\hypertarget{_mapping_context_8cs_source}{}\label{_mapping_context_8cs_source}\index{Fauna/Mapping/MappingContext.cs@{Fauna/Mapping/MappingContext.cs}}
+\mbox{\hyperlink{_mapping_context_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Diagnostics.CodeAnalysis;}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_linq}{Fauna.Linq}};}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00004}00004\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_mapping}{Fauna.Mapping}};}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00009}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{00009}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{sealed}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{MappingContext}}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00011}00011\ \ \ \ \ \textcolor{comment}{//\ FIXME(matt)\ possibly\ replace\ with\ more\ efficient\ cache\ impl}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ Dictionary<Type,\ MappingInfo>\ \_cache\ =\ \textcolor{keyword}{new}();}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ Dictionary<string,\ MappingInfo>\ \_collections\ =\ \textcolor{keyword}{new}();}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00014}00014\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ Dictionary<Type,\ MappingInfo>\ \_baseTypes\ =\ \textcolor{keyword}{new}();}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00016}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a0672111dbf3563f9c8da9ff3880a782f}{00016}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a0672111dbf3563f9c8da9ff3880a782f}{MappingContext}}()\ \{\ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00017}00017\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00018}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a1f02b6b075bd6e36111f68ee94f71c79}{00018}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a1f02b6b075bd6e36111f68ee94f71c79}{MappingContext}}(IEnumerable<DataContext.ICollection>\ collections)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00019}00019\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00020}00020\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (var\ col\ \textcolor{keywordflow}{in}\ collections)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00021}00021\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00022}00022\ \ \ \ \ \ \ \ \ \ \ \ \ var\ info\ =\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a8e26e07f2f2915b88bbf067b7bfecd15}{GetInfo}}(col.DocType,\ col.Name);}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00023}00023\ \ \ \ \ \ \ \ \ \ \ \ \ \_collections[col.Name]\ =\ info;}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00024}00024\ \ \ \ \ \ \ \ \ \ \ \ \ \_baseTypes[col.DocType]\ =\ info;}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00025}00025\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00026}00026\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00028}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a3e013b25894715b0b14ca1b237070c44}{00028}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a3e013b25894715b0b14ca1b237070c44}{MappingContext}}(Dictionary<string,\ Type>\ collections)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00029}00029\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00030}00030\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ ((\textcolor{keywordtype}{string}\ name,\ Type\ ty)\ in\ collections)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00031}00031\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00032}00032\ \ \ \ \ \ \ \ \ \ \ \ \ \_collections[name]\ =\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a8e26e07f2f2915b88bbf067b7bfecd15}{GetInfo}}(ty,\ name);}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00034}00034\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00042}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a9beddff535fd85d07fb1d8e50b35caeb}{00042}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a9beddff535fd85d07fb1d8e50b35caeb}{TryGetCollection}}(\textcolor{keywordtype}{string}\ col,\ [NotNullWhen(\textcolor{keyword}{true})]\ out\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_info}{MappingInfo}}?\ ret)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00043}00043\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_collections.TryGetValue(col,\ out\ ret);}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00045}00045\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00053}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a7fdb283f4925ea5711f5c8cccbb8effb}{00053}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a7fdb283f4925ea5711f5c8cccbb8effb}{TryGetBaseType}}(Type\ ty,\ [NotNullWhen(\textcolor{keyword}{true})]\ out\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_info}{MappingInfo}}?\ ret)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00054}00054\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_baseTypes.TryGetValue(ty,\ out\ ret);}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00056}00056\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00064}\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a8e26e07f2f2915b88bbf067b7bfecd15}{00064}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_info}{MappingInfo}}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context_a8e26e07f2f2915b88bbf067b7bfecd15}{GetInfo}}(Type\ ty,\ \textcolor{keywordtype}{string}?\ colName\ =\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00065}00065\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ lock\ (\textcolor{keyword}{this})}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00067}00067\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\_cache.TryGetValue(ty,\ out\ var\ ret))}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ret;}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00073}00073\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ MappingInfo\ caches\ itself\ during\ construction\ in\ order\ to\ make}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ itself\ available\ early\ for\ recursive\ lookup.}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_info}{MappingInfo}}(\textcolor{keyword}{this},\ ty,\ colName);}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00079}00079\ \ \ \ \ \textcolor{keyword}{internal}\ \textcolor{keywordtype}{void}\ Add(Type\ ty,\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_info}{MappingInfo}}\ info)}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00080}00080\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00081}00081\ \ \ \ \ \ \ \ \ lock\ (\textcolor{keyword}{this})}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00082}00082\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00083}00083\ \ \ \ \ \ \ \ \ \ \ \ \ \_cache[ty]\ =\ info;}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00085}00085\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_mapping_context_8cs_source_l00086}00086\ \}}
+
+\end{DoxyCode}

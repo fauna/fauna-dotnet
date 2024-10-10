@@ -1,0 +1,120 @@
+\doxysection{Stats\+Collector.\+cs}
+\hypertarget{_stats_collector_8cs_source}{}\label{_stats_collector_8cs_source}\index{Fauna/Core/StatsCollector.cs@{Fauna/Core/StatsCollector.cs}}
+\mbox{\hyperlink{_stats_collector_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00001}00001\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_core}{Fauna.Core}};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00004}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{00004}}\ \textcolor{keyword}{public}\ readonly\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00005}00005\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00006}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a212a96d8dfb248cbdc615cf89907b27f}{00006}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a212a96d8dfb248cbdc615cf89907b27f}{ReadOps}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00007}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_acc15176f1c9fcec496d9877d25ff6d5e}{00007}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_acc15176f1c9fcec496d9877d25ff6d5e}{ComputeOps}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00008}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a80c48b1e69b141d15419293fdee7a477}{00008}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a80c48b1e69b141d15419293fdee7a477}{WriteOps}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00009}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a32224f8180d6225e57602b7e04406339}{00009}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a32224f8180d6225e57602b7e04406339}{QueryTimeMs}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00010}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a77acc81ca05d1c3d044edb9653156ad4}{00010}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a77acc81ca05d1c3d044edb9653156ad4}{ContentionRetries}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00011}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a1b4a10e1b3dd26e46e2529587f98d088}{00011}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a1b4a10e1b3dd26e46e2529587f98d088}{StorageBytesRead}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00012}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a6668bd4ce18bff6ac4e40703e1ccbdf2}{00012}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a6668bd4ce18bff6ac4e40703e1ccbdf2}{StorageBytesWrite}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00013}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a7df99cda2d06e4aa4e87925c057e1fcc}{00013}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a7df99cda2d06e4aa4e87925c057e1fcc}{QueryCount}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00014}00014\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00015}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a4d203d51290f1cc059ac2215fbc7a978}{00015}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a4d203d51290f1cc059ac2215fbc7a978}{RateLimitedReadQueryCount}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00016}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a748ea3e6d41b59a01a0993cd1c92adb2}{00016}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a748ea3e6d41b59a01a0993cd1c92adb2}{RateLimitedComputeQueryCount}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00017}\mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a4dd3b9e21139246f6b71e1d3828eae31}{00017}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats_a4dd3b9e21139246f6b71e1d3828eae31}{RateLimitedWriteQueryCount}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00018}00018\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00020}\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector}{00020}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector}{IStatsCollector}}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00021}00021\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00026}\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_a42df7f5f66a3f609573b504e40ef7687}{00026}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_a42df7f5f66a3f609573b504e40ef7687}{Add}}(\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{QueryStats}}\ stats);}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00027}00027\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00031}\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_a129f12130d12ee9d15d46227d95ec5f2}{00031}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}\ \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_a129f12130d12ee9d15d46227d95ec5f2}{Read}}();}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00032}00032\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00036}\mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_ac4f7f6e6fb05e11bf936aea7d75fc6ca}{00036}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}\ \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector_ac4f7f6e6fb05e11bf936aea7d75fc6ca}{ReadAndReset}}();}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00037}00037\ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00039}\mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector}{00039}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector}{StatsCollector}}\ :\ \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector}{IStatsCollector}}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00040}00040\ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00041}00041\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ RateLimitReadOps\ =\ \textcolor{stringliteral}{"{}read"{}};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00042}00042\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ RateLimitComputeOps\ =\ \textcolor{stringliteral}{"{}compute"{}};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00043}00043\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{string}\ RateLimitWriteOps\ =\ \textcolor{stringliteral}{"{}write"{}};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00045}00045\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{long}\ \_readOps;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00046}00046\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{long}\ \_computeOps;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00047}00047\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{long}\ \_writeOps;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00048}00048\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{long}\ \_queryTimeMs;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00049}00049\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ \_contentionRetries;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00050}00050\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{long}\ \_storageBytesRead;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00051}00051\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{long}\ \_storageBytesWrite;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00052}00052\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ \_queryCount;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00053}00053\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ \_rateLimitedReadQueryCount;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00054}00054\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ \_rateLimitedComputeQueryCount;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00055}00055\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{int}\ \_rateLimitedWriteQueryCount;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00056}00056\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00057}00057\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00058}\mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_a44cc6a97822da493063cdb0fea2f8137}{00058}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_a44cc6a97822da493063cdb0fea2f8137}{Add}}(\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{QueryStats}}\ stats)}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00059}00059\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00060}00060\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_readOps,\ \_readOps\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_a559791faf2f5c94825d9b6641b4cc269}{ReadOps}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00061}00061\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_computeOps,\ \_computeOps\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_aee266e68a394df199c90854b2d6b4a5d}{ComputeOps}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00062}00062\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_writeOps,\ \_writeOps\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_a42052a57e6945f6840b8d618a508f037}{WriteOps}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_queryTimeMs,\ \_queryTimeMs\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_ada4a2c17076a21a842e5e7f4fd6f65d5}{QueryTimeMs}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00064}00064\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_contentionRetries,\ \_contentionRetries\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_a4204bf833ce4a6f64994c9030aabf4eb}{ContentionRetries}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00065}00065\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_storageBytesRead,\ \_storageBytesRead\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_a76978366a8055949f82d9733355f9c1c}{StorageBytesRead}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ Interlocked.Exchange(ref\ \_storageBytesWrite,\ \_storageBytesWrite\ +\ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_a78b8003405bf41d4a0d03d03555dac46}{StorageBytesWrite}});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ stats.\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats_a7ed02cb1a1f025380e9963f1203065fb}{RateLimitsHit}}?.ForEach(limitHit\ =>}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{switch}\ (limitHit)}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ RateLimitReadOps:}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Interlocked.Increment(ref\ \_rateLimitedComputeQueryCount);}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ RateLimitComputeOps:}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Interlocked.Increment(ref\ \_rateLimitedComputeQueryCount);}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00077}00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00078}00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{case}\ RateLimitWriteOps:}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00079}00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Interlocked.Increment(ref\ \_rateLimitedWriteQueryCount);}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00080}00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{break};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00081}00081\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00082}00082\ \ \ \ \ \ \ \ \ \});}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00083}00083\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00084}00084\ \ \ \ \ \ \ \ \ Interlocked.Increment(ref\ \_queryCount);}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00085}00085\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00086}00086\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00087}\mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_a129a191f98a2fb792a9bbf95839f11d5}{00087}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_a129a191f98a2fb792a9bbf95839f11d5}{Read}}()}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00088}00088\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00089}00089\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00090}00090\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00091}00091\ \ \ \ \ \ \ \ \ \ \ \ \ ReadOps\ =\ \_readOps,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00092}00092\ \ \ \ \ \ \ \ \ \ \ \ \ ComputeOps\ =\ \_computeOps,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00093}00093\ \ \ \ \ \ \ \ \ \ \ \ \ WriteOps\ =\ \_writeOps,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00094}00094\ \ \ \ \ \ \ \ \ \ \ \ \ QueryTimeMs\ =\ \_queryTimeMs,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00095}00095\ \ \ \ \ \ \ \ \ \ \ \ \ ContentionRetries\ =\ \_contentionRetries,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ \ \ \ \ StorageBytesRead\ =\ \_storageBytesRead,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00097}00097\ \ \ \ \ \ \ \ \ \ \ \ \ StorageBytesWrite\ =\ \_storageBytesWrite,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00098}00098\ \ \ \ \ \ \ \ \ \ \ \ \ QueryCount\ =\ \_queryCount,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00099}00099\ \ \ \ \ \ \ \ \ \ \ \ \ RateLimitedReadQueryCount\ =\ \_rateLimitedReadQueryCount,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00100}00100\ \ \ \ \ \ \ \ \ \ \ \ \ RateLimitedComputeQueryCount\ =\ \_rateLimitedComputeQueryCount,}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00101}00101\ \ \ \ \ \ \ \ \ \ \ \ \ RateLimitedWriteQueryCount\ =\ \_rateLimitedWriteQueryCount}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00102}00102\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00103}00103\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00104}00104\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00105}\mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_ad691d9a6763164fd4f1668d889283408}{00105}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector_ad691d9a6763164fd4f1668d889283408}{ReadAndReset}}()}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00106}00106\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00107}00107\ \ \ \ \ \ \ \ \ var\ beforeReset\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00108}00108\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00109}00109\ \ \ \ \ \ \ \ \ \ \ \ \ ReadOps\ =\ Interlocked.Exchange(ref\ \_readOps,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00110}00110\ \ \ \ \ \ \ \ \ \ \ \ \ ComputeOps\ =\ Interlocked.Exchange(ref\ \_computeOps,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00111}00111\ \ \ \ \ \ \ \ \ \ \ \ \ WriteOps\ =\ Interlocked.Exchange(ref\ \_writeOps,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00112}00112\ \ \ \ \ \ \ \ \ \ \ \ \ QueryTimeMs\ =\ Interlocked.Exchange(ref\ \_queryTimeMs,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00113}00113\ \ \ \ \ \ \ \ \ \ \ \ \ ContentionRetries\ =\ Interlocked.Exchange(ref\ \_contentionRetries,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00114}00114\ \ \ \ \ \ \ \ \ \ \ \ \ StorageBytesRead\ =\ Interlocked.Exchange(ref\ \_storageBytesRead,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00115}00115\ \ \ \ \ \ \ \ \ \ \ \ \ StorageBytesWrite\ =\ Interlocked.Exchange(ref\ \_storageBytesWrite,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00116}00116\ \ \ \ \ \ \ \ \ \ \ \ \ QueryCount\ =\ Interlocked.Exchange(ref\ \_queryCount,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00117}00117\ \ \ \ \ \ \ \ \ \ \ \ \ RateLimitedReadQueryCount\ =\ Interlocked.Exchange(ref\ \_rateLimitedReadQueryCount,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00118}00118\ \ \ \ \ \ \ \ \ \ \ \ \ RateLimitedComputeQueryCount\ =\ Interlocked.Exchange(ref\ \_rateLimitedComputeQueryCount,\ 0),}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00119}00119\ \ \ \ \ \ \ \ \ \ \ \ \ RateLimitedWriteQueryCount\ =\ Interlocked.Exchange(ref\ \_rateLimitedWriteQueryCount,\ 0)}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00120}00120\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00121}00121\ }
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00122}00122\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ beforeReset;}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00123}00123\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_stats_collector_8cs_source_l00124}00124\ \}}
+
+\end{DoxyCode}

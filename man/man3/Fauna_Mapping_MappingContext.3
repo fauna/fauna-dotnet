@@ -1,0 +1,118 @@
+.TH "Fauna.Mapping.MappingContext" 3 "Version 0.3.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Mapping.MappingContext \- A class representing the mapping context to be used during serialization and deserialization\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMappingContext\fP ()"
+.br
+.ti -1c
+.RI "\fBMappingContext\fP (IEnumerable< \fBDataContext\&.ICollection\fP > collections)"
+.br
+.ti -1c
+.RI "\fBMappingContext\fP (Dictionary< string, Type > collections)"
+.br
+.ti -1c
+.RI "bool \fBTryGetCollection\fP (string col, [NotNullWhen(true)] out \fBMappingInfo\fP? ret)"
+.br
+.RI "Gets the \fBMappingInfo\fP for a given collection name\&. "
+.ti -1c
+.RI "bool \fBTryGetBaseType\fP (Type ty, [NotNullWhen(true)] out \fBMappingInfo\fP? ret)"
+.br
+.RI "Gets the \fBMappingInfo\fP for a given Type\&. "
+.ti -1c
+.RI "\fBMappingInfo\fP \fBGetInfo\fP (Type ty, string? colName=null)"
+.br
+.RI "Gets the \fBMappingInfo\fP for a given Type\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+A class representing the mapping context to be used during serialization and deserialization\&. 
+.PP
+Definition at line \fB9\fP of file \fBMappingContext\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Fauna\&.Mapping\&.MappingContext\&.MappingContext ()"
+
+.PP
+Definition at line \fB16\fP of file \fBMappingContext\&.cs\fP\&.
+.SS "Fauna\&.Mapping\&.MappingContext\&.MappingContext (IEnumerable< \fBDataContext\&.ICollection\fP > collections)"
+
+.PP
+Definition at line \fB18\fP of file \fBMappingContext\&.cs\fP\&.
+.SS "Fauna\&.Mapping\&.MappingContext\&.MappingContext (Dictionary< string, Type > collections)"
+
+.PP
+Definition at line \fB28\fP of file \fBMappingContext\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBMappingInfo\fP Fauna\&.Mapping\&.MappingContext\&.GetInfo (Type ty, string? colName = \fRnull\fP)"
+
+.PP
+Gets the \fBMappingInfo\fP for a given Type\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIty\fP The type to get\&.
+.br
+\fIcolName\fP The associated collection name, if any
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+.RE
+.PP
+
+.PP
+Definition at line \fB64\fP of file \fBMappingContext\&.cs\fP\&.
+.SS "bool Fauna\&.Mapping\&.MappingContext\&.TryGetBaseType (Type ty, [NotNullWhen(true)] out \fBMappingInfo\fP? ret)"
+
+.PP
+Gets the \fBMappingInfo\fP for a given Type\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIty\fP The type to get\&.
+.br
+\fIret\fP When this method returns, contains the \fBMappingInfo\fP associated with the type if found; otherwise, \fRnull\fP\&. This parameter is passed uninitialized\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fRtrue\fP if the \fBMappingContext\fP contains \fBMappingInfo\fP for the specified type; otherwise, \fRfalse\fP\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB53\fP of file \fBMappingContext\&.cs\fP\&.
+.SS "bool Fauna\&.Mapping\&.MappingContext\&.TryGetCollection (string col, [NotNullWhen(true)] out \fBMappingInfo\fP? ret)"
+
+.PP
+Gets the \fBMappingInfo\fP for a given collection name\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIcol\fP The collection name to get\&.
+.br
+\fIret\fP When this method returns, contains the \fBMappingInfo\fP associated with the collection if found; otherwise, \fRnull\fP\&. This parameter is passed uninitialized\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+\fRtrue\fP if the \fBMappingContext\fP contains \fBMappingInfo\fP for the specified collection; otherwise, \fRfalse\fP\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB42\fP of file \fBMappingContext\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

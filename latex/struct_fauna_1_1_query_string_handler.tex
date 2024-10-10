@@ -1,0 +1,112 @@
+\doxysection{Fauna.\+Query\+String\+Handler Struct Reference}
+\hypertarget{struct_fauna_1_1_query_string_handler}{}\label{struct_fauna_1_1_query_string_handler}\index{Fauna.QueryStringHandler@{Fauna.QueryStringHandler}}
+
+
+Provides a mechanism to build FQL query expressions using interpolated strings. This structure collects fragments and literals to construct complex query expressions.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_fauna_1_1_query_string_handler_aeda2711d536fbce1fc18f907d99d8d70}{Query\+String\+Handler}} (int literal\+Length, int formatted\+Count)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler} struct. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a6bbc0298057deb0bd61d8737db8137c1}{Append\+Literal}} (string value)
+\begin{DoxyCompactList}\small\item\em Appends a literal string to the query. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a821c0c7774a21f68d8acd35ddb141987}{Append\+Formatted}} (object? value)
+\begin{DoxyCompactList}\small\item\em Appends a formatted value to the query. The value is wrapped as a \doxylink{class_fauna_1_1_query_val}{Query\+Val} or \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} depending on its type. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_query}{Query}} \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a54d2c80380f3946a1b43d0259a8cf12d}{Result}} ()
+\begin{DoxyCompactList}\small\item\em Constructs and returns a \doxylink{class_fauna_1_1_query}{Query} instance representing the current state of the handler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Provides a mechanism to build FQL query expressions using interpolated strings. This structure collects fragments and literals to construct complex query expressions. 
+
+Definition at line \mbox{\hyperlink{_query_string_handler_8cs_source_l00009}{9}} of file \mbox{\hyperlink{_query_string_handler_8cs_source}{Query\+String\+Handler.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{struct_fauna_1_1_query_string_handler_aeda2711d536fbce1fc18f907d99d8d70}\index{Fauna.QueryStringHandler@{Fauna.QueryStringHandler}!QueryStringHandler@{QueryStringHandler}}
+\index{QueryStringHandler@{QueryStringHandler}!Fauna.QueryStringHandler@{Fauna.QueryStringHandler}}
+\doxysubsubsection{\texorpdfstring{QueryStringHandler()}{QueryStringHandler()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_query_string_handler_aeda2711d536fbce1fc18f907d99d8d70} 
+Fauna.\+Query\+String\+Handler.\+Query\+String\+Handler (\begin{DoxyParamCaption}\item[{int}]{literal\+Length}{, }\item[{int}]{formatted\+Count}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler} struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em literal\+Length} & The estimated length of the literals in the interpolated string.\\
+\hline
+{\em formatted\+Count} & The number of format items in the interpolated string.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_string_handler_8cs_source_l00018}{18}} of file \mbox{\hyperlink{_query_string_handler_8cs_source}{Query\+String\+Handler.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_fauna_1_1_query_string_handler_a821c0c7774a21f68d8acd35ddb141987}\index{Fauna.QueryStringHandler@{Fauna.QueryStringHandler}!AppendFormatted@{AppendFormatted}}
+\index{AppendFormatted@{AppendFormatted}!Fauna.QueryStringHandler@{Fauna.QueryStringHandler}}
+\doxysubsubsection{\texorpdfstring{AppendFormatted()}{AppendFormatted()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_query_string_handler_a821c0c7774a21f68d8acd35ddb141987} 
+void Fauna.\+Query\+String\+Handler.\+Append\+Formatted (\begin{DoxyParamCaption}\item[{object?}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Appends a formatted value to the query. The value is wrapped as a \doxylink{class_fauna_1_1_query_val}{Query\+Val} or \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} depending on its type. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The value to append.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_string_handler_8cs_source_l00036}{36}} of file \mbox{\hyperlink{_query_string_handler_8cs_source}{Query\+String\+Handler.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_query_string_handler_a6bbc0298057deb0bd61d8737db8137c1}\index{Fauna.QueryStringHandler@{Fauna.QueryStringHandler}!AppendLiteral@{AppendLiteral}}
+\index{AppendLiteral@{AppendLiteral}!Fauna.QueryStringHandler@{Fauna.QueryStringHandler}}
+\doxysubsubsection{\texorpdfstring{AppendLiteral()}{AppendLiteral()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_query_string_handler_a6bbc0298057deb0bd61d8737db8137c1} 
+void Fauna.\+Query\+String\+Handler.\+Append\+Literal (\begin{DoxyParamCaption}\item[{string}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Appends a literal string to the query. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & The literal string to append.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_string_handler_8cs_source_l00027}{27}} of file \mbox{\hyperlink{_query_string_handler_8cs_source}{Query\+String\+Handler.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_query_string_handler_a54d2c80380f3946a1b43d0259a8cf12d}\index{Fauna.QueryStringHandler@{Fauna.QueryStringHandler}!Result@{Result}}
+\index{Result@{Result}!Fauna.QueryStringHandler@{Fauna.QueryStringHandler}}
+\doxysubsubsection{\texorpdfstring{Result()}{Result()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_query_string_handler_a54d2c80380f3946a1b43d0259a8cf12d} 
+\mbox{\hyperlink{class_fauna_1_1_query}{Query}} Fauna.\+Query\+String\+Handler.\+Result (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Constructs and returns a \doxylink{class_fauna_1_1_query}{Query} instance representing the current state of the handler. 
+
+\begin{DoxyReturn}{Returns}
+A \doxylink{class_fauna_1_1_query}{Query} instance representing the constructed query fragments.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_string_handler_8cs_source_l00052}{52}} of file \mbox{\hyperlink{_query_string_handler_8cs_source}{Query\+String\+Handler.\+cs}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Query/\mbox{\hyperlink{_query_string_handler_8cs}{Query\+String\+Handler.\+cs}}\end{DoxyCompactItemize}
