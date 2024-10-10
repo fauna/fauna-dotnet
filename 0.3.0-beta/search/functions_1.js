@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['badgatewayexception_0',['BadGatewayException',['../class_fauna_1_1_exceptions_1_1_bad_gateway_exception.html#a6970cd0357d02d9cb797f233299ee055',1,'Fauna::Exceptions::BadGatewayException']]],
-  ['basefieldattribute_1',['BaseFieldAttribute',['../class_fauna_1_1_mapping_1_1_base_field_attribute.html#a1730b02e91eb142a324af40943d222a0',1,'Fauna::Mapping::BaseFieldAttribute']]],
-  ['baseref_2',['baseref',['../class_fauna_1_1_types_1_1_base_ref.html#a99d89cf05bd5c6f2d9c4c512ea1b6bbc',1,'Fauna.Types.BaseRef.BaseRef(DataContext.ICollection col)'],['../class_fauna_1_1_types_1_1_base_ref.html#a5136866a25a9d4b10b62488725df4ea9',1,'Fauna.Types.BaseRef.BaseRef(DataContext.ICollection col, T doc)'],['../class_fauna_1_1_types_1_1_base_ref.html#a3c4176f3aa2abceb14ae0a4391c68c79',1,'Fauna.Types.BaseRef.BaseRef(DataContext.ICollection col, string cause)'],['../class_fauna_1_1_types_1_1_base_ref.html#af592dee6be2337aa860313e4682e01b1',1,'Fauna.Types.BaseRef.BaseRef(Module coll)'],['../class_fauna_1_1_types_1_1_base_ref.html#a4d855dd43e22be98cf286d2e0ed8c0d0',1,'Fauna.Types.BaseRef.BaseRef(Module coll, T doc)'],['../class_fauna_1_1_types_1_1_base_ref.html#a81b047fc82839e5701657bb669bb6b2e',1,'Fauna.Types.BaseRef.BaseRef(Module coll, string cause)']]],
-  ['build_3',['Build',['../class_fauna_1_1_types_1_1_base_ref_builder.html#a6d8f1141a840634de86d73c431503e27',1,'Fauna::Types::BaseRefBuilder']]]
-];
