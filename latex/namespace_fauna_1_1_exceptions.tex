@@ -1,0 +1,47 @@
+\doxysection{Fauna.\+Exceptions Namespace Reference}
+\hypertarget{namespace_fauna_1_1_exceptions}{}\label{namespace_fauna_1_1_exceptions}\index{Fauna.Exceptions@{Fauna.Exceptions}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception}{Abort\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception that occurs when the FQL {\ttfamily abort} function is called. This exception captures the data provided during the abort operation. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_authentication_exception}{Authentication\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception thrown when there is an authorization error in \doxylink{namespace_fauna}{Fauna}. Corresponds to the \textquotesingle{}unauthorized\textquotesingle{} error code in \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_authorization_exception}{Authorization\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception thrown when access to a resource is not allowed. Corresponds to the \textquotesingle{}forbidden\textquotesingle{} error code in \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_bad_gateway_exception}{Bad\+Gateway\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception thrown for a bad gateway. Corresponds to the \textquotesingle{}bad\+\_\+gateway\textquotesingle{} error code in \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_constraint_failure}{Constraint\+Failure}}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_constraint_failure_exception}{Constraint\+Failure\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception that occurs when constraints are violated in a query. This exception captures the specific constraint failures for inspection. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_contended_transaction_exception}{Contended\+Transaction\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception that occurs when a transaction is aborted due to concurrent modification. This exception is considered retryable after a suitable delay. \end{DoxyCompactList}\item 
+class {\bfseries Exception\+Handler}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception}{Fauna\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents the base exception class for all exceptions specific to \doxylink{namespace_fauna}{Fauna} interactions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_invalid_request_exception}{Invalid\+Request\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents exceptions caused by invalid requests to \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_exceptions_1_1_i_retryable_exception}{IRetryable\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an interface for exceptions that are potentially recoverable through retrying the failed operation. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_network_exception}{Network\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception that occurs when a request fails due to a network issue. \end{DoxyCompactList}\item 
+class {\bfseries Null\+Document\+Exception}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception}{Protocol\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents exceptions when a response does not match the wire protocol. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_query_check_exception}{Query\+Check\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents exceptions thrown when the query has syntax errors. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_query_runtime_exception}{Query\+Runtime\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents exceptions thrown when the query fails at runtime. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_query_timeout_exception}{Query\+Timeout\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents exceptions thrown when the query execution time exceeds the specified or default timeout period. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_serialization_exception}{Serialization\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents error that occur during serialization and deserialization of \doxylink{namespace_fauna}{Fauna} data. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception}{Service\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception related to \doxylink{namespace_fauna}{Fauna} service errors, particularly for query failures. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_throttling_exception}{Throttling\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents an exception that indicates some capacity limit was exceeded and thus the request could not be served. This exception is considered retryable after a suitable delay. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_timeout_exception}{Timeout\+Exception}}
+\begin{DoxyCompactList}\small\item\em Represents exceptions thrown when the query execution time exceeds the specified or default timeout period. \end{DoxyCompactList}\end{DoxyCompactItemize}

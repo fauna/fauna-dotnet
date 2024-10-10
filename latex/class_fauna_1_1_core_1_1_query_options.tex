@@ -1,0 +1,105 @@
+\doxysection{Fauna.\+Core.\+Query\+Options Class Reference}
+\hypertarget{class_fauna_1_1_core_1_1_query_options}{}\label{class_fauna_1_1_core_1_1_query_options}\index{Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}}
+
+
+Represents the options for customizing \doxylink{namespace_fauna}{Fauna} queries.  
+
+
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+bool? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options_adfb91ed60ee515f63a8400b9e4505d6d}{Linearized}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets a value indicating whether the query runs as strictly serialized, affecting read-\/only transactions. \end{DoxyCompactList}\item 
+bool? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options_a096a0b15d947c325dd27a95824eba285}{Type\+Check}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets a value indicating whether type checking of the query is enabled or disabled before evaluation. \end{DoxyCompactList}\item 
+Time\+Span? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options_a03a005967f73948d566a63743a8a9700}{Query\+Timeout}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets the query timeout. It defines how long the client waits for a query to complete. \end{DoxyCompactList}\item 
+Dictionary$<$ string, string $>$? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options_a910682a2882d9a5c1e87a840f4a420e9}{Query\+Tags}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets a string-\/encoded set of caller-\/defined tags for identifying the request in logs and response bodies. Each key and value should be limited to \mbox{[}a-\/z\+A-\/\+Z0-\/9\+\_\+\mbox{]}. \end{DoxyCompactList}\item 
+string? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options_adcd2d01f1052814fbe91493c336b24ed}{Trace\+Parent}} = null\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets or sets the trace parent identifier for distributed tracing systems. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the options for customizing \doxylink{namespace_fauna}{Fauna} queries. 
+
+Definition at line \mbox{\hyperlink{_query_options_8cs_source_l00006}{6}} of file \mbox{\hyperlink{_query_options_8cs_source}{Query\+Options.\+cs}}.
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_fauna_1_1_core_1_1_query_options_adfb91ed60ee515f63a8400b9e4505d6d}\index{Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}!Linearized@{Linearized}}
+\index{Linearized@{Linearized}!Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}}
+\doxysubsubsection{\texorpdfstring{Linearized}{Linearized}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_options_adfb91ed60ee515f63a8400b9e4505d6d} 
+bool? Fauna.\+Core.\+Query\+Options.\+Linearized = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets a value indicating whether the query runs as strictly serialized, affecting read-\/only transactions. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_options_8cs_source_l00011}{11}} of file \mbox{\hyperlink{_query_options_8cs_source}{Query\+Options.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_options_a910682a2882d9a5c1e87a840f4a420e9}\index{Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}!QueryTags@{QueryTags}}
+\index{QueryTags@{QueryTags}!Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}}
+\doxysubsubsection{\texorpdfstring{QueryTags}{QueryTags}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_options_a910682a2882d9a5c1e87a840f4a420e9} 
+Dictionary$<$string, string$>$? Fauna.\+Core.\+Query\+Options.\+Query\+Tags = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets a string-\/encoded set of caller-\/defined tags for identifying the request in logs and response bodies. Each key and value should be limited to \mbox{[}a-\/z\+A-\/\+Z0-\/9\+\_\+\mbox{]}. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_options_8cs_source_l00027}{27}} of file \mbox{\hyperlink{_query_options_8cs_source}{Query\+Options.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_options_a03a005967f73948d566a63743a8a9700}\index{Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}!QueryTimeout@{QueryTimeout}}
+\index{QueryTimeout@{QueryTimeout}!Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}}
+\doxysubsubsection{\texorpdfstring{QueryTimeout}{QueryTimeout}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_options_a03a005967f73948d566a63743a8a9700} 
+Time\+Span? Fauna.\+Core.\+Query\+Options.\+Query\+Timeout = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets the query timeout. It defines how long the client waits for a query to complete. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_options_8cs_source_l00021}{21}} of file \mbox{\hyperlink{_query_options_8cs_source}{Query\+Options.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_options_adcd2d01f1052814fbe91493c336b24ed}\index{Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}!TraceParent@{TraceParent}}
+\index{TraceParent@{TraceParent}!Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}}
+\doxysubsubsection{\texorpdfstring{TraceParent}{TraceParent}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_options_adcd2d01f1052814fbe91493c336b24ed} 
+string? Fauna.\+Core.\+Query\+Options.\+Trace\+Parent = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets the trace parent identifier for distributed tracing systems. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_options_8cs_source_l00032}{32}} of file \mbox{\hyperlink{_query_options_8cs_source}{Query\+Options.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_options_a096a0b15d947c325dd27a95824eba285}\index{Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}!TypeCheck@{TypeCheck}}
+\index{TypeCheck@{TypeCheck}!Fauna.Core.QueryOptions@{Fauna.Core.QueryOptions}}
+\doxysubsubsection{\texorpdfstring{TypeCheck}{TypeCheck}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_options_a096a0b15d947c325dd27a95824eba285} 
+bool? Fauna.\+Core.\+Query\+Options.\+Type\+Check = null\hspace{0.3cm}{\ttfamily [get]}, {\ttfamily [set]}}
+
+
+
+Gets or sets a value indicating whether type checking of the query is enabled or disabled before evaluation. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_options_8cs_source_l00016}{16}} of file \mbox{\hyperlink{_query_options_8cs_source}{Query\+Options.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Core/\mbox{\hyperlink{_query_options_8cs}{Query\+Options.\+cs}}\end{DoxyCompactItemize}

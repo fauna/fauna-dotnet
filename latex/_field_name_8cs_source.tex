@@ -1,0 +1,15 @@
+\doxysection{Field\+Name.\+cs}
+\hypertarget{_field_name_8cs_source}{}\label{_field_name_8cs_source}\index{Fauna/Mapping/FieldName.cs@{Fauna/Mapping/FieldName.cs}}
+\mbox{\hyperlink{_field_name_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00001}00001\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_mapping}{Fauna.Mapping}};}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00006}00006\ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50ac5b8d76e52be996ffe6ea3b9a19f1fed}{FieldName}}}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00007}00007\ \{}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00013}00013\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{string}\ Canonical(\textcolor{keywordtype}{string}\ name)\ =>}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00014}00014\ \ \ \ \ \ \ \ \ (\textcolor{keywordtype}{string}.IsNullOrEmpty(name)\ ||\ \textcolor{keywordtype}{char}.IsLower(name[0]))\ ?}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00015}00015\ \ \ \ \ \ \ \ \ \ \ \ \ name\ :}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00016}00016\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{string}.Concat(name[0].ToString().ToLower(),\ name.AsSpan(1));}
+\DoxyCodeLine{\Hypertarget{_field_name_8cs_source_l00017}00017\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,28 @@
+\doxysection{IQuery\+Fragment.\+cs}
+\hypertarget{_i_query_fragment_8cs_source}{}\label{_i_query_fragment_8cs_source}\index{Fauna/Query/IQueryFragment.cs@{Fauna/Query/IQueryFragment.cs}}
+\mbox{\hyperlink{_i_query_fragment_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Text;}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_mapping}{Fauna.Mapping}};}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_serialization}{Fauna.Serialization}};}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00005}00005\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna}{Fauna}};}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00006}00006\ }
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00010}\mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{00010}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{interface\ }\mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQueryFragment}}}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00011}00011\ \{}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00017}\mbox{\hyperlink{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}{00017}}\ \ \ \ \ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}{Serialize}}(\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{MappingContext}}\ ctx,\ \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8FaunaWriter}}\ writer);}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00018}00018\ \}}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00019}00019\ }
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00024}00024\ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keyword}{class\ }IQueryFragmentExtensions}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00025}00025\ \{}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00031}00031\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{string}\ Serialize(\textcolor{keyword}{this}\ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQueryFragment}}\ fragment,\ \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{MappingContext}}\ ctx)}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00032}00032\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }var\ ms\ =\ \textcolor{keyword}{new}\ MemoryStream();}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00034}00034\ \ \ \ \ \ \ \ \ \textcolor{keyword}{using\ }var\ fw\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8FaunaWriter}}(ms);}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00035}00035\ \ \ \ \ \ \ \ \ fragment.\mbox{\hyperlink{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}{Serialize}}(ctx,\ fw);}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00036}00036\ \ \ \ \ \ \ \ \ fw.Flush();}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00037}00037\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ Encoding.UTF8.GetString(ms.ToArray());}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00038}00038\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_i_query_fragment_8cs_source_l00039}00039\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,125 @@
+.TH "Fauna.Core.QueryFailure" 3 "Version 0.3.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Core.QueryFailure \- Represents a failed query response\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFauna\&.Core\&.QueryResponse\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBQueryFailure\fP (HttpStatusCode statusCode, JsonElement json)"
+.br
+.RI "Initializes a new instance of the \fBQueryFailure\fP class, parsing the provided raw response text to extract error information\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "HttpStatusCode \fBStatusCode\fP\fR [get]\fP"
+.br
+.ti -1c
+.RI "string \fBErrorCode\fP = ''\fR [get]\fP"
+.br
+.ti -1c
+.RI "string \fBMessage\fP = ''\fR [get]\fP"
+.br
+.ti -1c
+.RI "\fBConstraintFailure\fP?[] \fBConstraintFailures\fP\fR [get]\fP"
+.br
+.ti -1c
+.RI "object? \fBAbort\fP\fR [get]\fP"
+.br
+.in -1c
+
+Properties inherited from \fBFauna\&.Core\&.QueryResponse\fP
+.in +1c
+.ti -1c
+.RI "JsonElement \fBRawJson\fP\fR [get]\fP"
+.br
+.ti -1c
+.RI "long \fBLastSeenTxn\fP\fR [get]\fP"
+.br
+.RI "Gets the last transaction seen by this query\&. "
+.ti -1c
+.RI "long \fBSchemaVersion\fP\fR [get]\fP"
+.br
+.RI "Gets the schema version\&. "
+.ti -1c
+.RI "string \fBSummary\fP = ''\fR [get]\fP"
+.br
+.RI "Gets a summary of the query execution\&. "
+.ti -1c
+.RI "Dictionary< string, string > \fBQueryTags\fP = new()\fR [get]\fP"
+.br
+.RI "Gets a dictionary of query tags, providing additional context about the query\&. "
+.ti -1c
+.RI "\fBQueryStats\fP \fBStats\fP\fR [get]\fP"
+.br
+.RI "Gets the statistics related to the query execution\&. "
+.in -1c
+.SS "Additional Inherited Members"
+
+
+Static Public Member Functions inherited from \fBFauna\&.Core\&.QueryResponse\fP
+.in +1c
+.ti -1c
+.RI "static ? \fBQueryResponse\fP \fBGetFromResponseBody< T >\fP (\fBMappingContext\fP ctx, \fBISerializer\fP< T > serializer, HttpStatusCode statusCode, string body)"
+.br
+.RI "Asynchronously parses the HTTP response message to create a \fBQueryResponse\fP instance\&. "
+.in -1c
+
+Package Functions inherited from \fBFauna\&.Core\&.QueryResponse\fP
+.SH "Detailed Description"
+.PP 
+Represents a failed query response\&. 
+.PP
+Definition at line \fB160\fP of file \fBQueryResponse\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Fauna\&.Core\&.QueryFailure\&.QueryFailure (HttpStatusCode statusCode, JsonElement json)"
+
+.PP
+Initializes a new instance of the \fBQueryFailure\fP class, parsing the provided raw response text to extract error information\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIstatusCode\fP The HTTP status code\&.
+.br
+\fIjson\fP The JSON response body\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB173\fP of file \fBQueryResponse\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "object? Fauna\&.Core\&.QueryFailure\&.Abort\fR [get]\fP"
+
+.PP
+Definition at line \fB166\fP of file \fBQueryResponse\&.cs\fP\&.
+.SS "\fBConstraintFailure\fP? [] Fauna\&.Core\&.QueryFailure\&.ConstraintFailures\fR [get]\fP"
+
+.PP
+Definition at line \fB165\fP of file \fBQueryResponse\&.cs\fP\&.
+.SS "string Fauna\&.Core\&.QueryFailure\&.ErrorCode = ''\fR [get]\fP"
+
+.PP
+Definition at line \fB163\fP of file \fBQueryResponse\&.cs\fP\&.
+.SS "string Fauna\&.Core\&.QueryFailure\&.Message = ''\fR [get]\fP"
+
+.PP
+Definition at line \fB164\fP of file \fBQueryResponse\&.cs\fP\&.
+.SS "HttpStatusCode Fauna\&.Core\&.QueryFailure\&.StatusCode\fR [get]\fP"
+
+.PP
+Definition at line \fB162\fP of file \fBQueryResponse\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

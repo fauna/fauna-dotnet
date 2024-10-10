@@ -1,0 +1,287 @@
+\doxysection{Fauna.\+Query\+Expr Class Reference}
+\hypertarget{class_fauna_1_1_query_expr}{}\label{class_fauna_1_1_query_expr}\index{Fauna.QueryExpr@{Fauna.QueryExpr}}
+
+
+Represents an FQL query expression. This class encapsulates a list of \doxylink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment} instances, allowing for complex query constructions.  
+
+
+Inheritance diagram for Fauna.\+Query\+Expr\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_fauna_1_1_query_expr}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_query_expr_ab4855535c8b9d1e59cd1f167e8bdb04d}{Query\+Expr}} (IList$<$ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}} $>$ fragments)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} class with a collection of query fragments. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_query_expr_a26327fc1568adb5c9df90471c923d11b}{Query\+Expr}} (params \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}}\mbox{[}$\,$\mbox{]} fragments)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} class with one or more query fragments. \end{DoxyCompactList}\item 
+override void \mbox{\hyperlink{class_fauna_1_1_query_expr_a75528037f15d84ad51abf82aec6b7e8d}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} writer)
+\begin{DoxyCompactList}\small\item\em Serializes the query expression. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_1_1_query_expr_a4a17a90c6c17be6d466b9dc12766e3f2}{Equals}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}}? o)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} is equal to the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_1_1_query_expr_a1172c95ee313166f22668b786ae7f606}{Equals}} (object? o)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified object is equal to the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}. \end{DoxyCompactList}\item 
+override int \mbox{\hyperlink{class_fauna_1_1_query_expr_ae124c834c24d6c7e9ac5072cc0a8cf6e}{Get\+Hash\+Code}} ()
+\begin{DoxyCompactList}\small\item\em The default hash function. \end{DoxyCompactList}\item 
+override string \mbox{\hyperlink{class_fauna_1_1_query_expr_a6cb3b2816a8a4eec624751f0a911403d}{To\+String}} ()
+\begin{DoxyCompactList}\small\item\em Returns a string that represents the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_query}{Fauna.\+Query}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_fauna_1_1_query_a36a3930b5ff06da0f35d761147a37965}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} writer)
+\begin{DoxyCompactList}\small\item\em Serializes the query into the provided stream. \end{DoxyCompactList}\item 
+override int \mbox{\hyperlink{class_fauna_1_1_query_aa35b3fdd9a6fea0f0ed7e1a24fd25798}{Get\+Hash\+Code}} ()
+\begin{DoxyCompactList}\small\item\em Returns a hash code for the current query. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_1_1_query_ab22b52963a0b28f4e21fd49cd16cb391}{Equals}} (object? other\+Object)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified object is equal to the current query. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_fauna_1_1_query_a886a9f190ebcb682841816568837c7e4}{Equals}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}}? other\+Query)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified \doxylink{class_fauna_1_1_query}{Query} is equal to the current query. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{Fauna.\+IQuery\+Fragment}}}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_fauna_1_1_query_expr_abaacba7dcd71961e159f075bb1ba9d42}{operator==}} (\mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}} left, \mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}} right)
+\begin{DoxyCompactList}\small\item\em Determines whether two specified instances of \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} are equal. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{class_fauna_1_1_query_expr_ac7e063fd6ab8fc39a03b7f8b3122ca13}{operator!=}} (\mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}} left, \mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}} right)
+\begin{DoxyCompactList}\small\item\em Determines whether two specified instances of \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} are not equal. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_query}{Fauna.\+Query}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_1_1_query}{Query}} \mbox{\hyperlink{class_fauna_1_1_query_ab22c4311010b08a9ca0e0be37c3caf6e}{FQL}} (ref \mbox{\hyperlink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler}} handler)
+\begin{DoxyCompactList}\small\item\em Constructs an FQL query using the specified \doxylink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+IRead\+Only\+Collection$<$ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}} $>$ \mbox{\hyperlink{class_fauna_1_1_query_expr_a15ecd8bb43a28ae4c53852da41455a37}{Unwrap}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the readonly collection of query fragments. \end{DoxyCompactList}\item 
+IRead\+Only\+Collection$<$ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}} $>$ \mbox{\hyperlink{class_fauna_1_1_query_expr_adc1762d7b7145265591e66b5b26ec4d5}{Fragments}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the readonly collection of query fragments. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an FQL query expression. This class encapsulates a list of \doxylink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment} instances, allowing for complex query constructions. 
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00010}{10}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_fauna_1_1_query_expr_ab4855535c8b9d1e59cd1f167e8bdb04d}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!QueryExpr@{QueryExpr}}
+\index{QueryExpr@{QueryExpr}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{QueryExpr()}{QueryExpr()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_ab4855535c8b9d1e59cd1f167e8bdb04d} 
+Fauna.\+Query\+Expr.\+Query\+Expr (\begin{DoxyParamCaption}\item[{IList$<$ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}} $>$}]{fragments}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} class with a collection of query fragments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fragments} & The collection of \doxylink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment} instances.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00016}{16}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_expr_a26327fc1568adb5c9df90471c923d11b}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!QueryExpr@{QueryExpr}}
+\index{QueryExpr@{QueryExpr}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{QueryExpr()}{QueryExpr()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_a26327fc1568adb5c9df90471c923d11b} 
+Fauna.\+Query\+Expr.\+Query\+Expr (\begin{DoxyParamCaption}\item[{params \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}}\mbox{[}$\,$\mbox{]}}]{fragments}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} class with one or more query fragments. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em fragments} & The array of \doxylink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment} instances.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00025}{25}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fauna_1_1_query_expr_a1172c95ee313166f22668b786ae7f606}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!Equals@{Equals}}
+\index{Equals@{Equals}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_a1172c95ee313166f22668b786ae7f606} 
+override bool Fauna.\+Query\+Expr.\+Equals (\begin{DoxyParamCaption}\item[{object?}]{o}{}\end{DoxyParamCaption})}
+
+
+
+Determines whether the specified object is equal to the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em o} & The object to compare with the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the specified object is equal to the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00070}{70}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_expr_a4a17a90c6c17be6d466b9dc12766e3f2}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!Equals@{Equals}}
+\index{Equals@{Equals}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_a4a17a90c6c17be6d466b9dc12766e3f2} 
+override bool Fauna.\+Query\+Expr.\+Equals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_query}{Query}}?}]{o}{}\end{DoxyParamCaption})}
+
+
+
+Determines whether the specified \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} is equal to the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em o} & The \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} to compare with the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the specified \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} is equal to the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}; otherwise, false.
+\end{DoxyReturn}
+\Hypertarget{class_fauna_1_1_query_expr_ae124c834c24d6c7e9ac5072cc0a8cf6e}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!GetHashCode@{GetHashCode}}
+\index{GetHashCode@{GetHashCode}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{GetHashCode()}{GetHashCode()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_ae124c834c24d6c7e9ac5072cc0a8cf6e} 
+override int Fauna.\+Query\+Expr.\+Get\+Hash\+Code (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+The default hash function. 
+
+\begin{DoxyReturn}{Returns}
+A hash code for the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}.
+\end{DoxyReturn}
+\Hypertarget{class_fauna_1_1_query_expr_ac7e063fd6ab8fc39a03b7f8b3122ca13}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_ac7e063fd6ab8fc39a03b7f8b3122ca13} 
+static bool Fauna.\+Query\+Expr.\+operator!= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}}}]{left}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}}}]{right}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Determines whether two specified instances of \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} are not equal. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The first \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} to compare.\\
+\hline
+{\em right} & The second \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} to compare.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if left and right are not equal; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00134}{134}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_expr_abaacba7dcd71961e159f075bb1ba9d42}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!operator==@{operator==}}
+\index{operator==@{operator==}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_abaacba7dcd71961e159f075bb1ba9d42} 
+static bool Fauna.\+Query\+Expr.\+operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}}}]{left}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}}}]{right}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Determines whether two specified instances of \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} are equal. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The first \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} to compare.\\
+\hline
+{\em right} & The second \doxylink{class_fauna_1_1_query_expr}{Query\+Expr} to compare.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if left and right are equal; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00113}{113}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_expr_a75528037f15d84ad51abf82aec6b7e8d}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_a75528037f15d84ad51abf82aec6b7e8d} 
+override void Fauna.\+Query\+Expr.\+Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{ctx}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}}}]{writer}{}\end{DoxyParamCaption})}
+
+
+
+Serializes the query expression. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The serialization context.\\
+\hline
+{\em writer} & The writer to serialize the query expression to.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}{Fauna.\+IQuery\+Fragment}}.
+
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00045}{45}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_expr_a6cb3b2816a8a4eec624751f0a911403d}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!ToString@{ToString}}
+\index{ToString@{ToString}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_a6cb3b2816a8a4eec624751f0a911403d} 
+override string Fauna.\+Query\+Expr.\+To\+String (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns a string that represents the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}. 
+
+\begin{DoxyReturn}{Returns}
+A string that represents the current \doxylink{class_fauna_1_1_query_expr}{Query\+Expr}.
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_fauna_1_1_query_expr_adc1762d7b7145265591e66b5b26ec4d5}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!Fragments@{Fragments}}
+\index{Fragments@{Fragments}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{Fragments}{Fragments}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_adc1762d7b7145265591e66b5b26ec4d5} 
+IRead\+Only\+Collection$<$\mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}}$>$ Fauna.\+Query\+Expr.\+Fragments\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the readonly collection of query fragments. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00038}{38}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_expr_a15ecd8bb43a28ae4c53852da41455a37}\index{Fauna.QueryExpr@{Fauna.QueryExpr}!Unwrap@{Unwrap}}
+\index{Unwrap@{Unwrap}!Fauna.QueryExpr@{Fauna.QueryExpr}}
+\doxysubsubsection{\texorpdfstring{Unwrap}{Unwrap}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_expr_a15ecd8bb43a28ae4c53852da41455a37} 
+IRead\+Only\+Collection$<$\mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}}$>$ Fauna.\+Query\+Expr.\+Unwrap\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the readonly collection of query fragments. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_expr_8cs_source_l00033}{33}} of file \mbox{\hyperlink{_query_expr_8cs_source}{Query\+Expr.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Query/\mbox{\hyperlink{_query_expr_8cs}{Query\+Expr.\+cs}}\end{DoxyCompactItemize}

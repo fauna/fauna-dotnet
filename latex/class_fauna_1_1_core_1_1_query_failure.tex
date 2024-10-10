@@ -1,0 +1,142 @@
+\doxysection{Fauna.\+Core.\+Query\+Failure Class Reference}
+\hypertarget{class_fauna_1_1_core_1_1_query_failure}{}\label{class_fauna_1_1_core_1_1_query_failure}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+
+
+Represents a failed query response.  
+
+
+Inheritance diagram for Fauna.\+Core.\+Query\+Failure\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_1_1_core_1_1_query_failure}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_ae98617aa8e640c3f6126d5634c3e84bf}{Query\+Failure}} (Http\+Status\+Code status\+Code, Json\+Element json)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_core_1_1_query_failure}{Query\+Failure} class, parsing the provided raw response text to extract error information. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Http\+Status\+Code \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_abb1d293cd1f0362b70f7b5759170ba05}{Status\+Code}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+string \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_aacdd2c14ff770390a0413a5df3d3bc63}{Error\+Code}} = "{}"{}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+string \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_a240736a9073234b2b13c6f4a616bc7d6}{Message}} = "{}"{}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_constraint_failure}{Constraint\+Failure}}?\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_a4c67ae33df66c326add5eaba832ddf12}{Constraint\+Failures}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+object? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_abcb23b7239c6179a6ad83fca7abcff21}{Abort}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Properties inherited from \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response}{Fauna.\+Core.\+Query\+Response}}}
+\begin{DoxyCompactItemize}
+\item 
+Json\+Element \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a1e4bbf5d4c802be69412a980548236ef}{Raw\+Json}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+long \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a49d66597de41bef65d03b4e6b0c612e2}{Last\+Seen\+Txn}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the last transaction seen by this query. \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_ae1eb6cb66e28964b59b649df292e120e}{Schema\+Version}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the schema version. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a8a296943a4f7ea89390ef217a7e0002a}{Summary}} = "{}"{}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets a summary of the query execution. \end{DoxyCompactList}\item 
+Dictionary$<$ string, string $>$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a556a527fe8a2cb89e8f83d1384ac275c}{Query\+Tags}} = new()\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets a dictionary of query tags, providing additional context about the query. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}} \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a1e4dcba989f75a7f4b660f09728ee152}{Stats}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the statistics related to the query execution. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response}{Fauna.\+Core.\+Query\+Response}}}
+\begin{DoxyCompactItemize}
+\item 
+static ? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response}{Query\+Response}} \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_acb8d6105c5867d4167f681c8872a958f}{Get\+From\+Response\+Body$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$ serializer, Http\+Status\+Code status\+Code, string body)
+\begin{DoxyCompactList}\small\item\em Asynchronously parses the HTTP response message to create a \doxylink{class_fauna_1_1_core_1_1_query_response}{Query\+Response} instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Package Functions inherited from \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response}{Fauna.\+Core.\+Query\+Response}}}
+
+
+\doxysubsection{Detailed Description}
+Represents a failed query response. 
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00160}{160}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_fauna_1_1_core_1_1_query_failure_ae98617aa8e640c3f6126d5634c3e84bf}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}!QueryFailure@{QueryFailure}}
+\index{QueryFailure@{QueryFailure}!Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+\doxysubsubsection{\texorpdfstring{QueryFailure()}{QueryFailure()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_failure_ae98617aa8e640c3f6126d5634c3e84bf} 
+Fauna.\+Core.\+Query\+Failure.\+Query\+Failure (\begin{DoxyParamCaption}\item[{Http\+Status\+Code}]{status\+Code}{, }\item[{Json\+Element}]{json}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{class_fauna_1_1_core_1_1_query_failure}{Query\+Failure} class, parsing the provided raw response text to extract error information. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em status\+Code} & The HTTP status code.\\
+\hline
+{\em json} & The JSON response body.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00173}{173}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_fauna_1_1_core_1_1_query_failure_abcb23b7239c6179a6ad83fca7abcff21}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}!Abort@{Abort}}
+\index{Abort@{Abort}!Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+\doxysubsubsection{\texorpdfstring{Abort}{Abort}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_failure_abcb23b7239c6179a6ad83fca7abcff21} 
+object? Fauna.\+Core.\+Query\+Failure.\+Abort\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00166}{166}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_failure_a4c67ae33df66c326add5eaba832ddf12}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}!ConstraintFailures@{ConstraintFailures}}
+\index{ConstraintFailures@{ConstraintFailures}!Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+\doxysubsubsection{\texorpdfstring{ConstraintFailures}{ConstraintFailures}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_failure_a4c67ae33df66c326add5eaba832ddf12} 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_constraint_failure}{Constraint\+Failure}}? \mbox{[}$\,$\mbox{]} Fauna.\+Core.\+Query\+Failure.\+Constraint\+Failures\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00165}{165}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_failure_aacdd2c14ff770390a0413a5df3d3bc63}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}!ErrorCode@{ErrorCode}}
+\index{ErrorCode@{ErrorCode}!Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+\doxysubsubsection{\texorpdfstring{ErrorCode}{ErrorCode}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_failure_aacdd2c14ff770390a0413a5df3d3bc63} 
+string Fauna.\+Core.\+Query\+Failure.\+Error\+Code = "{}"{}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00163}{163}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_failure_a240736a9073234b2b13c6f4a616bc7d6}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}!Message@{Message}}
+\index{Message@{Message}!Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+\doxysubsubsection{\texorpdfstring{Message}{Message}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_failure_a240736a9073234b2b13c6f4a616bc7d6} 
+string Fauna.\+Core.\+Query\+Failure.\+Message = "{}"{}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00164}{164}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_failure_abb1d293cd1f0362b70f7b5759170ba05}\index{Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}!StatusCode@{StatusCode}}
+\index{StatusCode@{StatusCode}!Fauna.Core.QueryFailure@{Fauna.Core.QueryFailure}}
+\doxysubsubsection{\texorpdfstring{StatusCode}{StatusCode}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_failure_abb1d293cd1f0362b70f7b5759170ba05} 
+Http\+Status\+Code Fauna.\+Core.\+Query\+Failure.\+Status\+Code\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00162}{162}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Core/\mbox{\hyperlink{_query_response_8cs}{Query\+Response.\+cs}}\end{DoxyCompactItemize}

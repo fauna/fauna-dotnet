@@ -1,0 +1,71 @@
+\doxysection{List\+Serializer.\+cs}
+\hypertarget{_list_serializer_8cs_source}{}\label{_list_serializer_8cs_source}\index{Fauna/Serialization/ListSerializer.cs@{Fauna/Serialization/ListSerializer.cs}}
+\mbox{\hyperlink{_list_serializer_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Collections;}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_exceptions}{Fauna.Exceptions}};}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00003}00003\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_mapping}{Fauna.Mapping}};}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00004}\mbox{\hyperlink{_list_serializer_8cs_a7959e8545484d855f8e9a0ab47b16039}{00004}}\ \textcolor{keyword}{using\ }\mbox{\hyperlink{_list_serializer_8cs_a7959e8545484d855f8e9a0ab47b16039}{ArgumentException}}\ =\ System.ArgumentException;}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00006}00006\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_serialization}{Fauna.Serialization}};}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00008}00008\ \textcolor{keyword}{internal}\ \textcolor{keyword}{class\ }ListSerializer<T>\ :\ BaseSerializer<List<T>>}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00009}00009\ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00010}00010\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ ISerializer<T>\ \_elemSerializer;}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00012}00012\ \ \ \ \ \textcolor{keyword}{public}\ ListSerializer(ISerializer<T>\ elemSerializer)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00013}00013\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00014}00014\ \ \ \ \ \ \ \ \ \_elemSerializer\ =\ elemSerializer;}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00015}00015\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00017}00017\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ List<T>\ Deserialize(\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{MappingContext}}\ context,\ ref\ Utf8FaunaReader\ reader)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00018}00018\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00019}00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (reader.CurrentTokenType\ ==\ \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{TokenType}}.StartPage)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00020}00020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_serialization_exception}{SerializationException}}(}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00021}00021\ \ \ \ \ \ \ \ \ \ \ \ \ \$\textcolor{stringliteral}{"{}Unexpected\ token\ while\ deserializing\ into\ \{typeof(List<T>)\}:\ \{reader.CurrentTokenType\}"{}});}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00023}00023\ \ \ \ \ \ \ \ \ var\ wrapInList\ =\ reader.CurrentTokenType\ !=\ \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{TokenType}}.StartArray;}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00025}00025\ \ \ \ \ \ \ \ \ var\ lst\ =\ \textcolor{keyword}{new}\ List<T>();}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00026}00026\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00027}00027\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (wrapInList)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00028}00028\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00029}00029\ \ \ \ \ \ \ \ \ \ \ \ \ lst.Add(\_elemSerializer.Deserialize(context,\ ref\ reader));}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00030}00030\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00032}00032\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{while}\ (reader.Read()\ \&\&\ reader.CurrentTokenType\ !=\ \mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{TokenType}}.EndArray)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00034}00034\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00035}00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lst.Add(\_elemSerializer.Deserialize(context,\ ref\ reader));}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00036}00036\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00037}00037\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00039}00039\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ lst;}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00040}00040\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00042}00042\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ Serialize(\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{MappingContext}}\ ctx,\ Utf8FaunaWriter\ w,\ \textcolor{keywordtype}{object}?\ o)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00043}00043\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00044}00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (o\ is\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00045}00045\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00046}00046\ \ \ \ \ \ \ \ \ \ \ \ \ w.WriteNullValue();}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00047}00047\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00048}00048\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00049}00049\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (o.GetType().IsGenericType\ \&\&}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ o.GetType().GetGenericTypeDefinition()\ ==\ typeof(List<>)\ ||}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \ \ \ \ o.GetType().GetGenericTypeDefinition()\ ==\ typeof(IEnumerable))}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00053}00053\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00054}00054\ \ \ \ \ \ \ \ \ \ \ \ \ w.WriteStartArray();}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00055}00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{foreach}\ (\textcolor{keywordtype}{object}?\ elem\ \textcolor{keywordflow}{in}\ (IEnumerable)o)}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00056}00056\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \_elemSerializer.Serialize(ctx,\ w,\ elem);}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00058}00058\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00059}00059\ \ \ \ \ \ \ \ \ \ \ \ \ w.WriteEndArray();}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00060}00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00061}00061\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_serialization_exception}{SerializationException}}(\mbox{\hyperlink{class_fauna_1_1_serialization_1_1_base_serializer_a1ecc6a9336abf0679953ce8d6661d75f}{UnsupportedSerializationTypeMessage}}(o.GetType()));}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00064}00064\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_list_serializer_8cs_source_l00065}00065\ \}}
+
+\end{DoxyCode}

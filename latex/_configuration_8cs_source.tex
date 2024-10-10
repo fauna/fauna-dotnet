@@ -1,0 +1,47 @@
+\doxysection{Configuration.\+cs}
+\hypertarget{_configuration_8cs_source}{}\label{_configuration_8cs_source}\index{Fauna/Configuration.cs@{Fauna/Configuration.cs}}
+\mbox{\hyperlink{_configuration_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_core}{Fauna.Core}};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00003}00003\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna}{Fauna}};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00009}\mbox{\hyperlink{class_fauna_1_1_configuration}{00009}}\ \textcolor{keyword}{public}\ record\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_configuration}{Configuration}}}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00014}\mbox{\hyperlink{class_fauna_1_1_configuration_a97862ebc360b777aa17bbf20033c74d4}{00014}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a97862ebc360b777aa17bbf20033c74d4}{DisposeHttpClient}}\ \{\ \textcolor{keyword}{get};\ \}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00019}\mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{00019}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{HttpClient}}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{HttpClient}}\ \{\ \textcolor{keyword}{get};\ \}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{HttpClient}}\ \{\ Timeout\ =\ TimeSpan.FromSeconds(5)\ \};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00020}00020\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00024}\mbox{\hyperlink{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}{00024}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}{Secret}}\ \{\ \textcolor{keyword}{get};\ init;\ \}\ =\ Environment.GetEnvironmentVariable(\textcolor{stringliteral}{"{}FAUNA\_SECRET"{}})\ ??\ \textcolor{keywordtype}{string}.Empty;}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00025}00025\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00029}\mbox{\hyperlink{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}{00029}}\ \ \ \ \ \textcolor{keyword}{public}\ Uri\ \mbox{\hyperlink{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}{Endpoint}}\ \{\ \textcolor{keyword}{get};\ init;\ \}\ =\ Endpoints.GetFaunaEndpoint();}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00034}\mbox{\hyperlink{class_fauna_1_1_configuration_a1629157a309f63727d65d6da62e81268}{00034}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{QueryOptions}}?\ \mbox{\hyperlink{class_fauna_1_1_configuration_a1629157a309f63727d65d6da62e81268}{DefaultQueryOptions}}\ \{\ \textcolor{keyword}{get};\ init;\ \}\ =\ \textcolor{keyword}{null};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00039}\mbox{\hyperlink{class_fauna_1_1_configuration_a1653cacae741b8362dfcb453133a7ab3}{00039}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration}{RetryConfiguration}}\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_retry_configuration}{RetryConfiguration}}\ \{\ \textcolor{keyword}{get};\ init;\ \}\ =\ \textcolor{keyword}{new}(3,\ TimeSpan.FromSeconds(20));}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00040}00040\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00041}00041\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00045}\mbox{\hyperlink{class_fauna_1_1_configuration_ab04409b18aad1ba47b860fb6ff5b923e}{00045}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{interface_fauna_1_1_core_1_1_i_stats_collector}{IStatsCollector}}?\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_stats_collector}{StatsCollector}}\ \{\ \textcolor{keyword}{get};\ init;\ \}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_configuration_ab04409b18aad1ba47b860fb6ff5b923e}{StatsCollector}}();}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00046}00046\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00047}\mbox{\hyperlink{class_fauna_1_1_configuration_a7bb17ca9c8f8f323a29800439eeef5f5}{00047}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a7bb17ca9c8f8f323a29800439eeef5f5}{Configuration}}()}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00048}00048\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00049}00049\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (\textcolor{keywordtype}{string}.IsNullOrEmpty(\mbox{\hyperlink{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}{Secret}}))}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{throw}\ \textcolor{keyword}{new}\ ArgumentNullException(nameof(\mbox{\hyperlink{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}{Secret}}),\ \textcolor{stringliteral}{"{}Need\ to\ set\ FAUNA\_SECRET\ environment\ variable\ or\ pass\ a\ secret\ as\ a\ parameter\ when\ creating\ the\ Client."{}});}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00053}00053\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00054}00054\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00060}\mbox{\hyperlink{class_fauna_1_1_configuration_a622f6d7fed94432d2c960b50f6560c6e}{00060}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_configuration_a622f6d7fed94432d2c960b50f6560c6e}{Configuration}}(\textcolor{keywordtype}{string}\ secret,\ \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{HttpClient}}?\ httpClient\ =\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00061}00061\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00062}00062\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_configuration_a8ae4e969be477bd601e4abaffea172e8}{Secret}}\ =\ secret;}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (httpClient\ is\ \textcolor{keyword}{null})}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00064}00064\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00065}00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00067}00067\ }
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_configuration_a423347ad4ff7c5d71bed0ae8d83ecdfc}{HttpClient}}\ =\ httpClient;}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00069}00069\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_configuration_a97862ebc360b777aa17bbf20033c74d4}{DisposeHttpClient}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00070}00070\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_configuration_8cs_source_l00071}00071\ \}}
+
+\end{DoxyCode}

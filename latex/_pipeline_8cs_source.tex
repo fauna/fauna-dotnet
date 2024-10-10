@@ -1,0 +1,39 @@
+\doxysection{Pipeline.\+cs}
+\hypertarget{_pipeline_8cs_source}{}\label{_pipeline_8cs_source}\index{Fauna/Linq/Pipeline.cs@{Fauna/Linq/Pipeline.cs}}
+\mbox{\hyperlink{_pipeline_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Linq.Expressions;}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_serialization}{Fauna.Serialization}};}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00004}00004\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_linq}{Fauna.Linq}};}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00006}\mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725}{00006}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{enum}\ \mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725}{PipelineMode}}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00007}00007\ \{}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00008}00008\ \ \ \ \ \mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725a66c1b4c7f3dc385b68a9fa903ccd016d}{Query}},\ \textcolor{comment}{//\ "{}pure"{}\ query.\ no\ local\ processing\ required\ (except\ deserialization)}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00009}00009\ \ \ \ \ \mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725a9e727fdd3aec8274f46685441900280d}{Project}},\ \textcolor{comment}{//\ elements\ have\ local\ projection.}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00010}00010\ \ \ \ \ \mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725ae099f26cb6d4af2fd25aacb9e7364cb6}{SetLoad}},\ \textcolor{comment}{//\ post-\/processing\ on\ loaded\ set\ required}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00011}00011\ \ \ \ \ \mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725af60357a8d17e45793298323f1b372a74}{Scalar}},\ \textcolor{comment}{//\ final,\ non-\/enum\ result:\ no\ more\ transformations\ allowed}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00012}00012\ \}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00014}00014\ \textcolor{keyword}{internal}\ readonly\ record\ \textcolor{keyword}{struct\ }Pipeline(}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00015}00015\ \ \ \ \ \mbox{\hyperlink{namespace_fauna_1_1_linq_ac10c7fce4171dfb86e1f15915e0dd725}{PipelineMode}}\ Mode,}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00016}00016\ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}},}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00017}00017\ \ \ \ \ Type\ ElemType,}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00018}00018\ \ \ \ \ bool\ ElemNullable,}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00019}00019\ \ \ \ \ \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}?\ ElemSerializer,}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00020}00020\ \ \ \ \ LambdaExpression?\ ProjectExpr)}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00021}00021\ \{}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00022}00022\ \ \ \ \ \textcolor{keyword}{public}\ IPipelineExecutor\ GetExec(DataContext\ ctx)}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00023}00023\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00024}00024\ \ \ \ \ \ \ \ \ var\ ser\ =\ ElemSerializer\ ??}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00025}00025\ \ \ \ \ \ \ \ \ \ \ \ \ (ElemNullable\ ?}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00026}00026\ \ \ \ \ \ \ \ \ \ \ \ \ \ Serializer.GenerateNullable(ctx.MappingCtx,\ ElemType)\ :}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00027}00027\ \ \ \ \ \ \ \ \ \ \ \ \ \ Serializer.Generate(ctx.MappingCtx,\ ElemType));}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00029}00029\ \ \ \ \ \ \ \ \ var\ proj\ =\ ProjectExpr?.Compile();}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00030}00030\ }
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00031}00031\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ IPipelineExecutor.Create(ctx,\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}},\ ser,\ proj,\ Mode);}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00032}00032\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_pipeline_8cs_source_l00033}00033\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,163 @@
+\doxysection{Fauna.\+Exceptions.\+Abort\+Exception Class Reference}
+\hypertarget{class_fauna_1_1_exceptions_1_1_abort_exception}{}\label{class_fauna_1_1_exceptions_1_1_abort_exception}\index{Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}}
+
+
+Represents an exception that occurs when the FQL {\ttfamily abort} function is called. This exception captures the data provided during the abort operation.  
+
+
+Inheritance diagram for Fauna.\+Exceptions.\+Abort\+Exception\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_fauna_1_1_exceptions_1_1_abort_exception}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception_a640b6a9640ff8caf8c34996c7d866c01}{Abort\+Exception}} (string message, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure}{Query\+Failure}} failure, \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_exceptions_1_1_abort_exception}{Abort\+Exception} class with a specified error message and query failure details. \end{DoxyCompactList}\item 
+object? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception_a50269733350987da5ce610840a45762b}{Get\+Data}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the deserialized data associated with the abort operation as an object. \end{DoxyCompactList}\item 
+T? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception_a14b8ce7183b9227da26a66f85459af10}{Get\+Data$<$ T $>$}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the deserialized data associated with the abort operation as a specific type. \end{DoxyCompactList}\item 
+T? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception_a1ae1e6c9819778e3d57719ef8efc4342}{Get\+Data$<$ T $>$}} (\mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$ serializer)
+\begin{DoxyCompactList}\small\item\em Retrieves the deserialized data associated with the abort operation as a specific type. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception}{Fauna.\+Exceptions.\+Service\+Exception}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_adb0746705507e1391b006264a215fc5e}{Service\+Exception}} (string message)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_exceptions_1_1_service_exception}{Service\+Exception} class with a specified query failure details and error message. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae5bc45cc05f0bca1d6879425c0cea447}{Service\+Exception}} (string message, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure}{Query\+Failure}} failure)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_exceptions_1_1_service_exception}{Service\+Exception} class with a specified query failure details and error message. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception}{Fauna.\+Exceptions.\+Fauna\+Exception}}}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception_a08c37bea15eb95a9453247b95a4ad671}{Fauna\+Exception}} ()
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception_a62980b9d018ebe9cd575bedb773d2dfa}{Fauna\+Exception}} (string message)
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception_ab6833d6991f5def8464eeb2be842feb1}{Fauna\+Exception}} (string message, Exception inner\+Exception)
+\item 
+\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception_ace8a701ab9d752dde716eaf4320a8f8c}{Fauna\+Exception}} (\mbox{\hyperlink{struct_fauna_1_1_core_1_1_error_info}{Error\+Info}} err)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Properties inherited from \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception}{Fauna.\+Exceptions.\+Service\+Exception}}}
+\begin{DoxyCompactItemize}
+\item 
+string? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a8497e5ce76ed54d5d41fbb8e06e69577}{Error\+Code}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The error code when a query fails. \end{DoxyCompactList}\item 
+IDictionary$<$ string, string $>$ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a0e364c903a5f6734ba12ef675713d6a0}{Query\+Tags}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The tags on the x-\/query-\/tags header, if it was provided. \end{DoxyCompactList}\item 
+long? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a65603b7803bb1d46f4f318339b19fbe4}{Schema\+Version}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The schema version used by the query. This can be used by clients displaying schema to determine when they should refresh their schema. If the schema version that a client has stored differs from the one returned by the query, schema should be refreshed. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}} \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a6af6c7dbc47cd2d825376bc08cbf47dd}{Stats}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The query stats for the request. \end{DoxyCompactList}\item 
+Http\+Status\+Code? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a76832ee18db230c2f20354b924691b4c}{Status\+Code}}\hspace{0.3cm}{\ttfamily  \mbox{[}get, set\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The HTTP status code. \end{DoxyCompactList}\item 
+string? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a30fef9448a1973796a1eaac5e167f4e5}{Summary}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em A comprehensive, human readable summary of any errors, warnings and/or logs returned from the query. \end{DoxyCompactList}\item 
+long? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae3b905ebb35e6e1488f5413433aca00c}{Txn\+Ts}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em The transaction commit time in micros since epoch. Used by drivers to populate the x-\/last-\/txn-\/ts request header in order to get a consistent prefix RYOW guarantee. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents an exception that occurs when the FQL {\ttfamily abort} function is called. This exception captures the data provided during the abort operation. 
+
+Definition at line \mbox{\hyperlink{_abort_exception_8cs_source_l00011}{11}} of file \mbox{\hyperlink{_abort_exception_8cs_source}{Abort\+Exception.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_fauna_1_1_exceptions_1_1_abort_exception_a640b6a9640ff8caf8c34996c7d866c01}\index{Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}!AbortException@{AbortException}}
+\index{AbortException@{AbortException}!Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}}
+\doxysubsubsection{\texorpdfstring{AbortException()}{AbortException()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_exceptions_1_1_abort_exception_a640b6a9640ff8caf8c34996c7d866c01} 
+Fauna.\+Exceptions.\+Abort\+Exception.\+Abort\+Exception (\begin{DoxyParamCaption}\item[{string}]{message}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure}{Query\+Failure}}}]{failure}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{ctx}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{class_fauna_1_1_exceptions_1_1_abort_exception}{Abort\+Exception} class with a specified error message and query failure details. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em message} & The error message that explains the reason for the exception.\\
+\hline
+{\em failure} & A Query\+Failure\\
+\hline
+{\em ctx} & A mapping context.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_abort_exception_8cs_source_l00024}{24}} of file \mbox{\hyperlink{_abort_exception_8cs_source}{Abort\+Exception.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fauna_1_1_exceptions_1_1_abort_exception_a50269733350987da5ce610840a45762b}\index{Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}!GetData@{GetData}}
+\index{GetData@{GetData}!Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}}
+\doxysubsubsection{\texorpdfstring{GetData()}{GetData()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_exceptions_1_1_abort_exception_a50269733350987da5ce610840a45762b} 
+object? Fauna.\+Exceptions.\+Abort\+Exception.\+Get\+Data (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves the deserialized data associated with the abort operation as an object. 
+
+\begin{DoxyReturn}{Returns}
+The deserialized data as an object, or null if no data is available.
+\end{DoxyReturn}
+\Hypertarget{class_fauna_1_1_exceptions_1_1_abort_exception_a14b8ce7183b9227da26a66f85459af10}\index{Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}!GetData$<$ T $>$@{GetData$<$ T $>$}}
+\index{GetData$<$ T $>$@{GetData$<$ T $>$}!Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}}
+\doxysubsubsection{\texorpdfstring{GetData$<$ T $>$()}{GetData< T >()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_exceptions_1_1_abort_exception_a14b8ce7183b9227da26a66f85459af10} 
+T? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception_a50269733350987da5ce610840a45762b}{Fauna.\+Exceptions.\+Abort\+Exception.\+Get\+Data}}$<$ T $>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves the deserialized data associated with the abort operation as a specific type. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type to which the data should be deserialized.\\
+\hline
+\end{DoxyTemplParams}
+\begin{DoxyReturn}{Returns}
+The deserialized data as the specified type, or null if no data is available.
+\end{DoxyReturn}
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em T} : {\em notnull}]\end{description}
+\end{Desc}
+\Hypertarget{class_fauna_1_1_exceptions_1_1_abort_exception_a1ae1e6c9819778e3d57719ef8efc4342}\index{Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}!GetData$<$ T $>$@{GetData$<$ T $>$}}
+\index{GetData$<$ T $>$@{GetData$<$ T $>$}!Fauna.Exceptions.AbortException@{Fauna.Exceptions.AbortException}}
+\doxysubsubsection{\texorpdfstring{GetData$<$ T $>$()}{GetData< T >()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_exceptions_1_1_abort_exception_a1ae1e6c9819778e3d57719ef8efc4342} 
+T? \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_abort_exception_a50269733350987da5ce610840a45762b}{Fauna.\+Exceptions.\+Abort\+Exception.\+Get\+Data}}$<$ T $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$}]{serializer}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves the deserialized data associated with the abort operation as a specific type. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The type to which the data should be deserialized.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em serializer} & A serializer for the abort data.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The deserialized data as the specified type, or null if no data is available.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_abort_exception_8cs_source_l00050}{50}} of file \mbox{\hyperlink{_abort_exception_8cs_source}{Abort\+Exception.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Exceptions/\mbox{\hyperlink{_abort_exception_8cs}{Abort\+Exception.\+cs}}\end{DoxyCompactItemize}

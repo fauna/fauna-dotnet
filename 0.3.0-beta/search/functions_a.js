@@ -1,0 +1,6 @@
+var searchData=
+[
+  ['nameattribute_0',['NameAttribute',['../class_fauna_1_1_linq_1_1_data_context_1_1_name_attribute.html#ae026afe1a6fba4a003d23a8fccd494c8',1,'Fauna::Linq::DataContext::NameAttribute']]],
+  ['namedref_1',['NamedRef',['../class_fauna_1_1_types_1_1_named_ref.html#adf75850d8cedde721426e7a0ef8f83d7',1,'Fauna.Types.NamedRef.NamedRef(string name, DataContext.ICollection col)'],['../class_fauna_1_1_types_1_1_named_ref.html#afdf9f0e45e5ee07495a689667e88ed53',1,'Fauna.Types.NamedRef.NamedRef(string name, DataContext.ICollection col, T doc)'],['../class_fauna_1_1_types_1_1_named_ref.html#a6bebf77f5959fbf2fcc5aadb360fffe4',1,'Fauna.Types.NamedRef.NamedRef(string name, DataContext.ICollection col, string cause)'],['../class_fauna_1_1_types_1_1_named_ref.html#aaad14469c887adf7f1d054712660e46d',1,'Fauna.Types.NamedRef.NamedRef(string name, Module col)'],['../class_fauna_1_1_types_1_1_named_ref.html#aefa2494c200df3a84a5e3ba7f5bb6c86',1,'Fauna.Types.NamedRef.NamedRef(string name, Module col, string cause)'],['../class_fauna_1_1_types_1_1_named_ref.html#a69cfb3d6b63d5f43bae348905fe97c36',1,'Fauna.Types.NamedRef.NamedRef(string name, Module col, T doc)']]],
+  ['networkexception_2',['NetworkException',['../class_fauna_1_1_exceptions_1_1_network_exception.html#a864e8405b9f733bac90a3a27f195e7e1',1,'Fauna::Exceptions::NetworkException']]]
+];

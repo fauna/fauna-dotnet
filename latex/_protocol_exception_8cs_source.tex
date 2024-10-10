@@ -1,0 +1,23 @@
+\doxysection{Protocol\+Exception.\+cs}
+\hypertarget{_protocol_exception_8cs_source}{}\label{_protocol_exception_8cs_source}\index{Fauna/Exceptions/ProtocolException.cs@{Fauna/Exceptions/ProtocolException.cs}}
+\mbox{\hyperlink{_protocol_exception_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Net;}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00003}00003\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_exceptions}{Fauna.Exceptions}};}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00008}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception}{00008}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception}{ProtocolException}}\ :\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception}{FaunaException}}}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00009}00009\ \{}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00010}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_abc51ffe41d2b04b15d4cd83d2b94f4b9}{00010}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_abc51ffe41d2b04b15d4cd83d2b94f4b9}{ResponseBody}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00012}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_ab39646ac32b572ad69dada194a4b4cc6}{00012}}\ \ \ \ \ \textcolor{keyword}{public}\ HttpStatusCode\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_ab39646ac32b572ad69dada194a4b4cc6}{StatusCode}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00014}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_ac57324fdfc6426b4e048c68ee6fdf856}{00014}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_ac57324fdfc6426b4e048c68ee6fdf856}{ProtocolException}}(\textcolor{keywordtype}{string}\ message,\ HttpStatusCode\ statusCode,\ \textcolor{keywordtype}{string}\ body)}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00015}00015\ \ \ \ \ \ \ \ \ :\ base(message)}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00016}00016\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00017}00017\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_ab39646ac32b572ad69dada194a4b4cc6}{StatusCode}}\ =\ statusCode;}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00018}00018\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_protocol_exception_abc51ffe41d2b04b15d4cd83d2b94f4b9}{ResponseBody}}\ =\ body;}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00019}00019\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_protocol_exception_8cs_source_l00020}00020\ \}}
+
+\end{DoxyCode}
