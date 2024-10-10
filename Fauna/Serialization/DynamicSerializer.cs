@@ -85,6 +85,9 @@ internal class DynamicSerializer : BaseSerializer<object?>
                     builder.Doc = (Dictionary<string, object>?)_dict.DeserializeDocument(context, builder.Id, builder.Name, builder.Collection, ref reader);
                     break;
             }
+
+            // After we deserialize into a doc, we end on the EndDocument a token and do not want to read again
+            if (reader.CurrentTokenType == TokenType.EndDocument) break;
         }
 
         return builder.Build();

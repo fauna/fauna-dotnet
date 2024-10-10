@@ -522,4 +522,20 @@ public class IntegrationTests
 
         Assert.Zero(expectedEvents, "stream handler should process all events");
     }
+
+    [Test]
+    public async Task CollectionAll()
+    {
+        var query = FQL($"Collection.all()");
+        object result = (await _client.QueryAsync(query)).Data!;
+        switch (result)
+        {
+            case Page<object> p:
+                Assert.Greater(p.Data.Count, 0);
+                break;
+            default:
+                Assert.Fail($"Expected Page<Ref<Dictionary<string, object>>> but was {result.GetType()}");
+                break;
+        }
+    }
 }
