@@ -310,21 +310,21 @@ await foreach (var evt in stream)
 }
 ```
 
-## Debug Logging
+## Debug logging
 
-To assist in developing your applications, the driver can be configured to emit additional debug log messages. 
-To enable basic debug logging, you can set the `FAUNA_DEBUG` environment variable to an integer value of the 
-`Microsoft.Extensions.Logging.LogLevel` enum; e.g. to see all additional log messages, pass `FAUNA_DEBUG=0`, 
-which corresponds to `LogLevel.Trace`, whereas if you only want to see `LogLevel.Warning` and higher, set `FAUNA_DEBUG=3`.
+To enable debug logging, set the `FAUNA_DEBUG` environment variable to an integer for the `Microsoft.Extensions.Logging.LogLevel`. For example:
 
-_NB: As of release 1.0.0, the driver only outputs `LogLevel.Debug` messages, so you will need to 
-set the variable to `0 (LogLevel.Trace)` or `1 (LogLevel.Debug)` to see those messages._
+* `0`: `LogLevel.Trace` and higher (all messages)
+* `3`: `LogLevel.Warning` and higher
 
-If you prefer to have more control over the additional logging from the driver, you can bring 
-your own `ILogger` implementation (e.g. Serilog, NLog) and pass it to the `Configuration` class 
-when instantiating a `Client`. Below is a basic example using `Serilog`:
+> [!NOTE]  
+> As of v1.0.0, the driver only outputs `LogLevel.Debug` messages. Use `0` (Trace) or `1` (Debug) to log these messages.
 
-First install the packages:
+For advanced logging, you can use a custom `ILogger` implementation, such as Serilog or NLog. Pass the implementation to the `Configuration` class when instantiating a `Client`.
+
+### Basic example: Serilog
+
+Install the packages:
 ```
 $ dotnet add package Serilog
 $ dotnet add package Serilog.Extensions.Logging
@@ -332,7 +332,7 @@ $ dotnet add package Serilog.Sinks.Console
 $ dotnet add package Serilog.Sinks.File
 ```
 
-Then instantiate the `Log.Logger` and pass it to the `Configuration` object:
+Configure and use the logger:
 ```csharp
 using Fauna;
 using Microsoft.Extensions.Logging;
