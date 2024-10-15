@@ -53,6 +53,8 @@ internal class Connection : IConnection
                 response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
         );
 
+        Logger.Instance.LogTrace("Response body: {body}", await response.Content.ReadAsStringAsync(cancel));
+
         return response;
     }
 
@@ -163,8 +165,9 @@ internal class Connection : IConnection
                     .ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
         );
 
-        // Emit unredacted Auth header in trace logs
+        // Emit unredacted Auth header and response body in trace logs
         Logger.Instance.LogTrace("Unredacted Authorization header: {value}", request.Headers.Authorization?.ToString() ?? "null");
+        Logger.Instance.LogTrace("Request body: {body}", request.Content.ReadAsStringAsync().Result);
 
         return request;
     }
