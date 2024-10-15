@@ -152,15 +152,19 @@ internal class Connection : IConnection
                 request.Headers
                     .Select(header =>
                     {
+                        // Redact Auth header in debug logs
                         if (header.Key.StartsWith("Authorization", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            return KeyValuePair.Create(header.Key, new[] { "HIDDEN" }.AsEnumerable());
+                            return KeyValuePair.Create(header.Key, new[] { "hidden" }.AsEnumerable());
                         }
 
                         return header;
                     })
                     .ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
         );
+
+        // Emit unredacted Auth header in trace logs
+        Logger.Instance.LogTrace("Unredacted Authorization header: {value}", request.Headers.Authorization?.ToString() ?? "null");
 
         return request;
     }
