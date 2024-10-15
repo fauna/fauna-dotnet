@@ -1,9 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
+using Fauna.Util;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Stream = System.IO.Stream;
 
@@ -33,15 +36,22 @@ internal class Connection : IConnection
         CancellationToken cancel = default)
     {
         HttpResponseMessage response;
-        {
-            var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                .ExecuteAndCaptureAsync(() =>
-                    _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
-                .ConfigureAwait(false);
-            response = policyResult.Outcome == OutcomeType.Successful
-                ? policyResult.Result
-                : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
-        }
+
+        var policyResult = await _cfg.RetryConfiguration.RetryPolicy
+            .ExecuteAndCaptureAsync(() =>
+                _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+            .ConfigureAwait(false);
+        response = policyResult.Outcome == OutcomeType.Successful
+            ? policyResult.Result
+            : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
+
+        Logger.Instance.LogDebug(
+            "Fauna HTTP Response {status} from {uri}, headers: {headers}",
+            response.StatusCode.ToString(),
+            response.RequestMessage?.RequestUri?.ToString() ?? "UNKNOWN",
+            JsonSerializer.Serialize(
+                response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
+        );
 
         return response;
     }
@@ -132,6 +142,25 @@ internal class Connection : IConnection
         {
             request.Headers.Add(header.Key, header.Value);
         }
+
+        Logger.Instance.LogDebug(
+            "Fauna HTTP {method} Request to {uri} (timeout {timeout}ms), headers: {headers}",
+            HttpMethod.Post.ToString(),
+            request.RequestUri.ToString(),
+            _cfg.HttpClient.Timeout.TotalMilliseconds,
+            JsonSerializer.Serialize(
+                request.Headers
+                    .Select(header =>
+                    {
+                        if (header.Key.StartsWith("Authorization", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            return KeyValuePair.Create(header.Key, new[] { "HIDDEN" }.AsEnumerable());
+                        }
+
+                        return header;
+                    })
+                    .ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
+        );
 
         return request;
     }

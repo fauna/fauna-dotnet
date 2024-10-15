@@ -1,4 +1,6 @@
 ﻿using Fauna.Core;
+using Fauna.Util;
+using Microsoft.Extensions.Logging;
 
 namespace Fauna;
 
@@ -44,28 +46,32 @@ public record class Configuration
     /// </summary>
     public IStatsCollector? StatsCollector { get; init; } = new StatsCollector();
 
-    public Configuration()
-    {
-        if (string.IsNullOrEmpty(Secret))
-        {
-            throw new ArgumentNullException(nameof(Secret), "Need to set FAUNA_SECRET environment variable or pass a secret as a parameter when creating the Client.");
-        }
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="Configuration"/> record with the specified secret key.
     /// </summary>
     /// <param name="secret">The secret key used for authentication.</param>
     /// <param name="httpClient">The <see cref="HttpClient"/> to use.</param>
-    public Configuration(string secret, HttpClient? httpClient = null)
+    public Configuration(string secret = "", HttpClient? httpClient = null, ILogger? logger = null)
     {
-        Secret = secret;
-        if (httpClient is null)
+        if (string.IsNullOrEmpty(secret) && string.IsNullOrEmpty(Secret))
         {
-            return;
+            throw new ArgumentNullException(nameof(Secret), "Need to set FAUNA_SECRET environment variable or pass a secret as a parameter when creating the Client.");
         }
 
-        HttpClient = httpClient;
-        DisposeHttpClient = false;
+        if (!string.IsNullOrEmpty(secret))
+        {
+            Secret = secret;
+        }
+
+        if (httpClient != null)
+        {
+            HttpClient = httpClient;
+            DisposeHttpClient = false;
+        }
+
+        if (logger != null)
+        {
+            Logger.Initialize(logger);
+        }
     }
 }

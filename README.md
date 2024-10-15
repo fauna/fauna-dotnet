@@ -309,3 +309,51 @@ await foreach (var evt in stream)
     }
 }
 ```
+
+## Debug Logging
+
+To assist in developing your applications, the driver can be configured to emit additional debug log messages. 
+To enable basic debug logging, you can set the `FAUNA_DEBUG` environment variable to an integer value of the 
+`Microsoft.Extensions.Logging.LogLevel` enum; e.g. to see all additional log messages, pass `FAUNA_DEBUG=0`, 
+which corresponds to `LogLevel.Trace`, whereas if you only want to see `LogLevel.Warning` and higher, set `FAUNA_DEBUG=3`.
+
+_NB: As of release 1.0.0, the driver only outputs `LogLevel.Debug` messages, so you will need to 
+set the variable to `0 (LogLevel.Trace)` or `1 (LogLevel.Debug)` to see those messages._
+
+If you prefer to have more control over the additional logging from the driver, you can bring 
+your own `ILogger` implementation (e.g. Serilog, NLog) and pass it to the `Configuration` class 
+when instantiating a `Client`. Below is a basic example using `Serilog`:
+
+First install the packages:
+```
+$ dotnet add package Serilog
+$ dotnet add package Serilog.Extensions.Logging
+$ dotnet add package Serilog.Sinks.Console
+$ dotnet add package Serilog.Sinks.File
+```
+
+Then instantiate the `Log.Logger` and pass it to the `Configuration` object:
+```csharp
+using Fauna;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using static Fauna.Query;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose()
+    .WriteTo.Console()
+    .WriteTo.File("log.txt",
+        rollingInterval: RollingInterval.Day,
+        rollOnFileSizeLimit: true)
+    .CreateLogger();
+
+var logFactory = new LoggerFactory().AddSerilog(Log.Logger);
+
+var config = new Configuration("mysecret", logger: logFactory.CreateLogger("myapp"));
+
+var client = new Client(config);
+
+await client.QueryAsync(FQL($"1+1"));
+
+// You should see LogLevel.Debug messages in both the Console and the "log{date}.txt" file
+```
