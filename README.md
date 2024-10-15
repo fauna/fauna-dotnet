@@ -317,6 +317,8 @@ To enable debug logging, set the `FAUNA_DEBUG` environment variable to an intege
 * `0`: `LogLevel.Trace` and higher (all messages)
 * `3`: `LogLevel.Warning` and higher
 
+The driver logs HTTP request and response details, including headers. For security, the `Authorization` header is redacted in debug logs but is visible in trace logs.
+
 > [!NOTE]  
 > As of v1.0.0, the driver only outputs `LogLevel.Debug` messages. Use `0` (Trace) or `1` (Debug) to log these messages.
 
