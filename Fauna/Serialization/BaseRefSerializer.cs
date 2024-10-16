@@ -14,6 +14,8 @@ internal class RefSerializer<T> : BaseSerializer<Ref<T>> where T : notnull
         _baseRefSerializer = new BaseRefSerializer<T>(docSerializer);
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Ref };
+
     public override Ref<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         return (Ref<T>)_baseRefSerializer.Deserialize(context, ref reader);
@@ -34,6 +36,8 @@ internal class NamedRefSerializer<T> : BaseSerializer<NamedRef<T>> where T : not
         _baseRefSerializer = new BaseRefSerializer<T>(docSerializer);
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Ref };
+
     public override NamedRef<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         return (NamedRef<T>)_baseRefSerializer.Deserialize(context, ref reader);
@@ -53,6 +57,8 @@ internal class BaseRefSerializer<T> : BaseSerializer<BaseRef<T>> where T : notnu
     {
         _docSerializer = docSerializer;
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Ref };
 
     public override BaseRef<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {

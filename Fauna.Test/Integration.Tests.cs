@@ -538,4 +538,32 @@ public class IntegrationTests
                 break;
         }
     }
+
+    [Test]
+    [Category("serialization")]
+    public void ValidateUnwrappedListOfQueriesError()
+    {
+        var q = new List<Query>
+        {
+            FQL($"4 + 2"),
+            FQL($"5 + 2"),
+            FQL($"6 + 2")
+        };
+        var ex = Assert.ThrowsAsync<SerializationException>(async () => await _client.QueryAsync<List<int>>(FQL($"{q}")));
+        Assert.IsTrue(ex!.Message.StartsWith("Unable to deserialize `FaunaType.Object` with `IntSerializer`"));
+    }
+
+    [Test]
+    [Category("serialization")]
+    public void ValidateUnwrappedMapOfQueriesError()
+    {
+        var q = new Dictionary<string, Query>
+        {
+            { "six", FQL($"4 + 2") },
+            { "seven", FQL($"1 + 6") },
+            { "eight", FQL($"3 + 5") }
+        };
+        var ex = Assert.ThrowsAsync<SerializationException>(async () => await _client.QueryAsync<Dictionary<string, int>>(FQL($"{q}")));
+        Assert.IsTrue(ex!.Message.Contains("Unable to deserialize `FaunaType.Object` with `IntSerializer`"));
+    }
 }

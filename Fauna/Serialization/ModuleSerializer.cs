@@ -7,6 +7,8 @@ namespace Fauna.Serialization;
 
 internal class ModuleSerializer : BaseSerializer<Module>
 {
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Module, FaunaType.Null };
+
     public override Module Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {

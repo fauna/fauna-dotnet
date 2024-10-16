@@ -13,6 +13,8 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
         _dataSerializer = new ListSerializer<T>(elemSerializer);
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Set };
+
     public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         var wrapInPage = false;

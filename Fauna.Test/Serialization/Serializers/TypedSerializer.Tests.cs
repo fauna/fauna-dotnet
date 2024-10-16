@@ -41,7 +41,7 @@ public class TypedSerializerTests
                 else
                 {
                     var ex = Assert.Throws<SerializationException>(() => Helpers.Serialize(t.Serializer, s_ctx, t.Value));
-                    Assert.That(ex!.Message, Is.EqualTo(t.Throws));
+                    Assert.IsTrue(ex!.Message.StartsWith(t.Throws));
                 }
                 break;
 
@@ -54,7 +54,7 @@ public class TypedSerializerTests
                 else
                 {
                     var ex = Assert.Throws<SerializationException>(() => Helpers.Deserialize(t.Serializer, s_ctx, (string)t.Value!));
-                    Assert.That(ex!.Message, Is.EqualTo(t.Throws));
+                    Assert.IsTrue(ex!.Message.StartsWith(t.Throws));
                 }
                 break;
 
@@ -101,7 +101,7 @@ public class TypedSerializerTests
             {
                 Serializer = _string,
                 Value = Helpers.IntMaxWire,
-                Throws = "Unexpected token `Int` deserializing with `StringSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Int` with `StringSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -133,7 +133,7 @@ public class TypedSerializerTests
             {
                 Serializer = _byte,
                 Value = Helpers.LongMaxWire,
-                Throws = "Unexpected token `Long` deserializing with `ByteSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Long` with `ByteSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -165,7 +165,7 @@ public class TypedSerializerTests
             {
                 Serializer = _sbyte,
                 Value = Helpers.LongMaxWire,
-                Throws = "Unexpected token `Long` deserializing with `SByteSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Long` with `SByteSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -207,7 +207,7 @@ public class TypedSerializerTests
             {
                 Serializer = _short,
                 Value = Helpers.LongMaxWire,
-                Throws = "Unexpected token `Long` deserializing with `ShortSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Long` with `ShortSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -249,7 +249,7 @@ public class TypedSerializerTests
             {
                 Serializer = _ushort,
                 Value = Helpers.LongMaxWire,
-                Throws = "Unexpected token `Long` deserializing with `UShortSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Long` with `UShortSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -291,7 +291,7 @@ public class TypedSerializerTests
             {
                 Serializer = _int,
                 Value = Helpers.LongMaxWire,
-                Throws = "Unexpected token `Long` deserializing with `IntSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Long` with `IntSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -333,7 +333,7 @@ public class TypedSerializerTests
             {
                 Serializer = _uint,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `UIntSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `UIntSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -375,7 +375,7 @@ public class TypedSerializerTests
             {
                 Serializer = _long,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `LongSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `LongSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -417,7 +417,7 @@ public class TypedSerializerTests
             {
                 Serializer = _float,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `FloatSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `FloatSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -489,7 +489,7 @@ public class TypedSerializerTests
             {
                 Serializer = _double,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `DoubleSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `DoubleSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -531,7 +531,7 @@ public class TypedSerializerTests
             {
                 Serializer = _bool,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `BooleanSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `BooleanSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -563,7 +563,7 @@ public class TypedSerializerTests
             {
                 Serializer = _date,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `DateOnlySerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `DateOnlySerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -595,7 +595,7 @@ public class TypedSerializerTests
             {
                 Serializer = _time,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `DateTimeSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `DateTimeSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },
@@ -627,7 +627,7 @@ public class TypedSerializerTests
             {
                 Serializer = _offset,
                 Value = Helpers.NullWire,
-                Throws = "Unexpected token `Null` deserializing with `DateTimeOffsetSerializer`",
+                Throws = "Unable to deserialize `FaunaType.Null` with `DateTimeOffsetSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },

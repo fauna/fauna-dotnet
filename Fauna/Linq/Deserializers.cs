@@ -15,6 +15,8 @@ internal class MappedDeserializer<I, O> : BaseSerializer<O>
         _mapper = mapper;
     }
 
+    public override List<FaunaType> GetSupportedTypes() => _inner.GetSupportedTypes();
+
     public override O Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         _mapper(_inner.Deserialize(context, ref reader));
 
@@ -32,6 +34,8 @@ internal class ProjectionDeserializer : BaseSerializer<object?[]>
     {
         _fields = fields.ToArray();
     }
+
+    public override List<FaunaType> GetSupportedTypes() => _fields.SelectMany(x => x.GetSupportedTypes()).Distinct().ToList();
 
     public override object?[] Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {

@@ -5,7 +5,6 @@ namespace Fauna.Serialization;
 /// </summary>
 public enum TokenType
 {
-
     /// <summary>There is no value. This is the default token type if no data has been read by the <see cref="T:Fauna.Serialization.Utf8FaunaReader" />.</summary>
     None,
 
@@ -65,4 +64,60 @@ public enum TokenType
 
     /// <summary>The token type is the Fauna stream token.</summary>
     Stream,
+}
+
+public static class TokenTypeExtensions
+{
+    public static FaunaType GetFaunaType(this TokenType tokenType)
+    {
+        switch (tokenType)
+        {
+            case TokenType.StartObject:
+            case TokenType.EndObject:
+                return FaunaType.Object;
+
+            case TokenType.StartArray:
+            case TokenType.EndArray:
+                return FaunaType.Array;
+
+            case TokenType.StartPage:
+            case TokenType.EndPage:
+                return FaunaType.Set;
+
+            case TokenType.StartRef:
+            case TokenType.EndRef:
+                return FaunaType.Ref;
+
+            case TokenType.StartDocument:
+            case TokenType.EndDocument:
+                return FaunaType.Document;
+
+            case TokenType.String:
+                return FaunaType.String;
+            // BUGBUG: @bytes support is missing; BT-5183
+            // case TokenType.Bytes:
+            //     return FaunaType.Bytes;
+            case TokenType.Int:
+                return FaunaType.Int;
+            case TokenType.Long:
+                return FaunaType.Long;
+            case TokenType.Double:
+                return FaunaType.Double;
+            case TokenType.Date:
+                return FaunaType.Date;
+            case TokenType.Time:
+                return FaunaType.Time;
+            case TokenType.True:
+            case TokenType.False:
+                return FaunaType.Boolean;
+            case TokenType.Null:
+                return FaunaType.Null;
+            case TokenType.Stream:
+                return FaunaType.Stream;
+            case TokenType.Module:
+                return FaunaType.Module;
+            default:
+                throw new ArgumentException($"No associated FaunaType for TokenType: {tokenType}");
+        }
+    }
 }

@@ -225,7 +225,7 @@ public class IntToStringSerializer : BaseSerializer<int>
         return reader.CurrentTokenType switch
         {
             TokenType.String => int.Parse(reader.GetString() ?? "0"),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
     }
 

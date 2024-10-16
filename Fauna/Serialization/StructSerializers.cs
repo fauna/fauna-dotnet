@@ -11,7 +11,7 @@ internal class StringSerializer : BaseSerializer<string?>
         {
             TokenType.Null => null,
             TokenType.String => reader.GetString(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -28,6 +28,8 @@ internal class StringSerializer : BaseSerializer<string?>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.String };
 }
 
 internal class ByteSerializer : BaseSerializer<byte>
@@ -36,7 +38,7 @@ internal class ByteSerializer : BaseSerializer<byte>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetByte(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -53,6 +55,8 @@ internal class ByteSerializer : BaseSerializer<byte>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Null };
 }
 
 internal class SByteSerializer : BaseSerializer<sbyte>
@@ -61,7 +65,7 @@ internal class SByteSerializer : BaseSerializer<sbyte>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetUnsignedByte(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -78,6 +82,8 @@ internal class SByteSerializer : BaseSerializer<sbyte>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Null };
 }
 
 
@@ -87,7 +93,7 @@ internal class ShortSerializer : BaseSerializer<short>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetShort(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -104,6 +110,8 @@ internal class ShortSerializer : BaseSerializer<short>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Null };
 }
 
 internal class UShortSerializer : BaseSerializer<ushort>
@@ -112,7 +120,7 @@ internal class UShortSerializer : BaseSerializer<ushort>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetUnsignedShort(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -129,6 +137,8 @@ internal class UShortSerializer : BaseSerializer<ushort>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Null };
 }
 
 internal class IntSerializer : BaseSerializer<int>
@@ -137,7 +147,7 @@ internal class IntSerializer : BaseSerializer<int>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetInt(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -154,6 +164,8 @@ internal class IntSerializer : BaseSerializer<int>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Null };
 }
 
 internal class UIntSerializer : BaseSerializer<uint>
@@ -162,7 +174,7 @@ internal class UIntSerializer : BaseSerializer<uint>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long => reader.GetUnsignedInt(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -179,6 +191,8 @@ internal class UIntSerializer : BaseSerializer<uint>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Long, FaunaType.Null };
 }
 
 internal class LongSerializer : BaseSerializer<long>
@@ -187,7 +201,7 @@ internal class LongSerializer : BaseSerializer<long>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long => reader.GetLong(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -204,6 +218,8 @@ internal class LongSerializer : BaseSerializer<long>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Long, FaunaType.Null };
 }
 
 internal class FloatSerializer : BaseSerializer<float>
@@ -212,7 +228,7 @@ internal class FloatSerializer : BaseSerializer<float>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long or TokenType.Double => reader.GetFloat(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -229,6 +245,9 @@ internal class FloatSerializer : BaseSerializer<float>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Double, FaunaType.Int, FaunaType.Long, FaunaType.Null };
 }
 
 internal class DoubleSerializer : BaseSerializer<double>
@@ -237,7 +256,7 @@ internal class DoubleSerializer : BaseSerializer<double>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long or TokenType.Double => reader.GetDouble(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -254,6 +273,8 @@ internal class DoubleSerializer : BaseSerializer<double>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Double, FaunaType.Int, FaunaType.Long, FaunaType.Null };
 }
 
 internal class BooleanSerializer : BaseSerializer<bool>
@@ -262,7 +283,7 @@ internal class BooleanSerializer : BaseSerializer<bool>
         reader.CurrentTokenType switch
         {
             TokenType.True or TokenType.False => reader.GetBoolean(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -279,6 +300,8 @@ internal class BooleanSerializer : BaseSerializer<bool>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Boolean, FaunaType.Null };
 }
 
 internal class DateOnlySerializer : BaseSerializer<DateOnly>
@@ -287,7 +310,7 @@ internal class DateOnlySerializer : BaseSerializer<DateOnly>
         reader.CurrentTokenType switch
         {
             TokenType.Date => reader.GetDate(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -304,6 +327,8 @@ internal class DateOnlySerializer : BaseSerializer<DateOnly>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Date, FaunaType.Null };
 }
 
 internal class DateTimeSerializer : BaseSerializer<DateTime>
@@ -312,7 +337,7 @@ internal class DateTimeSerializer : BaseSerializer<DateTime>
         reader.CurrentTokenType switch
         {
             TokenType.Time => reader.GetTime(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -329,6 +354,8 @@ internal class DateTimeSerializer : BaseSerializer<DateTime>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Time };
 }
 
 internal class DateTimeOffsetSerializer : BaseSerializer<DateTimeOffset>
@@ -337,7 +364,7 @@ internal class DateTimeOffsetSerializer : BaseSerializer<DateTimeOffset>
         reader.CurrentTokenType switch
         {
             TokenType.Time => reader.GetTime(),
-            _ => throw new SerializationException(UnexpectedTokenExceptionMessage(reader.CurrentTokenType))
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
         };
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -354,4 +381,6 @@ internal class DateTimeOffsetSerializer : BaseSerializer<DateTimeOffset>
                 throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
         }
     }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Time };
 }

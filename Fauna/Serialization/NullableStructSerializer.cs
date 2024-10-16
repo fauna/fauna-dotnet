@@ -11,6 +11,8 @@ internal class NullableStructSerializer<T> : BaseSerializer<T?> where T : struct
         _inner = inner;
     }
 
+    public override List<FaunaType> GetSupportedTypes() => _inner.GetSupportedTypes();
+
     public override T? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         return reader.CurrentTokenType == TokenType.Null ? new T?() : _inner.Deserialize(context, ref reader);

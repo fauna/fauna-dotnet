@@ -14,6 +14,8 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
         _elemSerializer = elemSerializer;
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Array, FaunaType.Null };
+
     public override List<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType == TokenType.StartPage)
@@ -51,6 +53,13 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
             o.GetType().GetGenericTypeDefinition() == typeof(List<>) ||
             o.GetType().GetGenericTypeDefinition() == typeof(IEnumerable))
         {
+            var genType = o.GetType().GenericTypeArguments.SingleOrDefault();
+
+            if (genType is not null && genType.GetInterfaces().Contains(typeof(IQueryFragment)))
+            {
+                //throw new ArgumentException($"{genType} cannot be serialized in a List<>; try {nameof(QueryArr)} instead.");
+            }
+
             w.WriteStartArray();
             foreach (object? elem in (IEnumerable)o)
             {
