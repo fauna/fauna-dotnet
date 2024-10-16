@@ -1,9 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
+using Fauna.Util;
+using Microsoft.Extensions.Logging;
 using Polly;
 using Stream = System.IO.Stream;
 
@@ -33,15 +36,24 @@ internal class Connection : IConnection
         CancellationToken cancel = default)
     {
         HttpResponseMessage response;
-        {
-            var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                .ExecuteAndCaptureAsync(() =>
-                    _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
-                .ConfigureAwait(false);
-            response = policyResult.Outcome == OutcomeType.Successful
-                ? policyResult.Result
-                : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
-        }
+
+        var policyResult = await _cfg.RetryConfiguration.RetryPolicy
+            .ExecuteAndCaptureAsync(() =>
+                _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+            .ConfigureAwait(false);
+        response = policyResult.Outcome == OutcomeType.Successful
+            ? policyResult.Result
+            : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
+
+        Logger.Instance.LogDebug(
+            "Fauna HTTP Response {status} from {uri}, headers: {headers}",
+            response.StatusCode.ToString(),
+            response.RequestMessage?.RequestUri?.ToString() ?? "UNKNOWN",
+            JsonSerializer.Serialize(
+                response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
+        );
+
+        Logger.Instance.LogTrace("Response body: {body}", await response.Content.ReadAsStringAsync(cancel));
 
         return response;
     }
@@ -132,6 +144,30 @@ internal class Connection : IConnection
         {
             request.Headers.Add(header.Key, header.Value);
         }
+
+        Logger.Instance.LogDebug(
+            "Fauna HTTP {method} Request to {uri} (timeout {timeout}ms), headers: {headers}",
+            HttpMethod.Post.ToString(),
+            request.RequestUri.ToString(),
+            _cfg.HttpClient.Timeout.TotalMilliseconds,
+            JsonSerializer.Serialize(
+                request.Headers
+                    .Select(header =>
+                    {
+                        // Redact Auth header in debug logs
+                        if (header.Key.StartsWith("Authorization", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            return KeyValuePair.Create(header.Key, new[] { "hidden" }.AsEnumerable());
+                        }
+
+                        return header;
+                    })
+                    .ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
+        );
+
+        // Emit unredacted Auth header and response body in trace logs
+        Logger.Instance.LogTrace("Unredacted Authorization header: {value}", request.Headers.Authorization?.ToString() ?? "null");
+        Logger.Instance.LogTrace("Request body: {body}", request.Content.ReadAsStringAsync().Result);
 
         return request;
     }

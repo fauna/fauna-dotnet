@@ -309,3 +309,53 @@ await foreach (var evt in stream)
     }
 }
 ```
+
+## Debug logging
+
+To enable debug logging, set the `FAUNA_DEBUG` environment variable to an integer for the `Microsoft.Extensions.Logging.LogLevel`. For example:
+
+* `0`: `LogLevel.Trace` and higher (all messages)
+* `3`: `LogLevel.Warning` and higher
+
+The driver logs HTTP request and response details, including headers. For security, the `Authorization` header is redacted in debug logs but is visible in trace logs.
+
+> [!NOTE]  
+> As of v1.0.0, the driver only outputs `LogLevel.Debug` messages. Use `0` (Trace) or `1` (Debug) to log these messages.
+
+For advanced logging, you can use a custom `ILogger` implementation, such as Serilog or NLog. Pass the implementation to the `Configuration` class when instantiating a `Client`.
+
+### Basic example: Serilog
+
+Install the packages:
+```
+$ dotnet add package Serilog
+$ dotnet add package Serilog.Extensions.Logging
+$ dotnet add package Serilog.Sinks.Console
+$ dotnet add package Serilog.Sinks.File
+```
+
+Configure and use the logger:
+```csharp
+using Fauna;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using static Fauna.Query;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose()
+    .WriteTo.Console()
+    .WriteTo.File("log.txt",
+        rollingInterval: RollingInterval.Day,
+        rollOnFileSizeLimit: true)
+    .CreateLogger();
+
+var logFactory = new LoggerFactory().AddSerilog(Log.Logger);
+
+var config = new Configuration("mysecret", logger: logFactory.CreateLogger("myapp"));
+
+var client = new Client(config);
+
+await client.QueryAsync(FQL($"1+1"));
+
+// You should see LogLevel.Debug messages in both the Console and the "log{date}.txt" file
+```
