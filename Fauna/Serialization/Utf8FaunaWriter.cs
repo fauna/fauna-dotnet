@@ -178,6 +178,17 @@ public sealed class Utf8FaunaWriter : IAsyncDisposable, IDisposable
     }
 
     /// <summary>
+    /// Writes a byte array value with a specific field name.
+    /// </summary>
+    /// <param name="fieldName">The name of the field.</param>
+    /// <param name="value">The byte array value to write.</param>
+    public void WriteBytes(string fieldName, byte[] value)
+    {
+        WriteFieldName(fieldName);
+        WriteBytesValue(value);
+    }
+
+    /// <summary>
     /// Writes a string value with a specific field name.
     /// </summary>
     /// <param name="fieldName">The name of the field.</param>
@@ -289,6 +300,15 @@ public sealed class Utf8FaunaWriter : IAsyncDisposable, IDisposable
     public void WriteIntValue(int value)
     {
         WriteTaggedValue("@int", value.ToString());
+    }
+
+    /// <summary>
+    /// Writes a byte array value as a tagged element.
+    /// </summary>
+    /// <param name="value">The byte array value to write.</param>
+    public void WriteBytesValue(byte[] value)
+    {
+        WriteTaggedValue("@bytes", Convert.ToBase64String(value));
     }
 
     /// <summary>
