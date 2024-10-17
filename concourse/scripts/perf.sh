@@ -8,7 +8,7 @@ export LOG_UNIQUE=$(date +%s%3N)
 # Install fauna-shell
 apt update -qq
 apt install -y -qq npm
-npm install --silent -g fauna-shell
+npm install --silent -g fauna-shell@^2.0.0
 
 cd repo.git
 
