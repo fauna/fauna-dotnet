@@ -6,6 +6,8 @@ namespace Fauna.Serialization;
 
 internal class StreamSerializer : BaseSerializer<Stream>
 {
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Stream };
+
     public override Stream Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {

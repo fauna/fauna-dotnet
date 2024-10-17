@@ -14,6 +14,8 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
         _elemSerializer = elemSerializer;
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Array, FaunaType.Null };
+
     public override List<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType == TokenType.StartPage)

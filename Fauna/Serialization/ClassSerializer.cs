@@ -18,6 +18,8 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IPartialDocumentSerialize
         _info = info;
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Document, FaunaType.Null, FaunaType.Object, FaunaType.Ref };
+
     public object DeserializeDocument(MappingContext context, string? id, string? name, Module? coll, ref Utf8FaunaReader reader)
     {
         object instance = CreateInstance();

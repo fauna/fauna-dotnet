@@ -14,6 +14,8 @@ internal class DictionarySerializer<T> : BaseSerializer<Dictionary<string, T>>, 
         _elemSerializer = elemSerializer;
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Object };
+
     public override Dictionary<string, T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
     {
         switch (reader.CurrentTokenType)

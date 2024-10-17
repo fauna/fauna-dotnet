@@ -22,6 +22,25 @@ internal class DynamicSerializer : BaseSerializer<object?>
         _docref = new BaseRefSerializer<Dictionary<string, object>>(_dict);
     }
 
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> {
+        FaunaType.Array,
+        FaunaType.Boolean,
+        FaunaType.Bytes,
+        FaunaType.Date,
+        FaunaType.Double,
+        FaunaType.Document,
+        FaunaType.Int,
+        FaunaType.Long,
+        FaunaType.Module,
+        FaunaType.Null,
+        FaunaType.Object,
+        FaunaType.Ref,
+        FaunaType.Set,
+        FaunaType.Stream,
+        FaunaType.String,
+        FaunaType.Time
+    };
+
     public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {

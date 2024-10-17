@@ -12,10 +12,12 @@ public interface ISerializer
 {
     object? Deserialize(MappingContext context, ref Utf8FaunaReader reader);
     void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o);
+    List<FaunaType> GetSupportedTypes();
 }
 
 public abstract class BaseSerializer<T> : ISerializer<T>
 {
+    public virtual List<FaunaType> GetSupportedTypes() => new List<FaunaType>();
 
     protected static TokenType EndTokenFor(TokenType start)
     {
@@ -33,6 +35,10 @@ public abstract class BaseSerializer<T> : ISerializer<T>
     protected string UnexpectedTokenExceptionMessage(TokenType token) => $"Unexpected token `{token}` deserializing with `{GetType().Name}`";
 
     protected string UnsupportedSerializationTypeMessage(Type type) => $"Cannot serialize `{type}` with `{GetType()}`";
+
+    protected string UnexpectedTypeDecodingMessage(FaunaType faunaType) =>
+        $"Unable to deserialize `{faunaType.GetType().Name}.{faunaType}` with `{GetType().Name}`. " +
+        $"Supported types are [{string.Join(", ", GetSupportedTypes().Select(x => $"{x.GetType().Name}.{x}"))}]";
 
     object? ISerializer.Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         Deserialize(context, ref reader);
