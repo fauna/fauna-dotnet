@@ -573,9 +573,10 @@ public class IntegrationTests
     public async Task ValidateBytesAcrossTheWire()
     {
         byte[] byteArray = { 70, 97, 117, 110, 97 };
+        byte[]? nullArray = null;
 
-        var result = await _client.QueryAsync<byte[]>(FQL($"let x:Bytes = {byteArray}; x"));
+        var result = await _client.QueryAsync<List<object?>>(FQL($"let x:Bytes = {byteArray}; let y:Bytes|Null = {nullArray}; [x,y]"));
 
-        Assert.AreEqual(Encoding.UTF8.GetBytes("Fauna"), result.Data);
+        Assert.AreEqual(new[] { Encoding.UTF8.GetBytes("Fauna"), null }, result.Data);
     }
 }
