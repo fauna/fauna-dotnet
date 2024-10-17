@@ -59,6 +59,33 @@ internal class ByteSerializer : BaseSerializer<byte>
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Int, FaunaType.Null };
 }
 
+internal class BytesSerializer : BaseSerializer<byte[]>
+{
+    public override byte[] Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+        reader.CurrentTokenType switch
+        {
+            TokenType.Bytes => reader.GetBytes(),
+            _ => throw new SerializationException(UnexpectedTypeDecodingMessage(reader.CurrentTokenType.GetFaunaType()))
+        };
+
+    public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
+    {
+        switch (o)
+        {
+            case null:
+                writer.WriteNullValue();
+                break;
+            case byte[] b:
+                writer.WriteBytesValue(b);
+                break;
+            default:
+                throw new SerializationException(UnsupportedSerializationTypeMessage(o.GetType()));
+        }
+    }
+
+    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Bytes, FaunaType.Null };
+}
+
 internal class SByteSerializer : BaseSerializer<sbyte>
 {
     public override sbyte Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
