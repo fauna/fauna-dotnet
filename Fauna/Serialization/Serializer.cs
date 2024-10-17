@@ -102,18 +102,9 @@ public static class Serializer
 
         if (targetType.IsGenericType)
         {
-            var args = targetType.GetGenericArguments();
-            var blocked = args.Where(arg => arg.GetInterfaces().Contains(typeof(IQueryFragment)));
-
-            if (blocked.Any())
-            {
-                // throw new ArgumentException(
-                //     $"Query types ({string.Join(", ", blocked.Select(x => x.FullName))}) are not supported as " +
-                //     $"generic type arguments; use {nameof(QueryArr)} or {nameof(QueryObj)} when composing complex queries.");
-            }
-
             if (targetType.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
+                var args = targetType.GetGenericArguments();
                 if (args.Length == 1)
                 {
                     var inner = (ISerializer)Generate(context, args[0]);
@@ -126,10 +117,12 @@ public static class Serializer
                 throw new ArgumentException($"Unsupported nullable type. Generic arguments > 1: {args}");
             }
 
+
             if (targetType.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
-                var keyType = args[0];
-                var valueType = args[1];
+                var argTypes = targetType.GetGenericArguments();
+                var keyType = argTypes[0];
+                var valueType = argTypes[1];
 
                 if (keyType != typeof(string))
                     throw new ArgumentException(
@@ -145,7 +138,7 @@ public static class Serializer
 
             if (targetType.GetGenericTypeDefinition() == typeof(List<>) || targetType.GetGenericTypeDefinition() == typeof(IEnumerable<>))
             {
-                var elemType = args[0];
+                var elemType = targetType.GetGenericArguments()[0];
                 var elemSerializer = Generate(context, elemType);
 
                 var serType = typeof(ListSerializer<>).MakeGenericType(new[] { elemType });
@@ -156,7 +149,7 @@ public static class Serializer
 
             if (targetType.GetGenericTypeDefinition() == typeof(Page<>))
             {
-                var elemType = args[0];
+                var elemType = targetType.GetGenericArguments()[0];
                 var elemSerializer = Generate(context, elemType);
 
                 var serType = typeof(PageSerializer<>).MakeGenericType(new[] { elemType });
@@ -167,7 +160,7 @@ public static class Serializer
 
             if (targetType.GetGenericTypeDefinition() == typeof(BaseRef<>))
             {
-                var docType = args[0];
+                var docType = targetType.GetGenericArguments()[0];
                 var docSerializer = Generate(context, docType);
 
                 var serType = typeof(BaseRefSerializer<>).MakeGenericType(new[] { docType });
@@ -178,7 +171,7 @@ public static class Serializer
 
             if (targetType.GetGenericTypeDefinition() == typeof(Ref<>))
             {
-                var docType = args[0];
+                var docType = targetType.GetGenericArguments()[0];
                 var docSerializer = Generate(context, docType);
 
                 var serType = typeof(RefSerializer<>).MakeGenericType(new[] { docType });
@@ -189,7 +182,7 @@ public static class Serializer
 
             if (targetType.GetGenericTypeDefinition() == typeof(NamedRef<>))
             {
-                var docType = args[0];
+                var docType = targetType.GetGenericArguments()[0];
                 var docSerializer = Generate(context, docType);
 
                 var serType = typeof(NamedRefSerializer<>).MakeGenericType(new[] { docType });
