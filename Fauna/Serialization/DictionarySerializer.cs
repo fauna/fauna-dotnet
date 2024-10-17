@@ -38,14 +38,6 @@ internal class DictionarySerializer<T> : BaseSerializer<Dictionary<string, T>>, 
                 writer.WriteNullValue();
                 break;
             case Dictionary<string, T> d:
-                // Get generic type arg for the value, which should be the 2nd type arg
-                var genType = d.GetType().GenericTypeArguments[1];
-
-                if (genType is not null && genType.GetInterfaces().Contains(typeof(IQueryFragment)))
-                {
-                    //throw new ArgumentException($"{genType} cannot be serialized in a Dictionary<>; try {nameof(QueryObj)} instead.");
-                }
-
                 bool shouldEscape = Serializer.Tags.Overlaps(d.Keys);
                 if (shouldEscape) writer.WriteStartEscapedObject();
                 else writer.WriteStartObject();

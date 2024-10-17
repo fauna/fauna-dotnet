@@ -94,7 +94,7 @@ public static class TokenTypeExtensions
 
             case TokenType.String:
                 return FaunaType.String;
-            // BUGBUG: @bytes support is missing; BT-5183
+            // BUG: @bytes support is missing; BT-5183
             // case TokenType.Bytes:
             //     return FaunaType.Bytes;
             case TokenType.Int:

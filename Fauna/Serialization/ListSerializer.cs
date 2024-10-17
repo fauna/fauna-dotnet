@@ -53,13 +53,6 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
             o.GetType().GetGenericTypeDefinition() == typeof(List<>) ||
             o.GetType().GetGenericTypeDefinition() == typeof(IEnumerable))
         {
-            var genType = o.GetType().GenericTypeArguments.SingleOrDefault();
-
-            if (genType is not null && genType.GetInterfaces().Contains(typeof(IQueryFragment)))
-            {
-                //throw new ArgumentException($"{genType} cannot be serialized in a List<>; try {nameof(QueryArr)} instead.");
-            }
-
             w.WriteStartArray();
             foreach (object? elem in (IEnumerable)o)
             {
