@@ -38,6 +38,8 @@ public enum TokenType
 
     /// <summary>The token type is a Fauna string.</summary>
     String,
+    /// <summary>The token type is a Fauna byte array.</summary>
+    Bytes,
 
     /// <summary>The token type is a Fauna integer.</summary>
     Int,
@@ -94,9 +96,8 @@ public static class TokenTypeExtensions
 
             case TokenType.String:
                 return FaunaType.String;
-            // BUG: @bytes support is missing; BT-5183
-            // case TokenType.Bytes:
-            //     return FaunaType.Bytes;
+            case TokenType.Bytes:
+                return FaunaType.Bytes;
             case TokenType.Int:
                 return FaunaType.Int;
             case TokenType.Long:

@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
@@ -565,5 +566,17 @@ public class IntegrationTests
         };
         var ex = Assert.ThrowsAsync<SerializationException>(async () => await _client.QueryAsync<Dictionary<string, int>>(FQL($"{q}")));
         Assert.IsTrue(ex!.Message.Contains("Unable to deserialize `FaunaType.Object` with `IntSerializer`"));
+    }
+
+    [Test]
+    [Category("serialization")]
+    public async Task ValidateBytesAcrossTheWire()
+    {
+        byte[] byteArray = { 70, 97, 117, 110, 97 };
+        byte[]? nullArray = null;
+
+        var result = await _client.QueryAsync<List<object?>>(FQL($"let x:Bytes = {byteArray}; let y:Bytes|Null = {nullArray}; [x,y]"));
+
+        Assert.AreEqual(new[] { Encoding.UTF8.GetBytes("Fauna"), null }, result.Data);
     }
 }

@@ -101,6 +101,13 @@ public class Utf8FaunaWriterTests
     }
 
     [Test]
+    public void WriteBytesValue()
+    {
+        _writer.WriteBytesValue(Encoding.UTF8.GetBytes("Fauna"));
+        AssertWriter(@"{""@bytes"":""RmF1bmE=""}");
+    }
+
+    [Test]
     public void WriteObject()
     {
         _writer.WriteStartObject();
@@ -110,6 +117,7 @@ public class Utf8FaunaWriterTests
         _writer.WriteDouble("aDecimal", 3.14M);
         _writer.WriteBoolean("true", true);
         _writer.WriteBoolean("false", false);
+        _writer.WriteBytes("someBytes", Encoding.UTF8.GetBytes("Fauna"));
         _writer.WriteString("foo", "bar");
         _writer.WriteDate("aDate", new DateTime(2023, 12, 4));
         _writer.WriteTime("aTime", new DateTime(2023, 12, 4, 0, 0, 0, 0, DateTimeKind.Utc));
@@ -121,7 +129,7 @@ public class Utf8FaunaWriterTests
         _writer.WriteStartObject();
         _writer.WriteEndObject();
         _writer.WriteEndObject();
-        AssertWriter(@"{""anInt"":{""@int"":""42""},""aLong"":{""@long"":""42""},""aDouble"":{""@double"":""1.2""},""aDecimal"":{""@double"":""3.14""},""true"":true,""false"":false,""foo"":""bar"",""aDate"":{""@date"":""2023-12-04""},""aTime"":{""@time"":""2023-12-04T00:00:00.0000000Z""},""aNull"":null,""anArray"":[],""anObject"":{}}");
+        AssertWriter(@"{""anInt"":{""@int"":""42""},""aLong"":{""@long"":""42""},""aDouble"":{""@double"":""1.2""},""aDecimal"":{""@double"":""3.14""},""true"":true,""false"":false,""someBytes"":{""@bytes"":""RmF1bmE=""},""foo"":""bar"",""aDate"":{""@date"":""2023-12-04""},""aTime"":{""@time"":""2023-12-04T00:00:00.0000000Z""},""aNull"":null,""anArray"":[],""anObject"":{}}");
     }
 
     [Test]
@@ -134,6 +142,7 @@ public class Utf8FaunaWriterTests
         _writer.WriteDoubleValue(3.14M);
         _writer.WriteBooleanValue(true);
         _writer.WriteBooleanValue(false);
+        _writer.WriteBytesValue(Encoding.UTF8.GetBytes("Fauna"));
         _writer.WriteStringValue("bar");
         _writer.WriteDateValue(new DateTime(2023, 12, 4));
         _writer.WriteTimeValue(new DateTime(2023, 12, 4, 0, 0, 0, 0, DateTimeKind.Utc));
@@ -143,7 +152,7 @@ public class Utf8FaunaWriterTests
         _writer.WriteStartObject();
         _writer.WriteEndObject();
         _writer.WriteEndArray();
-        AssertWriter(@"[{""@int"":""42""},{""@long"":""42""},{""@double"":""1.2""},{""@double"":""3.14""},true,false,""bar"",{""@date"":""2023-12-04""},{""@time"":""2023-12-04T00:00:00.0000000Z""},null,[],{}]");
+        AssertWriter(@"[{""@int"":""42""},{""@long"":""42""},{""@double"":""1.2""},{""@double"":""3.14""},true,false,{""@bytes"":""RmF1bmE=""},""bar"",{""@date"":""2023-12-04""},{""@time"":""2023-12-04T00:00:00.0000000Z""},null,[],{}]");
     }
 
     [Test]

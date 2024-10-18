@@ -15,6 +15,9 @@ public class Helpers
     public const byte ByteVal = 42;
     public const sbyte SByteVal = 42;
 
+    public static readonly byte[] BytesVal = { 70, 97, 117, 110, 97 }; // Encoding.UTF8.GetBytes("Fauna")
+    public const string BytesWire = @"{""@bytes"":""RmF1bmE=""}";
+
     public const string ShortMaxWire = @"{""@int"":""32767""}";
     public const string ShortMinWire = @"{""@int"":""-32768""}";
     public const string UShortMaxWire = @"{""@int"":""65535""}";

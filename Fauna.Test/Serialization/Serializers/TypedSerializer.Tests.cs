@@ -12,6 +12,7 @@ public class TypedSerializerTests
     private static readonly MappingContext s_ctx = new();
     private static readonly StringSerializer _string = new();
     private static readonly ByteSerializer _byte = new();
+    private static readonly BytesSerializer _bytes = new();
     private static readonly SByteSerializer _sbyte = new();
     private static readonly ShortSerializer _short = new();
     private static readonly UShortSerializer _ushort = new();
@@ -134,6 +135,38 @@ public class TypedSerializerTests
                 Serializer = _byte,
                 Value = Helpers.LongMaxWire,
                 Throws = "Unable to deserialize `FaunaType.Long` with `ByteSerializer`",
+                TestType = Helpers.TestType.Deserialize
+            }
+        },
+
+        // BytesSerializer
+        new object[]
+        {
+            new Helpers.SerializeTest<byte[]>
+            {
+                Serializer = _bytes,
+                Value = Helpers.BytesVal,
+                Expected = Helpers.BytesWire,
+                TestType = Helpers.TestType.Roundtrip
+            }
+        },
+        new object[]
+        {
+            new Helpers.SerializeTest<byte[]>
+            {
+                Serializer = _bytes,
+                Value = null,
+                Expected = Helpers.NullWire,
+                TestType = Helpers.TestType.Serialize
+            }
+        },
+        new object[]
+        {
+            new Helpers.SerializeTest<byte[]>
+            {
+                Serializer = _bytes,
+                Value = Helpers.LongMaxWire,
+                Throws = "Unable to deserialize `FaunaType.Long` with `BytesSerializer`",
                 TestType = Helpers.TestType.Deserialize
             }
         },

@@ -1,3 +1,4 @@
+using System.Text;
 using Fauna.Exceptions;
 using Fauna.Serialization;
 using Fauna.Types;
@@ -50,6 +51,9 @@ public class Utf8FaunaReaderTests
                     break;
                 case TokenType.Module:
                     Assert.AreEqual(obj, reader.GetModule());
+                    break;
+                case TokenType.Bytes:
+                    Assert.AreEqual(obj, reader.GetBytes());
                     break;
                 default:
                     Assert.Null(obj);
@@ -117,6 +121,19 @@ public class Utf8FaunaReaderTests
         var expectedTokens = new List<Tuple<TokenType, object?>>()
         {
             new(TokenType.Int, 123)
+        };
+
+        AssertReader(reader, expectedTokens);
+    }
+
+    [Test]
+    public void ReadBytes()
+    {
+        const string s = @"{""@bytes"": ""RmF1bmE=""}";
+        var reader = new Utf8FaunaReader(s);
+        var expectedTokens = new List<Tuple<TokenType, object?>>()
+        {
+            new(TokenType.Bytes, Encoding.UTF8.GetBytes("Fauna"))
         };
 
         AssertReader(reader, expectedTokens);

@@ -170,6 +170,7 @@ public ref struct Utf8FaunaReader
             TokenType.Time => GetTime(),
             TokenType.True or TokenType.False => GetBoolean(),
             TokenType.Module => GetModule(),
+            TokenType.Bytes => GetBytes(),
             _ => throw new SerializationException($"{CurrentTokenType} does not have an associated value")
         };
     }
@@ -298,6 +299,24 @@ public ref struct Utf8FaunaReader
         catch (Exception e)
         {
             throw new SerializationException($"Failed to get byte from {_taggedTokenValue}", e);
+        }
+    }
+
+    /// <summary>
+    /// Retrieves a byte array value from the current token.
+    /// </summary>
+    /// <returns>A byte array representation of the current token's value.</returns>
+    public byte[] GetBytes()
+    {
+        ValidateTaggedTypes(TokenType.Bytes);
+
+        try
+        {
+            return Convert.FromBase64String(_taggedTokenValue!);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException($"Failed to get byte array from {_taggedTokenValue}", e);
         }
     }
 
@@ -583,6 +602,9 @@ public ref struct Utf8FaunaReader
                         break;
                     case "@time":
                         HandleTaggedString(TokenType.Time);
+                        break;
+                    case "@bytes":
+                        HandleTaggedString(TokenType.Bytes);
                         break;
                     default:
                         _bufferedTokenType = TokenType.FieldName;

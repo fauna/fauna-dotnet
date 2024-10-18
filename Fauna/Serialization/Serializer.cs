@@ -19,12 +19,13 @@ public static class Serializer
 
     internal static readonly HashSet<string> Tags = new()
     {
-        "@int", "@long", "@double", "@date", "@time", "@mod", "@stream", "@ref", "@doc", "@set", "@object"
+        "@int", "@long", "@double", "@date", "@time", "@mod", "@stream", "@ref", "@doc", "@set", "@object", "@bytes"
     };
 
     private static readonly DynamicSerializer s_object = DynamicSerializer.Singleton;
     private static readonly StringSerializer s_string = new();
     private static readonly ByteSerializer s_byte = new();
+    private static readonly BytesSerializer s_bytes = new();
     private static readonly SByteSerializer s_sbyte = new();
     private static readonly ShortSerializer s_short = new();
     private static readonly UShortSerializer s_ushort = new();
@@ -79,6 +80,7 @@ public static class Serializer
         if (targetType == typeof(object)) return s_object;
         if (targetType == typeof(string)) return s_string;
         if (targetType == typeof(byte)) return s_byte;
+        if (targetType == typeof(byte[])) return s_bytes;
         if (targetType == typeof(sbyte)) return s_sbyte;
         if (targetType == typeof(short)) return s_short;
         if (targetType == typeof(ushort)) return s_ushort;
