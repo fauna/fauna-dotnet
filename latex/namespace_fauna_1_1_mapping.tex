@@ -1,0 +1,74 @@
+\doxysection{Fauna.\+Mapping Namespace Reference}
+\hypertarget{namespace_fauna_1_1_mapping}{}\label{namespace_fauna_1_1_mapping}\index{Fauna.Mapping@{Fauna.Mapping}}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_base_field_attribute}{Base\+Field\+Attribute}}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_collection_attribute}{Collection\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Attribute used to specify the coll (Collection) field on a \doxylink{namespace_fauna}{Fauna} document. The associated field will be ignored during serialization. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_attribute}{Field\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Attribute used to specify fields on a \doxylink{namespace_fauna}{Fauna} document or struct. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_field_info}{Field\+Info}}
+\begin{DoxyCompactList}\small\item\em A class that encapsulates the field mapping, serialization, and deserialization of a particular field in \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+class {\bfseries Field\+Name}
+\begin{DoxyCompactList}\small\item\em A class of utilities for field names. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_id_attribute}{Id\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Attribute used to specify the id field on a \doxylink{namespace_fauna}{Fauna} document. The associated field will be ignored during serialization unless is\+Client\+Generated is set to true. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ignore_attribute}{Ignore\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Attribute used to indicate that a field should be ignored during serialization and deserialization. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}
+\begin{DoxyCompactList}\small\item\em A class representing the mapping context to be used during serialization and deserialization. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_info}{Mapping\+Info}}
+\begin{DoxyCompactList}\small\item\em A class that encapsulates the class mapping, serialization, and deserialization of a \doxylink{namespace_fauna}{Fauna} object, including documents. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_object_attribute}{Object\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Attribute used to indicate that a class represents a \doxylink{namespace_fauna}{Fauna} document or struct. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_ts_attribute}{Ts\+Attribute}}
+\begin{DoxyCompactList}\small\item\em Attribute used to specify the ts field on a \doxylink{namespace_fauna}{Fauna} document. The associated field will be ignored during serialization. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{Field\+Type}} \{ \newline
+\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea262614acb323cca83f55d1fe1d5de332}{Client\+Generated\+Id}}
+, \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aead92f9f61cb0996c2991d2c8bf272162a}{Server\+Generated\+Id}}
+, \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea9a557bb14d1daf432595d548d5cdc415}{Coll}}
+, \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6a2389c404bc1b338fb35293fd4c19d3}{Ts}}
+, \newline
+\mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6f16a5f8ff5d75ab84c018adacdfcbb7}{Field}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\Hypertarget{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}\index{Fauna.Mapping@{Fauna.Mapping}!FieldType@{FieldType}}
+\index{FieldType@{FieldType}!Fauna.Mapping@{Fauna.Mapping}}
+\doxysubsubsection{\texorpdfstring{FieldType}{FieldType}}
+{\footnotesize\ttfamily \label{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae} 
+enum \mbox{\hyperlink{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae}{Fauna.\+Mapping.\+Field\+Type}}}
+
+\begin{DoxyEnumFields}[2]{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ClientGeneratedId@{ClientGeneratedId}!Fauna.Mapping@{Fauna.Mapping}}\index{Fauna.Mapping@{Fauna.Mapping}!ClientGeneratedId@{ClientGeneratedId}}}\Hypertarget{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea262614acb323cca83f55d1fe1d5de332}\label{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae} 
+Client\+Generated\+Id&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ServerGeneratedId@{ServerGeneratedId}!Fauna.Mapping@{Fauna.Mapping}}\index{Fauna.Mapping@{Fauna.Mapping}!ServerGeneratedId@{ServerGeneratedId}}}\Hypertarget{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aead92f9f61cb0996c2991d2c8bf272162a}\label{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae} 
+Server\+Generated\+Id&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Coll@{Coll}!Fauna.Mapping@{Fauna.Mapping}}\index{Fauna.Mapping@{Fauna.Mapping}!Coll@{Coll}}}\Hypertarget{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea9a557bb14d1daf432595d548d5cdc415}\label{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae} 
+Coll&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Ts@{Ts}!Fauna.Mapping@{Fauna.Mapping}}\index{Fauna.Mapping@{Fauna.Mapping}!Ts@{Ts}}}\Hypertarget{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6a2389c404bc1b338fb35293fd4c19d3}\label{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae} 
+Ts&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Field@{Field}!Fauna.Mapping@{Fauna.Mapping}}\index{Fauna.Mapping@{Fauna.Mapping}!Field@{Field}}}\Hypertarget{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889aea6f16a5f8ff5d75ab84c018adacdfcbb7}\label{namespace_fauna_1_1_mapping_a133053254643c723af41bd74167889ae} 
+Field&\\
+\hline
+
+\end{DoxyEnumFields}
+
+
+Definition at line \mbox{\hyperlink{_field_type_8cs_source_l00003}{3}} of file \mbox{\hyperlink{_field_type_8cs_source}{Field\+Type.\+cs}}.
+

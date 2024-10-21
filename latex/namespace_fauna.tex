@@ -1,0 +1,50 @@
+\doxysection{Fauna Namespace Reference}
+\hypertarget{namespace_fauna}{}\label{namespace_fauna}\index{Fauna@{Fauna}}
+\doxysubsubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_core}{Core}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_exceptions}{Exceptions}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_linq}{Linq}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_mapping}{Mapping}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_serialization}{Serialization}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_types}{Types}}
+\item 
+namespace \mbox{\hyperlink{namespace_fauna_1_1_util}{Util}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_base_client}{Base\+Client}}
+\begin{DoxyCompactList}\small\item\em The base class for \doxylink{class_fauna_1_1_client}{Client} and Data\+Context. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_client}{Client}}
+\begin{DoxyCompactList}\small\item\em Represents a client for interacting with a \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_configuration}{Configuration}}
+\begin{DoxyCompactList}\small\item\em \doxylink{class_fauna_1_1_configuration}{Configuration} is a class used to configure a \doxylink{namespace_fauna}{Fauna} \doxylink{class_fauna_1_1_client}{Client}. It encapsulates various settings such as the \doxylink{class_fauna_1_1_configuration_a572031c6cd1f40e5a7852e6e1f746510}{Endpoint}, secret, query timeout, and others. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_i_client}{IClient}}
+\begin{DoxyCompactList}\small\item\em Represents a client for interacting with a \doxylink{namespace_fauna}{Fauna}. \end{DoxyCompactList}\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment}}
+\begin{DoxyCompactList}\small\item\em Represents the base interface for a query fragment used for FQL query construction. \end{DoxyCompactList}\item 
+class {\bfseries IQuery\+Fragment\+Extensions}
+\begin{DoxyCompactList}\small\item\em Provides extension methods for the \doxylink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment} interface to enhance its functionality, allowing for more flexible serialization options. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_query}{Query}}
+\begin{DoxyCompactList}\small\item\em Represents the abstract base class for constructing FQL queries. \end{DoxyCompactList}\item 
+class {\bfseries Query\+Arr}
+\begin{DoxyCompactList}\small\item\em Represents an array of FQL queries. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_query_expr}{Query\+Expr}}
+\begin{DoxyCompactList}\small\item\em Represents an FQL query expression. This class encapsulates a list of \doxylink{interface_fauna_1_1_i_query_fragment}{IQuery\+Fragment} instances, allowing for complex query constructions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_query_literal}{Query\+Literal}}
+\begin{DoxyCompactList}\small\item\em Represents a literal part of an FQL query. This class is used for embedding raw string values directly into the query structure. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_query_obj}{Query\+Obj}}
+\begin{DoxyCompactList}\small\item\em Represents a dictionary of FQL queries. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler}}
+\begin{DoxyCompactList}\small\item\em Provides a mechanism to build FQL query expressions using interpolated strings. This structure collects fragments and literals to construct complex query expressions. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}}
+\begin{DoxyCompactList}\small\item\em Represents a generic value holder for FQL queries. This class allows embedding values of various types into the query, with support for primitives, POCOs, and other types. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{class_fauna_1_1_stream_options}{Stream\+Options}}
+\begin{DoxyCompactList}\small\item\em Represents the options when subscribing to \doxylink{namespace_fauna}{Fauna} Streams. \end{DoxyCompactList}\end{DoxyCompactItemize}

@@ -1,0 +1,59 @@
+\doxysection{Query\+Obj.\+cs}
+\hypertarget{_query_obj_8cs_source}{}\label{_query_obj_8cs_source}\index{Fauna/Query/QueryObj.cs@{Fauna/Query/QueryObj.cs}}
+\mbox{\hyperlink{_query_obj_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_mapping}{Fauna.Mapping}};}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_serialization}{Fauna.Serialization}};}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00004}00004\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna}{Fauna}};}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00009}\mbox{\hyperlink{class_fauna_1_1_query_obj}{00009}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{sealed}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}}\ :\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}},\ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQueryFragment}}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00014}\mbox{\hyperlink{class_fauna_1_1_query_obj_aff4bb8d49b6ac001f8a584da4c7a34c8}{00014}}\ \ \ \ \ \textcolor{keyword}{public}\ IDictionary<string,\ Query>\ \mbox{\hyperlink{class_fauna_1_1_query_obj_aff4bb8d49b6ac001f8a584da4c7a34c8}{Unwrap}}\ \{\ \textcolor{keyword}{get};\ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00015}00015\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00020}\mbox{\hyperlink{class_fauna_1_1_query_obj_adfbce270d889fe37fcb3c5d49df40f47}{00020}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_adfbce270d889fe37fcb3c5d49df40f47}{QueryObj}}(IDictionary<string,\ Query>\ v)}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00021}00021\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00022}00022\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_query_obj_aff4bb8d49b6ac001f8a584da4c7a34c8}{Unwrap}}\ =\ v;}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00023}00023\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00024}00024\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00030}\mbox{\hyperlink{class_fauna_1_1_query_obj_accdc922a53a9cd71c2a3e2bcf0c22238}{00030}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_accdc922a53a9cd71c2a3e2bcf0c22238}{Serialize}}(\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{MappingContext}}\ ctx,\ \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8FaunaWriter}}\ writer)}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00031}00031\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00032}00032\ \ \ \ \ \ \ \ \ var\ ser\ =\ Serializer.Generate(ctx,\ GetType());}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00033}00033\ \ \ \ \ \ \ \ \ ser.Serialize(ctx,\ writer,\ \textcolor{keyword}{this});}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00034}00034\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00035}00035\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00041}\mbox{\hyperlink{class_fauna_1_1_query_obj_a16d60754686c3f4d49f7702167951941}{00041}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_a16d60754686c3f4d49f7702167951941}{Equals}}(\mbox{\hyperlink{class_fauna_1_1_query}{Query}}?\ o)\ =>\ IsEqual(o\ as\ \mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}});}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00042}00042\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00048}\mbox{\hyperlink{class_fauna_1_1_query_obj_a0e1f21c73237e62ff307e2fbe090f1f7}{00048}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_a0e1f21c73237e62ff307e2fbe090f1f7}{Equals}}(\textcolor{keywordtype}{object}?\ o)}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ReferenceEquals(\textcolor{keyword}{this},\ o)\ ||\ IsEqual(o\ as\ \mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}});}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00051}00051\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00052}00052\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00057}\mbox{\hyperlink{class_fauna_1_1_query_obj_aca49523c97265e8cdb8aa9ddb8c40d54}{00057}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{int}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_aca49523c97265e8cdb8aa9ddb8c40d54}{GetHashCode}}()}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00058}00058\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00059}00059\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ hash\ =\ 31;}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00061}00061\ \ \ \ \ \ \ \ \ hash\ *=\ \mbox{\hyperlink{class_fauna_1_1_query_obj_aff4bb8d49b6ac001f8a584da4c7a34c8}{Unwrap}}.GetHashCode();}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00062}00062\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hash;}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00064}00064\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00065}00065\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00070}\mbox{\hyperlink{class_fauna_1_1_query_obj_a601ef586b78e14f0f4465a2b20b96d0e}{00070}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{override}\ \textcolor{keywordtype}{string}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_a601ef586b78e14f0f4465a2b20b96d0e}{ToString}}()\ =>\ \$\textcolor{stringliteral}{"{}QueryObj(\{Unwrap\})"{}};}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00071}00071\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00078}\mbox{\hyperlink{class_fauna_1_1_query_obj_a4512f94c1e1c601ce436a355563390e2}{00078}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_a4512f94c1e1c601ce436a355563390e2}{operator\ ==}}(\mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}}\ left,\ \mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}}\ right)}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00079}00079\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00080}00080\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ ReferenceEquals(left,\ right)\ ||\ left.\mbox{\hyperlink{class_fauna_1_1_query_obj_a16d60754686c3f4d49f7702167951941}{Equals}}(right);}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00081}00081\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00082}00082\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00089}\mbox{\hyperlink{class_fauna_1_1_query_obj_aad958adfc96fcb7cb8442f992d16282c}{00089}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{static}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_query_obj_aad958adfc96fcb7cb8442f992d16282c}{operator\ !=}}(\mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}}\ left,\ \mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}}\ right)}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00090}00090\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00091}00091\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ !(left\ ==\ right);}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00092}00092\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00093}00093\ }
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00094}00094\ \ \ \ \ \textcolor{keyword}{private}\ \textcolor{keywordtype}{bool}\ IsEqual(\mbox{\hyperlink{class_fauna_1_1_query_obj}{QueryObj}}?\ o)}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00095}00095\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00096}00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ o\ is\ not\ \textcolor{keyword}{null}\ \&\&\ \mbox{\hyperlink{class_fauna_1_1_query_obj_aff4bb8d49b6ac001f8a584da4c7a34c8}{Unwrap}}.\mbox{\hyperlink{class_fauna_1_1_query_obj_a16d60754686c3f4d49f7702167951941}{Equals}}(o.\mbox{\hyperlink{class_fauna_1_1_query_obj_aff4bb8d49b6ac001f8a584da4c7a34c8}{Unwrap}});}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00097}00097\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_obj_8cs_source_l00098}00098\ \}}
+
+\end{DoxyCode}

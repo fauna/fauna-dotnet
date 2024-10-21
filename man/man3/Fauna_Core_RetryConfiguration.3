@@ -1,0 +1,59 @@
+.TH "Fauna.Core.RetryConfiguration" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Core.RetryConfiguration \- A class representing a retry configuration for queries\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBRetryConfiguration\fP (int retryCount, TimeSpan maxBackoff)"
+.br
+.RI "Creates a new \fBRetryConfiguration\fP instance\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "AsyncPolicy< HttpResponseMessage > \fBRetryPolicy\fP\fR [get, set]\fP"
+.br
+.RI "Gets the retry policy\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+A class representing a retry configuration for queries\&. 
+.PP
+Definition at line \fB10\fP of file \fBRetryConfiguration\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Fauna\&.Core\&.RetryConfiguration\&.RetryConfiguration (int retryCount, TimeSpan maxBackoff)"
+
+.PP
+Creates a new \fBRetryConfiguration\fP instance\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIretryCount\fP Maximum times to retry a request\&.
+.br
+\fImaxBackoff\fP The maximum backoff to apply\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB24\fP of file \fBRetryConfiguration\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "AsyncPolicy<HttpResponseMessage> Fauna\&.Core\&.RetryConfiguration\&.RetryPolicy\fR [get]\fP, \fR [set]\fP"
+
+.PP
+Gets the retry policy\&. 
+.PP
+Definition at line \fB16\fP of file \fBRetryConfiguration\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

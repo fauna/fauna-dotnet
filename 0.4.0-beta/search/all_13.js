@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['unexpectedtokenexceptionmessage_0',['UnexpectedTokenExceptionMessage',['../class_fauna_1_1_serialization_1_1_base_serializer.html#afa05195a1e716c601f4e20ade41894b8',1,'Fauna::Serialization::BaseSerializer']]],
+  ['unsupportedserializationtypemessage_1',['UnsupportedSerializationTypeMessage',['../class_fauna_1_1_serialization_1_1_base_serializer.html#a1ecc6a9336abf0679953ce8d6661d75f',1,'Fauna::Serialization::BaseSerializer']]],
+  ['unwrap_2',['Unwrap',['../class_fauna_1_1_query_expr.html#a15ecd8bb43a28ae4c53852da41455a37',1,'Fauna.QueryExpr.Unwrap'],['../class_fauna_1_1_query_literal.html#a3f611be6098117cb2a14563627cf5bf6',1,'Fauna.QueryLiteral.Unwrap'],['../class_fauna_1_1_query_obj.html#aff4bb8d49b6ac001f8a584da4c7a34c8',1,'Fauna.QueryObj.Unwrap'],['../class_fauna_1_1_query_val.html#a8cee65a5c9047d781885c6a2bb5f93c3',1,'Fauna.QueryVal.Unwrap']]],
+  ['update_3',['Update',['../namespace_fauna_1_1_types.html#afcef5225ec29fe553ddef5c9c70cd424a06933067aafd48425d67bcb01bba5cb6',1,'Fauna::Types']]],
+  ['utf8faunareader_4',['Utf8FaunaReader',['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html',1,'Fauna.Serialization.Utf8FaunaReader'],['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html#a12393dfb40044cd779a83dae18d00a59',1,'Fauna.Serialization.Utf8FaunaReader.Utf8FaunaReader(ReadOnlySequence&lt; byte &gt; bytes)'],['../struct_fauna_1_1_serialization_1_1_utf8_fauna_reader.html#a5091a273d4ba7cf535201c0430bb966b',1,'Fauna.Serialization.Utf8FaunaReader.Utf8FaunaReader(string str)']]],
+  ['utf8faunareader_2ecs_5',['Utf8FaunaReader.cs',['../_utf8_fauna_reader_8cs.html',1,'']]],
+  ['utf8faunawriter_6',['Utf8FaunaWriter',['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html',1,'Fauna.Serialization.Utf8FaunaWriter'],['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html#aebd64b5c3c21ef052921fa27694cbfb1',1,'Fauna.Serialization.Utf8FaunaWriter.Utf8FaunaWriter(IBufferWriter&lt; byte &gt; bufferWriter)'],['../class_fauna_1_1_serialization_1_1_utf8_fauna_writer.html#a54915e325dc4d021ca046e4ae538672e',1,'Fauna.Serialization.Utf8FaunaWriter.Utf8FaunaWriter(Stream stream)']]],
+  ['utf8faunawriter_2ecs_7',['Utf8FaunaWriter.cs',['../_utf8_fauna_writer_8cs.html',1,'']]]
+];

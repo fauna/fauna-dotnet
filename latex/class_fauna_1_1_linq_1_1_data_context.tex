@@ -1,0 +1,112 @@
+\doxysection{Fauna.\+Linq.\+Data\+Context Class Reference}
+\hypertarget{class_fauna_1_1_linq_1_1_data_context}{}\label{class_fauna_1_1_linq_1_1_data_context}\index{Fauna.Linq.DataContext@{Fauna.Linq.DataContext}}
+Inheritance diagram for Fauna.\+Linq.\+Data\+Context\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_fauna_1_1_linq_1_1_data_context}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_1_1_collection}{Collection}}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_1_1_function_call}{Function\+Call}}
+\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_data_context_1_1_i_collection}{ICollection}}
+\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_data_context_1_1_i_function}{IFunction}}
+\item 
+interface \mbox{\hyperlink{interface_fauna_1_1_linq_1_1_data_context_1_1_i_index}{IIndex}}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_1_1_index}{Index}}
+\item 
+class \mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_1_1_name_attribute}{Name\+Attribute}}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_1_1_function_call}{Function\+Call}}$<$ T $>$ \mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_aea5cfffbaad3f406ec19914bb6d51a4c}{Fn$<$ T $>$}} (string name="{}"{}, \mbox{[}Caller\+Member\+Name\mbox{]} string caller\+Name="{}"{})
+\item 
+Col \mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_acb8745368630f73b5b6a80436414d6b5}{Get\+Collection$<$ Col $>$}} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_base_client}{Fauna.\+Base\+Client}}}
+\begin{DoxyCompactItemize}
+\item 
+Task$<$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_success}{Query\+Success}}$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_acde010eca80373557d6ee10324496978}{Query\+Async$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously executes a specified FQL query against the \doxylink{namespace_fauna}{Fauna} database and returns the typed result. \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_success}{Query\+Success}}$<$ object?$>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_acc4988c813a4a7276b22c8b1ac68435a}{Query\+Async}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously executes a specified FQL query against the \doxylink{namespace_fauna}{Fauna} database. \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_success}{Query\+Success}}$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_af23dc32c34a56e03a0493a9048fd42a6}{Query\+Async$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$ serializer, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously executes a specified FQL query against the \doxylink{namespace_fauna}{Fauna} database and returns the typed result. \end{DoxyCompactList}\item 
+Task$<$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_success}{Query\+Success}}$<$ object?$>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_aab5c684a83cfa577f35b591305088a25}{Query\+Async}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}} serializer, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously executes a specified FQL query against the \doxylink{namespace_fauna}{Fauna} database and returns the typed result. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_a0c534fdee48b2755c33950d3b798c7bb}{Paginate\+Async$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_aedfa72bbbb3e09a9e5f651b7d4555f90}{Paginate\+Async$<$ T $>$}} (Page$<$ T $>$ page, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. The provided page is the first page yielded. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ object?$>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_a59455c7cb9ab1af7a71af7b87b8198a0}{Paginate\+Async}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ object?$>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_ae4e3dee20cc478be67be33b2b7991385}{Paginate\+Async}} (Page$<$ object?$>$ page, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. The provided page is the first page yielded. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_a9c6da6e6850c78ecdaa28f44eda28035}{Paginate\+Async$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$ elem\+Serializer, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_aea5e8ff85d17beb1c0ef0dcc022336f9}{Paginate\+Async$<$ T $>$}} (Page$<$ T $>$ page, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$ elem\+Serializer, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. The provided page is the first page yielded. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ object?$>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_a5d785b7bdd84b540fdc50aab74beb1b5}{Paginate\+Async}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}} elem\+Serializer, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. \end{DoxyCompactList}\item 
+IAsync\+Enumerable$<$ Page$<$ object?$>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_ac8952b3fc43b602a4c7aa0c51a0a49a9}{Paginate\+Async}} (Page$<$ object?$>$ page, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}} elem\+Serializer, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously iterates over pages of a \doxylink{namespace_fauna}{Fauna} query result, automatically fetching subsequent pages using the \textquotesingle{}after\textquotesingle{} cursor. The provided page is the first page yielded. \end{DoxyCompactList}\item 
+async Task$<$ T $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_a83ee78658084c6d1c8f1183811bf5091}{Load\+Ref\+Async$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref}{Base\+Ref}}$<$ T $>$ reference, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Asynchronously executes a specified FQL query against the \doxylink{namespace_fauna}{Fauna} database and returns the typed result. \end{DoxyCompactList}\item 
+async Task$<$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_stream_enumerable}{Stream\+Enumerable}}$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_a67b9e32dac927620258136b965671190}{Event\+Stream\+Async$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}} query, \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_options}{Query\+Options}}? query\+Options=null, \mbox{\hyperlink{class_fauna_1_1_stream_options}{Stream\+Options}}? stream\+Options=null, Cancellation\+Token cancellation\+Token=default)
+\begin{DoxyCompactList}\small\item\em Retrieves a Stream token from \doxylink{namespace_fauna}{Fauna} and returns a Stream\+Enumerable for the stream events. \end{DoxyCompactList}\item 
+IAsync\+Enumerator$<$ \mbox{\hyperlink{class_fauna_1_1_types_1_1_event}{Event}}$<$ T $>$ $>$ \mbox{\hyperlink{class_fauna_1_1_base_client_ad3bf366a047c9a36b1671519e2ea874d}{Subscribe\+Stream$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_types_1_1_stream}{Stream}} stream, \mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, Cancellation\+Token cancel=default)
+\begin{DoxyCompactList}\small\item\em Opens the stream with \doxylink{namespace_fauna}{Fauna} and returns an enumerator for the stream events. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{interface_fauna_1_1_i_client}{Fauna.\+IClient}}}
+\doxysubsection*{Package Functions inherited from \mbox{\hyperlink{class_fauna_1_1_base_client}{Fauna.\+Base\+Client}}}
+\doxysubsection*{Properties inherited from \mbox{\hyperlink{class_fauna_1_1_base_client}{Fauna.\+Base\+Client}}}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{_data_context_8cs_source_l00012}{12}} of file \mbox{\hyperlink{_data_context_8cs_source}{Data\+Context.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fauna_1_1_linq_1_1_data_context_aea5cfffbaad3f406ec19914bb6d51a4c}\index{Fauna.Linq.DataContext@{Fauna.Linq.DataContext}!Fn$<$ T $>$@{Fn$<$ T $>$}}
+\index{Fn$<$ T $>$@{Fn$<$ T $>$}!Fauna.Linq.DataContext@{Fauna.Linq.DataContext}}
+\doxysubsubsection{\texorpdfstring{Fn$<$ T $>$()}{Fn< T >()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_linq_1_1_data_context_aea5cfffbaad3f406ec19914bb6d51a4c} 
+\mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context_1_1_function_call}{Function\+Call}}$<$ T $>$ Fauna.\+Linq.\+Data\+Context.\+Fn$<$ T $>$ (\begin{DoxyParamCaption}\item[{string}]{name}{ = {\ttfamily "{}"{}}, }\item[{\mbox{[}\+Caller\+Member\+Name\mbox{]} string}]{caller\+Name}{ = {\ttfamily "{}"{}}}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em T} : {\em notnull}]\end{description}
+\end{Desc}
+
+
+Definition at line \mbox{\hyperlink{_data_context_8cs_source_l00204}{204}} of file \mbox{\hyperlink{_data_context_8cs_source}{Data\+Context.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_linq_1_1_data_context_acb8745368630f73b5b6a80436414d6b5}\index{Fauna.Linq.DataContext@{Fauna.Linq.DataContext}!GetCollection$<$ Col $>$@{GetCollection$<$ Col $>$}}
+\index{GetCollection$<$ Col $>$@{GetCollection$<$ Col $>$}!Fauna.Linq.DataContext@{Fauna.Linq.DataContext}}
+\doxysubsubsection{\texorpdfstring{GetCollection$<$ Col $>$()}{GetCollection< Col >()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_linq_1_1_data_context_acb8745368630f73b5b6a80436414d6b5} 
+Col Fauna.\+Linq.\+Data\+Context.\+Get\+Collection$<$ Col $>$ (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+\begin{Desc}
+\item[Type Constraints]\begin{description}
+\item[{\em Col} : {\em ICollection}]\end{description}
+\end{Desc}
+
+
+Definition at line \mbox{\hyperlink{_data_context_8cs_source_l00210}{210}} of file \mbox{\hyperlink{_data_context_8cs_source}{Data\+Context.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Linq/\mbox{\hyperlink{_data_context_8cs}{Data\+Context.\+cs}}\end{DoxyCompactItemize}

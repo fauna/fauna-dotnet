@@ -1,0 +1,54 @@
+\doxysection{Fauna.\+IQuery\+Fragment Interface Reference}
+\hypertarget{interface_fauna_1_1_i_query_fragment}{}\label{interface_fauna_1_1_i_query_fragment}\index{Fauna.IQueryFragment@{Fauna.IQueryFragment}}
+
+
+Represents the base interface for a query fragment used for FQL query construction.  
+
+
+Inheritance diagram for Fauna.\+IQuery\+Fragment\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.842105cm]{interface_fauna_1_1_i_query_fragment}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} writer)
+\begin{DoxyCompactList}\small\item\em Serializes the query fragment into the provided stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the base interface for a query fragment used for FQL query construction. 
+
+Definition at line \mbox{\hyperlink{_i_query_fragment_8cs_source_l00010}{10}} of file \mbox{\hyperlink{_i_query_fragment_8cs_source}{IQuery\+Fragment.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}\index{Fauna.IQueryFragment@{Fauna.IQueryFragment}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!Fauna.IQueryFragment@{Fauna.IQueryFragment}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily \label{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e} 
+void Fauna.\+IQuery\+Fragment.\+Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{ctx}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}}}]{writer}{}\end{DoxyParamCaption})}
+
+
+
+Serializes the query fragment into the provided stream. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The context to be used during serialization.\\
+\hline
+{\em writer} & The writer to which the query fragment is serialized.\\
+\hline
+\end{DoxyParams}
+
+
+Implemented in \mbox{\hyperlink{class_fauna_1_1_query_a36a3930b5ff06da0f35d761147a37965}{Fauna.\+Query}}, \mbox{\hyperlink{class_fauna_1_1_query_expr_a75528037f15d84ad51abf82aec6b7e8d}{Fauna.\+Query\+Expr}}, \mbox{\hyperlink{class_fauna_1_1_query_literal_a93dc2c086c98f688607176336a6b5144}{Fauna.\+Query\+Literal}}, \mbox{\hyperlink{class_fauna_1_1_query_obj_accdc922a53a9cd71c2a3e2bcf0c22238}{Fauna.\+Query\+Obj}}, and \mbox{\hyperlink{class_fauna_1_1_query_val_a05804276806a471ffeb2e396d4e790ed}{Fauna.\+Query\+Val}}.
+
+
+
+The documentation for this interface was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Query/\mbox{\hyperlink{_i_query_fragment_8cs}{IQuery\+Fragment.\+cs}}\end{DoxyCompactItemize}

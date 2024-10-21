@@ -1,0 +1,47 @@
+\doxysection{Service\+Exception.\+cs}
+\hypertarget{_service_exception_8cs_source}{}\label{_service_exception_8cs_source}\index{Fauna/Exceptions/ServiceException.cs@{Fauna/Exceptions/ServiceException.cs}}
+\mbox{\hyperlink{_service_exception_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Net;}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00002}00002\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_core}{Fauna.Core}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00003}00003\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00004}00004\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_exceptions}{Fauna.Exceptions}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00005}00005\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00009}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception}{00009}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception}{ServiceException}}\ :\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_fauna_exception}{FaunaException}}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00011}00011\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00015}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a8497e5ce76ed54d5d41fbb8e06e69577}{00015}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}?\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a8497e5ce76ed54d5d41fbb8e06e69577}{ErrorCode}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00016}00016\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00020}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a0e364c903a5f6734ba12ef675713d6a0}{00020}}\ \ \ \ \ \textcolor{keyword}{public}\ IDictionary<string,\ string>\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a0e364c903a5f6734ba12ef675713d6a0}{QueryTags}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00021}00021\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00028}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a65603b7803bb1d46f4f318339b19fbe4}{00028}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}?\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a65603b7803bb1d46f4f318339b19fbe4}{SchemaVersion}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00029}00029\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00033}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a6af6c7dbc47cd2d825376bc08cbf47dd}{00033}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{QueryStats}}\ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00034}00034\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00038}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a76832ee18db230c2f20354b924691b4c}{00038}}\ \ \ \ \ \textcolor{keyword}{public}\ HttpStatusCode?\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a76832ee18db230c2f20354b924691b4c}{StatusCode}}\ \{\ \textcolor{keyword}{get};\ \textcolor{keyword}{set};\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00043}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a30fef9448a1973796a1eaac5e167f4e5}{00043}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}?\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a30fef9448a1973796a1eaac5e167f4e5}{Summary}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00044}00044\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00050}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae3b905ebb35e6e1488f5413433aca00c}{00050}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{long}?\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae3b905ebb35e6e1488f5413433aca00c}{TxnTs}}\ \{\ \textcolor{keyword}{get};\ init;\ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00051}00051\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00056}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_adb0746705507e1391b006264a215fc5e}{00056}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_adb0746705507e1391b006264a215fc5e}{ServiceException}}(\textcolor{keywordtype}{string}\ message)}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00057}00057\ \ \ \ \ \ \ \ \ :\ base(message)}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00058}00058\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00059}00059\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a0e364c903a5f6734ba12ef675713d6a0}{QueryTags}}\ =\ \textcolor{keyword}{new}\ Dictionary<string,\ string>();}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00060}00060\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00061}00061\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00067}\mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae5bc45cc05f0bca1d6879425c0cea447}{00067}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae5bc45cc05f0bca1d6879425c0cea447}{ServiceException}}(\textcolor{keywordtype}{string}\ message,\ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure}{QueryFailure}}\ failure)}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00068}00068\ \ \ \ \ \ \ \ \ :\ base(message)}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00069}00069\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00070}00070\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a76832ee18db230c2f20354b924691b4c}{StatusCode}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_abb1d293cd1f0362b70f7b5759170ba05}{StatusCode}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a8497e5ce76ed54d5d41fbb8e06e69577}{ErrorCode}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_failure_aacdd2c14ff770390a0413a5df3d3bc63}{ErrorCode}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a30fef9448a1973796a1eaac5e167f4e5}{Summary}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a8a296943a4f7ea89390ef217a7e0002a}{Summary}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_fauna_1_1_core_1_1_stats}{Stats}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a1e4dcba989f75a7f4b660f09728ee152}{Stats}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_ae3b905ebb35e6e1488f5413433aca00c}{TxnTs}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a49d66597de41bef65d03b4e6b0c612e2}{LastSeenTxn}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00075}00075\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a65603b7803bb1d46f4f318339b19fbe4}{SchemaVersion}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_ae1eb6cb66e28964b59b649df292e120e}{SchemaVersion}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00076}00076\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_exceptions_1_1_service_exception_a0e364c903a5f6734ba12ef675713d6a0}{QueryTags}}\ =\ failure.\mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a556a527fe8a2cb89e8f83d1384ac275c}{QueryTags}};}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00077}00077\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00078}00078\ }
+\DoxyCodeLine{\Hypertarget{_service_exception_8cs_source_l00079}00079\ \}}
+
+\end{DoxyCode}

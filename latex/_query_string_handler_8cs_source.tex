@@ -1,0 +1,42 @@
+\doxysection{Query\+String\+Handler.\+cs}
+\hypertarget{_query_string_handler_8cs_source}{}\label{_query_string_handler_8cs_source}\index{Fauna/Query/QueryStringHandler.cs@{Fauna/Query/QueryStringHandler.cs}}
+\mbox{\hyperlink{_query_string_handler_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }System.Runtime.CompilerServices;}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00003}00003\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna}{Fauna}};}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00008}00008\ [InterpolatedStringHandler]}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00009}\mbox{\hyperlink{struct_fauna_1_1_query_string_handler}{00009}}\ \textcolor{keyword}{public\ ref\ struct}\ \mbox{\hyperlink{struct_fauna_1_1_query_string_handler}{QueryStringHandler}}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00010}00010\ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00011}00011\ \ \ \ \ \textcolor{keyword}{private}\ readonly\ List<IQueryFragment>\ \_fragments;}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00012}00012\ }
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00018}\mbox{\hyperlink{struct_fauna_1_1_query_string_handler_aeda2711d536fbce1fc18f907d99d8d70}{00018}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_aeda2711d536fbce1fc18f907d99d8d70}{QueryStringHandler}}(\textcolor{keywordtype}{int}\ literalLength,\ \textcolor{keywordtype}{int}\ formattedCount)}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00019}00019\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00020}00020\ \ \ \ \ \ \ \ \ \_fragments\ =\ \textcolor{keyword}{new}\ List<IQueryFragment>();}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00021}00021\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00022}00022\ }
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00027}\mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a6bbc0298057deb0bd61d8737db8137c1}{00027}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a6bbc0298057deb0bd61d8737db8137c1}{AppendLiteral}}(\textcolor{keywordtype}{string}\ value)}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00028}00028\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00029}00029\ \ \ \ \ \ \ \ \ \_fragments.Add(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_query_literal}{QueryLiteral}}(value));}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00030}00030\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00031}00031\ }
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00036}\mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a821c0c7774a21f68d8acd35ddb141987}{00036}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{void}\ \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a821c0c7774a21f68d8acd35ddb141987}{AppendFormatted}}(\textcolor{keywordtype}{object}?\ value)}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00037}00037\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00038}00038\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}\ (value\ is\ \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{IQueryFragment}}\ frag)}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00039}00039\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00040}00040\ \ \ \ \ \ \ \ \ \ \ \ \ \_fragments.Add(frag);}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00041}00041\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00042}00042\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00043}00043\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00044}00044\ \ \ \ \ \ \ \ \ \ \ \ \ \_fragments.Add(\textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_query_val}{QueryVal}}(value));}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00045}00045\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00052}\mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a54d2c80380f3946a1b43d0259a8cf12d}{00052}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_query}{Query}}\ \mbox{\hyperlink{struct_fauna_1_1_query_string_handler_a54d2c80380f3946a1b43d0259a8cf12d}{Result}}()}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00053}00053\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00054}00054\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{new}\ \mbox{\hyperlink{class_fauna_1_1_query_expr}{QueryExpr}}(\_fragments);}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00055}00055\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_query_string_handler_8cs_source_l00056}00056\ \}}
+
+\end{DoxyCode}

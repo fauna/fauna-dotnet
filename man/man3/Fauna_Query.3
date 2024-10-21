@@ -1,0 +1,130 @@
+.TH "Fauna.Query" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Query \- Represents the abstract base class for constructing FQL queries\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits IEquatable< Query >, and \fBFauna\&.IQueryFragment\fP\&.
+.PP
+Inherited by , \fBFauna\&.QueryExpr\fP, and \fBFauna\&.QueryObj\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBSerialize\fP (\fBMappingContext\fP ctx, \fBUtf8FaunaWriter\fP writer)"
+.br
+.RI "Serializes the query into the provided stream\&. "
+.ti -1c
+.RI "override int \fBGetHashCode\fP ()"
+.br
+.RI "Returns a hash code for the current query\&. "
+.ti -1c
+.RI "override bool \fBEquals\fP (object? otherObject)"
+.br
+.RI "Determines whether the specified object is equal to the current query\&. "
+.ti -1c
+.RI "bool \fBEquals\fP (\fBQuery\fP? otherQuery)"
+.br
+.RI "Determines whether the specified \fBQuery\fP is equal to the current query\&. "
+.in -1c
+
+Public Member Functions inherited from \fBFauna\&.IQueryFragment\fP
+.SS "Static Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "static \fBQuery\fP \fBFQL\fP (ref \fBQueryStringHandler\fP handler)"
+.br
+.RI "Constructs an FQL query using the specified \fBQueryStringHandler\fP\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents the abstract base class for constructing FQL queries\&. 
+.PP
+Definition at line \fB10\fP of file \fBQuery\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "override bool Fauna\&.Query\&.Equals (object? otherObject)\fR [abstract]\fP"
+
+.PP
+Determines whether the specified object is equal to the current query\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIotherObject\fP The object to compare with the current query\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if the specified object is equal to the current query; otherwise, false\&.
+.RE
+.PP
+
+.SS "bool Fauna\&.Query\&.Equals (\fBQuery\fP? otherQuery)\fR [abstract]\fP"
+
+.PP
+Determines whether the specified \fBQuery\fP is equal to the current query\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIotherQuery\fP The \fBQuery\fP to compare with the current query\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if the specified \fBQuery\fP is equal to the current query; otherwise, false\&.
+.RE
+.PP
+
+.SS "static \fBQuery\fP Fauna\&.Query\&.FQL (ref \fBQueryStringHandler\fP handler)\fR [static]\fP"
+
+.PP
+Constructs an FQL query using the specified \fBQueryStringHandler\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIhandler\fP The \fBQueryStringHandler\fP that contains the query fragments\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+A \fBQuery\fP instance constructed from the handler\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB44\fP of file \fBQuery\&.cs\fP\&.
+.SS "override int Fauna\&.Query\&.GetHashCode ()\fR [abstract]\fP"
+
+.PP
+Returns a hash code for the current query\&. 
+.PP
+\fBReturns\fP
+.RS 4
+A hash code for the current query\&.
+.RE
+.PP
+
+.SS "void Fauna\&.Query\&.Serialize (\fBMappingContext\fP ctx, \fBUtf8FaunaWriter\fP writer)\fR [abstract]\fP"
+
+.PP
+Serializes the query into the provided stream\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIctx\fP The context to be used during serialization\&.
+.br
+\fIwriter\fP The writer to which the query is serialized\&.
+.RE
+.PP
+
+.PP
+Implements \fBFauna\&.IQueryFragment\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

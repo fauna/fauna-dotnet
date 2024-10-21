@@ -1,0 +1,642 @@
+\doxysection{Fauna.\+Serialization.\+Utf8\+Fauna\+Reader Struct Reference}
+\hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{}\label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+
+
+Represents a reader that provides fast, non-\/cached, forward-\/only access to serialized data.  
+
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a12393dfb40044cd779a83dae18d00a59}{Utf8\+Fauna\+Reader}} (Read\+Only\+Sequence$<$ byte $>$ bytes)
+\begin{DoxyCompactList}\small\item\em Initializes a new \doxylink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader} to read from a Read\+Only\+Sequence of bytes. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5091a273d4ba7cf535201c0430bb966b}{Utf8\+Fauna\+Reader}} (string str)
+\begin{DoxyCompactList}\small\item\em Initializes a new \doxylink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader} to read from a string. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a23e2786ced57f4461c34d02afaf2051c}{Skip}} ()
+\begin{DoxyCompactList}\small\item\em Skips the value of the current token. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ac3565529b838a49a1a145f628a7cc567}{Read}} ()
+\begin{DoxyCompactList}\small\item\em Reads the next token from the source. \end{DoxyCompactList}\item 
+object? \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5c7afb5cc22543fbdc6bf189ea427373}{Get\+Value}} ()
+\begin{DoxyCompactList}\small\item\em Gets the value of the current token. \end{DoxyCompactList}\item 
+string? \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ab3d758ba652d37e83cff84788b5adc4e}{Get\+String}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a string value from the current token. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_aab51c01050b73922846adc43e6bdb01f}{Get\+Boolean}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a boolean value from the current JSON token. \end{DoxyCompactList}\item 
+Date\+Only \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a1f4833d5a579082d208ecf34c01c20de}{Get\+Date}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a Date\+Only value from the current token. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ab2009a6ba606fdcc3621c347437cf19e}{Get\+Float}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a float value from the current token. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3ef09b8686c9819329661ba90b9903dc}{Get\+Double}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a double value from the current token. \end{DoxyCompactList}\item 
+decimal \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a146a2daf20f1a06099a0dde616e2ad3b}{Get\+Double\+As\+Decimal}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a decimal value from the current token. \end{DoxyCompactList}\item 
+byte \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a2fe898602068c2cccf444c2c4c2abbf3}{Get\+Byte}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves an byte value from the current token. \end{DoxyCompactList}\item 
+byte\mbox{[}$\,$\mbox{]} \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a4d2eb3cd86b5eb6d203551c0b8fffde8}{Get\+Bytes}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a byte array value from the current token. \end{DoxyCompactList}\item 
+sbyte \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ae8b6afe7318b150b85cea122bc1700d9}{Get\+Unsigned\+Byte}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves an unsigned byte value from the current token. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_aeeef80fc1f8473bca377fc05532b6235}{Get\+Int}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves an integer value from the current token. \end{DoxyCompactList}\item 
+uint \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a7d5205e1aecc5b5488fa33690d1979f4}{Get\+Unsigned\+Int}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves an unsigned integer value from the current token. \end{DoxyCompactList}\item 
+short \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a39a1fade8e3759d89843bf032d1d29d3}{Get\+Short}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves an short value from the current token. \end{DoxyCompactList}\item 
+ushort \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a868c825d2ff8960fb23c605ad4eed4c1}{Get\+Unsigned\+Short}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves an unsigned short value from the current token. \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a906a4426b5f5e96c59f71faec33cba94}{Get\+Long}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a long value from the current token. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}} \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_af8fe5c4a0cbcd3027ca66a4cebadd6cd}{Get\+Module}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a Module object from the current token. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_types_1_1_stream}{Stream}} \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a394830ddedae62755637fe1b1f19318c}{Get\+Stream}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a Stream token string from the current token. \end{DoxyCompactList}\item 
+Date\+Time \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ac936c744a99994bd9206fa94c257806f}{Get\+Time}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves a Date\+Time value from the current token. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5b73cf66dc32154d2c982c1844b642d3}{Try\+Get\+String}} (out string value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve a string value from the current token. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5bc2782b7b296b5c6277a01e1bb50ebd}{Try\+Get\+Boolean}} (out bool value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve a boolean value from the current token. \end{DoxyCompactList}\item 
+Date\+Time \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a2661c472091add48762c3af5a43d593c}{Try\+Get\+Date\+Time}} (out Date\+Time value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve a Date\+Time value from the current token. \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ae7cc6939bee83fe46d7b6e5f4c7adddf}{Try\+Get\+Double}} (out double value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve a double value from the current token. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a778b7c7dc0686d49c9cb2f44be24201b}{Try\+Get\+Int}} (out int value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve an integer value from the current token. \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3cb8cfd6b74ed247a74294995dad3074}{Try\+Get\+Long}} (out long value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve a long value from the current token. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}} \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3499d6e1fc554811d8b3f550001e49ea}{Try\+Get\+Module}} (out \mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}} value)
+\begin{DoxyCompactList}\small\item\em Tries to retrieve a Module object from the current token. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} \mbox{\hyperlink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a63422ba82ddc6fe2499855564182d76c}{Current\+Token\+Type}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the type of the current token. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a reader that provides fast, non-\/cached, forward-\/only access to serialized data. 
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00014}{14}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a12393dfb40044cd779a83dae18d00a59}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!Utf8FaunaReader@{Utf8FaunaReader}}
+\index{Utf8FaunaReader@{Utf8FaunaReader}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{Utf8FaunaReader()}{Utf8FaunaReader()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a12393dfb40044cd779a83dae18d00a59} 
+Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Utf8\+Fauna\+Reader (\begin{DoxyParamCaption}\item[{Read\+Only\+Sequence$<$ byte $>$}]{bytes}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new \doxylink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader} to read from a Read\+Only\+Sequence of bytes. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em bytes} & The sequence of bytes to read from.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00046}{46}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5091a273d4ba7cf535201c0430bb966b}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!Utf8FaunaReader@{Utf8FaunaReader}}
+\index{Utf8FaunaReader@{Utf8FaunaReader}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{Utf8FaunaReader()}{Utf8FaunaReader()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5091a273d4ba7cf535201c0430bb966b} 
+Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Utf8\+Fauna\+Reader (\begin{DoxyParamCaption}\item[{string}]{str}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new \doxylink{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader}{Utf8\+Fauna\+Reader} to read from a string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em str} & The string to read from.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00056}{56}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_aab51c01050b73922846adc43e6bdb01f}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetBoolean@{GetBoolean}}
+\index{GetBoolean@{GetBoolean}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetBoolean()}{GetBoolean()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_aab51c01050b73922846adc43e6bdb01f} 
+bool Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Boolean (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a boolean value from the current JSON token. 
+
+\begin{DoxyReturn}{Returns}
+A boolean representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00203}{203}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a2fe898602068c2cccf444c2c4c2abbf3}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetByte@{GetByte}}
+\index{GetByte@{GetByte}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetByte()}{GetByte()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a2fe898602068c2cccf444c2c4c2abbf3} 
+byte Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Byte (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves an byte value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A byte representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00291}{291}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a4d2eb3cd86b5eb6d203551c0b8fffde8}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetBytes@{GetBytes}}
+\index{GetBytes@{GetBytes}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetBytes()}{GetBytes()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a4d2eb3cd86b5eb6d203551c0b8fffde8} 
+byte\mbox{[}$\,$\mbox{]} Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Bytes (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a byte array value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A byte array representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00309}{309}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a1f4833d5a579082d208ecf34c01c20de}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetDate@{GetDate}}
+\index{GetDate@{GetDate}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetDate()}{GetDate()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a1f4833d5a579082d208ecf34c01c20de} 
+Date\+Only Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Date (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a Date\+Only value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A Date\+Only representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00219}{219}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3ef09b8686c9819329661ba90b9903dc}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetDouble@{GetDouble}}
+\index{GetDouble@{GetDouble}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetDouble()}{GetDouble()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3ef09b8686c9819329661ba90b9903dc} 
+double Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Double (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a double value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A double representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00255}{255}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a146a2daf20f1a06099a0dde616e2ad3b}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetDoubleAsDecimal@{GetDoubleAsDecimal}}
+\index{GetDoubleAsDecimal@{GetDoubleAsDecimal}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetDoubleAsDecimal()}{GetDoubleAsDecimal()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a146a2daf20f1a06099a0dde616e2ad3b} 
+decimal Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Double\+As\+Decimal (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a decimal value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A decimal representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00273}{273}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ab2009a6ba606fdcc3621c347437cf19e}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetFloat@{GetFloat}}
+\index{GetFloat@{GetFloat}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetFloat()}{GetFloat()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ab2009a6ba606fdcc3621c347437cf19e} 
+float Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Float (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a float value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A float representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00237}{237}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_aeeef80fc1f8473bca377fc05532b6235}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetInt@{GetInt}}
+\index{GetInt@{GetInt}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetInt()}{GetInt()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_aeeef80fc1f8473bca377fc05532b6235} 
+int Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Int (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves an integer value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+An integer representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00345}{345}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a906a4426b5f5e96c59f71faec33cba94}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetLong@{GetLong}}
+\index{GetLong@{GetLong}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetLong()}{GetLong()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a906a4426b5f5e96c59f71faec33cba94} 
+long Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Long (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a long value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A long representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00415}{415}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_af8fe5c4a0cbcd3027ca66a4cebadd6cd}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetModule@{GetModule}}
+\index{GetModule@{GetModule}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetModule()}{GetModule()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_af8fe5c4a0cbcd3027ca66a4cebadd6cd} 
+\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}} Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Module (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a Module object from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A Module representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00433}{433}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a39a1fade8e3759d89843bf032d1d29d3}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetShort@{GetShort}}
+\index{GetShort@{GetShort}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetShort()}{GetShort()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a39a1fade8e3759d89843bf032d1d29d3} 
+short Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Short (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves an short value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+An short representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00381}{381}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a394830ddedae62755637fe1b1f19318c}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetStream@{GetStream}}
+\index{GetStream@{GetStream}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetStream()}{GetStream()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a394830ddedae62755637fe1b1f19318c} 
+\mbox{\hyperlink{class_fauna_1_1_types_1_1_stream}{Stream}} Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Stream (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a Stream token string from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A Stream token string of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00444}{444}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ab3d758ba652d37e83cff84788b5adc4e}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetString@{GetString}}
+\index{GetString@{GetString}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetString()}{GetString()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ab3d758ba652d37e83cff84788b5adc4e} 
+string? Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+String (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a string value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A string representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00182}{182}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ac936c744a99994bd9206fa94c257806f}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetTime@{GetTime}}
+\index{GetTime@{GetTime}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetTime()}{GetTime()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ac936c744a99994bd9206fa94c257806f} 
+Date\+Time Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Time (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves a Date\+Time value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+A Date\+Time representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00455}{455}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ae8b6afe7318b150b85cea122bc1700d9}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetUnsignedByte@{GetUnsignedByte}}
+\index{GetUnsignedByte@{GetUnsignedByte}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetUnsignedByte()}{GetUnsignedByte()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ae8b6afe7318b150b85cea122bc1700d9} 
+sbyte Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Unsigned\+Byte (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves an unsigned byte value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+An unsigned byte representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00327}{327}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a7d5205e1aecc5b5488fa33690d1979f4}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetUnsignedInt@{GetUnsignedInt}}
+\index{GetUnsignedInt@{GetUnsignedInt}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetUnsignedInt()}{GetUnsignedInt()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a7d5205e1aecc5b5488fa33690d1979f4} 
+uint Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Unsigned\+Int (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves an unsigned integer value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+An unsigned integer representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00363}{363}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a868c825d2ff8960fb23c605ad4eed4c1}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetUnsignedShort@{GetUnsignedShort}}
+\index{GetUnsignedShort@{GetUnsignedShort}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetUnsignedShort()}{GetUnsignedShort()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a868c825d2ff8960fb23c605ad4eed4c1} 
+ushort Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Unsigned\+Short (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Retrieves an unsigned short value from the current token. 
+
+\begin{DoxyReturn}{Returns}
+An unsigned short representation of the current token\textquotesingle{}s value.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00398}{398}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5c7afb5cc22543fbdc6bf189ea427373}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!GetValue@{GetValue}}
+\index{GetValue@{GetValue}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{GetValue()}{GetValue()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5c7afb5cc22543fbdc6bf189ea427373} 
+object? Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Get\+Value (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Gets the value of the current token. 
+
+\begin{DoxyReturn}{Returns}
+The value of the current token, or null if no value is associated with the token.
+\end{DoxyReturn}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Serialization\+Exception} & Thrown when an error occurs during token value retrieval.\\
+\hline
+\end{DoxyExceptions}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00161}{161}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ac3565529b838a49a1a145f628a7cc567}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!Read@{Read}}
+\index{Read@{Read}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{Read()}{Read()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ac3565529b838a49a1a145f628a7cc567} 
+bool Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Read (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Reads the next token from the source. 
+
+\begin{DoxyReturn}{Returns}
+true if the token was read successfully; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00094}{94}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a23e2786ced57f4461c34d02afaf2051c}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!Skip@{Skip}}
+\index{Skip@{Skip}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{Skip()}{Skip()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a23e2786ced57f4461c34d02afaf2051c} 
+void Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Skip (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Skips the value of the current token. 
+
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00067}{67}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5bc2782b7b296b5c6277a01e1bb50ebd}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetBoolean@{TryGetBoolean}}
+\index{TryGetBoolean@{TryGetBoolean}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetBoolean()}{TryGetBoolean()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5bc2782b7b296b5c6277a01e1bb50ebd} 
+bool Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+Boolean (\begin{DoxyParamCaption}\item[{out bool}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve a boolean value from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the boolean value, if the conversion succeeded, or false if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to a boolean; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00484}{484}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a2661c472091add48762c3af5a43d593c}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetDateTime@{TryGetDateTime}}
+\index{TryGetDateTime@{TryGetDateTime}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetDateTime()}{TryGetDateTime()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a2661c472091add48762c3af5a43d593c} 
+Date\+Time Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+Date\+Time (\begin{DoxyParamCaption}\item[{out Date\+Time}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve a Date\+Time value from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the Date\+Time value, if the conversion succeeded, or the default Date\+Time value if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to a Date\+Time; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00494}{494}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ae7cc6939bee83fe46d7b6e5f4c7adddf}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetDouble@{TryGetDouble}}
+\index{TryGetDouble@{TryGetDouble}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetDouble()}{TryGetDouble()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_ae7cc6939bee83fe46d7b6e5f4c7adddf} 
+double Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+Double (\begin{DoxyParamCaption}\item[{out double}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve a double value from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the double value, if the conversion succeeded, or 0.\+0 if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to a double; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00504}{504}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a778b7c7dc0686d49c9cb2f44be24201b}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetInt@{TryGetInt}}
+\index{TryGetInt@{TryGetInt}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetInt()}{TryGetInt()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a778b7c7dc0686d49c9cb2f44be24201b} 
+int Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+Int (\begin{DoxyParamCaption}\item[{out int}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve an integer value from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the integer value, if the conversion succeeded, or 0 if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to an integer; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00514}{514}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3cb8cfd6b74ed247a74294995dad3074}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetLong@{TryGetLong}}
+\index{TryGetLong@{TryGetLong}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetLong()}{TryGetLong()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3cb8cfd6b74ed247a74294995dad3074} 
+long Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+Long (\begin{DoxyParamCaption}\item[{out long}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve a long value from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the long value, if the conversion succeeded, or 0 if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to a long; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00524}{524}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3499d6e1fc554811d8b3f550001e49ea}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetModule@{TryGetModule}}
+\index{TryGetModule@{TryGetModule}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetModule()}{TryGetModule()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a3499d6e1fc554811d8b3f550001e49ea} 
+\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}} Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+Module (\begin{DoxyParamCaption}\item[{out \mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}}}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve a Module object from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the Module object, if the conversion succeeded, or null if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to a Module; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00534}{534}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5b73cf66dc32154d2c982c1844b642d3}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!TryGetString@{TryGetString}}
+\index{TryGetString@{TryGetString}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{TryGetString()}{TryGetString()}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a5b73cf66dc32154d2c982c1844b642d3} 
+string Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Try\+Get\+String (\begin{DoxyParamCaption}\item[{out string}]{value}{}\end{DoxyParamCaption})}
+
+
+
+Tries to retrieve a string value from the current token. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & When this method returns, contains the string value, if the conversion succeeded, or null if the conversion failed.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the token\textquotesingle{}s value could be converted to a string; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00474}{474}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a63422ba82ddc6fe2499855564182d76c}\index{Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}!CurrentTokenType@{CurrentTokenType}}
+\index{CurrentTokenType@{CurrentTokenType}!Fauna.Serialization.Utf8FaunaReader@{Fauna.Serialization.Utf8FaunaReader}}
+\doxysubsubsection{\texorpdfstring{CurrentTokenType}{CurrentTokenType}}
+{\footnotesize\ttfamily \label{struct_fauna_1_1_serialization_1_1_utf8_fauna_reader_a63422ba82ddc6fe2499855564182d76c} 
+\mbox{\hyperlink{namespace_fauna_1_1_serialization_a564aa46d376b2e193a3c208775e46d50}{Token\+Type}} Fauna.\+Serialization.\+Utf8\+Fauna\+Reader.\+Current\+Token\+Type\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the type of the current token. 
+
+
+
+Definition at line \mbox{\hyperlink{_utf8_fauna_reader_8cs_source_l00034}{34}} of file \mbox{\hyperlink{_utf8_fauna_reader_8cs_source}{Utf8\+Fauna\+Reader.\+cs}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Serialization/\mbox{\hyperlink{_utf8_fauna_reader_8cs}{Utf8\+Fauna\+Reader.\+cs}}\end{DoxyCompactItemize}

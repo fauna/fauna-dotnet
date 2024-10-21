@@ -1,0 +1,96 @@
+.TH "Fauna.Exceptions" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Exceptions
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBAbortException\fP"
+.br
+.RI "Represents an exception that occurs when the FQL \fRabort\fP function is called\&. This exception captures the data provided during the abort operation\&. "
+.ti -1c
+.RI "class \fBAuthenticationException\fP"
+.br
+.RI "Represents an exception thrown when there is an authorization error in \fBFauna\fP\&. Corresponds to the 'unauthorized' error code in \fBFauna\fP\&. "
+.ti -1c
+.RI "class \fBAuthorizationException\fP"
+.br
+.RI "Represents an exception thrown when access to a resource is not allowed\&. Corresponds to the 'forbidden' error code in \fBFauna\fP\&. "
+.ti -1c
+.RI "class \fBBadGatewayException\fP"
+.br
+.RI "Represents an exception thrown for a bad gateway\&. Corresponds to the 'bad_gateway' error code in \fBFauna\fP\&. "
+.ti -1c
+.RI "class \fBConstraintFailure\fP"
+.br
+.ti -1c
+.RI "class \fBConstraintFailureException\fP"
+.br
+.RI "Represents an exception that occurs when constraints are violated in a query\&. This exception captures the specific constraint failures for inspection\&. "
+.ti -1c
+.RI "class \fBContendedTransactionException\fP"
+.br
+.RI "Represents an exception that occurs when a transaction is aborted due to concurrent modification\&. This exception is considered retryable after a suitable delay\&. "
+.ti -1c
+.RI "class \fBExceptionHandler\fP"
+.br
+.ti -1c
+.RI "class \fBFaunaException\fP"
+.br
+.RI "Represents the base exception class for all exceptions specific to \fBFauna\fP interactions\&. "
+.ti -1c
+.RI "class \fBInvalidRequestException\fP"
+.br
+.RI "Represents exceptions caused by invalid requests to \fBFauna\fP\&. "
+.ti -1c
+.RI "interface \fBIRetryableException\fP"
+.br
+.RI "Represents an interface for exceptions that are potentially recoverable through retrying the failed operation\&. "
+.ti -1c
+.RI "class \fBNetworkException\fP"
+.br
+.RI "Represents an exception that occurs when a request fails due to a network issue\&. "
+.ti -1c
+.RI "class \fBNullDocumentException\fP"
+.br
+.ti -1c
+.RI "class \fBProtocolException\fP"
+.br
+.RI "Represents exceptions when a response does not match the wire protocol\&. "
+.ti -1c
+.RI "class \fBQueryCheckException\fP"
+.br
+.RI "Represents exceptions thrown when the query has syntax errors\&. "
+.ti -1c
+.RI "class \fBQueryRuntimeException\fP"
+.br
+.RI "Represents exceptions thrown when the query fails at runtime\&. "
+.ti -1c
+.RI "class \fBQueryTimeoutException\fP"
+.br
+.RI "Represents exceptions thrown when the query execution time exceeds the specified or default timeout period\&. "
+.ti -1c
+.RI "class \fBSerializationException\fP"
+.br
+.RI "Represents error that occur during serialization and deserialization of \fBFauna\fP data\&. "
+.ti -1c
+.RI "class \fBServiceException\fP"
+.br
+.RI "Represents an exception related to \fBFauna\fP service errors, particularly for query failures\&. "
+.ti -1c
+.RI "class \fBThrottlingException\fP"
+.br
+.RI "Represents an exception that indicates some capacity limit was exceeded and thus the request could not be served\&. This exception is considered retryable after a suitable delay\&. "
+.ti -1c
+.RI "class \fBTimeoutException\fP"
+.br
+.RI "Represents exceptions thrown when the query execution time exceeds the specified or default timeout period\&. "
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

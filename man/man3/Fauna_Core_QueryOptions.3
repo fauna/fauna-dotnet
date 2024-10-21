@@ -1,0 +1,74 @@
+.TH "Fauna.Core.QueryOptions" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Core.QueryOptions \- Represents the options for customizing \fBFauna\fP queries\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "bool? \fBLinearized\fP = null\fR [get, set]\fP"
+.br
+.RI "Gets or sets a value indicating whether the query runs as strictly serialized, affecting read-only transactions\&. "
+.ti -1c
+.RI "bool? \fBTypeCheck\fP = null\fR [get, set]\fP"
+.br
+.RI "Gets or sets a value indicating whether type checking of the query is enabled or disabled before evaluation\&. "
+.ti -1c
+.RI "TimeSpan? \fBQueryTimeout\fP = null\fR [get, set]\fP"
+.br
+.RI "Gets or sets the query timeout\&. It defines how long the client waits for a query to complete\&. "
+.ti -1c
+.RI "Dictionary< string, string >? \fBQueryTags\fP = null\fR [get, set]\fP"
+.br
+.RI "Gets or sets a string-encoded set of caller-defined tags for identifying the request in logs and response bodies\&. Each key and value should be limited to [a-zA-Z0-9_]\&. "
+.ti -1c
+.RI "string? \fBTraceParent\fP = null\fR [get, set]\fP"
+.br
+.RI "Gets or sets the trace parent identifier for distributed tracing systems\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents the options for customizing \fBFauna\fP queries\&. 
+.PP
+Definition at line \fB6\fP of file \fBQueryOptions\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "bool? Fauna\&.Core\&.QueryOptions\&.Linearized = null\fR [get]\fP, \fR [set]\fP"
+
+.PP
+Gets or sets a value indicating whether the query runs as strictly serialized, affecting read-only transactions\&. 
+.PP
+Definition at line \fB11\fP of file \fBQueryOptions\&.cs\fP\&.
+.SS "Dictionary<string, string>? Fauna\&.Core\&.QueryOptions\&.QueryTags = null\fR [get]\fP, \fR [set]\fP"
+
+.PP
+Gets or sets a string-encoded set of caller-defined tags for identifying the request in logs and response bodies\&. Each key and value should be limited to [a-zA-Z0-9_]\&. 
+.PP
+Definition at line \fB27\fP of file \fBQueryOptions\&.cs\fP\&.
+.SS "TimeSpan? Fauna\&.Core\&.QueryOptions\&.QueryTimeout = null\fR [get]\fP, \fR [set]\fP"
+
+.PP
+Gets or sets the query timeout\&. It defines how long the client waits for a query to complete\&. 
+.PP
+Definition at line \fB21\fP of file \fBQueryOptions\&.cs\fP\&.
+.SS "string? Fauna\&.Core\&.QueryOptions\&.TraceParent = null\fR [get]\fP, \fR [set]\fP"
+
+.PP
+Gets or sets the trace parent identifier for distributed tracing systems\&. 
+.PP
+Definition at line \fB32\fP of file \fBQueryOptions\&.cs\fP\&.
+.SS "bool? Fauna\&.Core\&.QueryOptions\&.TypeCheck = null\fR [get]\fP, \fR [set]\fP"
+
+.PP
+Gets or sets a value indicating whether type checking of the query is enabled or disabled before evaluation\&. 
+.PP
+Definition at line \fB16\fP of file \fBQueryOptions\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

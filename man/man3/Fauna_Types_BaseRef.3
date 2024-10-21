@@ -1,0 +1,134 @@
+.TH "Fauna.Types.BaseRef< T >" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Types.BaseRef< T >
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherited by \fBFauna\&.Types\&.NamedRef< T >\fP, and \fBFauna\&.Types\&.Ref< T >\fP\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col, T doc)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col, string cause)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBModule\fP coll)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBModule\fP coll, T doc)"
+.br
+.ti -1c
+.RI "\fBBaseRef\fP (\fBModule\fP coll, string cause)"
+.br
+.ti -1c
+.RI "T \fBGet\fP ()"
+.br
+.in -1c
+.SS "Protected Attributes"
+
+.in +1c
+.ti -1c
+.RI "readonly? T \fBDoc\fP"
+.br
+.RI "Gets the materialized document represented by the \fBRef\fP\&. Is null unless IsLoaded is true and Exists is true\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string? \fBCause\fP\fR [get]\fP"
+.br
+.RI "Gets the cause when exists is false\&. Is null unless IsLoaded is true and Exists is false\&. "
+.ti -1c
+.RI "\fBModule\fP \fBCollection\fP\fR [get]\fP"
+.br
+.RI "Gets the collection to which the ref belongs\&. "
+.ti -1c
+.RI "bool? \fBExists\fP\fR [get]\fP"
+.br
+.RI "Gets a boolean indicating whether the doc exists\&. Is null unless IsLoaded is true\&. "
+.ti -1c
+.RI "bool \fBIsLoaded\fP = false\fR [get]\fP"
+.br
+.RI "Gets a boolean indicating whether the document represented by the ref has been loaded\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Definition at line \fB5\fP of file \fBBaseRef\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "\fBFauna\&.Types\&.BaseRef\fP< T >\&.\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col)"
+
+.PP
+Definition at line \fB34\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.BaseRef\fP< T >\&.\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col, T doc)"
+
+.PP
+Definition at line \fB40\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.BaseRef\fP< T >\&.\fBBaseRef\fP (\fBDataContext\&.ICollection\fP col, string cause)"
+
+.PP
+Definition at line \fB48\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.BaseRef\fP< T >\&.\fBBaseRef\fP (\fBModule\fP coll)"
+
+.PP
+Definition at line \fB56\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.BaseRef\fP< T >\&.\fBBaseRef\fP (\fBModule\fP coll, T doc)"
+
+.PP
+Definition at line \fB61\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "\fBFauna\&.Types\&.BaseRef\fP< T >\&.\fBBaseRef\fP (\fBModule\fP coll, string cause)"
+
+.PP
+Definition at line \fB69\fP of file \fBBaseRef\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "T \fBFauna\&.Types\&.BaseRef\fP< T >\&.Get ()\fR [abstract]\fP"
+
+.SH "Member Data Documentation"
+.PP 
+.SS "readonly? T \fBFauna\&.Types\&.BaseRef\fP< T >\&.Doc\fR [protected]\fP"
+
+.PP
+Gets the materialized document represented by the \fBRef\fP\&. Is null unless IsLoaded is true and Exists is true\&. 
+.PP
+Definition at line \fB12\fP of file \fBBaseRef\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "string? \fBFauna\&.Types\&.BaseRef\fP< T >\&.Cause\fR [get]\fP"
+
+.PP
+Gets the cause when exists is false\&. Is null unless IsLoaded is true and Exists is false\&. 
+.PP
+Definition at line \fB17\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "\fBModule\fP \fBFauna\&.Types\&.BaseRef\fP< T >\&.Collection\fR [get]\fP"
+
+.PP
+Gets the collection to which the ref belongs\&. 
+.PP
+Definition at line \fB22\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "bool? \fBFauna\&.Types\&.BaseRef\fP< T >\&.Exists\fR [get]\fP"
+
+.PP
+Gets a boolean indicating whether the doc exists\&. Is null unless IsLoaded is true\&. 
+.PP
+Definition at line \fB27\fP of file \fBBaseRef\&.cs\fP\&.
+.SS "bool \fBFauna\&.Types\&.BaseRef\fP< T >\&.IsLoaded = false\fR [get]\fP"
+
+.PP
+Gets a boolean indicating whether the document represented by the ref has been loaded\&. 
+.PP
+Definition at line \fB32\fP of file \fBBaseRef\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

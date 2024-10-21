@@ -1,0 +1,142 @@
+.TH "Fauna.Linq.DataContext" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Linq.DataContext
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits \fBFauna\&.BaseClient\fP\&.
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBCollection\fP"
+.br
+.ti -1c
+.RI "class \fBFunctionCall\fP"
+.br
+.ti -1c
+.RI "interface \fBICollection\fP"
+.br
+.ti -1c
+.RI "interface \fBIFunction\fP"
+.br
+.ti -1c
+.RI "interface \fBIIndex\fP"
+.br
+.ti -1c
+.RI "class \fBIndex\fP"
+.br
+.ti -1c
+.RI "class \fBNameAttribute\fP"
+.br
+.in -1c
+.SS "Protected Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBFunctionCall\fP< T > \fBFn< T >\fP (string name='', [CallerMemberName] string callerName='')"
+.br
+.ti -1c
+.RI "Col \fBGetCollection< Col >\fP ()"
+.br
+.in -1c
+.SS "Additional Inherited Members"
+
+
+Public Member Functions inherited from \fBFauna\&.BaseClient\fP
+.in +1c
+.ti -1c
+.RI "Task< \fBQuerySuccess\fP< T > > \fBQueryAsync< T >\fP (\fBQuery\fP query, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously executes a specified FQL query against the \fBFauna\fP database and returns the typed result\&. "
+.ti -1c
+.RI "Task< \fBQuerySuccess\fP< object?> > \fBQueryAsync\fP (\fBQuery\fP query, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously executes a specified FQL query against the \fBFauna\fP database\&. "
+.ti -1c
+.RI "Task< \fBQuerySuccess\fP< T > > \fBQueryAsync< T >\fP (\fBQuery\fP query, \fBISerializer\fP< T > serializer, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously executes a specified FQL query against the \fBFauna\fP database and returns the typed result\&. "
+.ti -1c
+.RI "Task< \fBQuerySuccess\fP< object?> > \fBQueryAsync\fP (\fBQuery\fP query, \fBISerializer\fP serializer, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously executes a specified FQL query against the \fBFauna\fP database and returns the typed result\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< T > > \fBPaginateAsync< T >\fP (\fBQuery\fP query, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< T > > \fBPaginateAsync< T >\fP (Page< T > page, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. The provided page is the first page yielded\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< object?> > \fBPaginateAsync\fP (\fBQuery\fP query, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< object?> > \fBPaginateAsync\fP (Page< object?> page, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. The provided page is the first page yielded\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< T > > \fBPaginateAsync< T >\fP (\fBQuery\fP query, \fBISerializer\fP< T > elemSerializer, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< T > > \fBPaginateAsync< T >\fP (Page< T > page, \fBISerializer\fP< T > elemSerializer, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. The provided page is the first page yielded\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< object?> > \fBPaginateAsync\fP (\fBQuery\fP query, \fBISerializer\fP elemSerializer, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. "
+.ti -1c
+.RI "IAsyncEnumerable< Page< object?> > \fBPaginateAsync\fP (Page< object?> page, \fBISerializer\fP elemSerializer, \fBQueryOptions\fP? queryOptions=null, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously iterates over pages of a \fBFauna\fP query result, automatically fetching subsequent pages using the 'after' cursor\&. The provided page is the first page yielded\&. "
+.ti -1c
+.RI "async Task< T > \fBLoadRefAsync< T >\fP (\fBBaseRef\fP< T > reference, CancellationToken cancel=default)"
+.br
+.RI "Asynchronously executes a specified FQL query against the \fBFauna\fP database and returns the typed result\&. "
+.ti -1c
+.RI "async Task< \fBStreamEnumerable\fP< T > > \fBEventStreamAsync< T >\fP (\fBQuery\fP query, \fBQueryOptions\fP? queryOptions=null, \fBStreamOptions\fP? streamOptions=null, CancellationToken cancellationToken=default)"
+.br
+.RI "Retrieves a Stream token from \fBFauna\fP and returns a StreamEnumerable for the stream events\&. "
+.ti -1c
+.RI "IAsyncEnumerator< \fBEvent\fP< T > > \fBSubscribeStream< T >\fP (\fBStream\fP stream, \fBMappingContext\fP ctx, CancellationToken cancel=default)"
+.br
+.RI "Opens the stream with \fBFauna\fP and returns an enumerator for the stream events\&. "
+.in -1c
+
+Public Member Functions inherited from \fBFauna\&.IClient\fP
+
+Package Functions inherited from \fBFauna\&.BaseClient\fP
+
+Properties inherited from \fBFauna\&.BaseClient\fP
+.SH "Detailed Description"
+.PP 
+Definition at line \fB12\fP of file \fBDataContext\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "\fBFunctionCall\fP< T > Fauna\&.Linq\&.DataContext\&.Fn< T > (string name = \fR''\fP, [CallerMemberName] string callerName = \fR''\fP)\fR [protected]\fP"
+
+.PP
+\fBType Constraints\fP
+.TP
+\fIT\fP : \fInotnull\fP
+.PP
+Definition at line \fB204\fP of file \fBDataContext\&.cs\fP\&.
+.SS "Col Fauna\&.Linq\&.DataContext\&.GetCollection< Col > ()\fR [protected]\fP"
+
+.PP
+\fBType Constraints\fP
+.TP
+\fICol\fP : \fIICollection\fP
+.PP
+Definition at line \fB210\fP of file \fBDataContext\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

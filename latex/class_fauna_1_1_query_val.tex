@@ -1,0 +1,254 @@
+\doxysection{Fauna.\+Query\+Val Class Reference}
+\hypertarget{class_fauna_1_1_query_val}{}\label{class_fauna_1_1_query_val}\index{Fauna.QueryVal@{Fauna.QueryVal}}
+
+
+Represents a generic value holder for FQL queries. This class allows embedding values of various types into the query, with support for primitives, POCOs, and other types.  
+
+
+Inheritance diagram for Fauna.\+Query\+Val\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{class_fauna_1_1_query_val}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_fauna_1_1_query_val_a8c5a5814dbe7b929208cca976979a17c}{Query\+Val}} (object? v)
+\begin{DoxyCompactList}\small\item\em Initializes a new instance of the \doxylink{class_fauna_1_1_query_val}{Query\+Val} class with the specified value. \end{DoxyCompactList}\item 
+override void \mbox{\hyperlink{class_fauna_1_1_query_val_a05804276806a471ffeb2e396d4e790ed}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} writer)
+\begin{DoxyCompactList}\small\item\em Serializes the query value. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_1_1_query_val_a37538b24a566fa6caf4e05ccd1b3fa5d}{Equals}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}}? o)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified \doxylink{class_fauna_1_1_query_val}{Query\+Val} is equal to the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_1_1_query_val_a0cdf027738add3b70ec79aee1c536eb4}{Equals}} (object? o)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified object is equal to the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}. \end{DoxyCompactList}\item 
+override int \mbox{\hyperlink{class_fauna_1_1_query_val_a6703f33f25b6782f7e715f293963f7bb}{Get\+Hash\+Code}} ()
+\begin{DoxyCompactList}\small\item\em The default hash function. \end{DoxyCompactList}\item 
+override string \mbox{\hyperlink{class_fauna_1_1_query_val_af0f8d56abf36e483693bcd302d22a9c7}{To\+String}} ()
+\begin{DoxyCompactList}\small\item\em Returns a string that represents the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_query}{Fauna.\+Query}}}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_fauna_1_1_query_a36a3930b5ff06da0f35d761147a37965}{Serialize}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}} writer)
+\begin{DoxyCompactList}\small\item\em Serializes the query into the provided stream. \end{DoxyCompactList}\item 
+override int \mbox{\hyperlink{class_fauna_1_1_query_aa35b3fdd9a6fea0f0ed7e1a24fd25798}{Get\+Hash\+Code}} ()
+\begin{DoxyCompactList}\small\item\em Returns a hash code for the current query. \end{DoxyCompactList}\item 
+override bool \mbox{\hyperlink{class_fauna_1_1_query_ab22b52963a0b28f4e21fd49cd16cb391}{Equals}} (object? other\+Object)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified object is equal to the current query. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{class_fauna_1_1_query_a886a9f190ebcb682841816568837c7e4}{Equals}} (\mbox{\hyperlink{class_fauna_1_1_query}{Query}}? other\+Query)
+\begin{DoxyCompactList}\small\item\em Determines whether the specified \doxylink{class_fauna_1_1_query}{Query} is equal to the current query. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment}{Fauna.\+IQuery\+Fragment}}}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static bool \mbox{\hyperlink{class_fauna_1_1_query_val_a6963503f371bb6e798402053b3cb789e}{operator==}} (\mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}} left, \mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}} right)
+\begin{DoxyCompactList}\small\item\em Determines whether two specified instances of \doxylink{class_fauna_1_1_query_val}{Query\+Val} are equal. \end{DoxyCompactList}\item 
+static bool \mbox{\hyperlink{class_fauna_1_1_query_val_a215a94d433dae88b7e293384601798f0}{operator!=}} (\mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}} left, \mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}} right)
+\begin{DoxyCompactList}\small\item\em Determines whether two specified instances of \doxylink{class_fauna_1_1_query_val}{Query\+Val} are not equal. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions inherited from \mbox{\hyperlink{class_fauna_1_1_query}{Fauna.\+Query}}}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_fauna_1_1_query}{Query}} \mbox{\hyperlink{class_fauna_1_1_query_ab22c4311010b08a9ca0e0be37c3caf6e}{FQL}} (ref \mbox{\hyperlink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler}} handler)
+\begin{DoxyCompactList}\small\item\em Constructs an FQL query using the specified \doxylink{struct_fauna_1_1_query_string_handler}{Query\+String\+Handler}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+object? \mbox{\hyperlink{class_fauna_1_1_query_val_a8cee65a5c9047d781885c6a2bb5f93c3}{Unwrap}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the value of the specified type represented in the query. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a generic value holder for FQL queries. This class allows embedding values of various types into the query, with support for primitives, POCOs, and other types. 
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00009}{9}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_fauna_1_1_query_val_a8c5a5814dbe7b929208cca976979a17c}\index{Fauna.QueryVal@{Fauna.QueryVal}!QueryVal@{QueryVal}}
+\index{QueryVal@{QueryVal}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{QueryVal()}{QueryVal()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a8c5a5814dbe7b929208cca976979a17c} 
+Fauna.\+Query\+Val.\+Query\+Val (\begin{DoxyParamCaption}\item[{object?}]{v}{}\end{DoxyParamCaption})}
+
+
+
+Initializes a new instance of the \doxylink{class_fauna_1_1_query_val}{Query\+Val} class with the specified value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & The value of the specified type to be represented in the query.\\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00020}{20}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fauna_1_1_query_val_a0cdf027738add3b70ec79aee1c536eb4}\index{Fauna.QueryVal@{Fauna.QueryVal}!Equals@{Equals}}
+\index{Equals@{Equals}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a0cdf027738add3b70ec79aee1c536eb4} 
+override bool Fauna.\+Query\+Val.\+Equals (\begin{DoxyParamCaption}\item[{object?}]{o}{}\end{DoxyParamCaption})}
+
+
+
+Determines whether the specified object is equal to the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em o} & The object to compare with the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the specified object is equal to the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00052}{52}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_val_a37538b24a566fa6caf4e05ccd1b3fa5d}\index{Fauna.QueryVal@{Fauna.QueryVal}!Equals@{Equals}}
+\index{Equals@{Equals}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{Equals()}{Equals()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a37538b24a566fa6caf4e05ccd1b3fa5d} 
+override bool Fauna.\+Query\+Val.\+Equals (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_query}{Query}}?}]{o}{}\end{DoxyParamCaption})}
+
+
+
+Determines whether the specified \doxylink{class_fauna_1_1_query_val}{Query\+Val} is equal to the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em o} & The \doxylink{class_fauna_1_1_query_val}{Query\+Val} to compare with the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if the specified \doxylink{class_fauna_1_1_query_val}{Query\+Val} is equal to the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}; otherwise, false.
+\end{DoxyReturn}
+\Hypertarget{class_fauna_1_1_query_val_a6703f33f25b6782f7e715f293963f7bb}\index{Fauna.QueryVal@{Fauna.QueryVal}!GetHashCode@{GetHashCode}}
+\index{GetHashCode@{GetHashCode}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{GetHashCode()}{GetHashCode()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a6703f33f25b6782f7e715f293963f7bb} 
+override int Fauna.\+Query\+Val.\+Get\+Hash\+Code (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+The default hash function. 
+
+\begin{DoxyReturn}{Returns}
+A hash code for the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00066}{66}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_val_a215a94d433dae88b7e293384601798f0}\index{Fauna.QueryVal@{Fauna.QueryVal}!operator"!=@{operator"!=}}
+\index{operator"!=@{operator"!=}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{operator"!=()}{operator!=()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a215a94d433dae88b7e293384601798f0} 
+static bool Fauna.\+Query\+Val.\+operator!= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}}}]{left}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}}}]{right}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Determines whether two specified instances of \doxylink{class_fauna_1_1_query_val}{Query\+Val} are not equal. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The first \doxylink{class_fauna_1_1_query_val}{Query\+Val} to compare.\\
+\hline
+{\em right} & The second \doxylink{class_fauna_1_1_query_val}{Query\+Val} to compare.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if left and right are not equal; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00111}{111}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_val_a6963503f371bb6e798402053b3cb789e}\index{Fauna.QueryVal@{Fauna.QueryVal}!operator==@{operator==}}
+\index{operator==@{operator==}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{operator==()}{operator==()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a6963503f371bb6e798402053b3cb789e} 
+static bool Fauna.\+Query\+Val.\+operator== (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}}}]{left}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_query_val}{Query\+Val}}}]{right}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Determines whether two specified instances of \doxylink{class_fauna_1_1_query_val}{Query\+Val} are equal. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em left} & The first \doxylink{class_fauna_1_1_query_val}{Query\+Val} to compare.\\
+\hline
+{\em right} & The second \doxylink{class_fauna_1_1_query_val}{Query\+Val} to compare.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if left and right are equal; otherwise, false.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00090}{90}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_val_a05804276806a471ffeb2e396d4e790ed}\index{Fauna.QueryVal@{Fauna.QueryVal}!Serialize@{Serialize}}
+\index{Serialize@{Serialize}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{Serialize()}{Serialize()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a05804276806a471ffeb2e396d4e790ed} 
+override void Fauna.\+Query\+Val.\+Serialize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{ctx}{, }\item[{\mbox{\hyperlink{class_fauna_1_1_serialization_1_1_utf8_fauna_writer}{Utf8\+Fauna\+Writer}}}]{writer}{}\end{DoxyParamCaption})}
+
+
+
+Serializes the query value. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & The serialization context.\\
+\hline
+{\em writer} & The writer to serialize the query value to.\\
+\hline
+\end{DoxyParams}
+
+
+Implements \mbox{\hyperlink{interface_fauna_1_1_i_query_fragment_af6c5d7e27cc7f2c68666d0f567d6ac7e}{Fauna.\+IQuery\+Fragment}}.
+
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00031}{31}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_query_val_af0f8d56abf36e483693bcd302d22a9c7}\index{Fauna.QueryVal@{Fauna.QueryVal}!ToString@{ToString}}
+\index{ToString@{ToString}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{ToString()}{ToString()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_af0f8d56abf36e483693bcd302d22a9c7} 
+override string Fauna.\+Query\+Val.\+To\+String (\begin{DoxyParamCaption}{}{}\end{DoxyParamCaption})}
+
+
+
+Returns a string that represents the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}. 
+
+\begin{DoxyReturn}{Returns}
+A string that represents the current \doxylink{class_fauna_1_1_query_val}{Query\+Val}.
+\end{DoxyReturn}
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_fauna_1_1_query_val_a8cee65a5c9047d781885c6a2bb5f93c3}\index{Fauna.QueryVal@{Fauna.QueryVal}!Unwrap@{Unwrap}}
+\index{Unwrap@{Unwrap}!Fauna.QueryVal@{Fauna.QueryVal}}
+\doxysubsubsection{\texorpdfstring{Unwrap}{Unwrap}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_query_val_a8cee65a5c9047d781885c6a2bb5f93c3} 
+object? Fauna.\+Query\+Val.\+Unwrap\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the value of the specified type represented in the query. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_val_8cs_source_l00014}{14}} of file \mbox{\hyperlink{_query_val_8cs_source}{Query\+Val.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Query/\mbox{\hyperlink{_query_val_8cs}{Query\+Val.\+cs}}\end{DoxyCompactItemize}

@@ -1,0 +1,122 @@
+.TH "Fauna.Types.Module" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Types.Module \- Represents a module, a singleton object grouping related functionalities\&. Modules are serialized as @mod values in tagged formats, organizing and encapsulating specific functionalities\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+Inherits IEquatable< Module >\&.
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBModule\fP (string name)"
+.br
+.RI "Initializes a new instance of the \fBModule\fP class with the specified name\&. "
+.ti -1c
+.RI "bool \fBEquals\fP (\fBModule\fP? other)"
+.br
+.RI "Determines whether the specified \fBModule\fP is equal to the current \fBModule\fP\&. "
+.ti -1c
+.RI "override bool \fBEquals\fP (object? obj)"
+.br
+.RI "Determines whether the specified object is equal to the current \fBModule\fP\&. "
+.ti -1c
+.RI "override int \fBGetHashCode\fP ()"
+.br
+.RI "The default hash function\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string \fBName\fP\fR [get]\fP"
+.br
+.RI "Gets the name of the module\&. The name is used to identify and reference the module\&. "
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents a module, a singleton object grouping related functionalities\&. Modules are serialized as @mod values in tagged formats, organizing and encapsulating specific functionalities\&. 
+.PP
+Definition at line \fB7\fP of file \fBModule\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Fauna\&.Types\&.Module\&.Module (string name)"
+
+.PP
+Initializes a new instance of the \fBModule\fP class with the specified name\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIname\fP The name of the module\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB18\fP of file \fBModule\&.cs\fP\&.
+.SH "Member Function Documentation"
+.PP 
+.SS "bool Fauna\&.Types\&.Module\&.Equals (\fBModule\fP? other)"
+
+.PP
+Determines whether the specified \fBModule\fP is equal to the current \fBModule\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIother\fP The \fBModule\fP to compare with the current \fBModule\fP\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if the specified \fBModule\fP is equal to the current \fBModule\fP; otherwise, false\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB28\fP of file \fBModule\&.cs\fP\&.
+.SS "override bool Fauna\&.Types\&.Module\&.Equals (object? obj)"
+
+.PP
+Determines whether the specified object is equal to the current \fBModule\fP\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fIobj\fP The object to compare with the current \fBModule\fP\&.
+.RE
+.PP
+\fBReturns\fP
+.RS 4
+true if the specified object is equal to the current \fBModule\fP; otherwise, false\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB40\fP of file \fBModule\&.cs\fP\&.
+.SS "override int Fauna\&.Types\&.Module\&.GetHashCode ()"
+
+.PP
+The default hash function\&. 
+.PP
+\fBReturns\fP
+.RS 4
+A hash code for the current \fBModule\fP\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB52\fP of file \fBModule\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "string Fauna\&.Types\&.Module\&.Name\fR [get]\fP"
+
+.PP
+Gets the name of the module\&. The name is used to identify and reference the module\&. 
+.PP
+Definition at line \fB12\fP of file \fBModule\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

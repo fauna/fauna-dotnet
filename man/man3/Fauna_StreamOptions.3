@@ -1,0 +1,96 @@
+.TH "Fauna.StreamOptions" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.StreamOptions \- Represents the options when subscribing to \fBFauna\fP Streams\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBStreamOptions\fP (string token, string cursor)"
+.br
+.RI "Initializes a new instance of the \fBStreamOptions\fP class with the specified token and cursor\&. "
+.ti -1c
+.RI "\fBStreamOptions\fP (string token, long startTs)"
+.br
+.RI "Initializes a new instance of the \fBStreamOptions\fP class with the specified token and start timestamp\&. "
+.in -1c
+.SS "Properties"
+
+.in +1c
+.ti -1c
+.RI "string? \fBToken\fP\fR [get]\fP"
+.br
+.ti -1c
+.RI "string? \fBCursor\fP\fR [get]\fP"
+.br
+.RI "Cursor from the stream, must be used with the associated Token\&. Used to resume the stream\&. "
+.ti -1c
+.RI "long? \fBStartTs\fP\fR [get]\fP"
+.br
+.in -1c
+.SH "Detailed Description"
+.PP 
+Represents the options when subscribing to \fBFauna\fP Streams\&. 
+.PP
+Definition at line \fB6\fP of file \fBStreamOptions\&.cs\fP\&.
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "Fauna\&.StreamOptions\&.StreamOptions (string token, string cursor)"
+
+.PP
+Initializes a new instance of the \fBStreamOptions\fP class with the specified token and cursor\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItoken\fP The token returned from \fBFauna\fP when the stream is created\&.
+.br
+\fIcursor\fP The cursor from the stream, must be used with the associated Token\&. Used to resume the stream\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB14\fP of file \fBStreamOptions\&.cs\fP\&.
+.SS "Fauna\&.StreamOptions\&.StreamOptions (string token, long startTs)"
+
+.PP
+Initializes a new instance of the \fBStreamOptions\fP class with the specified token and start timestamp\&. 
+.PP
+\fBParameters\fP
+.RS 4
+\fItoken\fP The token returned from \fBFauna\fP when the stream is created\&.
+.br
+\fIstartTs\fP The start timestamp to use for the stream\&.
+.RE
+.PP
+
+.PP
+Definition at line \fB25\fP of file \fBStreamOptions\&.cs\fP\&.
+.SH "Property Documentation"
+.PP 
+.SS "string? Fauna\&.StreamOptions\&.Cursor\fR [get]\fP"
+
+.PP
+Cursor from the stream, must be used with the associated Token\&. Used to resume the stream\&. 
+.PP
+Definition at line \fB37\fP of file \fBStreamOptions\&.cs\fP\&.
+.SS "long? Fauna\&.StreamOptions\&.StartTs\fR [get]\fP"
+
+.PP
+
+.PP
+Definition at line \fB41\fP of file \fBStreamOptions\&.cs\fP\&.
+.SS "string? Fauna\&.StreamOptions\&.Token\fR [get]\fP"
+
+.PP
+
+.PP
+Definition at line \fB33\fP of file \fBStreamOptions\&.cs\fP\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.

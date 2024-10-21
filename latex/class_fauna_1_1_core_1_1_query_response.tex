@@ -1,0 +1,164 @@
+\doxysection{Fauna.\+Core.\+Query\+Response Class Reference}
+\hypertarget{class_fauna_1_1_core_1_1_query_response}{}\label{class_fauna_1_1_core_1_1_query_response}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+
+
+Represents the response from a query executed.  
+
+
+Inheritance diagram for Fauna.\+Core.\+Query\+Response\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_fauna_1_1_core_1_1_query_response}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static ? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response}{Query\+Response}} \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_acb8d6105c5867d4167f681c8872a958f}{Get\+From\+Response\+Body$<$ T $>$}} (\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}} ctx, \mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$ serializer, Http\+Status\+Code status\+Code, string body)
+\begin{DoxyCompactList}\small\item\em Asynchronously parses the HTTP response message to create a \doxylink{class_fauna_1_1_core_1_1_query_response}{Query\+Response} instance. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsubsection*{Properties}
+\begin{DoxyCompactItemize}
+\item 
+Json\+Element \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a1e4bbf5d4c802be69412a980548236ef}{Raw\+Json}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\item 
+long \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a49d66597de41bef65d03b4e6b0c612e2}{Last\+Seen\+Txn}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the last transaction seen by this query. \end{DoxyCompactList}\item 
+long \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_ae1eb6cb66e28964b59b649df292e120e}{Schema\+Version}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the schema version. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a8a296943a4f7ea89390ef217a7e0002a}{Summary}} = "{}"{}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets a summary of the query execution. \end{DoxyCompactList}\item 
+Dictionary$<$ string, string $>$ \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a556a527fe8a2cb89e8f83d1384ac275c}{Query\+Tags}} = new()\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets a dictionary of query tags, providing additional context about the query. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}} \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response_a1e4dcba989f75a7f4b660f09728ee152}{Stats}}\hspace{0.3cm}{\ttfamily  \mbox{[}get\mbox{]}}
+\begin{DoxyCompactList}\small\item\em Gets the statistics related to the query execution. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents the response from a query executed. 
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00013}{13}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_acb8d6105c5867d4167f681c8872a958f}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!GetFromResponseBody$<$ T $>$@{GetFromResponseBody$<$ T $>$}}
+\index{GetFromResponseBody$<$ T $>$@{GetFromResponseBody$<$ T $>$}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{GetFromResponseBody$<$ T $>$()}{GetFromResponseBody< T >()}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_acb8d6105c5867d4167f681c8872a958f} 
+static ? \mbox{\hyperlink{class_fauna_1_1_core_1_1_query_response}{Query\+Response}} Fauna.\+Core.\+Query\+Response.\+Get\+From\+Response\+Body$<$ T $>$ (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_fauna_1_1_mapping_1_1_mapping_context}{Mapping\+Context}}}]{ctx}{, }\item[{\mbox{\hyperlink{interface_fauna_1_1_serialization_1_1_i_serializer}{ISerializer}}$<$ T $>$}]{serializer}{, }\item[{Http\+Status\+Code}]{status\+Code}{, }\item[{string}]{body}{}\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Asynchronously parses the HTTP response message to create a \doxylink{class_fauna_1_1_core_1_1_query_response}{Query\+Response} instance. 
+
+
+\begin{DoxyTemplParams}{Template Parameters}
+{\em T} & The expected data type of the query response.\\
+\hline
+\end{DoxyTemplParams}
+
+\begin{DoxyParams}{Parameters}
+{\em ctx} & \doxylink{namespace_fauna_1_1_serialization}{Serialization} context for handling response data.\\
+\hline
+{\em serializer} & A serializer for the success data type.\\
+\hline
+{\em status\+Code} & The HTTP status code.\\
+\hline
+{\em body} & The response body.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Task that resolves to a \doxylink{class_fauna_1_1_core_1_1_query_response}{Query\+Response} instance.
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00093}{93}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+
+
+\doxysubsection{Property Documentation}
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_a49d66597de41bef65d03b4e6b0c612e2}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!LastSeenTxn@{LastSeenTxn}}
+\index{LastSeenTxn@{LastSeenTxn}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{LastSeenTxn}{LastSeenTxn}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_a49d66597de41bef65d03b4e6b0c612e2} 
+long Fauna.\+Core.\+Query\+Response.\+Last\+Seen\+Txn\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the last transaction seen by this query. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00020}{20}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_a556a527fe8a2cb89e8f83d1384ac275c}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!QueryTags@{QueryTags}}
+\index{QueryTags@{QueryTags}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{QueryTags}{QueryTags}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_a556a527fe8a2cb89e8f83d1384ac275c} 
+Dictionary$<$string, string$>$ Fauna.\+Core.\+Query\+Response.\+Query\+Tags = new()\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets a dictionary of query tags, providing additional context about the query. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00035}{35}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_a1e4bbf5d4c802be69412a980548236ef}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!RawJson@{RawJson}}
+\index{RawJson@{RawJson}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{RawJson}{RawJson}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_a1e4bbf5d4c802be69412a980548236ef} 
+Json\+Element Fauna.\+Core.\+Query\+Response.\+Raw\+Json\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00015}{15}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_ae1eb6cb66e28964b59b649df292e120e}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!SchemaVersion@{SchemaVersion}}
+\index{SchemaVersion@{SchemaVersion}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{SchemaVersion}{SchemaVersion}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_ae1eb6cb66e28964b59b649df292e120e} 
+long Fauna.\+Core.\+Query\+Response.\+Schema\+Version\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the schema version. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00025}{25}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_a1e4dcba989f75a7f4b660f09728ee152}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!Stats@{Stats}}
+\index{Stats@{Stats}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{Stats}{Stats}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_a1e4dcba989f75a7f4b660f09728ee152} 
+\mbox{\hyperlink{struct_fauna_1_1_core_1_1_query_stats}{Query\+Stats}} Fauna.\+Core.\+Query\+Response.\+Stats\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets the statistics related to the query execution. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00040}{40}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+\Hypertarget{class_fauna_1_1_core_1_1_query_response_a8a296943a4f7ea89390ef217a7e0002a}\index{Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}!Summary@{Summary}}
+\index{Summary@{Summary}!Fauna.Core.QueryResponse@{Fauna.Core.QueryResponse}}
+\doxysubsubsection{\texorpdfstring{Summary}{Summary}}
+{\footnotesize\ttfamily \label{class_fauna_1_1_core_1_1_query_response_a8a296943a4f7ea89390ef217a7e0002a} 
+string Fauna.\+Core.\+Query\+Response.\+Summary = "{}"{}\hspace{0.3cm}{\ttfamily [get]}}
+
+
+
+Gets a summary of the query execution. 
+
+
+
+Definition at line \mbox{\hyperlink{_query_response_8cs_source_l00030}{30}} of file \mbox{\hyperlink{_query_response_8cs_source}{Query\+Response.\+cs}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Fauna/\+Core/\mbox{\hyperlink{_query_response_8cs}{Query\+Response.\+cs}}\end{DoxyCompactItemize}

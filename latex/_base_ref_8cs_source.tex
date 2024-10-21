@@ -1,0 +1,72 @@
+\doxysection{Base\+Ref.\+cs}
+\hypertarget{_base_ref_8cs_source}{}\label{_base_ref_8cs_source}\index{Fauna/Types/BaseRef.cs@{Fauna/Types/BaseRef.cs}}
+\mbox{\hyperlink{_base_ref_8cs}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00001}00001\ \textcolor{keyword}{using\ }\mbox{\hyperlink{namespace_fauna_1_1_linq}{Fauna.Linq}};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00002}00002\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00003}\mbox{\hyperlink{namespace_fauna_1_1_types}{00003}}\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespace_fauna_1_1_types}{Fauna.Types}};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00004}00004\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00005}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref}{00005}}\ \textcolor{keyword}{public}\ \textcolor{keyword}{abstract}\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref}{BaseRef}}<T>}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00006}00006\ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00007}00007\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00012}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a021e88643747b5ae21654a6a8da94c73}{00012}}\ \ \ \ \ \textcolor{keyword}{protected}\ readonly\ T?\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a021e88643747b5ae21654a6a8da94c73}{Doc}};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00013}00013\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00017}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a607d55888a2cc71e806a2862fda2a0ad}{00017}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{string}?\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a607d55888a2cc71e806a2862fda2a0ad}{Cause}}\ \{\ \textcolor{keyword}{get};\ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00018}00018\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00022}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{00022}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ \{\ \textcolor{keyword}{get};\ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00023}00023\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00027}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ad01d846bfd24e65a658a6f519ee43d8e}{00027}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}?\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ad01d846bfd24e65a658a6f519ee43d8e}{Exists}}\ \{\ \textcolor{keyword}{get};\ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00028}00028\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00032}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a8df6443c5d68805ecc972816e3d798eb}{00032}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keywordtype}{bool}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a8df6443c5d68805ecc972816e3d798eb}{IsLoaded}}\ \{\ \textcolor{keyword}{get};\ \}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00033}00033\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00034}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a99d89cf05bd5c6f2d9c4c512ea1b6bbc}{00034}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a99d89cf05bd5c6f2d9c4c512ea1b6bbc}{BaseRef}}(\mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context}{DataContext}}.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_data_context_1_1_i_collection}{ICollection}}\ col)}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00035}00035\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00036}00036\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{_mapping_info_8cs_abcea649e6af05490ce7bc9bee913f011}{Module}}(col.Name);}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00037}00037\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00038}00038\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00039}00039\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00040}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a5136866a25a9d4b10b62488725df4ea9}{00040}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a5136866a25a9d4b10b62488725df4ea9}{BaseRef}}(\mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context}{DataContext}}.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_data_context_1_1_i_collection}{ICollection}}\ col,\ T\ doc)}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00041}00041\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00042}00042\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{_mapping_info_8cs_abcea649e6af05490ce7bc9bee913f011}{Module}}(col.Name);}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00043}00043\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a021e88643747b5ae21654a6a8da94c73}{Doc}}\ =\ doc;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00044}00044\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a8df6443c5d68805ecc972816e3d798eb}{IsLoaded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00045}00045\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ad01d846bfd24e65a658a6f519ee43d8e}{Exists}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00046}00046\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00047}00047\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00048}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a3c4176f3aa2abceb14ae0a4391c68c79}{00048}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a3c4176f3aa2abceb14ae0a4391c68c79}{BaseRef}}(\mbox{\hyperlink{class_fauna_1_1_linq_1_1_data_context}{DataContext}}.\mbox{\hyperlink{interface_fauna_1_1_linq_1_1_data_context_1_1_i_collection}{ICollection}}\ col,\ \textcolor{keywordtype}{string}\ cause)}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00049}00049\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00050}00050\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ =\ \textcolor{keyword}{new}\ \mbox{\hyperlink{_mapping_info_8cs_abcea649e6af05490ce7bc9bee913f011}{Module}}(col.Name);}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00051}00051\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ad01d846bfd24e65a658a6f519ee43d8e}{Exists}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00052}00052\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a607d55888a2cc71e806a2862fda2a0ad}{Cause}}\ =\ cause;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00053}00053\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a8df6443c5d68805ecc972816e3d798eb}{IsLoaded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00054}00054\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00055}00055\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00056}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_af592dee6be2337aa860313e4682e01b1}{00056}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_af592dee6be2337aa860313e4682e01b1}{BaseRef}}(\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}}\ coll)}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00057}00057\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00058}00058\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ =\ coll;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00059}00059\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00060}00060\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00061}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a4d855dd43e22be98cf286d2e0ed8c0d0}{00061}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a4d855dd43e22be98cf286d2e0ed8c0d0}{BaseRef}}(\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}}\ coll,\ T\ doc)}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00062}00062\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00063}00063\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ =\ coll;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00064}00064\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ad01d846bfd24e65a658a6f519ee43d8e}{Exists}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00065}00065\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a021e88643747b5ae21654a6a8da94c73}{Doc}}\ =\ doc;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00066}00066\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a8df6443c5d68805ecc972816e3d798eb}{IsLoaded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00067}00067\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00068}00068\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00069}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a81b047fc82839e5701657bb669bb6b2e}{00069}}\ \ \ \ \ \textcolor{keyword}{public}\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a81b047fc82839e5701657bb669bb6b2e}{BaseRef}}(\mbox{\hyperlink{class_fauna_1_1_types_1_1_module}{Module}}\ coll,\ \textcolor{keywordtype}{string}\ cause)}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00070}00070\ \ \ \ \ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00071}00071\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ac09636be2b1c3d8f5861d1131b2b3b7c}{Collection}}\ =\ coll;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00072}00072\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_ad01d846bfd24e65a658a6f519ee43d8e}{Exists}}\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00073}00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a607d55888a2cc71e806a2862fda2a0ad}{Cause}}\ =\ cause;}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00074}00074\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_a8df6443c5d68805ecc972816e3d798eb}{IsLoaded}}\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00075}00075\ \ \ \ \ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00076}00076\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00077}\mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_aaa67f5d5f1ce388843a1ff64a07a54c8}{00077}}\ \ \ \ \ \textcolor{keyword}{public}\ \textcolor{keyword}{abstract}\ T\ \mbox{\hyperlink{class_fauna_1_1_types_1_1_base_ref_aaa67f5d5f1ce388843a1ff64a07a54c8}{Get}}();}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00078}00078\ \}}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00079}00079\ }
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00080}00080\ \textcolor{keyword}{internal}\ \textcolor{keyword}{class\ }UnloadedRefException\ :\ Exception}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00081}00081\ \{}
+\DoxyCodeLine{\Hypertarget{_base_ref_8cs_source_l00082}00082\ \}}
+
+\end{DoxyCode}

@@ -1,0 +1,84 @@
+.TH "Fauna.Mapping" 3 "Version 0.4.0-beta" "Fauna v10 .NET/C# Driver" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Fauna.Mapping
+.SH SYNOPSIS
+.br
+.PP
+.SS "Classes"
+
+.in +1c
+.ti -1c
+.RI "class \fBBaseFieldAttribute\fP"
+.br
+.ti -1c
+.RI "class \fBCollectionAttribute\fP"
+.br
+.RI "Attribute used to specify the coll (Collection) field on a \fBFauna\fP document\&. The associated field will be ignored during serialization\&. "
+.ti -1c
+.RI "class \fBFieldAttribute\fP"
+.br
+.RI "Attribute used to specify fields on a \fBFauna\fP document or struct\&. "
+.ti -1c
+.RI "class \fBFieldInfo\fP"
+.br
+.RI "A class that encapsulates the field mapping, serialization, and deserialization of a particular field in \fBFauna\fP\&. "
+.ti -1c
+.RI "class \fBFieldName\fP"
+.br
+.RI "A class of utilities for field names\&. "
+.ti -1c
+.RI "class \fBIdAttribute\fP"
+.br
+.RI "Attribute used to specify the id field on a \fBFauna\fP document\&. The associated field will be ignored during serialization unless isClientGenerated is set to true\&. "
+.ti -1c
+.RI "class \fBIgnoreAttribute\fP"
+.br
+.RI "Attribute used to indicate that a field should be ignored during serialization and deserialization\&. "
+.ti -1c
+.RI "class \fBMappingContext\fP"
+.br
+.RI "A class representing the mapping context to be used during serialization and deserialization\&. "
+.ti -1c
+.RI "class \fBMappingInfo\fP"
+.br
+.RI "A class that encapsulates the class mapping, serialization, and deserialization of a \fBFauna\fP object, including documents\&. "
+.ti -1c
+.RI "class \fBObjectAttribute\fP"
+.br
+.RI "Attribute used to indicate that a class represents a \fBFauna\fP document or struct\&. "
+.ti -1c
+.RI "class \fBTsAttribute\fP"
+.br
+.RI "Attribute used to specify the ts field on a \fBFauna\fP document\&. The associated field will be ignored during serialization\&. "
+.in -1c
+.SS "Enumerations"
+
+.in +1c
+.ti -1c
+.RI "enum \fBFieldType\fP { \fBClientGeneratedId\fP, \fBServerGeneratedId\fP, \fBColl\fP, \fBTs\fP, \fBField\fP }"
+.br
+.in -1c
+.SH "Enumeration Type Documentation"
+.PP 
+.SS "enum \fBFauna\&.Mapping\&.FieldType\fP"
+
+.PP
+\fBEnumerator\fP
+.in +1c
+.TP
+\f(BIClientGeneratedId \fP
+.TP
+\f(BIServerGeneratedId \fP
+.TP
+\f(BIColl \fP
+.TP
+\f(BITs \fP
+.TP
+\f(BIField \fP
+.PP
+Definition at line \fB3\fP of file \fBFieldType\&.cs\fP\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Fauna v10 \&.NET/C# Driver from the source code\&.
