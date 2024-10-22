@@ -16,6 +16,7 @@ public ref struct Utf8FaunaReader
     private Utf8JsonReader _json;
     private readonly Stack<object> _tokenStack = new();
     private TokenType? _bufferedTokenType = null;
+    private object? _bufferedTokenValue = null;
 
     private readonly HashSet<TokenType> _closers = new()
     {
@@ -37,6 +38,7 @@ public ref struct Utf8FaunaReader
     {
         /// <summary>The token type is the start of an escaped Fauna object.</summary>
         StartEscapedObject,
+        StartPageUnmaterialized,
     }
 
     /// <summary>
@@ -105,6 +107,9 @@ public ref struct Utf8FaunaReader
             }
             return true;
         }
+
+        // At this point we're passed a buffered token type so this read should unset this no matter what
+        _bufferedTokenValue = null;
 
         if (!Advance())
         {
@@ -188,6 +193,7 @@ public ref struct Utf8FaunaReader
 
         try
         {
+            if (_bufferedTokenValue != null) return (string)_bufferedTokenValue;
             return _json.GetString();
         }
         catch (Exception e)
@@ -598,7 +604,16 @@ public ref struct Utf8FaunaReader
                     case "@set":
                         AdvanceTrue();
                         CurrentTokenType = TokenType.StartPage;
-                        _tokenStack.Push(TokenType.StartPage);
+                        if (_json.TokenType == JsonTokenType.String)
+                        {
+                            _bufferedTokenValue = _json.GetString();
+                            _bufferedTokenType = TokenType.String;
+                            _tokenStack.Push(TokenTypeInternal.StartPageUnmaterialized);
+                        }
+                        else
+                        {
+                            _tokenStack.Push(TokenType.StartPage);
+                        }
                         break;
                     case "@time":
                         HandleTaggedString(TokenType.Time);
@@ -635,6 +650,9 @@ public ref struct Utf8FaunaReader
             case TokenType.StartPage:
                 CurrentTokenType = TokenType.EndPage;
                 AdvanceTrue();
+                break;
+            case TokenTypeInternal.StartPageUnmaterialized:
+                CurrentTokenType = TokenType.EndPage;
                 break;
             case TokenType.StartRef:
                 CurrentTokenType = TokenType.EndRef;
