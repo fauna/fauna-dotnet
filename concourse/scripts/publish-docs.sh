@@ -46,6 +46,7 @@ sed -i.bak "0,/<body>/{s/<body>/<body>${BODY_GTM}/}" ./index.html
 rm ./index.html.bak
 
 echo "Updating 'latest' symlink to point to $PACKAGE_VERSION"
+cd ..
 ln -sfn "$PACKAGE_VERSION" latest
 
 git config --global user.email "nobody@fauna.com"
