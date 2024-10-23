@@ -196,9 +196,12 @@ var person = (Person)result.Data!;
 Console.WriteLine(person.FirstName);
 ```
 
-### LINQ-based queries
+### LINQ-based queries (preview)
 
-Last but not least, your DataContext subclass provides a LINQ-compatible API for type-safe querying.
+> [!IMPORTANT]
+> This functionality is in preview and may change in future releases.
+
+DataContext provides a LINQ-compatible API for type-safe querying.
 
 ```csharp
 // general query
@@ -319,7 +322,7 @@ To enable debug logging, set the `FAUNA_DEBUG` environment variable to an intege
 
 The driver logs HTTP request and response details, including headers. For security, the `Authorization` header is redacted in debug logs but is visible in trace logs.
 
-> [!NOTE]  
+> [!NOTE]
 > As of v1.0.0, the driver only outputs `LogLevel.Debug` messages. Use `0` (Trace) or `1` (Debug) to log these messages.
 
 For advanced logging, you can use a custom `ILogger` implementation, such as Serilog or NLog. Pass the implementation to the `Configuration` class when instantiating a `Client`.
