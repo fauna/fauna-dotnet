@@ -593,4 +593,30 @@ public class Utf8FaunaReaderTests
         Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
         Assert.AreEqual("k2", reader.GetString());
     }
+
+    [Test]
+    public void HandlesUnmaterializedSets()
+    {
+        const string test =
+            @"{""products"":{""@set"":""hdWCxmdQcm9kdWN0gcqEamJ5Q2F0ZWdvcnmBxmJ2MPT2gc1KBbkdRAugBgAEAvbBghpnGCOgGjW0K0AQ""},""name"":""foo""}";
+        var reader = new Utf8FaunaReader(test);
+        reader.Read(); // {
+        Assert.AreEqual(TokenType.StartObject, reader.CurrentTokenType);
+        reader.Read(); // "products"
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        Assert.AreEqual("products", reader.GetString());
+        reader.Read(); // { "@set":
+        Assert.AreEqual(TokenType.StartPage, reader.CurrentTokenType);
+        reader.Read(); // "hdWCxmdQcm9kdWN0gcqEamJ5Q2F0ZWdvcnmBxmJ2MPT2gc1KBbkdRAugBgAEAvbBghpnGCOgGjW0K0AQ"
+        Assert.AreEqual("hdWCxmdQcm9kdWN0gcqEamJ5Q2F0ZWdvcnmBxmJ2MPT2gc1KBbkdRAugBgAEAvbBghpnGCOgGjW0K0AQ", reader.GetString());
+        reader.Read(); // "}"
+        Assert.AreEqual(TokenType.EndPage, reader.CurrentTokenType);
+        reader.Read(); // "name"
+        Assert.AreEqual(TokenType.FieldName, reader.CurrentTokenType);
+        Assert.AreEqual("name", reader.GetString());
+        reader.Read(); // "foo"
+        Assert.AreEqual("foo", reader.GetString());
+        reader.Read(); // "}"
+        Assert.AreEqual(TokenType.EndObject, reader.CurrentTokenType);
+    }
 }
