@@ -292,10 +292,11 @@ if (r.Data.Exists) {
 
 ## Event Streaming
 
-The driver supports [Event Streaming](https://docs.fauna.com/fauna/current/learn/track-changes/streaming/).
+The driver supports [Event Streaming](https://docs.fauna.com/fauna/current/learn/cdc/#event-streaming).
 
-To start and subscribe to an event stream, pass a
-query that produces a stream token to `EventStreamAsync()`:
+To start and subscribe to an Event Stream, pass a query that produces an [event
+source](https://docs.fauna.com/fauna/current/learn/cdc/#create-an-event-source)
+to `EventStreamAsync()`:
 
 ```csharp
 var stream = await client.EventStreamAsync<Person>(FQL($"Person.all().toStream"));
@@ -319,7 +320,7 @@ To enable debug logging, set the `FAUNA_DEBUG` environment variable to an intege
 
 The driver logs HTTP request and response details, including headers. For security, the `Authorization` header is redacted in debug logs but is visible in trace logs.
 
-> [!NOTE]  
+> [!NOTE]
 > As of v1.0.0, the driver only outputs `LogLevel.Debug` messages. Use `0` (Trace) or `1` (Debug) to log these messages.
 
 For advanced logging, you can use a custom `ILogger` implementation, such as Serilog or NLog. Pass the implementation to the `Configuration` class when instantiating a `Client`.
