@@ -326,7 +326,7 @@ public class IntegrationTests
     {
         var cts = new CancellationTokenSource();
         var stream =
-            await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+            await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().eventSource()"),
                 cancellationToken: cts.Token);
         Assert.NotNull(stream);
         var longRunningTask = Task.Run(async () =>
@@ -365,7 +365,7 @@ public class IntegrationTests
             Assert.DoesNotThrowAsync(async () =>
             {
                 var stream = await _client.EventStreamAsync<StreamingSandbox>(
-                    FQL($"StreamingSandbox.all().toStream()"),
+                    FQL($"StreamingSandbox.all().eventSource()"),
                     cancellationToken: cts.Token
                 );
                 Assert.NotNull(stream);
@@ -428,7 +428,7 @@ public class IntegrationTests
 
         var ex = Assert.ThrowsAsync<FaunaException>(async () =>
         {
-            var stream = await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().toStream()"),
+            var stream = await _client.EventStreamAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().eventSource()"),
                 streamOptions: new StreamOptions("fake", "abc1234=="),
                 cancellationToken: cts.Token);
 
@@ -468,7 +468,7 @@ public class IntegrationTests
             Assert.DoesNotThrowAsync(async () =>
             {
                 var stream = await _client.EventStreamAsync<StreamingSandbox>(
-                    FQL($"StreamingSandbox.all().toStream()"),
+                    FQL($"StreamingSandbox.all().eventSource()"),
                     cancellationToken: cts.Token
                 );
                 Assert.NotNull(stream);
@@ -503,7 +503,7 @@ public class IntegrationTests
         Assert.NotNull(cursor, "should have a cursor from the first event");
 
         var stream = await _client.EventStreamAsync<StreamingSandbox>(
-            FQL($"StreamingSandbox.all().toStream()"),
+            FQL($"StreamingSandbox.all().eventSource()"),
             streamOptions: new StreamOptions(token!, cursor!),
             cancellationToken: cts.Token
         );
@@ -532,7 +532,7 @@ public class IntegrationTests
         cts.Token.ThrowIfCancellationRequested();
 
         EventSource eventSource = await _client.GetEventSourceFromQueryAsync(
-            FQL($"StreamingSandbox.all().toStream()"),
+            FQL($"StreamingSandbox.all().eventSource()"),
             queryOptions: null,
             cancellationToken: cts.Token
         );
