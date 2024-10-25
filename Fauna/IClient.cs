@@ -543,7 +543,7 @@ public abstract class BaseClient : IClient
     /// Opens the stream with Fauna and returns an enumerator for the stream events.
     /// </summary>
     /// <typeparam name="T">The type of event data that will be deserialized from the stream.</typeparam>
-    /// <param name="eventSource">The stream to subscribe to.</param>
+    /// <param name="eventSource">The event source to subscribe to.</param>
     /// <param name="ctx">The mapping context to use for deserializing stream events.</param>
     /// <param name="cancel">The cancellation token for the operation.</param>
     /// <returns>An async enumerator of stream events.</returns>
