@@ -3,11 +3,11 @@ using System.Text.Json;
 namespace Fauna.Types;
 
 /// <summary>
-///     Represents a Fauna stream token.
+/// Represents a Fauna EventSource for initializing Streams and Feeds.
 /// </summary>
-public sealed class Stream : IEquatable<Stream>
+public sealed class EventSource : IEquatable<EventSource>
 {
-    public Stream(string token)
+    public EventSource(string token)
     {
         Token = token;
     }
@@ -44,7 +44,7 @@ public sealed class Stream : IEquatable<Stream>
     /// </summary>
     /// <param name="other">The Stream to compare with the current Stream.</param>
     /// <returns>true if the specified Stream is equal to the current Stream; otherwise, false.</returns>
-    public bool Equals(Stream? other)
+    public bool Equals(EventSource? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -61,7 +61,7 @@ public sealed class Stream : IEquatable<Stream>
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((Stream)obj);
+        return Equals((EventSource)obj);
     }
 
     /// <summary>

@@ -64,8 +64,8 @@ public enum TokenType
     /// <summary>The token type is the Fauna module.</summary>
     Module,
 
-    /// <summary>The token type is the Fauna stream token.</summary>
-    Stream,
+    /// <summary>The token type is the Fauna event source token.</summary>
+    EventSource,
 }
 
 public static class TokenTypeExtensions
@@ -113,7 +113,7 @@ public static class TokenTypeExtensions
                 return FaunaType.Boolean;
             case TokenType.Null:
                 return FaunaType.Null;
-            case TokenType.Stream:
+            case TokenType.EventSource:
                 return FaunaType.Stream;
             case TokenType.Module:
                 return FaunaType.Module;

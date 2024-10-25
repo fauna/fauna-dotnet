@@ -525,6 +525,23 @@ public class IntegrationTests
     }
 
     [Test]
+    [Category("Streaming")]
+    public async Task CanOpenStreamWithEventSource()
+    {
+        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
+        cts.Token.ThrowIfCancellationRequested();
+
+        EventSource eventSource = await _client.GetEventSourceFromQueryAsync(
+            FQL($"StreamingSandbox.all().toStream()"),
+            queryOptions: null,
+            cancellationToken: cts.Token
+        );
+
+        var stream = await _client.EventStreamAsync<StreamingSandbox>(eventSource, cts.Token);
+        Assert.IsNotNull(stream);
+    }
+
+    [Test]
     public async Task CollectionAll()
     {
         var query = FQL($"Collection.all()");

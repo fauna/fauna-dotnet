@@ -5,7 +5,6 @@ using Fauna.Mapping;
 using Fauna.Serialization;
 using Fauna.Types;
 using static Fauna.Query;
-using Stream = Fauna.Types.Stream;
 
 namespace Fauna;
 
@@ -544,13 +543,13 @@ public abstract class BaseClient : IClient
     /// Opens the stream with Fauna and returns an enumerator for the stream events.
     /// </summary>
     /// <typeparam name="T">The type of event data that will be deserialized from the stream.</typeparam>
-    /// <param name="stream">The stream to subscribe to.</param>
+    /// <param name="eventSource">The stream to subscribe to.</param>
     /// <param name="ctx">The mapping context to use for deserializing stream events.</param>
     /// <param name="cancel">The cancellation token for the operation.</param>
     /// <returns>An async enumerator of stream events.</returns>
-    /// Implementation <seealso cref="Client.SubscribeStreamInternal{T}(Stream, MappingContext, CancellationToken)"/>
+    /// Implementation <seealso cref="Client.SubscribeStreamInternal{T}(EventSource,MappingContext,CancellationToken)"/>
     internal abstract IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
-        Stream stream,
+        EventSource eventSource,
         MappingContext ctx,
         CancellationToken cancel = default) where T : notnull;
 
@@ -569,19 +568,42 @@ public abstract class BaseClient : IClient
         StreamOptions? streamOptions = null,
         CancellationToken cancellationToken = default) where T : notnull
     {
-        Stream stream = streamOptions?.Token != null
-            ? new Stream(streamOptions.Token) { LastCursor = streamOptions.Cursor, StartTs = streamOptions.StartTs }
-            : await GetStreamFromQueryAsync(query, queryOptions, cancellationToken);
+        EventSource eventSource = streamOptions?.Token != null
+            ? new EventSource(streamOptions.Token) { LastCursor = streamOptions.Cursor, StartTs = streamOptions.StartTs }
+            : await GetEventSourceFromQueryAsync(query, queryOptions, cancellationToken);
 
-        return new StreamEnumerable<T>(this, stream, cancellationToken);
+        return new StreamEnumerable<T>(this, eventSource, cancellationToken);
     }
 
-    private async Task<Stream> GetStreamFromQueryAsync(
+    /// <summary>
+    /// Returns a StreamEnumerable for the stream events.
+    /// </summary>
+    /// <param name="eventSource"></param>
+    /// <param name="cancellationToken"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public async Task<StreamEnumerable<T>> EventStreamAsync<T>(
+        EventSource eventSource,
+        CancellationToken cancellationToken = default) where T : notnull
+    {
+        await Task.CompletedTask;
+
+        return new StreamEnumerable<T>(this, eventSource, cancellationToken);
+    }
+
+    /// <summary>
+    /// Retrieves an EventSource from Fauna Query
+    /// </summary>
+    /// <param name="query"></param>
+    /// <param name="queryOptions"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    public async Task<EventSource> GetEventSourceFromQueryAsync(
         Query query,
         QueryOptions? queryOptions,
         CancellationToken cancellationToken)
     {
-        var response = await QueryAsync<Stream>(
+        var response = await QueryAsync<EventSource>(
             query,
             queryOptions,
             cancellationToken);
@@ -593,16 +615,16 @@ public abstract class BaseClient : IClient
     /// Opens the stream with Fauna and returns an enumerator for the stream events.
     /// </summary>
     /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
-    /// <param name="stream">The stream to subscribe to.</param>
+    /// <param name="eventSource">The stream to subscribe to.</param>
     /// <param name="ctx">Mapping context for stream.</param>
     /// <param name="cancel">The cancellation token.</param>
     /// <returns>An async enumerator of stream events.</returns>
     public IAsyncEnumerator<Event<T>> SubscribeStream<T>(
-        Stream stream,
+        EventSource eventSource,
         MappingContext ctx,
         CancellationToken cancel = default) where T : notnull
     {
-        return SubscribeStreamInternal<T>(stream, ctx, cancel);
+        return SubscribeStreamInternal<T>(eventSource, ctx, cancel);
     }
 
     #endregion

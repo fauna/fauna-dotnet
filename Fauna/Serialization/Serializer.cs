@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
 using Fauna.Mapping;
 using Fauna.Types;
-using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Serialization;
 
@@ -39,7 +38,7 @@ public static class Serializer
     private static readonly DateTimeOffsetSerializer s_dateTimeOffset = new();
     private static readonly BooleanSerializer s_bool = new();
     private static readonly ModuleSerializer s_module = new();
-    private static readonly StreamSerializer s_stream = new();
+    private static readonly EventSourceSerializer s_eventSource = new();
     private static readonly QuerySerializer s_query = new();
     private static readonly QueryExprSerializer s_queryExpr = new();
     private static readonly QueryLiteralSerializer s_queryLiteral = new();
@@ -94,7 +93,7 @@ public static class Serializer
         if (targetType == typeof(DateTimeOffset)) return s_dateTimeOffset;
         if (targetType == typeof(bool)) return s_bool;
         if (targetType == typeof(Module)) return s_module;
-        if (targetType == typeof(Stream)) return s_stream;
+        if (targetType == typeof(EventSource)) return s_eventSource;
         if (targetType == typeof(Query)) return s_query;
         if (targetType == typeof(QueryExpr)) return s_queryExpr;
         if (targetType == typeof(QueryLiteral)) return s_queryLiteral;

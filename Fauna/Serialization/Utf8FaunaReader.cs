@@ -4,7 +4,6 @@ using System.Text;
 using System.Text.Json;
 using Fauna.Exceptions;
 using Fauna.Types;
-using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Serialization;
 
@@ -444,14 +443,14 @@ public ref struct Utf8FaunaReader
     }
 
     /// <summary>
-    /// Retrieves a Stream token string from the current token.
+    /// Retrieves an EventSource token string from the current token.
     /// </summary>
-    /// <returns>A Stream token string of the current token's value.</returns>
-    public Stream GetStream()
+    /// <returns>A EventSource of the current token's value.</returns>
+    public EventSource GetEventSource()
     {
-        ValidateTaggedType(TokenType.Stream);
+        ValidateTaggedType(TokenType.EventSource);
 
-        return new Stream(_taggedTokenValue!);
+        return new EventSource(_taggedTokenValue!);
     }
 
     /// <summary>
@@ -589,7 +588,7 @@ public ref struct Utf8FaunaReader
                         HandleTaggedString(TokenType.Module);
                         break;
                     case "@stream":
-                        HandleTaggedString(TokenType.Stream);
+                        HandleTaggedString(TokenType.EventSource);
                         break;
                     case "@object":
                         AdvanceTrue();

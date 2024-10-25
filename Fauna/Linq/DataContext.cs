@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using Fauna.Core;
 using Fauna.Mapping;
 using Fauna.Types;
-using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Linq;
 
@@ -50,12 +49,12 @@ public abstract class DataContext : BaseClient
     }
 
     internal override IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
-        Stream stream,
+        EventSource eventSource,
         MappingContext ctx,
         CancellationToken cancel = default)
     {
         CheckInitialization();
-        return _client.SubscribeStreamInternal<T>(stream, ctx, cancel);
+        return _client.SubscribeStreamInternal<T>(eventSource, ctx, cancel);
     }
 
     // Schema DSL
