@@ -295,10 +295,11 @@ if (r.Data.Exists) {
 
 ## Event Streaming
 
-The driver supports [Event Streaming](https://docs.fauna.com/fauna/current/learn/track-changes/streaming/).
+The driver supports [Event Streaming](https://docs.fauna.com/fauna/current/learn/cdc/#event-streaming).
 
-To start and subscribe to an event stream, pass a
-query that produces a stream token to `EventStreamAsync()`:
+To start and subscribe to an Event Stream, pass a query that produces an [event
+source](https://docs.fauna.com/fauna/current/learn/cdc/#create-an-event-source)
+to `EventStreamAsync()`:
 
 ```csharp
 var stream = await client.EventStreamAsync<Person>(FQL($"Person.all().toStream"));
