@@ -302,7 +302,7 @@ source](https://docs.fauna.com/fauna/current/learn/cdc/#create-an-event-source)
 to `EventStreamAsync()`:
 
 ```csharp
-var stream = await client.EventStreamAsync<Person>(FQL($"Person.all().toStream"));
+var stream = await client.EventStreamAsync<Person>(FQL($"Person.all().eventSource()"));
 await foreach (var evt in stream)
 {
     Console.WriteLine($"Received Event Type: {evt.Type}");
