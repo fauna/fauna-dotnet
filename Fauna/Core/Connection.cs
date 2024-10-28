@@ -20,6 +20,8 @@ internal class Connection : IConnection
     private readonly Configuration _cfg;
     private bool _disposed;
 
+    public TimeSpan BufferedRequestTimeout { get; init; }
+
     /// <summary>
     /// Initializes a new instance of the Connection class.
     /// </summary>
@@ -27,35 +29,54 @@ internal class Connection : IConnection
     public Connection(Configuration configuration)
     {
         _cfg = configuration;
+        BufferedRequestTimeout = _cfg.DefaultQueryOptions.QueryTimeout.Add(_cfg.ClientBufferTimeout);
     }
 
     public async Task<HttpResponseMessage> DoPostAsync(
         string path,
         Stream body,
         Dictionary<string, string> headers,
+        TimeSpan requestTimeout,
         CancellationToken cancel = default)
     {
         HttpResponseMessage response;
 
-        var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-            .ExecuteAndCaptureAsync(() =>
-                _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
-            .ConfigureAwait(false);
-        response = policyResult.Outcome == OutcomeType.Successful
-            ? policyResult.Result
-            : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
+        using var timeboundCts = new CancellationTokenSource(requestTimeout);
+        using var combinedCts = CancellationTokenSource.CreateLinkedTokenSource(timeboundCts.Token, cancel);
 
-        Logger.Instance.LogDebug(
-            "Fauna HTTP Response {status} from {uri}, headers: {headers}",
-            response.StatusCode.ToString(),
-            response.RequestMessage?.RequestUri?.ToString() ?? "UNKNOWN",
-            JsonSerializer.Serialize(
-                response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
-        );
+        try
+        {
+            var policyResult = await _cfg.RetryConfiguration.RetryPolicy
+                .ExecuteAndCaptureAsync(() =>
+                    _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), combinedCts.Token))
+                .ConfigureAwait(false);
+            response = policyResult.Outcome == OutcomeType.Successful
+                ? policyResult.Result
+                : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
 
-        Logger.Instance.LogTrace("Response body: {body}", await response.Content.ReadAsStringAsync(cancel));
+            Logger.Instance.LogDebug(
+                "Fauna HTTP Response {status} from {uri}, headers: {headers}",
+                response.StatusCode.ToString(),
+                response.RequestMessage?.RequestUri?.ToString() ?? "UNKNOWN",
+                JsonSerializer.Serialize(
+                    response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
+            );
 
-        return response;
+            Logger.Instance.LogTrace("Response body: {body}", await response.Content.ReadAsStringAsync(cancel));
+
+            return response;
+        }
+        catch (TaskCanceledException ex)
+        {
+            if (timeboundCts.IsCancellationRequested)
+            {
+                throw new System.TimeoutException($"The HTTP request on {path} timed out after {requestTimeout.TotalMilliseconds} ms.", ex);
+            }
+            else
+            {
+                throw;
+            }
+        }
     }
 
     public async IAsyncEnumerable<Event<T>> OpenStream<T>(

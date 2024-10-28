@@ -118,7 +118,12 @@ public class Client : BaseClient, IDisposable
         using var stream = new MemoryStream();
         Serialize(stream, query, ctx);
 
-        using var httpResponse = await _connection.DoPostAsync(QueryUriPath, stream, headers, cancel);
+        using var httpResponse = await _connection.DoPostAsync(
+            QueryUriPath,
+            stream,
+            headers,
+            GetRequestTimeoutWithBuffer(finalOptions.QueryTimeout),
+            cancel);
         var body = await httpResponse.Content.ReadAsStringAsync(cancel);
         var res = QueryResponse.GetFromResponseBody<T>(ctx, serializer, httpResponse.StatusCode, body);
         switch (res)
@@ -167,11 +172,10 @@ public class Client : BaseClient, IDisposable
         writer.Flush();
     }
 
-    private Dictionary<string, string> GetRequestHeaders(QueryOptions? queryOptions)
+    private Dictionary<string, string> GetRequestHeaders(QueryOptions queryOptions)
     {
         var headers = new Dictionary<string, string>
         {
-
             { Headers.Authorization, $"Bearer {_config.Secret}"},
             { Headers.Format, "tagged" },
             { Headers.Driver, "C#" }
@@ -182,37 +186,39 @@ public class Client : BaseClient, IDisposable
             headers.Add(Headers.LastTxnTs, LastSeenTxn.ToString());
         }
 
-        if (queryOptions != null)
+        if (queryOptions.QueryTimeout != TimeSpan.Zero)
         {
-            if (queryOptions.QueryTimeout.HasValue)
-            {
-                headers.Add(
-                    Headers.QueryTimeoutMs,
-                    queryOptions.QueryTimeout.Value.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
-            }
+            headers.Add(
+                Headers.QueryTimeoutMs,
+                queryOptions.QueryTimeout.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
+        }
 
-            if (queryOptions.QueryTags != null)
-            {
-                headers.Add(Headers.QueryTags, EncodeQueryTags(queryOptions.QueryTags));
-            }
+        if (queryOptions.QueryTags != null)
+        {
+            headers.Add(Headers.QueryTags, EncodeQueryTags(queryOptions.QueryTags));
+        }
 
-            if (!string.IsNullOrEmpty(queryOptions.TraceParent))
-            {
-                headers.Add(Headers.TraceParent, queryOptions.TraceParent);
-            }
+        if (!string.IsNullOrEmpty(queryOptions.TraceParent))
+        {
+            headers.Add(Headers.TraceParent, queryOptions.TraceParent);
+        }
 
-            if (queryOptions.Linearized != null)
-            {
-                headers.Add(Headers.Linearized, queryOptions.Linearized.ToString()!);
-            }
+        if (queryOptions.Linearized != null)
+        {
+            headers.Add(Headers.Linearized, queryOptions.Linearized.ToString()!);
+        }
 
-            if (queryOptions.TypeCheck != null)
-            {
-                headers.Add(Headers.TypeCheck, queryOptions.TypeCheck.ToString()!);
-            }
+        if (queryOptions.TypeCheck != null)
+        {
+            headers.Add(Headers.TypeCheck, queryOptions.TypeCheck.ToString()!);
         }
 
         return headers;
+    }
+
+    private TimeSpan GetRequestTimeoutWithBuffer(TimeSpan queryTimeout)
+    {
+        return queryTimeout.Add(_config.ClientBufferTimeout);
     }
 
     private static string EncodeQueryTags(Dictionary<string, string> tags)

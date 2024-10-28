@@ -16,9 +16,15 @@ public record class Configuration
     public bool DisposeHttpClient { get; } = true;
 
     /// <summary>
+    /// Additional buffer to add to <see cref="QueryOptions.QueryTimeout"/> when setting the HTTP request
+    /// timeout on the <see cref="HttpClient"/>; default is 5 seconds.
+    /// </summary>
+    public TimeSpan ClientBufferTimeout { get; init; } = TimeSpan.FromSeconds(5);
+
+    /// <summary>
     /// The HTTP Client to use for requests.
     /// </summary>
-    public HttpClient HttpClient { get; } = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+    public HttpClient HttpClient { get; init; }
 
     /// <summary>
     /// The secret key used for authentication.
@@ -33,7 +39,7 @@ public record class Configuration
     /// <summary>
     /// Default options for queries sent to Fauna.
     /// </summary>
-    public QueryOptions? DefaultQueryOptions { get; init; } = null;
+    public QueryOptions DefaultQueryOptions { get; init; } = new();
 
     /// <summary>
     /// The retry configuration to apply to requests.
@@ -67,6 +73,11 @@ public record class Configuration
         {
             HttpClient = httpClient;
             DisposeHttpClient = false;
+        }
+        else
+        {
+            // Set Timeout to int.MaxValue milliseconds and configure each SendAsync with a timebound CancellationToken
+            HttpClient = new HttpClient { Timeout = TimeSpan.FromMilliseconds(int.MaxValue) };
         }
 
         if (logger != null)

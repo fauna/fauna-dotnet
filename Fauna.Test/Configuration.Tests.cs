@@ -13,6 +13,7 @@ public class ConfigurationTests
 
         Assert.AreEqual("secret", b.Secret);
         Assert.AreEqual(Endpoints.Default, b.Endpoint);
+        Assert.AreEqual(TimeSpan.FromSeconds(5), b.DefaultQueryOptions.QueryTimeout);
         Assert.IsTrue(b.DisposeHttpClient);
     }
 
@@ -83,13 +84,13 @@ public class ConfigurationTests
         var defaults = new QueryOptions
         {
             TypeCheck = true,
-            QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } },
-            QueryTimeout = TimeSpan.FromSeconds(30)
+            QueryTags = new Dictionary<string, string> { { "foo", "bar" }, { "baz", "luhrmann" } }
         };
         var overrides = new QueryOptions
         {
             Linearized = true,
-            QueryTags = new Dictionary<string, string> { { "foo", "yep" } }
+            QueryTags = new Dictionary<string, string> { { "foo", "yep" } },
+            QueryTimeout = TimeSpan.FromSeconds(30)
         };
 
         var finalOptions = QueryOptions.GetFinalQueryOptions(defaults, overrides);
@@ -101,5 +102,6 @@ public class ConfigurationTests
         Assert.IsNotNull(finalOptions!.QueryTags);
         Assert.AreEqual("yep", finalOptions!.QueryTags!["foo"]);
         Assert.AreEqual("luhrmann", finalOptions!.QueryTags!["baz"]);
+        Assert.AreEqual(TimeSpan.FromSeconds(30), finalOptions!.QueryTimeout);
     }
 }
