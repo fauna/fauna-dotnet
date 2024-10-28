@@ -27,7 +27,7 @@ internal interface IConnection : IDisposable
     /// Asynchronously sends a POST request to open Stream.
     /// </summary>
     /// <param name="path">The path of the resource to send the request to.</param>
-    /// <param name="stream"></param>
+    /// <param name="eventSource"></param>
     /// <param name="headers">The headers to include in the request.</param>
     /// <param name="ctx"></param>
     /// <param name="cancellationToken">A cancellation token that can be used to cancel the operation.</param>
@@ -36,7 +36,7 @@ internal interface IConnection : IDisposable
 
     IAsyncEnumerable<Event<T>> OpenStream<T>(
         string path,
-        Types.Stream stream,
+        Types.EventSource eventSource,
         Dictionary<string, string> headers,
         MappingContext ctx,
         CancellationToken cancellationToken = default) where T : notnull;

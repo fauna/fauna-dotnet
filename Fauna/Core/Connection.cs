@@ -60,7 +60,7 @@ internal class Connection : IConnection
 
     public async IAsyncEnumerable<Event<T>> OpenStream<T>(
         string path,
-        Types.Stream stream,
+        Types.EventSource eventSource,
         Dictionary<string, string> headers,
         MappingContext ctx,
         [EnumeratorCancellation] CancellationToken cancellationToken = default) where T : notnull
@@ -74,7 +74,7 @@ internal class Connection : IConnection
                 _cfg.RetryConfiguration.RetryPolicy.ExecuteAndCaptureAsync(async () =>
                 {
                     var streamData = new MemoryStream();
-                    stream.Serialize(streamData);
+                    eventSource.Serialize(streamData);
 
                     var response = await _cfg.HttpClient
                         .SendAsync(
@@ -101,7 +101,7 @@ internal class Connection : IConnection
                         }
 
                         var evt = Event<T>.From(line, ctx);
-                        stream.LastCursor = evt.Cursor;
+                        eventSource.LastCursor = evt.Cursor;
                         bc.Add(evt, cancellationToken);
                     }
 

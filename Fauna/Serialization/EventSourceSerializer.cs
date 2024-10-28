@@ -1,17 +1,17 @@
 using Fauna.Mapping;
-using Stream = Fauna.Types.Stream;
+using Fauna.Types;
 
 namespace Fauna.Serialization;
 
 
-internal class StreamSerializer : BaseSerializer<Stream>
+internal class EventSourceSerializer : BaseSerializer<EventSource>
 {
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Stream };
 
-    public override Stream Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override EventSource Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
-            TokenType.Stream => reader.GetStream(),
+            TokenType.EventSource => reader.GetEventSource(),
             _ => throw UnexpectedToken(reader.CurrentTokenType)
         };
 

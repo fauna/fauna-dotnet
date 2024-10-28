@@ -2,7 +2,7 @@ using System.Text;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
-using Stream = Fauna.Types.Stream;
+using Fauna.Types;
 
 namespace Fauna.Test.Serialization;
 
@@ -65,7 +65,7 @@ public class Helpers
 
         public string? Throws { get; set; }
     }
-    public static Stream StreamVal => new("token");
+    public static EventSource EventSourceVal => new("token");
 
     public static string Serialize(ISerializer s, MappingContext ctx, object? obj)
     {

@@ -1,30 +1,29 @@
 using Fauna.Types;
-using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Core;
 
 public class StreamEnumerable<T> where T : notnull
 {
     private readonly BaseClient _client;
-    private readonly Stream _stream;
+    private readonly EventSource _eventSource;
     private readonly CancellationToken _cancel;
 
-    public string Token => _stream.Token;
+    public string Token => _eventSource.Token;
 
     internal StreamEnumerable(
         BaseClient client,
-        Stream stream,
+        EventSource eventSource,
         CancellationToken cancel = default)
     {
         _client = client;
-        _stream = stream;
+        _eventSource = eventSource;
         _cancel = cancel;
     }
 
     public async IAsyncEnumerator<Event<T>> GetAsyncEnumerator()
     {
         await using var subscribeStream = _client.SubscribeStream<T>(
-            _stream,
+            _eventSource,
             _client.MappingCtx,
             _cancel);
 

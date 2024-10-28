@@ -1,8 +1,8 @@
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Serialization;
+using Fauna.Types;
 using NUnit.Framework;
-using Stream = Fauna.Types.Stream;
 
 namespace Fauna.Test.Serialization;
 
@@ -25,7 +25,7 @@ public class TypedSerializerTests
     private static readonly DateOnlySerializer _date = new();
     private static readonly DateTimeSerializer _time = new();
     private static readonly DateTimeOffsetSerializer _offset = new();
-    private static readonly StreamSerializer _stream = new();
+    private static readonly EventSourceSerializer s_eventSource = new();
 
     [Test]
     [TestCaseSource(nameof(TypedSerializerCases))]
@@ -665,14 +665,14 @@ public class TypedSerializerTests
             }
         },
 
-        // StreamSerializer
+        // EventSourceSerializer
         new object[]
         {
-            new Helpers.SerializeTest<Stream>
+            new Helpers.SerializeTest<EventSource>
             {
-                Serializer = _stream,
+                Serializer = s_eventSource,
                 Value = Helpers.StreamWire,
-                Expected = Helpers.StreamVal,
+                Expected = Helpers.EventSourceVal,
                 TestType = Helpers.TestType.Deserialize
             }
         }

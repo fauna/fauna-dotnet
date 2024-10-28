@@ -136,7 +136,7 @@ public class Client : BaseClient, IDisposable
     }
 
     internal override async IAsyncEnumerator<Event<T>> SubscribeStreamInternal<T>(
-        Types.Stream stream,
+        Types.EventSource eventSource,
         MappingContext ctx,
         CancellationToken cancel = default)
     {
@@ -145,13 +145,13 @@ public class Client : BaseClient, IDisposable
 
         await foreach (var evt in _connection.OpenStream<T>(
                            StreamUriPath,
-                           stream,
+                           eventSource,
                            headers,
                            ctx,
                            cancel))
         {
             LastSeenTxn = evt.TxnTime;
-            stream.LastCursor = evt.Cursor;
+            eventSource.LastCursor = evt.Cursor;
             StatsCollector?.Add(evt.Stats);
             yield return evt;
         }
