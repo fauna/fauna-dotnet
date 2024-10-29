@@ -44,39 +44,25 @@ internal class Connection : IConnection
         using var timeboundCts = new CancellationTokenSource(requestTimeout);
         using var combinedCts = CancellationTokenSource.CreateLinkedTokenSource(timeboundCts.Token, cancel);
 
-        try
-        {
-            var policyResult = await _cfg.RetryConfiguration.RetryPolicy
-                .ExecuteAndCaptureAsync(() =>
-                    _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), combinedCts.Token))
-                .ConfigureAwait(false);
-            response = policyResult.Outcome == OutcomeType.Successful
-                ? policyResult.Result
-                : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
+        var policyResult = await _cfg.RetryConfiguration.RetryPolicy
+            .ExecuteAndCaptureAsync(() =>
+                _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), combinedCts.Token))
+            .ConfigureAwait(false);
+        response = policyResult.Outcome == OutcomeType.Successful
+            ? policyResult.Result
+            : policyResult.FinalHandledResult ?? throw policyResult.FinalException;
 
-            Logger.Instance.LogDebug(
-                "Fauna HTTP Response {status} from {uri}, headers: {headers}",
-                response.StatusCode.ToString(),
-                response.RequestMessage?.RequestUri?.ToString() ?? "UNKNOWN",
-                JsonSerializer.Serialize(
-                    response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
-            );
+        Logger.Instance.LogDebug(
+            "Fauna HTTP Response {status} from {uri}, headers: {headers}",
+            response.StatusCode.ToString(),
+            response.RequestMessage?.RequestUri?.ToString() ?? "UNKNOWN",
+            JsonSerializer.Serialize(
+                response.Headers.ToDictionary(kv => kv.Key, kv => kv.Value.ToList()))
+        );
 
-            Logger.Instance.LogTrace("Response body: {body}", await response.Content.ReadAsStringAsync(cancel));
+        Logger.Instance.LogTrace("Response body: {body}", await response.Content.ReadAsStringAsync(cancel));
 
-            return response;
-        }
-        catch (TaskCanceledException ex)
-        {
-            if (timeboundCts.IsCancellationRequested)
-            {
-                throw new System.TimeoutException($"The HTTP request on {path} timed out after {requestTimeout.TotalMilliseconds} ms.", ex);
-            }
-            else
-            {
-                throw;
-            }
-        }
+        return response;
     }
 
     public async IAsyncEnumerable<Event<T>> OpenStream<T>(

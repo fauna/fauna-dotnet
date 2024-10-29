@@ -1,4 +1,5 @@
-﻿using Fauna.Core;
+﻿using System.Threading;
+using Fauna.Core;
 using Fauna.Util;
 using Microsoft.Extensions.Logging;
 
@@ -76,8 +77,7 @@ public record class Configuration
         }
         else
         {
-            // Set Timeout to int.MaxValue milliseconds and configure each SendAsync with a timebound CancellationToken
-            HttpClient = new HttpClient { Timeout = TimeSpan.FromMilliseconds(int.MaxValue) };
+            HttpClient = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
         }
 
         if (logger != null)
