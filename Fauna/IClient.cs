@@ -11,7 +11,7 @@ namespace Fauna;
 /// <summary>
 /// Represents a client for interacting with a Fauna.
 /// </summary>
-interface IClient
+public interface IClient
 {
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database and returns the typed result.
