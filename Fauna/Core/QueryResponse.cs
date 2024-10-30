@@ -175,7 +175,7 @@ public sealed class QueryFailure : QueryResponse
     /// </summary>
     public string Message { get; init; } = "";
     /// <summary>
-    /// The constraint failures, if any. Only present for the  constraint_failure error code .
+    /// The constraint failures, if any. Only present for the  constraint_failure error code.
     /// </summary>
     public ConstraintFailure[]? ConstraintFailures { get; init; }
     /// <summary>
