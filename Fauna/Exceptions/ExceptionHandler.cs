@@ -12,7 +12,7 @@ public static class ExceptionHandler
     /// <summary>
     /// Creates an exception from a <see cref="QueryFailure"/>
     /// </summary>
-    /// <param name="ctx">A <see cref="MappingContext"/> used for exceptions that require additional deserialization, such as <see cref="AbortException"/></param>
+    /// <param name="ctx">A <see cref="MappingContext"/> used for exceptions that require additional deserialization, such as <see cref="AbortException"/>.</param>
     /// <param name="f">The <see cref="QueryFailure"/>.</param>
     /// <returns></returns>
     public static Exception FromQueryFailure(MappingContext ctx, QueryFailure f)

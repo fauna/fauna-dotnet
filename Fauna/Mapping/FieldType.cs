@@ -6,27 +6,27 @@ namespace Fauna.Mapping;
 public enum FieldType
 {
     /// <summary>
-    /// Indicates the document ID is client generated.
+    /// Indicates the document ID is client-generated.
     /// </summary>
     ClientGeneratedId,
 
     /// <summary>
-    /// Indicates the document ID is Fauna generated.
+    /// Indicates the document ID is Fauna-generated.
     /// </summary>
     ServerGeneratedId,
 
     /// <summary>
-    /// Indicates the field is the Collection field on a document.
+    /// Indicates the field is the coll (collection) field of the document.
     /// </summary>
     Coll,
 
     /// <summary>
-    /// Indicates the field is the Ts field on a document.
+    /// Indicates the field is the ts field of the document.
     /// </summary>
     Ts,
 
     /// <summary>
-    /// Indicates the field is user-defined data on a document.
+    /// Indicates the field contains user-defined data for the document.
     /// </summary>
     Field
 }

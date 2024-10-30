@@ -175,11 +175,11 @@ public sealed class QueryFailure : QueryResponse
     /// </summary>
     public string Message { get; init; } = "";
     /// <summary>
-    /// The constraint failures, if any. Only present for error code constraint_failure.
+    /// The constraint failures, if any. Only present for the  constraint_failure error code .
     /// </summary>
     public ConstraintFailure[]? ConstraintFailures { get; init; }
     /// <summary>
-    /// The abort object, if any. Only present for error code abort.
+    /// The abort object, if any. Only present for the abort error code.
     /// </summary>
     public object? Abort { get; init; }
 

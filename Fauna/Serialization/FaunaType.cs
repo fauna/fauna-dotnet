@@ -1,7 +1,7 @@
 namespace Fauna.Serialization;
 
 /// <summary>
-/// An enum representing possible <see href="https://docs.fauna.com/fauna/current/reference/fql/types/">Fauna types</see>.
+/// An enum representing possible <a href="https://docs.fauna.com/fauna/current/reference/fql/types/">Fauna types</a>.
 /// </summary>
 public enum FaunaType
 {
@@ -72,7 +72,7 @@ public enum FaunaType
     Null,
 
     /// <summary>
-    /// A Fauna stream or event source.
+    /// A Fauna event source.
     /// </summary>
     Stream,
 

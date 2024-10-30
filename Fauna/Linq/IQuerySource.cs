@@ -33,7 +33,7 @@ public interface IQuerySource<T> : IQuerySource
     /// </summary>
     /// <param name="queryOptions">An instance of <see cref="QueryOptions"/>.</param>
     /// <param name="cancel">A cancellation token.</param>
-    /// <returns>An IAsyncEnumerable of type <see cref="Page{T}"/></returns>
+    /// <returns>An IAsyncEnumerable of type <see cref="Page{T}"/>.</returns>
     public IAsyncEnumerable<Page<T>> PaginateAsync(QueryOptions? queryOptions = null, CancellationToken cancel = default);
     /// <summary>
     /// Executes a query asynchronously.
@@ -60,17 +60,17 @@ public interface IQuerySource<T> : IQuerySource
     /// <returns>This <see cref="IQuerySource{T}"/> instance.</returns>
     public IQuerySource<T> Order();
     /// <summary>
-    /// Orders by according to the selector. This is evaluated server-side.
+    /// Orders according to the selector. This is evaluated server-side.
     /// </summary>
     /// <returns>This <see cref="IQuerySource{T}"/> instance.</returns>
     public IQuerySource<T> OrderBy<K>(Expression<Func<T, K>> keySelector);
     /// <summary>
-    /// Order by descending. This is evaluated server-side.
+    /// Orders by descending. This is evaluated server-side.
     /// </summary>
     /// <returns>This <see cref="IQuerySource{T}"/> instance.</returns>
     public IQuerySource<T> OrderDescending();
     /// <summary>
-    /// Order by descending according to the selector. This is evaluated server-side.
+    /// Orders by descending according to the selector. This is evaluated server-side.
     /// </summary>
     /// <returns>This <see cref="IQuerySource{T}"/> instance.</returns>
     public IQuerySource<T> OrderByDescending<K>(Expression<Func<T, K>> keySelector);
@@ -117,7 +117,7 @@ public interface IQuerySource<T> : IQuerySource
     /// <summary>
     /// Applies each predicate and executes the query. This is evaluated server-side.
     /// </summary>
-    /// <returns>True if every predicate evaluate to true, otherwise false.</returns>
+    /// <returns>True if every predicate evaluates to true. Otherwise, false.</returns>
     public bool All(Expression<Func<T, bool>> predicate);
 
     /// <summary>
@@ -151,23 +151,23 @@ public interface IQuerySource<T> : IQuerySource
     public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies a count of the elements a executes the query. This is evaluated server-side.
+    /// Applies a count of the elements and executes the query. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public int Count();
     /// <summary>
-    /// Applies a count of the elements a executes the query asynchronously. This is evaluated server-side.
+    /// Applies a count of the elements and executes the query asynchronously. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public Task<int> CountAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies the predicate and a count and executes the query. This is evaluated server-side.
+    /// Applies the predicate, applies a count, and executes the query. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public int Count(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Applies the predicate and a count and executes the query asynchronously. This is evaluated server-side.
+    /// Applies the predicate, applies a count, and executes the query asynchronously. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public Task<int> CountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
@@ -184,12 +184,12 @@ public interface IQuerySource<T> : IQuerySource
     public Task<T> FirstAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies the predicate, executes the query and obtains the first element in the result. This is evaluated server-side.
+    /// Applies the predicate, executes the query, and obtains the first element in the result. This is evaluated server-side.
     /// </summary>
     /// <returns>The first element in the result.</returns>
     public T First(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Applies the predicate, executes the query asynchronously and obtains the first element in the result.
+    /// Applies the predicate, executes the query asynchronously, and obtains the first element in the result.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The first element in the result.</returns>
@@ -197,26 +197,26 @@ public interface IQuerySource<T> : IQuerySource
 
     /// <summary>
     /// Executes the query and obtains the first element in the result
-    /// or the default value if there is none. This is evaluated server-side.
+    /// or the default value, if there is no result. This is evaluated server-side.
     /// </summary>
-    /// <returns>The first element in the result or the default value if there is none.</returns>
+    /// <returns>The first element in the result or the default value, if there is no result.</returns>
     public T? FirstOrDefault();
     /// <summary>
     /// Executes the query asynchronously and obtains the first element in the result
-    /// or the default value if there is none. This is evaluated server-side.
+    /// or the default value, if there is no result. This is evaluated server-side.
     /// </summary>
     /// <returns>The first element in the result.</returns>
     public Task<T?> FirstOrDefaultAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies the predicate, executes the query and obtains the first element in the result or the
-    /// default value if there is none. This is evaluated server-side.
+    /// Applies the predicate, executes the query, and obtains the first element in the result or the
+    /// default value, if there is no result. This is evaluated server-side.
     /// </summary>
     /// <returns>The first element in the result.</returns>
     public T? FirstOrDefault(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Applies the predicate, executes the query asynchronously and obtains the first element in the result or the
-    /// default value if there is none. This is evaluated server-side.
+    /// Applies the predicate, executes the query asynchronously, and obtains the first element in the result or the
+    /// default value, if there is no result. This is evaluated server-side.
     /// </summary>
     /// <returns>The first element in the result.</returns>
     public Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
@@ -234,62 +234,62 @@ public interface IQuerySource<T> : IQuerySource
     public Task<T> LastAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies the predicate, executes the query and obtains the last element in the result.
+    /// Applies the predicate, executes the query, and obtains the last element in the result.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The last element in the result.</returns>
     public T Last(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Applies the predicate, executes the query asynchronously and obtains the last element in the result.
+    /// Applies the predicate, executes the query asynchronously, and obtains the last element in the result.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The last element in the result.</returns>
     public Task<T> LastAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
     /// <summary>
-    /// Executes the query and obtains the last element in the result or the default value if there is none.
+    /// Executes the query and obtains the last element in the result or the default value, if there is no result.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The last element in the result or the default value if there is none.</returns>
+    /// <returns>The last element in the result or the default value, if there is no result.</returns>
     public T? LastOrDefault();
     /// <summary>
-    /// Executes the query asynchronously and obtains the last element in the result or the default value
-    /// if there is none. This is evaluated server-side.
+    /// Executes the query asynchronously and obtains the last element in the result or the default value,
+    /// if there is no result. This is evaluated server-side.
     /// </summary>
-    /// <returns>The last element in the result or the default value if there is none.</returns>
+    /// <returns>The last element in the result or the default value, if there is no result.</returns>
     public Task<T?> LastOrDefaultAsync(CancellationToken cancel = default);
 
     /// <summary>
     /// Applies the predicate, executes the query and obtains the last element in the result
-    /// or the default value if there is none. This is evaluated server-side.
+    /// or the default value, if there is no result. This is evaluated server-side.
     /// </summary>
-    /// <returns>The last element in the result or the default value if there is none.</returns>
+    /// <returns>The last element in the result or the default value, if there is no result.</returns>
     public T? LastOrDefault(Expression<Func<T, bool>> predicate);
     /// <summary>
     /// Applies the predicate, executes the query asynchronously and obtains the last element in the result
-    /// or the default value if there is none. This is evaluated server-side.
+    /// or the default value, if there is no result. This is evaluated server-side.
     /// </summary>
-    /// <returns>The last element in the result or the default value if there is none.</returns>
+    /// <returns>The last element in the result or the default value, if there is no result.</returns>
     public Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies a count of the elements a executes the query. This is evaluated server-side.
+    /// Applies a count of the elements and executes the query. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public long LongCount();
     /// <summary>
-    /// Applies a count of the elements a executes the query asynchronously. This is evaluated server-side.
+    /// Applies a count of the elements and executes the query asynchronously. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public Task<long> LongCountAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies the predicate and a count and executes the query. This is evaluated server-side.
+    /// Applies the predicate, applies a count, and executes the query. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public long LongCount(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Applies the predicate and a count and executes the query asynchronously. This is evaluated server-side.
+    /// Applies the predicate, applies a count, and executes the query asynchronously. This is evaluated server-side.
     /// </summary>
     /// <returns>The number of elements in the result.</returns>
     public Task<long> LongCountAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
@@ -311,14 +311,14 @@ public interface IQuerySource<T> : IQuerySource
     public Task<T> MaxAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Applies a selector, executes a query and returns the maximum value in the result set. This is evaluated server-side.
+    /// Applies a selector, executes a query, and returns the maximum value in the result set. This is evaluated server-side.
     /// <p/>
     /// (a, b) => if (a >= b) a else b
     /// </summary>
     /// <returns>The maximum <typeparamref name="T"/>.</returns>
     public R Max<R>(Expression<Func<T, R>> selector);
     /// <summary>
-    /// Applies a selector, executes a query asynchronously and returns the maximum value in the result set.
+    /// Applies a selector, executes a query asynchronously, and returns the maximum value in the result set.
     /// This is evaluated server-side.
     /// <p/>
     /// (a, b) =&gt; if (a &gt;= b) a else b
@@ -348,7 +348,7 @@ public interface IQuerySource<T> : IQuerySource
     // public Task<K> MinByAsync<K>(Expression<Func<T, K>> selector, CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the selector, execute the query and return the minimum value in the result set.
+    /// Applies the selector, executes the query, and returns the minimum value in the result set.
     /// This is evaluated server-side.
     /// <p/>
     /// (a, b) =&gt; if (a &lt;= b) a else b
@@ -356,7 +356,7 @@ public interface IQuerySource<T> : IQuerySource
     /// <returns>The minimum <typeparamref name="T"/>.</returns>
     public R Min<R>(Expression<Func<T, R>> selector);
     /// <summary>
-    /// Apply the selector, execute the query asynchronously and return the minimum value in the result set.
+    /// Applies the selector, executes the query asynchronously, and returns the minimum value in the result set.
     /// This is evaluated server-side.
     /// <p/>
     /// (a, b) =&gt; if (a &lt;= b) a else b
@@ -365,174 +365,174 @@ public interface IQuerySource<T> : IQuerySource
     public Task<R> MinAsync<R>(Expression<Func<T, R>> selector, CancellationToken cancel = default);
 
     /// <summary>
-    /// Execute the query. If there's a single element, return it, otherwise throw.
+    /// Executes the query. If the result is a single element, returns it. Otherwise, throws an exception.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result.</returns>
     public T Single();
     /// <summary>
-    /// Execute the query asynchronously. If there's a single element, return it, otherwise throw.
+    /// Executes the query asynchronously. If the result is a single element, returns it. Otherwise, throws an exception.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result.</returns>
     public Task<T> SingleAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the predicate and execute the query. If there's a single element, return it, otherwise throw.
+    /// Applies the predicate and executes the query. If the result is a single element, returns it. Otherwise, throws an exception.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result.</returns>
     public T Single(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Apply the predicate and execute the query asynchronously. If there's a single element, return it, otherwise throw.
+    /// Applies the predicate and executes the query asynchronously. If the result is a single element, returns it. Otherwise, throws an exception.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result.</returns>
     public Task<T> SingleAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
     /// <summary>
-    /// Execute the query. If there's a single element, return it, otherwise default.
+    /// Executes the query. If the result is a single element, returns it. Otherwise, returns the default.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result or default.</returns>
     public T SingleOrDefault();
     /// <summary>
-    /// Execute the query asynchronously. If there's a single element, return it, otherwise default.
+    /// Executes the query asynchronously. If the result is a single element, returns it. Otherwise, returns the default.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result or default.</returns>
     public Task<T> SingleOrDefaultAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the predicate and execute the query. If there's a single element, return it, otherwise default.
+    /// Applies the predicate and executes the query. If the result is a single element, returns it. Otherwise, returns the default.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result or default.</returns>
     public T SingleOrDefault(Expression<Func<T, bool>> predicate);
     /// <summary>
-    /// Apply the predicate and execute the query asynchronously. If there's a single element, return it, otherwise default.
+    /// Applies the predicate and executes the query asynchronously. If the result is a single element, returns it. Otherwise, returns the default.
     /// This is evaluated server-side.
     /// </summary>
     /// <returns>The query result or default.</returns>
     public Task<T> SingleOrDefaultAsync(Expression<Func<T, bool>> predicate, CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the selector and query the sum across the result set.
+    /// Calculates the sum of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The sum according to the selector.</returns>
+    /// <returns>The sum of selected values.</returns>
     public int Sum(Expression<Func<T, int>> selector);
     /// <summary>
-    /// Apply the selector and query the sum the results asynchronously.
+    /// Asynchronously calculates the sum of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The sum according to the selector.</returns>
+    /// <returns>The sum of selected values.</returns>
     public Task<int> SumAsync(Expression<Func<T, int>> selector, CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the selector and query the sum across the result set.
+    /// Calculates the sum of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The sum according to the selector.</returns>
+    /// <returns>The sum of selected values.</returns>
     public long Sum(Expression<Func<T, long>> selector);
     /// <summary>
-    /// Apply the selector and query the sum the results asynchronously.
+    /// Asynchronously calculates the sum of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The sum according to the selector.</returns>
+    /// <returns>The sum of selected values.</returns>
     public Task<long> SumAsync(Expression<Func<T, long>> selector, CancellationToken cancel = default);
 
     // public float Sum(Expression<Func<T, float>> selector);
     // public Task<float> SumAsync(Expression<Func<T, float>> selector, CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the selector and query the sum across the result set.
+    /// Calculates the sum of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The sum according to the selector.</returns>
+    /// <returns>The sum of selected values.</returns>
     public double Sum(Expression<Func<T, double>> selector);
     /// <summary>
-    /// Apply the selector and query the sum the results asynchronously.
+    /// Asynchronously calculates the sum of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The sum according to the selector.</returns>
+    /// <returns>The sum of selected values.</returns>
     public Task<double> SumAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default);
 
     /// <summary>
-    /// Apply the selector and query the average across the result set.
+    /// Calculates the mean average of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The average according to the selector.</returns>
+    /// <returns>The mean average of selected values.</returns>
     public double Average(Expression<Func<T, double>> selector);
     /// <summary>
-    /// Apply the selector and query the average the results asynchronously.
+    /// Asynchronously calculates the mean average of values returned by a provided selector.
     /// This is evaluated server-side.
     /// </summary>
-    /// <returns>The average according to the selector.</returns>
+    /// <returns>The mean average of selected values.</returns>
     public Task<double> AverageAsync(Expression<Func<T, double>> selector, CancellationToken cancel = default);
 
     // Collection result methods
 
     /// <summary>
-    /// Executes the query and adapts it into a <see cref="List{T}"/>.
+    /// Executes the query and converts the results to a <see cref="List{T}"/>.
     /// </summary>
-    /// <returns>A <see cref="List{T}"/></returns>
+    /// <returns>A <see cref="List{T}"/>.</returns>
     public List<T> ToList();
     /// <summary>
-    /// Executes the query asynchronously and adapts it into a <see cref="List{T}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="List{T}"/>.
     /// </summary>
-    /// <returns>A <see cref="List{T}"/></returns>
+    /// <returns>A <see cref="List{T}"/>.</returns>
     public Task<List<T>> ToListAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Executes the query and adapts it into a <see cref="T:T[]"/>.
+    /// Executes the query and converts the results to a <see cref="T:T[]"/>.
     /// </summary>
-    /// <returns>A <see cref="T:T[]"/></returns>
+    /// <returns>A <see cref="T:T[]"/>.</returns>
     public T[] ToArray();
     /// <summary>
-    /// Executes the query asynchronously and adapts it into a <see cref="T:T[]"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="T:T[]"/>.
     /// </summary>
-    /// <returns>A <see cref="T:T[]"/></returns>
+    /// <returns>A <see cref="T:T[]"/>.</returns>
     public Task<T[]> ToArrayAsync(CancellationToken cancel = default);
 
     /// <summary>
-    /// Executes the query and adapts it into a <see cref="HashSet{T}"/>.
+    /// Executes the query and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
-    /// <returns>A <see cref="HashSet{T}"/></returns>
+    /// <returns>A <see cref="HashSet{T}"/>.</returns>
     public HashSet<T> ToHashSet();
     /// <summary>
-    /// Executes the query asynchronously and adapts it into a <see cref="HashSet{T}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
-    /// <returns>A <see cref="HashSet{T}"/></returns>
+    /// <returns>A <see cref="HashSet{T}"/>.</returns>
     public Task<HashSet<T>> ToHashSetAsync(CancellationToken cancel = default);
 
 
     /// <summary>
-    /// Executes the query and adapts it into a <see cref="HashSet{T}"/>.
+    /// Executes the query and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
     /// <param name="comparer">A comparer to use.</param>
-    /// <returns>A <see cref="HashSet{T}"/></returns>
+    /// <returns>A <see cref="HashSet{T}"/>.</returns>
     public HashSet<T> ToHashSet(IEqualityComparer<T>? comparer);
 
     /// <summary>
-    /// Executes the query asynchronously and adapts it into a <see cref="HashSet{T}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
     /// <param name="comparer">A comparer to use.</param>
     /// <param name="cancel">A cancellation token.</param>
-    /// <returns>A <see cref="HashSet{T}"/></returns>
+    /// <returns>A <see cref="HashSet{T}"/>.</returns>
     public Task<HashSet<T>> ToHashSetAsync(IEqualityComparer<T>? comparer, CancellationToken cancel = default);
 
     /// <summary>
-    /// Executes the query synchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>
     /// <typeparam name="K">The key type of the dictionary.</typeparam>
     /// <typeparam name="V">The value type of the dictionary.</typeparam>
-    /// <returns>The query result as a <see cref="Dictionary{K,V}"/></returns>
+    /// <returns>The query result as a <see cref="Dictionary{K,V}"/>.</returns>
     public Dictionary<K, V> ToDictionary<K, V>(Func<T, K> getKey, Func<T, V> getValue) where K : notnull;
     /// <summary>
-    /// Executes the query asynchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>
@@ -543,17 +543,17 @@ public interface IQuerySource<T> : IQuerySource
     public Task<Dictionary<K, V>> ToDictionaryAsync<K, V>(Func<T, K> getKey, Func<T, V> getValue, CancellationToken cancel = default) where K : notnull;
 
     /// <summary>
-    /// Executes the query synchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>
     /// <param name="comparer">A comparer used to compare keys.</param>
     /// <typeparam name="K">The key type of the dictionary.</typeparam>
     /// <typeparam name="V">The value type of the dictionary.</typeparam>
-    /// <returns>The query result as a <see cref="Dictionary{K,V}"/></returns>
+    /// <returns>The query result as a <see cref="Dictionary{K,V}"/>.</returns>
     public Dictionary<K, V> ToDictionary<K, V>(Func<T, K> getKey, Func<T, V> getValue, IEqualityComparer<K>? comparer) where K : notnull;
     /// <summary>
-    /// Executes the query asynchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>

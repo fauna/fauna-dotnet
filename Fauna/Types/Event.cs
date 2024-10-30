@@ -14,25 +14,25 @@ namespace Fauna.Types;
 public enum EventType
 {
     /// <summary>
-    /// An add event. E.g. when a document is added to a collection.
+    /// An add event. Emitted when a document is added to the tracked Set.
     /// </summary>
     Add,
     /// <summary>
-    /// An update event. E.g. when a document is updated.
+    /// An update event. Emitted when a document is updated in the tracked Set.
     /// </summary>
     Update,
     /// <summary>
-    /// A remove event. E.g. when a document is removed from a collection.
+    /// A remove event. Emitted when a document is removed from the tracked Set.
     /// </summary>
     Remove,
     /// <summary>
-    /// A status event. Typically used as an implementation detail of a driver. This indicates a status change on the stream.
+    /// A status event. Typically used as an implementation detail for a driver. Indicates a status change on the stream. Not emitted for Event Feeds.
     /// </summary>
     Status
 }
 
 /// <summary>
-/// A class representing an event from a stream or feed.
+/// A class representing an event from an Event Feed or Event Stream.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class Event<T> where T : notnull
@@ -46,11 +46,11 @@ public class Event<T> where T : notnull
     /// </summary>
     public long TxnTime { get; private init; }
     /// <summary>
-    /// A cursor for restarting at the event.
+    /// A cursor for the event. Used to resume an Event Feed or Event Stream after the event.
     /// </summary>
     public string Cursor { get; private init; } = null!;
     /// <summary>
-    /// The data associated with the event.
+    /// Document data for the event.
     /// </summary>
     public T? Data { get; private init; }
     /// <summary>

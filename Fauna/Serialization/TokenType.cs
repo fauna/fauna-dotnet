@@ -69,16 +69,16 @@ public enum TokenType
 }
 
 /// <summary>
-/// A set of extension methods that operate on <see cref="TokenType"/>
+/// A set of extension methods that operate on <see cref="TokenType"/>.
 /// </summary>
 public static class TokenTypeExtensions
 {
     /// <summary>
-    /// Relates a <see cref="TokenType"/> to a <see cref="FaunaType"/>
+    /// Maps a <see cref="TokenType"/> to a <see cref="FaunaType"/>.
     /// </summary>
-    /// <param name="tokenType">The token type to relate to a Fauna type.</param>
+    /// <param name="tokenType">The token type to map to a Fauna type.</param>
     /// <returns>The related Fauna type.</returns>
-    /// <exception cref="ArgumentException">Thrown when the provided token type does not map to a Fauna type</exception>
+    /// <exception cref="ArgumentException">Thrown when the provided token type does not map to a Fauna type.</exception>
     public static FaunaType GetFaunaType(this TokenType tokenType)
     {
         switch (tokenType)

@@ -4,9 +4,9 @@ using Fauna.Mapping;
 namespace Fauna.Serialization;
 
 /// <summary>
-/// A generic interface defining serialize and deserialize behavior, and for declaring which each supported <see cref="FaunaType"/>.
+/// A generic interface that defines serialize and deserialize behavior for a specific type, and declares the supported <see cref="FaunaType"/>.
 /// </summary>
-/// <typeparam name="T">The type to which the <see cref="ISerializer{T}"/> applies.</typeparam>
+/// <typeparam name="T">The type <see cref="ISerializer{T}"/> applies to.</typeparam>
 public interface ISerializer<out T> : ISerializer
 {
     /// <summary>
@@ -19,7 +19,7 @@ public interface ISerializer<out T> : ISerializer
 }
 
 /// <summary>
-/// An interface defining serialize and deserialize behavior, and for declaring which each supported <see cref="FaunaType"/>.
+/// An interface that defines serialize and deserialize behavior for each supported <see cref="FaunaType"/>.
 /// </summary>
 public interface ISerializer
 {
@@ -49,13 +49,13 @@ public interface ISerializer
 /// <summary>
 /// An abstract class encapsulating common serialization and deserialization logic.
 /// </summary>
-/// <typeparam name="T"></typeparam>
+/// <typeparam name="T">The type the BaseSerializer applies to.</typeparam>
 public abstract class BaseSerializer<T> : ISerializer<T>
 {
     /// <summary>
     /// Supported types for the serializer.
     /// </summary>
-    /// <returns>A list of supported types.</returns>
+    /// <returns>A list of supported <see cref="FaunaType"/>s.</returns>
     public virtual List<FaunaType> GetSupportedTypes() => new List<FaunaType>();
 
     /// <summary>

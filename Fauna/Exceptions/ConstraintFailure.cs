@@ -4,7 +4,7 @@ using static Fauna.Core.ResponseFields;
 namespace Fauna.Exceptions;
 
 /// <summary>
-/// A class representing a  <see href="https://docs.fauna.com/fauna/current/reference/fsl/check/">constraint failure</see> from Fauna.
+/// A class representing a <a href="https://docs.fauna.com/fauna/current/reference/fsl/check/">constraint failure</a> from Fauna.
 /// </summary>
 public class ConstraintFailure
 {

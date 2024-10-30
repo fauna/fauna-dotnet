@@ -79,9 +79,9 @@ public abstract class BaseRef<T>
     }
 
     /// <summary>
-    /// Gets the underlying document if it is loaded and it exists.
+    /// Gets the underlying document if it's loaded and exists.
     /// </summary>
-    /// <returns>An instance of <typeparamref name="T"/></returns>
+    /// <returns>An instance of <typeparamref name="T"/>.</returns>
     public abstract T Get();
 }
 

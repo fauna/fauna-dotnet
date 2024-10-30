@@ -72,7 +72,7 @@ public class IdAttribute : BaseFieldAttribute
     private const string FieldName = "id";
 
     /// <summary>
-    /// Initializes a <see cref="IdAttribute"/> indicating Fauna will generate the ID.
+    /// Initializes a <see cref="IdAttribute"/>, indicating Fauna will generate the ID.
     /// </summary>
     public IdAttribute() : base(FieldName, FieldType.ServerGeneratedId) { }
 
@@ -95,7 +95,7 @@ public class CollectionAttribute : BaseFieldAttribute
     private const string FieldName = "coll";
 
     /// <summary>
-    /// Initializes a <see cref="CollectionAttribute"/>.  The Fauna field name will always be `coll` for this attribute.
+    /// Initializes a <see cref="CollectionAttribute"/>. The Fauna field name will always be `coll` for this attribute.
     /// </summary>
     public CollectionAttribute() : base(FieldName, FieldType.Coll) { }
 

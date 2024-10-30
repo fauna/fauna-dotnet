@@ -9,7 +9,7 @@ namespace Fauna.Linq;
 public enum PipelineMode
 {
     /// <summary>
-    /// When a "pure" query. no local processing required (except deserialization)
+    /// When a "pure" query, no local processing is required except deserialization.
     /// </summary>
     Query,
     /// <summary>
@@ -17,11 +17,11 @@ public enum PipelineMode
     /// </summary>
     Project,
     /// <summary>
-    /// When post-processing on loaded set required
+    /// When post-processing on the loaded set is required.
     /// </summary>
     SetLoad,
     /// <summary>
-    /// When final, non-enum result: no more transformations allowed
+    /// When there is a final, non-enum result, no more transformations are allowed.
     /// </summary>
     Scalar,
 }

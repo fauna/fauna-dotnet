@@ -9,13 +9,13 @@ namespace Fauna.Linq;
 public partial class QuerySource<T>
 {
     /// <summary>
-    /// Evaluates the query synchronously into a <see cref="List{T}"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="List{T}"/>.
     /// </summary>
     /// <returns>The query result as a <see cref="List{T}"/>.</returns>
     public List<T> ToList() => ToEnumerable().ToList();
 
     /// <summary>
-    /// Evaluates the query asynchronously into a <see cref="List{T}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="List{T}"/>.
     /// </summary>
     /// <returns>The query result as an awaitable <see cref="Task"/> of <see cref="List{T}"/>.</returns>
     public async Task<List<T>> ToListAsync(CancellationToken cancel = default)
@@ -26,40 +26,40 @@ public partial class QuerySource<T>
     }
 
     /// <summary>
-    /// Evaluates the query synchronously into a <see cref="T:T[]"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="T:T[]"/>.
     /// </summary>
     /// <returns>The query result as <see cref="T:T[]"/>.</returns>
     public T[] ToArray() => ToEnumerable().ToArray();
 
     /// <summary>
-    /// Evaluates the query asynchronously into a <see cref="T:T[]"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="T:T[]"/>.
     /// </summary>
     /// <returns>The query result as an awaitable <see cref="Task"/> of <see cref="T:T[]"/>.</returns>
     public async Task<T[]> ToArrayAsync(CancellationToken cancel = default) =>
         (await ToListAsync(cancel)).ToArray();
 
     /// <summary>
-    /// Evaluates the query synchronously into a <see cref="HashSet{T}"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
     /// <returns>The query result as a <see cref="HashSet{T}"/>.</returns>
     public HashSet<T> ToHashSet() => ToHashSet(null);
 
     /// <summary>
-    /// Evaluates the query asynchronously into a <see cref="HashSet{T}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
     /// <returns>The query result as an awaitable <see cref="Task"/> of <see cref="HashSet{T}"/>.</returns>
     public Task<HashSet<T>> ToHashSetAsync(CancellationToken cancel = default) =>
         ToHashSetAsync(null, cancel);
 
     /// <summary>
-    /// Evaluates the query synchronously into a <see cref="HashSet{T}"/> using a comparer.
+    /// Executes the query synchronously and converts the results to a <see cref="HashSet{T}"/> using a comparer.
     /// </summary>
     /// <param name="comparer">The comparer to use.</param>
     /// <returns>The query result as a <see cref="HashSet{T}"/>.</returns>
     public HashSet<T> ToHashSet(IEqualityComparer<T>? comparer) => ToEnumerable().ToHashSet(comparer);
 
     /// <summary>
-    /// Evaluates the query asynchronously into a <see cref="HashSet{T}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="HashSet{T}"/>.
     /// </summary>
     /// <param name="comparer">The comparer to use.</param>
     /// <param name="cancel">A cancellation token.</param>
@@ -72,18 +72,18 @@ public partial class QuerySource<T>
     }
 
     /// <summary>
-    /// Evaluates the query synchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>
     /// <typeparam name="K">The key type of the dictionary.</typeparam>
     /// <typeparam name="V">The value type of the dictionary.</typeparam>
-    /// <returns>The query result as a <see cref="Dictionary{K,V}"/></returns>
+    /// <returns>The query result as a <see cref="Dictionary{K,V}"/>.</returns>
     public Dictionary<K, V> ToDictionary<K, V>(Func<T, K> getKey, Func<T, V> getValue) where K : notnull =>
         ToDictionary(getKey, getValue, null);
 
     /// <summary>
-    /// Evaluates the query asynchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>
@@ -95,19 +95,19 @@ public partial class QuerySource<T>
         ToDictionaryAsync(getKey, getValue, null, cancel);
 
     /// <summary>
-    /// Evaluates the query synchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query synchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>
     /// <param name="comparer">A comparer used to compare keys.</param>
     /// <typeparam name="K">The key type of the dictionary.</typeparam>
     /// <typeparam name="V">The value type of the dictionary.</typeparam>
-    /// <returns>The query result as a <see cref="Dictionary{K,V}"/></returns>
+    /// <returns>The query result as a <see cref="Dictionary{K,V}"/>.</returns>
     public Dictionary<K, V> ToDictionary<K, V>(Func<T, K> getKey, Func<T, V> getValue, IEqualityComparer<K>? comparer) where K : notnull =>
         ToEnumerable().ToDictionary(getKey, getValue, comparer);
 
     /// <summary>
-    /// Evaluates the query asynchronously into a <see cref="Dictionary{K,V}"/>.
+    /// Executes the query asynchronously and converts the results to a <see cref="Dictionary{K,V}"/>.
     /// </summary>
     /// <param name="getKey">A function used to obtain a key.</param>
     /// <param name="getValue">A function used to obtain a value.</param>

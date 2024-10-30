@@ -125,7 +125,7 @@ public abstract class DataContext : BaseClient
         /// <summary>
         /// Initializes an index associated with the collection. The name of the index can be assigned, or if
         /// declared inside a concrete <see cref="DataContext"/>, a canonical name will be assigned when a name
-        /// is not provieded.
+        /// is not provided.
         /// </summary>
         /// <param name="name">The name of the index.</param>
         /// <param name="auto">Used to generate a canonical name when name is null.</param>
