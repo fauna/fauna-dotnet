@@ -17,8 +17,9 @@ public class QueryOptions
 
     /// <summary>
     /// Gets or sets the query timeout. It defines how long the client waits for a query to complete.
+    /// Default value is 5 seconds.
     /// </summary>
-    public TimeSpan? QueryTimeout { get; set; } = null;
+    public TimeSpan QueryTimeout { get; set; } = TimeSpan.FromSeconds(5);
 
     /// <summary>
     /// Gets or sets a string-encoded set of caller-defined tags for identifying the request in logs and response bodies. 
@@ -37,19 +38,8 @@ public class QueryOptions
     /// <param name="options">The default query options.</param>
     /// <param name="overrides">The query options provided for a specific query, overriding the defaults.</param>
     /// <returns>A <see cref="QueryOptions"/> object representing the final combined set of query options.</returns>
-    internal static QueryOptions? GetFinalQueryOptions(QueryOptions? options, QueryOptions? overrides)
+    internal static QueryOptions GetFinalQueryOptions(QueryOptions options, QueryOptions? overrides)
     {
-
-        if (options == null && overrides == null)
-        {
-            return null;
-        }
-
-        if (options == null)
-        {
-            return overrides;
-        }
-
         if (overrides == null)
         {
             return options;

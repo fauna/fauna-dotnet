@@ -20,6 +20,8 @@ internal class Connection : IConnection
     private readonly Configuration _cfg;
     private bool _disposed;
 
+    public TimeSpan BufferedRequestTimeout { get; init; }
+
     /// <summary>
     /// Initializes a new instance of the Connection class.
     /// </summary>
@@ -27,19 +29,24 @@ internal class Connection : IConnection
     public Connection(Configuration configuration)
     {
         _cfg = configuration;
+        BufferedRequestTimeout = _cfg.DefaultQueryOptions.QueryTimeout.Add(_cfg.ClientBufferTimeout);
     }
 
     public async Task<HttpResponseMessage> DoPostAsync(
         string path,
         Stream body,
         Dictionary<string, string> headers,
+        TimeSpan requestTimeout,
         CancellationToken cancel = default)
     {
         HttpResponseMessage response;
 
+        using var timeboundCts = new CancellationTokenSource(requestTimeout);
+        using var combinedCts = CancellationTokenSource.CreateLinkedTokenSource(timeboundCts.Token, cancel);
+
         var policyResult = await _cfg.RetryConfiguration.RetryPolicy
             .ExecuteAndCaptureAsync(() =>
-                _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), cancel))
+                _cfg.HttpClient.SendAsync(CreateHttpRequest(path, body, headers), combinedCts.Token))
             .ConfigureAwait(false);
         response = policyResult.Outcome == OutcomeType.Successful
             ? policyResult.Result
