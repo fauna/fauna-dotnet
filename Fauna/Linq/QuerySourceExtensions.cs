@@ -1,6 +1,6 @@
 namespace Fauna.Linq;
 
-public static class QuerySourceExtensions
+internal static class QuerySourceExtensions
 {
     public static Dictionary<K, V> ToDictionary<K, V>(this IQuerySource<ValueTuple<K, V>> src) where K : notnull =>
         src.ToDictionary(t => t.Item1, t => t.Item2);

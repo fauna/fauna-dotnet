@@ -17,6 +17,9 @@ public sealed class FieldInfo
     /// </summary>
     public PropertyInfo Property { get; }
 
+    /// <summary>
+    /// The <see cref="FieldType"/> for the particular property.
+    /// </summary>
     public FieldType FieldType { get; }
 
     /// <summary>

@@ -9,6 +9,9 @@ namespace Fauna.Exceptions;
 /// </summary>
 public class ConstraintFailureException : ServiceException
 {
+    /// <summary>
+    /// The constraint failures related to the exception.
+    /// </summary>
     public ConstraintFailure[]? ConstraintFailures { get; }
 
     /// <summary>

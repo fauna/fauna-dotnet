@@ -1,6 +1,6 @@
 namespace Fauna.Types;
 
-public class BaseRefBuilder<T>
+internal class BaseRefBuilder<T>
 {
     public string? Id { get; set; }
     public string? Name { get; set; }

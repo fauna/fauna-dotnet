@@ -4,8 +4,17 @@ using Fauna.Mapping;
 
 namespace Fauna.Exceptions;
 
+/// <summary>
+/// A utility class for generating an appropriate <see cref="FaunaException"/> from a <see cref="QueryFailure"/>.
+/// </summary>
 public static class ExceptionHandler
 {
+    /// <summary>
+    /// Creates an exception from a <see cref="QueryFailure"/>
+    /// </summary>
+    /// <param name="ctx">A <see cref="MappingContext"/> used for exceptions that require additional deserialization, such as <see cref="AbortException"/></param>
+    /// <param name="f">The <see cref="QueryFailure"/>.</param>
+    /// <returns></returns>
     public static Exception FromQueryFailure(MappingContext ctx, QueryFailure f)
     {
         var msg =
@@ -31,6 +40,12 @@ public static class ExceptionHandler
     }
 
 
+    /// <summary>
+    /// Creates an exception from a body and an already consumed <see cref="HttpResponseMessage"/>
+    /// </summary>
+    /// <param name="body">The response body.</param>
+    /// <param name="r">The <see cref="HttpResponseMessage"/> with consumed body.</param>
+    /// <returns></returns>
     public static Exception FromRawResponse(string body, HttpResponseMessage r)
     {
         if (r.StatusCode is >= HttpStatusCode.OK and <= (HttpStatusCode)299)

@@ -13,8 +13,15 @@ public sealed class MappingContext
     private readonly Dictionary<string, MappingInfo> _collections = new();
     private readonly Dictionary<Type, MappingInfo> _baseTypes = new();
 
+    /// <summary>
+    /// Initialize an empty <see cref="MappingContext"/>.
+    /// </summary>
     public MappingContext() { }
 
+    /// <summary>
+    /// Initialize a <see cref="MappingContext"/> with associated collections.
+    /// </summary>
+    /// <param name="collections">The collections to associate.</param>
     public MappingContext(IEnumerable<DataContext.ICollection> collections)
     {
         foreach (var col in collections)
@@ -25,6 +32,10 @@ public sealed class MappingContext
         }
     }
 
+    /// <summary>
+    /// Initialize a <see cref="MappingContext"/> with associated collections.
+    /// </summary>
+    /// <param name="collections">The collections to associate.</param>
     public MappingContext(Dictionary<string, Type> collections)
     {
         foreach ((string name, Type ty) in collections)

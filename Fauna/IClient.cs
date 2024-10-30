@@ -11,7 +11,7 @@ namespace Fauna;
 /// <summary>
 /// Represents a client for interacting with a Fauna.
 /// </summary>
-interface IClient
+public interface IClient
 {
     /// <summary>
     /// Asynchronously executes a specified FQL query against the Fauna database and returns the typed result.
@@ -384,6 +384,7 @@ public abstract class BaseClient : IClient
 
     #region IClient
 
+    /// <inheritdoc />
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         QueryOptions? queryOptions = null,
@@ -391,12 +392,14 @@ public abstract class BaseClient : IClient
         where T : notnull =>
         QueryAsync<T>(query, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
+    /// <inheritdoc />
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
         QueryAsync<object?>(query, Serializer.Dynamic, queryOptions, cancel);
 
+    /// <inheritdoc />
     public Task<QuerySuccess<T>> QueryAsync<T>(
         Query query,
         ISerializer<T> serializer,
@@ -404,6 +407,7 @@ public abstract class BaseClient : IClient
         CancellationToken cancel = default) =>
         QueryAsyncInternal(query, serializer, MappingCtx, queryOptions, cancel);
 
+    /// <inheritdoc />
     public Task<QuerySuccess<object?>> QueryAsync(
         Query query,
         ISerializer serializer,
@@ -411,6 +415,7 @@ public abstract class BaseClient : IClient
         CancellationToken cancel = default) =>
         QueryAsync<object?>(query, (ISerializer<object?>)serializer, queryOptions, cancel);
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
         QueryOptions? queryOptions = null,
@@ -418,6 +423,7 @@ public abstract class BaseClient : IClient
         where T : notnull =>
         PaginateAsync(query, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Page<T> page,
         QueryOptions? queryOptions = null,
@@ -425,18 +431,21 @@ public abstract class BaseClient : IClient
         where T : notnull =>
         PaginateAsync(page, Serializer.Generate<T>(MappingCtx), queryOptions, cancel);
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
         PaginateAsync(query, Serializer.Dynamic, queryOptions, cancel);
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Page<object?> page,
         QueryOptions? queryOptions = null,
         CancellationToken cancel = default) =>
         PaginateAsync(page, Serializer.Dynamic, queryOptions, cancel);
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Query query,
         ISerializer<T> elemSerializer,
@@ -447,6 +456,7 @@ public abstract class BaseClient : IClient
         return PaginateAsyncInternal(query, serializer, queryOptions, cancel);
     }
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<T>> PaginateAsync<T>(
         Page<T> page,
         ISerializer<T> elemSerializer,
@@ -457,6 +467,7 @@ public abstract class BaseClient : IClient
         return PaginateAsyncInternal(page, serializer, queryOptions, cancel);
     }
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Query query,
         ISerializer elemSerializer,
@@ -468,6 +479,7 @@ public abstract class BaseClient : IClient
         return PaginateAsyncInternal(query, serializer, queryOptions, cancel);
     }
 
+    /// <inheritdoc />
     public IAsyncEnumerable<Page<object?>> PaginateAsync(
         Page<object?> page,
         ISerializer elemSerializer,
@@ -479,6 +491,7 @@ public abstract class BaseClient : IClient
         return PaginateAsyncInternal(page, serializer, queryOptions, cancel);
     }
 
+    /// <inheritdoc />
     public async Task<T> LoadRefAsync<T>(
         BaseRef<T> reference,
         CancellationToken cancel = default) where T : notnull

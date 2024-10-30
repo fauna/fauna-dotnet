@@ -17,8 +17,8 @@ internal class MappedDeserializer<I, O> : BaseSerializer<O>
 
     public override List<FaunaType> GetSupportedTypes() => _inner.GetSupportedTypes();
 
-    public override O Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
-        _mapper(_inner.Deserialize(context, ref reader));
+    public override O Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
+        _mapper(_inner.Deserialize(ctx, ref reader));
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
     {
@@ -37,7 +37,7 @@ internal class ProjectionDeserializer : BaseSerializer<object?[]>
 
     public override List<FaunaType> GetSupportedTypes() => _fields.SelectMany(x => x.GetSupportedTypes()).Distinct().ToList();
 
-    public override object?[] Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override object?[] Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType != TokenType.StartArray)
             throw UnexpectedToken(reader.CurrentTokenType);
@@ -49,7 +49,7 @@ internal class ProjectionDeserializer : BaseSerializer<object?[]>
             if (!reader.Read()) throw new SerializationException("Unexpected end of stream");
             if (reader.CurrentTokenType == TokenType.EndArray) throw UnexpectedToken(reader.CurrentTokenType);
 
-            values[i] = _fields[i].Deserialize(context, ref reader);
+            values[i] = _fields[i].Deserialize(ctx, ref reader);
         }
 
         if (!reader.Read()) throw new SerializationException("Unexpected end of stream");

@@ -2,6 +2,10 @@ using Fauna.Linq;
 
 namespace Fauna.Types;
 
+/// <summary>
+/// An abstract class representing a reference that can wrap an instance of the referenced document.
+/// </summary>
+/// <typeparam name="T">The referenced document type.</typeparam>
 public abstract class BaseRef<T>
 {
 
@@ -29,15 +33,15 @@ public abstract class BaseRef<T>
     /// <summary>
     /// Gets a boolean indicating whether the document represented by the ref has been loaded.
     /// </summary>
-    public bool IsLoaded { get; } = false;
+    public bool IsLoaded { get; }
 
-    public BaseRef(DataContext.ICollection col)
+    internal BaseRef(DataContext.ICollection col)
     {
         Collection = new Module(col.Name);
     }
 
 
-    public BaseRef(DataContext.ICollection col, T doc)
+    internal BaseRef(DataContext.ICollection col, T doc)
     {
         Collection = new Module(col.Name);
         Doc = doc;
@@ -45,7 +49,7 @@ public abstract class BaseRef<T>
         Exists = true;
     }
 
-    public BaseRef(DataContext.ICollection col, string cause)
+    internal BaseRef(DataContext.ICollection col, string cause)
     {
         Collection = new Module(col.Name);
         Exists = false;
@@ -53,12 +57,12 @@ public abstract class BaseRef<T>
         IsLoaded = true;
     }
 
-    public BaseRef(Module coll)
+    internal BaseRef(Module coll)
     {
         Collection = coll;
     }
 
-    public BaseRef(Module coll, T doc)
+    internal BaseRef(Module coll, T doc)
     {
         Collection = coll;
         Exists = true;
@@ -66,7 +70,7 @@ public abstract class BaseRef<T>
         IsLoaded = true;
     }
 
-    public BaseRef(Module coll, string cause)
+    internal BaseRef(Module coll, string cause)
     {
         Collection = coll;
         Exists = false;
@@ -74,6 +78,10 @@ public abstract class BaseRef<T>
         IsLoaded = true;
     }
 
+    /// <summary>
+    /// Gets the underlying document if it is loaded and it exists.
+    /// </summary>
+    /// <returns>An instance of <typeparamref name="T"/></returns>
     public abstract T Get();
 }
 

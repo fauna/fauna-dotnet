@@ -21,12 +21,13 @@ public interface IQueryFragment
 /// Provides extension methods for the <see cref="IQueryFragment"/> interface to enhance its functionality,
 /// allowing for more flexible serialization options.
 /// </summary>
-public static class IQueryFragmentExtensions
+public static class QueryFragmentExtensions
 {
     /// <summary>
     /// Serializes the query fragment to a string using UTF-8 encoding.
     /// </summary>
     /// <param name="fragment">The query fragment to serialize.</param>
+    /// <param name="ctx">A <see cref="MappingContext"/> to influence serialization.</param>
     /// <returns>A string representation of the serialized query fragment.</returns>
     public static string Serialize(this IQueryFragment fragment, MappingContext ctx)
     {

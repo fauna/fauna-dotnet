@@ -12,6 +12,9 @@ namespace Fauna.Core;
 /// </summary>
 public abstract class QueryResponse
 {
+    /// <summary>
+    /// The raw JSON of the query response.
+    /// </summary>
     public JsonElement RawJson { get; init; }
 
     /// <summary>
@@ -159,10 +162,25 @@ public sealed class QuerySuccess<T> : QueryResponse
 /// </summary>
 public sealed class QueryFailure : QueryResponse
 {
+    /// <summary>
+    /// The HTTP status code.
+    /// </summary>
     public HttpStatusCode StatusCode { get; init; }
+    /// <summary>
+    /// The Fauna error code.
+    /// </summary>
     public string ErrorCode { get; init; } = "";
+    /// <summary>
+    /// The query failure message.
+    /// </summary>
     public string Message { get; init; } = "";
+    /// <summary>
+    /// The constraint failures, if any. Only present for error code constraint_failure.
+    /// </summary>
     public ConstraintFailure[]? ConstraintFailures { get; init; }
+    /// <summary>
+    /// The abort object, if any. Only present for error code abort.
+    /// </summary>
     public object? Abort { get; init; }
 
     /// <summary>

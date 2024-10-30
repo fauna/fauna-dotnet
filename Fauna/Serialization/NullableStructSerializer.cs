@@ -13,9 +13,9 @@ internal class NullableStructSerializer<T> : BaseSerializer<T?> where T : struct
 
     public override List<FaunaType> GetSupportedTypes() => _inner.GetSupportedTypes();
 
-    public override T? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override T? Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
-        return reader.CurrentTokenType == TokenType.Null ? new T?() : _inner.Deserialize(context, ref reader);
+        return reader.CurrentTokenType == TokenType.Null ? new T?() : _inner.Deserialize(ctx, ref reader);
     }
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
