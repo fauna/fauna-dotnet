@@ -16,9 +16,9 @@ internal class RefSerializer<T> : BaseSerializer<Ref<T>> where T : notnull
 
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Ref };
 
-    public override Ref<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override Ref<T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
-        return (Ref<T>)_baseRefSerializer.Deserialize(context, ref reader);
+        return (Ref<T>)_baseRefSerializer.Deserialize(ctx, ref reader);
     }
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -38,9 +38,9 @@ internal class NamedRefSerializer<T> : BaseSerializer<NamedRef<T>> where T : not
 
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Ref };
 
-    public override NamedRef<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override NamedRef<T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
-        return (NamedRef<T>)_baseRefSerializer.Deserialize(context, ref reader);
+        return (NamedRef<T>)_baseRefSerializer.Deserialize(ctx, ref reader);
     }
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
@@ -60,12 +60,12 @@ internal class BaseRefSerializer<T> : BaseSerializer<BaseRef<T>> where T : notnu
 
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Ref };
 
-    public override BaseRef<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override BaseRef<T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         return reader.CurrentTokenType switch
         {
-            TokenType.StartRef => DeserializeRefInternal(new BaseRefBuilder<T>(), context, ref reader),
-            TokenType.StartDocument => DeserializeDocument(new BaseRefBuilder<T>(), context, ref reader),
+            TokenType.StartRef => DeserializeRefInternal(new BaseRefBuilder<T>(), ctx, ref reader),
+            TokenType.StartDocument => DeserializeDocument(new BaseRefBuilder<T>(), ctx, ref reader),
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing into Ref: {reader.CurrentTokenType}")
         };

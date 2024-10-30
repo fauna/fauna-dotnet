@@ -7,7 +7,7 @@ namespace Fauna.Serialization;
 
 internal class QueryValSerializer : BaseSerializer<QueryObj>
 {
-    public override QueryObj Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override QueryObj Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         throw new NotImplementedException();
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? obj)

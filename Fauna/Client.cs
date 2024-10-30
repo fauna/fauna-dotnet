@@ -94,7 +94,11 @@ public class Client : BaseClient, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    // A finalizer: https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
+    /// <inheritdoc />
+    /// <remarks>
+    /// https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/finalizers
+    /// https://stackoverflow.com/questions/151051/when-should-i-use-gc-suppressfinalize
+    /// </remarks>
     ~Client()
     {
         Dispose(false);

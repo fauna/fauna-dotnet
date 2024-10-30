@@ -15,7 +15,7 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
 
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Set };
 
-    public override Page<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override Page<T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         var wrapInPage = false;
         var endToken = TokenType.None;
@@ -37,7 +37,7 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
 
         if (wrapInPage)
         {
-            data = _dataSerializer.Deserialize(context, ref reader);
+            data = _dataSerializer.Deserialize(ctx, ref reader);
         }
         else
         {
@@ -49,7 +49,7 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
                 switch (fieldName)
                 {
                     case "data":
-                        data = _dataSerializer.Deserialize(context, ref reader);
+                        data = _dataSerializer.Deserialize(ctx, ref reader);
                         break;
                     case "after":
                         after = reader.GetString()!;

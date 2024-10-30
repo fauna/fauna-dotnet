@@ -34,7 +34,7 @@ internal class StringSerializer : BaseSerializer<string?>
 
 internal class ByteSerializer : BaseSerializer<byte>
 {
-    public override byte Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override byte Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetByte(),
@@ -61,7 +61,7 @@ internal class ByteSerializer : BaseSerializer<byte>
 
 internal class BytesSerializer : BaseSerializer<byte[]>
 {
-    public override byte[] Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override byte[] Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Bytes => reader.GetBytes(),
@@ -88,7 +88,7 @@ internal class BytesSerializer : BaseSerializer<byte[]>
 
 internal class SByteSerializer : BaseSerializer<sbyte>
 {
-    public override sbyte Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override sbyte Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetUnsignedByte(),
@@ -116,7 +116,7 @@ internal class SByteSerializer : BaseSerializer<sbyte>
 
 internal class ShortSerializer : BaseSerializer<short>
 {
-    public override short Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override short Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetShort(),
@@ -143,7 +143,7 @@ internal class ShortSerializer : BaseSerializer<short>
 
 internal class UShortSerializer : BaseSerializer<ushort>
 {
-    public override ushort Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override ushort Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetUnsignedShort(),
@@ -170,7 +170,7 @@ internal class UShortSerializer : BaseSerializer<ushort>
 
 internal class IntSerializer : BaseSerializer<int>
 {
-    public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override int Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int => reader.GetInt(),
@@ -197,7 +197,7 @@ internal class IntSerializer : BaseSerializer<int>
 
 internal class UIntSerializer : BaseSerializer<uint>
 {
-    public override uint Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override uint Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long => reader.GetUnsignedInt(),
@@ -224,7 +224,7 @@ internal class UIntSerializer : BaseSerializer<uint>
 
 internal class LongSerializer : BaseSerializer<long>
 {
-    public override long Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override long Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long => reader.GetLong(),
@@ -251,7 +251,7 @@ internal class LongSerializer : BaseSerializer<long>
 
 internal class FloatSerializer : BaseSerializer<float>
 {
-    public override float Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override float Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long or TokenType.Double => reader.GetFloat(),
@@ -279,7 +279,7 @@ internal class FloatSerializer : BaseSerializer<float>
 
 internal class DoubleSerializer : BaseSerializer<double>
 {
-    public override double Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override double Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Int or TokenType.Long or TokenType.Double => reader.GetDouble(),
@@ -306,7 +306,7 @@ internal class DoubleSerializer : BaseSerializer<double>
 
 internal class BooleanSerializer : BaseSerializer<bool>
 {
-    public override bool Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override bool Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.True or TokenType.False => reader.GetBoolean(),
@@ -333,7 +333,7 @@ internal class BooleanSerializer : BaseSerializer<bool>
 
 internal class DateOnlySerializer : BaseSerializer<DateOnly>
 {
-    public override DateOnly Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override DateOnly Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Date => reader.GetDate(),
@@ -360,7 +360,7 @@ internal class DateOnlySerializer : BaseSerializer<DateOnly>
 
 internal class DateTimeSerializer : BaseSerializer<DateTime>
 {
-    public override DateTime Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override DateTime Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Time => reader.GetTime(),
@@ -387,7 +387,7 @@ internal class DateTimeSerializer : BaseSerializer<DateTime>
 
 internal class DateTimeOffsetSerializer : BaseSerializer<DateTimeOffset>
 {
-    public override DateTimeOffset Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override DateTimeOffset Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.Time => reader.GetTime(),

@@ -16,7 +16,7 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
 
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Array, FaunaType.Null };
 
-    public override List<T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override List<T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType == TokenType.StartPage)
             throw new SerializationException(
@@ -28,13 +28,13 @@ internal class ListSerializer<T> : BaseSerializer<List<T>>
 
         if (wrapInList)
         {
-            lst.Add(_elemSerializer.Deserialize(context, ref reader));
+            lst.Add(_elemSerializer.Deserialize(ctx, ref reader));
         }
         else
         {
             while (reader.Read() && reader.CurrentTokenType != TokenType.EndArray)
             {
-                lst.Add(_elemSerializer.Deserialize(context, ref reader));
+                lst.Add(_elemSerializer.Deserialize(ctx, ref reader));
             }
         }
 

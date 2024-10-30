@@ -8,7 +8,7 @@ internal class EventSourceSerializer : BaseSerializer<EventSource>
 {
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Stream };
 
-    public override EventSource Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override EventSource Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
             TokenType.EventSource => reader.GetEventSource(),

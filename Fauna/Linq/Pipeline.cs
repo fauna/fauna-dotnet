@@ -3,12 +3,27 @@ using Fauna.Serialization;
 
 namespace Fauna.Linq;
 
+/// <summary>
+/// The mode of the query pipeline.
+/// </summary>
 public enum PipelineMode
 {
-    Query, // "pure" query. no local processing required (except deserialization)
-    Project, // elements have local projection.
-    SetLoad, // post-processing on loaded set required
-    Scalar, // final, non-enum result: no more transformations allowed
+    /// <summary>
+    /// When a "pure" query, no local processing is required except deserialization.
+    /// </summary>
+    Query,
+    /// <summary>
+    /// When elements have local projection.
+    /// </summary>
+    Project,
+    /// <summary>
+    /// When post-processing on the loaded set is required.
+    /// </summary>
+    SetLoad,
+    /// <summary>
+    /// When there is a final, non-enum result, no more transformations are allowed.
+    /// </summary>
+    Scalar,
 }
 
 internal readonly record struct Pipeline(

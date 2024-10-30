@@ -7,6 +7,10 @@ namespace Fauna.Types;
 /// </summary>
 public sealed class EventSource : IEquatable<EventSource>
 {
+    /// <summary>
+    /// Initializes an <see cref="EventSource"/>.
+    /// </summary>
+    /// <param name="token">An event source.</param>
     public EventSource(string token)
     {
         Token = token;
@@ -17,11 +21,21 @@ public sealed class EventSource : IEquatable<EventSource>
     /// </summary>
     internal string Token { get; }
 
+    /// <summary>
+    /// The start timestamp of the Event Feed or Event Stream.
+    /// </summary>
     public long? StartTs { get; set; }
 
+    /// <summary>
+    /// The starting cursor for the Event Feed or Event Stream. Typically, this is the last observed cursor.
+    /// </summary>
     public string? LastCursor { get; set; }
 
-    public void Serialize(System.IO.Stream stream)
+    /// <summary>
+    /// Serializes the event source to the provided <see cref="Stream"/>.
+    /// </summary>
+    /// <param name="stream"></param>
+    public void Serialize(Stream stream)
     {
         var writer = new Utf8JsonWriter(stream);
         writer.WriteStartObject();

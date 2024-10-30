@@ -64,7 +64,7 @@ public static class Serializer
     /// Generates a serializer for the specified non-nullable .NET type.
     /// </summary>
     /// <param name="context">The serialization context.</param>
-    /// <param name="targetType">The type of the object to serialize.</typeparam>
+    /// <param name="targetType">The type of the object to serialize.</param>
     /// <returns>An <see cref="ISerializer"/>.</returns>
     public static ISerializer Generate(MappingContext context, Type targetType)
     {
@@ -225,7 +225,7 @@ public static class Serializer
     /// Generates a serializer which returns values of the specified .NET type, or the default if the underlying query value is null.
     /// </summary>
     /// <param name="context">The serialization context.</param>
-    /// <param name="targetType">The type of the object to serialize.</typeparam>
+    /// <param name="targetType">The type of the object to serialize.</param>
     /// <returns>An <see cref="ISerializer"/>.</returns>
     public static ISerializer GenerateNullable(MappingContext context, Type targetType)
     {

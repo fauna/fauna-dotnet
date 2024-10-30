@@ -13,14 +13,14 @@ internal class NullableSerializer<T> : BaseSerializer<T?>
 
     public override List<FaunaType> GetSupportedTypes() => _inner.GetSupportedTypes();
 
-    public override T? Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override T? Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         if (reader.CurrentTokenType == TokenType.Null)
         {
             return default(T);
         }
 
-        return _inner.Deserialize(context, ref reader);
+        return _inner.Deserialize(ctx, ref reader);
     }
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)

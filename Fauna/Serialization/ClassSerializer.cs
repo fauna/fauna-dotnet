@@ -30,7 +30,7 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IPartialDocumentSerialize
         return instance;
     }
 
-    public override T Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override T Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         var endToken = reader.CurrentTokenType switch
         {
@@ -90,13 +90,13 @@ internal class ClassSerializer<T> : BaseSerializer<T>, IPartialDocumentSerialize
         }
 
         object instance = CreateInstance();
-        SetFields(instance, context, ref reader, endToken);
+        SetFields(instance, ctx, ref reader, endToken);
         return (T)instance;
     }
 
-    public override void Serialize(MappingContext ctx, Utf8FaunaWriter w, object? o)
+    public override void Serialize(MappingContext ctx, Utf8FaunaWriter writer, object? o)
     {
-        SerializeInternal(ctx, w, o);
+        SerializeInternal(ctx, writer, o);
     }
 
     private static void SerializeInternal(MappingContext ctx, Utf8FaunaWriter w, object? o)

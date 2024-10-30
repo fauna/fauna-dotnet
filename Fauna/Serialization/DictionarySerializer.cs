@@ -16,14 +16,14 @@ internal class DictionarySerializer<T> : BaseSerializer<Dictionary<string, T>>, 
 
     public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Object };
 
-    public override Dictionary<string, T> Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override Dictionary<string, T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         switch (reader.CurrentTokenType)
         {
             case TokenType.StartObject:
-                return DeserializeInternal(new Dictionary<string, T>(), TokenType.EndObject, context, ref reader);
+                return DeserializeInternal(new Dictionary<string, T>(), TokenType.EndObject, ctx, ref reader);
             case TokenType.StartDocument:
-                return DeserializeInternal(new Dictionary<string, T>(), TokenType.EndDocument, context, ref reader);
+                return DeserializeInternal(new Dictionary<string, T>(), TokenType.EndDocument, ctx, ref reader);
             default:
                 throw new SerializationException(
                     $"Unexpected token while deserializing into {typeof(Dictionary<string, T>)}: {reader.CurrentTokenType}");

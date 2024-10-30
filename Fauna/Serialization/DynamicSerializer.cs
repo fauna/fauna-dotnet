@@ -41,14 +41,14 @@ internal class DynamicSerializer : BaseSerializer<object?>
         FaunaType.Time
     };
 
-    public override object? Deserialize(MappingContext context, ref Utf8FaunaReader reader) =>
+    public override object? Deserialize(MappingContext ctx, ref Utf8FaunaReader reader) =>
         reader.CurrentTokenType switch
         {
-            TokenType.StartObject => _dict.Deserialize(context, ref reader),
-            TokenType.StartArray => _list.Deserialize(context, ref reader),
-            TokenType.StartPage => _page.Deserialize(context, ref reader),
-            TokenType.StartRef => _docref.Deserialize(context, ref reader),
-            TokenType.StartDocument => DeserializeDocumentInternal(context, ref reader),
+            TokenType.StartObject => _dict.Deserialize(ctx, ref reader),
+            TokenType.StartArray => _list.Deserialize(ctx, ref reader),
+            TokenType.StartPage => _page.Deserialize(ctx, ref reader),
+            TokenType.StartRef => _docref.Deserialize(ctx, ref reader),
+            TokenType.StartDocument => DeserializeDocumentInternal(ctx, ref reader),
             TokenType.String => reader.GetString(),
             TokenType.Int => reader.GetInt(),
             TokenType.Long => reader.GetLong(),

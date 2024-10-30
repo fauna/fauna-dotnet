@@ -1,22 +1,61 @@
 namespace Fauna.Core;
 
 
+/// <summary>
+/// A struct representing stats aggregated across queries.
+/// </summary>
 public readonly struct Stats
 {
+    /// <summary>
+    /// The aggregate read ops.
+    /// </summary>
     public long ReadOps { get; init; }
+    /// <summary>
+    /// The aggregate compute ops.
+    /// </summary>
     public long ComputeOps { get; init; }
+    /// <summary>
+    /// The aggregate write ops.
+    /// </summary>
     public long WriteOps { get; init; }
+    /// <summary>
+    /// The aggregate query time in milliseconds.
+    /// </summary>
     public long QueryTimeMs { get; init; }
+    /// <summary>
+    /// The aggregate number of retries due to transaction contention.
+    /// </summary>
     public int ContentionRetries { get; init; }
+    /// <summary>
+    /// The aggregate number of storage bytes read.
+    /// </summary>
     public long StorageBytesRead { get; init; }
+    /// <summary>
+    /// The aggregate number of storage bytes written.
+    /// </summary>
     public long StorageBytesWrite { get; init; }
+    /// <summary>
+    /// The aggregate number of queries summarized.
+    /// </summary>
     public int QueryCount { get; init; }
 
+    /// <summary>
+    /// The aggregate count of rate limited queries due to read limits.
+    /// </summary>
     public int RateLimitedReadQueryCount { get; init; }
+    /// <summary>
+    /// The aggregate count of rate limited queries due to compute limits.
+    /// </summary>
     public int RateLimitedComputeQueryCount { get; init; }
+    /// <summary>
+    /// The aggregate count of rate limited queries due to write limits.
+    /// </summary>
     public int RateLimitedWriteQueryCount { get; init; }
 }
 
+/// <summary>
+/// An interface used by a client instance for aggregating stats across all queries.
+/// </summary>
 public interface IStatsCollector
 {
     /// <summary>
@@ -36,6 +75,9 @@ public interface IStatsCollector
     public Stats ReadAndReset();
 }
 
+/// <summary>
+/// The default implementation of <see cref="IStatsCollector"/>.
+/// </summary>
 public class StatsCollector : IStatsCollector
 {
     private const string RateLimitReadOps = "read";
@@ -54,7 +96,7 @@ public class StatsCollector : IStatsCollector
     private int _rateLimitedComputeQueryCount;
     private int _rateLimitedWriteQueryCount;
 
-
+    /// <inheritdoc />
     public void Add(QueryStats stats)
     {
         Interlocked.Exchange(ref _readOps, _readOps + stats.ReadOps);
@@ -84,6 +126,7 @@ public class StatsCollector : IStatsCollector
         Interlocked.Increment(ref _queryCount);
     }
 
+    /// <inheritdoc />
     public Stats Read()
     {
         return new Stats
@@ -102,6 +145,7 @@ public class StatsCollector : IStatsCollector
         };
     }
 
+    /// <inheritdoc />
     public Stats ReadAndReset()
     {
         var beforeReset = new Stats

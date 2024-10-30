@@ -56,8 +56,9 @@ public record class Configuration
     /// <summary>
     /// Initializes a new instance of the <see cref="Configuration"/> record with the specified secret key.
     /// </summary>
-    /// <param name="secret">The secret key used for authentication.</param>
-    /// <param name="httpClient">The <see cref="HttpClient"/> to use.</param>
+    /// <param name="secret">The secret used for authentication. If null or empty, attempt to use the FAUNA_SECRET env var.</param>
+    /// <param name="httpClient">The <see cref="HttpClient"/> to use. If null, a default HttpClient is used.</param>
+    /// <param name="logger">A logger. If null, a default logger is used.</param>
     public Configuration(string secret = "", HttpClient? httpClient = null, ILogger? logger = null)
     {
         if (string.IsNullOrEmpty(secret) && string.IsNullOrEmpty(Secret))

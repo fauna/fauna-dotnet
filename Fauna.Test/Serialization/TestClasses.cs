@@ -220,7 +220,7 @@ class ClassWithLotsOfFields
 
 public class IntToStringSerializer : BaseSerializer<int>
 {
-    public override int Deserialize(MappingContext context, ref Utf8FaunaReader reader)
+    public override int Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
         return reader.CurrentTokenType switch
         {
