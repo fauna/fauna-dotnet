@@ -42,7 +42,7 @@ public interface ISerializer
     /// <summary>
     /// A list of types to which the <see cref="ISerializer"/> applies.
     /// </summary>
-    /// <returns>A list of <see cref="FaunaType"/>.</returns>
+    /// <returns>A list of <see cref="FaunaType"/>s.</returns>
     List<FaunaType> GetSupportedTypes();
 }
 
