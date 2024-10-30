@@ -1,16 +1,16 @@
 namespace Fauna;
 
 /// <summary>
-/// Represents the options when subscribing to Fauna Streams.
+/// Represents the options when subscribing to Fauna Event Streams.
 /// </summary>
 public class StreamOptions
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamOptions"/> class with the specified token and cursor.
     /// </summary>
-    /// <param name="token">The token returned from Fauna when the stream is created.</param>
+    /// <param name="token">The token for a Fauna event source.</param>
     /// <param name="cursor">The cursor from the stream, must be used with the associated Token. Used to resume the stream.</param>
-    /// <seealso href="https://docs.fauna.com/fauna/current/reference/streaming/#restart-a-stream"/>
+    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart">Restart an Event Stream</a>.
     public StreamOptions(string token, string cursor)
     {
         Token = token;
@@ -20,7 +20,7 @@ public class StreamOptions
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamOptions"/> class with the specified token and start timestamp.
     /// </summary>
-    /// <param name="token">The token returned from Fauna when the stream is created.</param>
+    /// <param name="token">The token for a Fauna event source.</param>
     /// <param name="startTs">The start timestamp to use for the stream.</param>
     public StreamOptions(string token, long startTs)
     {
@@ -28,15 +28,16 @@ public class StreamOptions
         StartTs = startTs;
     }
 
-    // <summary>Token returned from Fauna when the stream is created.</summary>
-    /// <see href="https://docs.fauna.com/fauna/current/reference/http/reference/stream/get/"/>
+    /// <summary>Token for a Fauna event source.</summary>
+    /// See the <a
+    /// href="https://docs.fauna.com/fauna/current/reference/cdc/#event-source">Create an event source</a>.
     public string? Token { get; }
 
     /// <summary>Cursor from the stream, must be used with the associated Token. Used to resume the stream.</summary>
-    /// <see href="https://docs.fauna.com/fauna/current/reference/streaming/#restart-a-stream"/>
+    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart-cursor">Restart from an event cursor</a>.
     public string? Cursor { get; }
 
-    // <summary>Start timestamp from the stream, must be used with the associated Token. Used to resume the stream.</summary>
-    /// <see href="https://docs.fauna.com/fauna/current/reference/streaming/#restart-a-stream"/>
+    /// <summary>Start timestamp from the stream, must be used with the associated Token. Used to resume the stream.</summary>
+    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart-txn-ts">Restart from a transaction timestamp</a>.
     public long? StartTs { get; }
 }
