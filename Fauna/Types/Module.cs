@@ -2,7 +2,7 @@ namespace Fauna.Types;
 
 /// <summary>
 /// Represents a module, a singleton object grouping related functionalities.
-/// Modules are serialized as @mod values in tagged formats, organizing and encapsulating specific functionalities.
+/// Modules are serialized as \@mod values in tagged formats, organizing and encapsulating specific functionalities.
 /// </summary>
 public sealed class Module : IEquatable<Module>
 {
