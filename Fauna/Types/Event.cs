@@ -58,17 +58,16 @@ public class Event<T> where T : notnull
     /// </summary>
     public QueryStats Stats { get; private init; }
 
+
     /// <summary>
-    /// A helper method for converting a JSON string into an event.
+    /// A helper method for converting a JSON element into an Event.
     /// </summary>
-    /// <param name="body">The string of raw JSON.</param>
+    /// <param name="json">JSON Element to convert.</param>
     /// <param name="ctx">A mapping context to influence deserialization.</param>
     /// <returns>An instance of <see cref="Event{T}"/>.</returns>
     /// <exception cref="FaunaException">Thrown when the event includes a Fauna error.</exception>
-    public static Event<T> From(string body, MappingContext ctx)
+    public static Event<T> From(JsonElement json, MappingContext ctx)
     {
-        var json = JsonSerializer.Deserialize<JsonElement>(body);
-
         var err = GetError(json);
         if (err != null)
         {
@@ -85,6 +84,20 @@ public class Event<T> where T : notnull
         };
 
         return evt;
+    }
+
+    /// <summary>
+    /// A helper method for converting a JSON string into an Event.
+    /// </summary>
+    /// <param name="body">The string of raw JSON.</param>
+    /// <param name="ctx">A mapping context to influence deserialization.</param>
+    /// <returns>An instance of <see cref="Event{T}"/>.</returns>
+    /// <exception cref="FaunaException">Thrown when the event includes a Fauna error.</exception>
+    public static Event<T> From(string body, MappingContext ctx)
+    {
+        var json = JsonSerializer.Deserialize<JsonElement>(body);
+
+        return From(json, ctx);
     }
 
     private static long GetTxnTime(JsonElement json)

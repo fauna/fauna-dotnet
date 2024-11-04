@@ -32,6 +32,11 @@ public sealed class EventSource : IEquatable<EventSource>
     public string? LastCursor { get; set; }
 
     /// <summary>
+    /// Set the page size when using Event Feeds.
+    /// </summary>
+    public int? PageSize { get; set; }
+
+    /// <summary>
     /// Serializes the event source to the provided <see cref="Stream"/>.
     /// </summary>
     /// <param name="stream"></param>
@@ -48,6 +53,12 @@ public sealed class EventSource : IEquatable<EventSource>
         {
             writer.WriteNumber("start_ts", StartTs.Value);
         }
+
+        if (PageSize is > 0)
+        {
+            writer.WriteNumber("page_size", PageSize.Value);
+        }
+
         writer.WriteEndObject();
         writer.Flush();
     }
