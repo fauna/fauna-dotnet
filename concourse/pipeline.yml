@@ -149,28 +149,19 @@ jobs:
         reveal: true
         file: repo.git/.git/ref
 
-      - in_parallel:
-          fail_fast: false
-          steps:
-            # - task: validate-aws-lambda
-            #   image: testtools-image-dotnet
-            #   file: testtools-repo/fauna-driver-platform-tests/concourse/tasks/dotnet-aws-lambda-tests.yml
-            #   params:
-            #     <<: [*shared-params, *aws-lambda-params]
-
-            - task: validate-azure-functions-net80
-              image: testtools-image-dotnet
-              file: testtools-repo/fauna-driver-platform-tests/concourse/tasks/dotnet-azure-tests.yml
-              params:
-                APP_ID: ((drivers-platform-tests/azure-app-id))
-                FAUNA_DOTNET: repo.git
-                FAUNA_SECRET: ((drivers-platform-tests/fauna-secret))
-                FUNC_NAME_PREFIX: fql-az-functions-
-                GIT_COMMIT: ((.:git-commit))
-                NET_VERSION: 8
-                PASSWORD: ((drivers-platform-tests/azure-app-password))
-                RG_NAME: FqlAzureFunctions-rg
-                TENANT_ID: ((drivers-platform-tests/azure-tenant-id))
+      - task: validate-azure-functions-net80
+        image: testtools-image-dotnet
+        file: testtools-repo/fauna-driver-platform-tests/concourse/tasks/dotnet-azure-tests.yml
+        params:
+          APP_ID: ((drivers-platform-tests/azure-app-id))
+          FAUNA_DOTNET: repo.git
+          FAUNA_SECRET: ((drivers-platform-tests/fauna-secret))
+          FUNC_NAME_PREFIX: fql-az-functions-
+          GIT_COMMIT: ((.:git-commit))
+          NET_VERSION: 8
+          PASSWORD: ((drivers-platform-tests/azure-app-password))
+          RG_NAME: FqlAzureFunctions-rg
+          TENANT_ID: ((drivers-platform-tests/azure-tenant-id))
 
   - name: release
     serial: true
