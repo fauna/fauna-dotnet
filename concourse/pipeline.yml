@@ -5,6 +5,16 @@ resource_types:
     source:
       repository: cfcommunity/slack-notification-resource
 
+  - name: buildx-resource
+    type: registry-image
+    privileged: true
+    source:
+      repository: shared-concourse-buildx
+      aws_access_key_id: ((prod-images-aws-access-key-id))
+      aws_secret_access_key: ((prod-images-aws-secret-key))
+      aws_region: us-east-2
+      tag: latest
+
 resources:
   - name: self-config
     type: git
@@ -41,6 +51,42 @@ resources:
       branch: gh-pages
       private_key: ((github-ssh-key))
 
+  - name: testtools-repo
+    type: git
+    icon: github
+    source:
+      uri: git@github.com:fauna/testtools.git
+      branch: main
+      private_key: ((github-ssh-key))
+
+  - name: testtools-deps-repo
+    type: git
+    icon: github
+    source:
+      uri: git@github.com:fauna/testtools.git
+      branch: main
+      private_key: ((github-ssh-key))
+      paths:
+        - fauna-driver-platform-tests/package.json
+        - fauna-driver-platform-tests/Dockerfile.dotnet
+
+  - name: testtools-image-dotnet
+    type: registry-image
+    icon: docker
+    source:
+      repository: devex-dotnet-driver-platform-tests
+      aws_access_key_id: ((prod-images-aws-access-key-id))
+      aws_secret_access_key: ((prod-images-aws-secret-key))
+      aws_region: us-east-2
+
+  - name: build-and-publish-dotnet
+    type: buildx-resource
+    source:
+      repo: ((prod-images-repo-url))/devex-dotnet-driver-platform-tests
+      aws_access_key_id: ((prod-images-aws-access-key-id))
+      aws_secret_access_key: ((prod-images-aws-secret-key))
+    icon: docker
+
   - name: dev-tests-trigger
     type: time
     source:
@@ -54,6 +100,20 @@ jobs:
 
       - set_pipeline: self
         file: self-config/concourse/pipeline.yml
+
+  - name: build-image
+    serial: true
+    plan:
+      - get: testtools-deps-repo
+        trigger: true
+
+      - put: build-and-publish-dotnet
+        inputs:
+          - testtools-deps-repo
+        params:
+          dir: testtools-deps-repo/fauna-driver-platform-tests/
+          dockerfile: testtools-deps-repo/fauna-driver-platform-tests/Dockerfile.dotnet
+          tag: latest
 
   - name: perf-tests-dev
     serial: true
@@ -76,11 +136,39 @@ jobs:
           params:
             text_file: slack-message/perf-stats
 
+  - name: test
+    serial: true
+    plan:
+      - get: repo.git
+        trigger: true
+
+      - get: testtools-repo
+      - get: testtools-image-dotnet
+
+      - load_var: git-commit
+        reveal: true
+        file: repo.git/.git/ref
+
+      - task: validate-azure-functions-net80
+        image: testtools-image-dotnet
+        file: testtools-repo/fauna-driver-platform-tests/concourse/tasks/dotnet-azure-tests.yml
+        params:
+          APP_ID: ((drivers-platform-tests/azure-app-id))
+          FAUNA_DOTNET: repo.git
+          FAUNA_SECRET: ((drivers-platform-tests/fauna-secret))
+          FUNC_NAME_PREFIX: fql-az-functions-
+          GIT_COMMIT: ((.:git-commit))
+          NET_VERSION: 8
+          PASSWORD: ((drivers-platform-tests/azure-app-password))
+          RG_NAME: FqlAzureFunctions-rg
+          TENANT_ID: ((drivers-platform-tests/azure-tenant-id))
+
   - name: release
     serial: true
     public: false
     plan:
       - get: repo.git
+        passed: [ test ]
       - get: docs.git
 
       - task: publish
