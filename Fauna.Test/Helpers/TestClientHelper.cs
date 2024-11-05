@@ -4,8 +4,11 @@ namespace Fauna.Test.Helpers;
 
 public static class TestClientHelper
 {
-    public static Client GetLocalhostClient(string secret = "secret", bool hasStatsCollector = true)
+    public static Client GetLocalhostClient(string secret = "secret", bool hasStatsCollector = true, bool debugMode = false)
     {
+        if (debugMode)
+            Environment.SetEnvironmentVariable("FAUNA_DEBUG", "0");
+
         return GetTestClient(secret, "http://localhost:8443", hasStatsCollector);
     }
 
