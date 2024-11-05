@@ -16,8 +16,6 @@ See the [Fauna Documentation](https://docs.fauna.com/fauna/current/) for additio
 ## Compatibility
 
 - C# ^10.0
-- .NET 6.0
-- .NET 7.0
 - .NET 8.0
 
 ## Installation
