@@ -674,12 +674,18 @@ public abstract class BaseClient : IClient
         QueryOptions? queryOptions,
         CancellationToken cancellationToken)
     {
-        var response = await QueryAsync<EventSource>(
-            query,
-            queryOptions,
-            cancellationToken);
-
-        return response.Data;
+        try
+        {
+            var response = await QueryAsync<EventSource>(
+                query,
+                queryOptions,
+                cancellationToken);
+            return response.Data;
+        }
+        catch (SerializationException ex)
+        {
+            throw new InvalidOperationException("Query must return an EventSource.", ex);
+        }
     }
 
     /// <summary>

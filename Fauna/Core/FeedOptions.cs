@@ -11,7 +11,7 @@ public class FeedOptions
     /// <param name="cursor">The cursor for the feed. Used to resume the Feed.</param>
     /// <param name="pageSize">Optional page size for the feed.</param>
     /// <seealso href="https://docs.fauna.com/fauna/current/reference/cdc/#get-events-after-a-specific-cursor"/>
-    public FeedOptions(string cursor, int? pageSize)
+    public FeedOptions(string cursor, int? pageSize = null)
     {
         Cursor = cursor;
         PageSize = pageSize;
@@ -23,7 +23,7 @@ public class FeedOptions
     /// <param name="startTs">The start timestamp for the feed. Used to resume the Feed.</param>
     /// <param name="pageSize">Optional page size for the feed.</param>
     /// <seealso href="https://docs.fauna.com/fauna/current/reference/cdc/#get-events-after-a-specific-cursor"/>
-    public FeedOptions(long startTs, int? pageSize)
+    public FeedOptions(long startTs, int? pageSize = null)
     {
         StartTs = startTs;
         PageSize = pageSize;

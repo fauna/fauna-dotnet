@@ -580,7 +580,8 @@ public class IntegrationTests
     [Test, Category("EventFeed")]
     public async Task CanOpenFeedWithEventSource()
     {
-        EventSource eventSource = _client.QueryAsync<EventSource>(FQL($"StreamingSandbox.all().eventSource()")).Result.Data;
+        EventSource eventSource =
+            _client.QueryAsync<EventSource>(FQL($"StreamingSandbox.all().eventSource()")).Result.Data;
         Assert.NotNull(eventSource);
 
         var feed = await _client.EventFeedAsync<StreamingSandbox>(eventSource);
@@ -622,6 +623,64 @@ public class IntegrationTests
         }
 
         Assert.AreEqual((end - start) / pageSize, pages, "should have the correct number of pages");
+    }
+
+    [Test, Category("EventFeed")]
+    public async Task CanUseFeedOptionsStartTs()
+    {
+        const int pageSize = 3;
+        const int start = 5;
+        const int end = 20;
+
+        // Create Events
+        await _client.QueryAsync(
+            FQL($"Set.sequence({start}, {end}).forEach(n => StreamingSandbox.create({{ n: n }}))"));
+
+        long fiveMinutesAgo = DateTimeOffset.UtcNow.AddMinutes(-5).ToUnixTimeMilliseconds() * 1000;
+
+        EventSource eventSource =
+            _client.QueryAsync<EventSource>(FQL($"StreamingSandbox.all().eventSource()")).Result.Data;
+        Assert.NotNull(eventSource);
+
+
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(eventSource, new FeedOptions(fiveMinutesAgo, pageSize: pageSize));
+        Assert.IsNotNull(feed);
+
+        int pages = 0;
+        await foreach (var page in feed)
+        {
+            if (page.HasNext)
+            {
+                Assert.AreEqual(pageSize, page.Events.Count);
+            }
+
+            pages++;
+        }
+
+        Assert.AreEqual((end - start) / pageSize, pages, "should have the correct number of pages");
+    }
+
+    [Test, Category("EventFeed")]
+    public void ThrowsWhenQueryDoesntReturnEventSource()
+    {
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await _client.EventFeedAsync<StreamingSandbox>(FQL($"42"))
+        );
+
+        Assert.That(ex!.Message, Does.Contain("Query must return an EventSource."));
+    }
+
+    [Test, Category("EventFeed")]
+    public void ThrowsWhenAttemptingToUseCursorWithQuery()
+    {
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await _client.EventFeedAsync<StreamingSandbox>(
+                FQL($"StreamingSandbox.all().eventSource()"),
+                feedOptions: new FeedOptions("abc1234==")
+            )
+        );
+
+        Assert.AreEqual("Cannot use Cursor when opening an EventFeed with a Query.", ex!.Message);
     }
 
     #endregion

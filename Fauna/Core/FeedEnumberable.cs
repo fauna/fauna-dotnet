@@ -112,15 +112,9 @@ public class FeedEnumerable<T> where T : notnull
         _cancel = cancel;
         _feedOptions = feedOptions;
 
-        if (feedOptions?.Cursor is not null)
-        {
-            _eventSource.LastCursor = feedOptions.Cursor;
-        }
-
-        if (feedOptions?.PageSize is > 0)
-        {
-            _eventSource.PageSize = feedOptions.PageSize;
-        }
+        _eventSource.LastCursor = feedOptions?.Cursor;
+        _eventSource.StartTs = feedOptions?.StartTs;
+        _eventSource.PageSize = feedOptions?.PageSize;
     }
 
     /// <summary>
