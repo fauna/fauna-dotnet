@@ -9,28 +9,28 @@ using static Fauna.Core.ResponseFields;
 namespace Fauna.Core;
 
 /// <summary>
-///
+/// Represents the response from Fauna Event Feed requests.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class FeedPage<T> where T : notnull
 {
     /// <summary>
-    ///
+    /// List of Events returned by the Feed
     /// </summary>
-    public List<Event<T>> Events { get; private init; } = new();
+    public List<Event<T>> Events { get; private init; } = [];
 
     /// <summary>
-    ///
+    /// Cursor returned from the Feed
     /// </summary>
     public string Cursor { get; private init; } = null!;
 
     /// <summary>
-    ///
+    /// Indicates if there are more pages for pagination.
     /// </summary>
     public bool HasNext { get; private init; }
 
     /// <summary>
-    ///
+    /// Stats returned from the Feed.
     /// </summary>
     public QueryStats Stats { get; private init; }
 
