@@ -113,6 +113,7 @@ jobs:
         params:
           dir: testtools-deps-repo/fauna-driver-platform-tests/
           dockerfile: testtools-deps-repo/fauna-driver-platform-tests/Dockerfile.dotnet
+          build_platform: linux/amd64
           tag: latest
 
   - name: perf-tests-dev
