@@ -661,6 +661,17 @@ public class IntegrationTests
     }
 
     [Test, Category("EventFeed")]
+    public async Task CanUseCursorWithQuery()
+    {
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(
+            FQL($"StreamingSandbox.all().eventSource()"),
+            feedOptions: new FeedOptions("abc1234==")
+        );
+
+        Assert.NotNull(feed);
+    }
+
+    [Test, Category("EventFeed")]
     public void ThrowsWhenQueryDoesntReturnEventSource()
     {
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
@@ -670,18 +681,6 @@ public class IntegrationTests
         Assert.That(ex!.Message, Does.Contain("Query must return an EventSource."));
     }
 
-    [Test, Category("EventFeed")]
-    public void ThrowsWhenAttemptingToUseCursorWithQuery()
-    {
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
-            await _client.EventFeedAsync<StreamingSandbox>(
-                FQL($"StreamingSandbox.all().eventSource()"),
-                feedOptions: new FeedOptions("abc1234==")
-            )
-        );
-
-        Assert.AreEqual("Cannot use Cursor when opening an EventFeed with a Query.", ex!.Message);
-    }
 
     #endregion
 

@@ -652,11 +652,6 @@ public abstract class BaseClient : IClient
         FeedOptions? feedOptions = null,
         CancellationToken cancellationToken = default) where T : notnull
     {
-        if (feedOptions?.Cursor != null)
-        {
-            throw new InvalidOperationException("Cannot use Cursor when opening an EventFeed with a Query.");
-        }
-
         EventSource eventSource = await GetEventSourceFromQueryAsync(query, null, cancellationToken);
         if (feedOptions != null) eventSource.Options = feedOptions;
 
