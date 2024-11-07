@@ -319,7 +319,7 @@ var feed = await client.EventFeedAsync<Person>(eventSource, feedOptions);
 var feedFromQuery = await client.EventFeedAsync<Person>(FQL($"Person.all().eventsOn({{ .price, .stock }})"), feedOptions);
 
 // EventFeedAsync() returns a `FeedEnumerable` instance that can act as an `AsyncEnumerator`.
-// You can use `await foreach()` to iterate through all the feed's pages:
+// Use `foreach()` to iterate through the feed's pages:
 await foreach (var page in feed)
 {
     foreach (var evt in page.Events)
@@ -330,15 +330,18 @@ await foreach (var page in feed)
     }
 }
 
-// Alternatively, you can use `MoveNextAsync()` to iterate through the feed's pages:
-while (await feedFromQuery.MoveNextAsync())
+// Alternatively, use `NextAsync()` to manually iterate through the feed's pages:
+while (await feedFromQuery.NextAsync())
 {
-    FeedPage<Person> page = feedFromQuery.Current;
-    foreach (var evt in page.Events)
+    FeedPage<Person>? page = feedFromQuery.CurrentPage;
+    if (page != null)
     {
-        Console.WriteLine($"Event Type: {evt.Type}");
-        Person person = evt.Data;
-        Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
+        foreach (var evt in page.Events)
+        {
+            Console.WriteLine($"Event Type: {evt.Type}");
+            Person person = evt.Data;
+            Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
+        }
     }
 }
 ```
