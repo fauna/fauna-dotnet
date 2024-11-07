@@ -684,7 +684,7 @@ public class IntegrationTests
     [Test, Category("EventFeed")]
     public void ThrowsWhenStartTsIsTooOld()
     {
-        var ex = Assert.ThrowsAsync<FaunaException>(async () =>
+        var ex = Assert.ThrowsAsync<EventException>(async () =>
             {
                 long aYearAgo = DateTimeOffset.UtcNow.AddYears(-1).ToUnixTimeMilliseconds() * 1000;
                 var feed = await _client.EventFeedAsync<StreamingSandbox>(
