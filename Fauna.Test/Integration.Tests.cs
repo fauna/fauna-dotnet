@@ -681,6 +681,26 @@ public class IntegrationTests
         Assert.That(ex!.Message, Does.Contain("Query must return an EventSource."));
     }
 
+    [Test, Category("EventFeed")]
+    public void ThrowsWhenStartTsIsTooOld()
+    {
+        var ex = Assert.ThrowsAsync<FaunaException>(async () =>
+            {
+                long aYearAgo = DateTimeOffset.UtcNow.AddYears(-1).ToUnixTimeMilliseconds() * 1000;
+                var feed = await _client.EventFeedAsync<StreamingSandbox>(
+                    FQL($"StreamingSandbox.all().eventSource()"),
+                    new FeedOptions(aYearAgo)
+                );
+                Assert.IsNotNull(feed);
+
+                await foreach (var unused in feed)
+                {
+                }
+            }
+        );
+
+        Assert.That(ex!.Message, Does.Contain("is too far in the past"));
+    }
 
     #endregion
 
