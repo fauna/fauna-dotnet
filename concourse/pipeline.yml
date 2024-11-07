@@ -153,9 +153,10 @@ jobs:
       - task: validate-azure-functions-net80
         image: testtools-image-dotnet
         file: testtools-repo/fauna-driver-platform-tests/concourse/tasks/dotnet-azure-tests.yml
+        input_mapping:
+          driver-repo: repo.git
         params:
           APP_ID: ((drivers-platform-tests/azure-app-id))
-          FAUNA_DOTNET: repo.git
           FAUNA_SECRET: ((drivers-platform-tests/fauna-secret))
           FUNC_NAME_PREFIX: fql-az-functions-
           GIT_COMMIT: ((.:git-commit))
