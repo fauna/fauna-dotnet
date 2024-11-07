@@ -65,13 +65,13 @@ public class Event<T> where T : notnull
     /// <param name="json">JSON Element to convert.</param>
     /// <param name="ctx">A mapping context to influence deserialization.</param>
     /// <returns>An instance of <see cref="Event{T}"/>.</returns>
-    /// <exception cref="FaunaException">Thrown when the event includes a Fauna error.</exception>
+    /// <exception cref="EventException">Thrown when the event includes a Fauna error.</exception>
     internal static Event<T> From(JsonElement json, MappingContext ctx)
     {
         var err = GetError(json);
         if (err != null)
         {
-            throw new FaunaException(err.Value);
+            throw new EventException(err.Value);
         }
 
         var evt = new Event<T>
