@@ -582,7 +582,7 @@ public abstract class BaseClient : IClient
         CancellationToken cancellationToken = default) where T : notnull
     {
         EventSource eventSource = streamOptions?.Token != null
-            ? new EventSource(streamOptions.Token) { LastCursor = streamOptions.Cursor, StartTs = streamOptions.StartTs }
+            ? new EventSource(streamOptions.Token) { Options = streamOptions }
             : await GetEventSourceFromQueryAsync(query, queryOptions, cancellationToken);
 
         return new StreamEnumerable<T>(this, eventSource, cancellationToken);
@@ -634,7 +634,9 @@ public abstract class BaseClient : IClient
     {
         await Task.CompletedTask;
 
-        return new FeedEnumerable<T>(this, eventSource, feedOptions, cancellationToken);
+        if (feedOptions != null) eventSource.Options = feedOptions;
+
+        return new FeedEnumerable<T>(this, eventSource, cancellationToken);
     }
 
     /// <summary>
@@ -656,8 +658,9 @@ public abstract class BaseClient : IClient
         }
 
         EventSource eventSource = await GetEventSourceFromQueryAsync(query, null, cancellationToken);
+        if (feedOptions != null) eventSource.Options = feedOptions;
 
-        return new FeedEnumerable<T>(this, eventSource, feedOptions, cancellationToken);
+        return new FeedEnumerable<T>(this, eventSource, cancellationToken);
     }
 
     /// <summary>

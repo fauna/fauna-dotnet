@@ -108,7 +108,8 @@ internal class Connection : IConnection
                         }
 
                         var evt = Event<T>.From(line, ctx);
-                        eventSource.LastCursor = evt.Cursor;
+                        eventSource.Options.Cursor = evt.Cursor;
+
                         bc.Add(evt, cancellationToken);
                     }
 

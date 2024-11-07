@@ -12,12 +12,11 @@ public class FeedEnumerable<T> where T : notnull
     private readonly BaseClient _client;
     private readonly EventSource _eventSource;
     private readonly CancellationToken _cancel;
-    private readonly FeedOptions? _feedOptions;
 
     /// <summary>
-    /// The current cursor for the Feed.
+    /// Current cursor for the Feed.
     /// </summary>
-    public string? Cursor => _eventSource.LastCursor;
+    public string? Cursor => CurrentPage?.Cursor;
 
     /// <summary>
     /// The latest page returned from the Event Feed enumerator.
@@ -27,17 +26,11 @@ public class FeedEnumerable<T> where T : notnull
     internal FeedEnumerable(
         BaseClient client,
         EventSource eventSource,
-        FeedOptions? feedOptions = null,
         CancellationToken cancel = default)
     {
         _client = client;
         _eventSource = eventSource;
         _cancel = cancel;
-        _feedOptions = feedOptions;
-
-        _eventSource.LastCursor = feedOptions?.Cursor;
-        _eventSource.StartTs = feedOptions?.StartTs;
-        _eventSource.PageSize = feedOptions?.PageSize;
     }
 
     /// <summary>

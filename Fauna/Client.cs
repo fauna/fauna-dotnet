@@ -161,7 +161,8 @@ public class Client : BaseClient, IDisposable
                            cancel))
         {
             LastSeenTxn = evt.TxnTime;
-            eventSource.LastCursor = evt.Cursor;
+            eventSource.Options.Cursor = evt.Cursor;
+
             StatsCollector?.Add(evt.Stats);
             yield return evt;
         }
@@ -190,7 +191,8 @@ public class Client : BaseClient, IDisposable
             string body = await httpResponse.Content.ReadAsStringAsync(cancel);
 
             var res = FeedPage<T>.From(body, ctx);
-            eventSource.LastCursor = res.Cursor;
+            eventSource.Options.Cursor = res.Cursor;
+
             StatsCollector?.Add(res.Stats);
             yield return res;
             if (!res.HasNext)

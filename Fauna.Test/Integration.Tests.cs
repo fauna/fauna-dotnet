@@ -733,7 +733,8 @@ public class IntegrationTests
     [Category("serialization")]
     public async Task ValidateBytesAcrossTheWire()
     {
-        byte[] byteArray = { 70, 97, 117, 110, 97 };
+        // ReSharper disable once UseUtf8StringLiteral
+        byte[] byteArray = [70, 97, 117, 110, 97];
         byte[]? nullArray = null;
 
         var result = await _client.QueryAsync<List<object?>>(FQL($"let x:Bytes = {byteArray}; let y:Bytes|Null = {nullArray}; [x,y]"));

@@ -1,9 +1,11 @@
+using Fauna.Types;
+
 namespace Fauna.Core;
 
 /// <summary>
 /// Represents the options when subscribing to Fauna Event Feeds.
 /// </summary>
-public class FeedOptions
+public class FeedOptions : EventOptions
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FeedOptions"/> class with the specified cursor and optional page size.
@@ -37,20 +39,4 @@ public class FeedOptions
     {
         PageSize = pageSize;
     }
-
-    /// <summary>
-    /// Cursor returned from Fauna
-    /// </summary>
-    /// <seealso href="https://docs.fauna.com/fauna/current/reference/cdc/#get-events-after-a-specific-cursor"/>
-    public string? Cursor { get; }
-
-    /// <summary>
-    /// Start timestamp returned for the feed. Used to resume the Feed.
-    /// </summary>
-    public long? StartTs { get; }
-
-    /// <summary>
-    /// Limit page size for the Feed
-    /// </summary>
-    public int? PageSize { get; }
 }
