@@ -57,6 +57,12 @@ public readonly struct QueryStats
     public List<string> RateLimitsHit { get; init; }
 
     /// <summary>
+    /// Processing time in milliseconds, only returned on Events.
+    /// </summary>
+    [JsonPropertyName(Stats_ProcessingTimeMs)]
+    public int? ProcessingTimeMs { get; init; }
+
+    /// <summary>
     /// Returns a string representation of the query statistics.
     /// </summary>
     /// <returns>A string detailing the query execution statistics.</returns>
@@ -65,6 +71,7 @@ public readonly struct QueryStats
         return $"compute: {ComputeOps}, read: {ReadOps}, write: {WriteOps}, " +
                $"queryTime: {QueryTimeMs}, retries: {ContentionRetries}, " +
                $"storageRead: {StorageBytesRead}, storageWrite: {StorageBytesWrite}, " +
+               $"{(ProcessingTimeMs.HasValue ? $"processingTime: {ProcessingTimeMs}, " : "")}" +
                $"limits: [{string.Join(',', RateLimitsHit)}]";
     }
 }

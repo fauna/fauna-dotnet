@@ -106,6 +106,11 @@ internal readonly struct ResponseFields
     /// </summary>
     public const string Stats_RateLimitsHit = "rate_limits_hit";
 
+    /// <summary>
+    /// Field name for the processing time in milliseconds.
+    /// </summary>
+    public const string Stats_ProcessingTimeMs = "processing_time_ms";
+
     #endregion
 
     #region "error" block

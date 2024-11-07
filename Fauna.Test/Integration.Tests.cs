@@ -649,10 +649,8 @@ public class IntegrationTests
         int pages = 0;
         await foreach (var page in feed)
         {
-            if (page.HasNext)
-            {
-                Assert.AreEqual(pageSize, page.Events.Count);
-            }
+            if (page.Events.Count > 0) Assert.NotNull(page.Events[0].Stats.ProcessingTimeMs);
+            if (page.HasNext) Assert.AreEqual(pageSize, page.Events.Count);
 
             pages++;
         }
