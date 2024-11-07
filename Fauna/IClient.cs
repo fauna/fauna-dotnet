@@ -641,14 +641,12 @@ public abstract class BaseClient : IClient
     /// Opens the event feed with Fauna and returns an enumerator for the events.
     /// </summary>
     /// <param name="query">The query to create the stream from Fauna.</param>
-    /// <param name="queryOptions">The options for the query.</param>
     /// <param name="feedOptions">The options for the feed.</param>
     /// <param name="cancellationToken">The cancellation token for the operation.</param>
     /// <typeparam name="T">Which Type to map the Events to.</typeparam>
     /// <returns></returns>
     public async Task<FeedEnumerable<T>> EventFeedAsync<T>(
         Query query,
-        QueryOptions? queryOptions = null,
         FeedOptions? feedOptions = null,
         CancellationToken cancellationToken = default) where T : notnull
     {
@@ -657,7 +655,7 @@ public abstract class BaseClient : IClient
             throw new InvalidOperationException("Cannot use Cursor when opening an EventFeed with a Query.");
         }
 
-        EventSource eventSource = await GetEventSourceFromQueryAsync(query, queryOptions, cancellationToken);
+        EventSource eventSource = await GetEventSourceFromQueryAsync(query, null, cancellationToken);
 
         return new FeedEnumerable<T>(this, eventSource, feedOptions, cancellationToken);
     }

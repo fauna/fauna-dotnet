@@ -66,7 +66,7 @@ public class Event<T> where T : notnull
     /// <param name="ctx">A mapping context to influence deserialization.</param>
     /// <returns>An instance of <see cref="Event{T}"/>.</returns>
     /// <exception cref="FaunaException">Thrown when the event includes a Fauna error.</exception>
-    public static Event<T> From(JsonElement json, MappingContext ctx)
+    internal static Event<T> From(JsonElement json, MappingContext ctx)
     {
         var err = GetError(json);
         if (err != null)
@@ -93,7 +93,7 @@ public class Event<T> where T : notnull
     /// <param name="ctx">A mapping context to influence deserialization.</param>
     /// <returns>An instance of <see cref="Event{T}"/>.</returns>
     /// <exception cref="FaunaException">Thrown when the event includes a Fauna error.</exception>
-    public static Event<T> From(string body, MappingContext ctx)
+    internal static Event<T> From(string body, MappingContext ctx)
     {
         var json = JsonSerializer.Deserialize<JsonElement>(body);
 

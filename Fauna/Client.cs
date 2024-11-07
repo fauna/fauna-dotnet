@@ -173,7 +173,7 @@ public class Client : BaseClient, IDisposable
     {
         cancel.ThrowIfCancellationRequested();
 
-        var finalOptions = QueryOptions.GetFinalQueryOptions(_config.DefaultQueryOptions, null);
+        var finalOptions = _config.DefaultQueryOptions;
         var headers = GetRequestHeaders(finalOptions);
 
         while (!cancel.IsCancellationRequested)

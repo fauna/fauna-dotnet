@@ -553,7 +553,7 @@ public class IntegrationTests
 
         Assert.NotNull(feed.CurrentPage, "should have loaded a page");
         Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
-        Assert.IsEmpty(feed.CurrentPage!.Events, "should note have events");
+        Assert.IsEmpty(feed.CurrentPage!.Events, "should not have events");
 
         await _client.QueryAsync(FQL($"StreamingSandbox.create({{ foo: 'bar' }})"));
 
