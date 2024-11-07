@@ -8,28 +8,21 @@ namespace Fauna.Types;
 public sealed class EventSource : IEquatable<EventSource>
 {
     /// <summary>
+    /// Gets the string value of the stream token.
+    /// </summary>
+    internal string Token { get; }
+
+    internal EventOptions Options { get; set; }
+
+    /// <summary>
     /// Initializes an <see cref="EventSource"/>.
     /// </summary>
     /// <param name="token">An event source.</param>
     public EventSource(string token)
     {
         Token = token;
+        Options = new EventOptions();
     }
-
-    /// <summary>
-    /// Gets the string value of the stream token.
-    /// </summary>
-    internal string Token { get; }
-
-    /// <summary>
-    /// The start timestamp of the Event Feed or Event Stream.
-    /// </summary>
-    public long? StartTs { get; set; }
-
-    /// <summary>
-    /// The starting cursor for the Event Feed or Event Stream. Typically, this is the last observed cursor.
-    /// </summary>
-    public string? LastCursor { get; set; }
 
     /// <summary>
     /// Serializes the event source to the provided <see cref="Stream"/>.
@@ -40,14 +33,20 @@ public sealed class EventSource : IEquatable<EventSource>
         var writer = new Utf8JsonWriter(stream);
         writer.WriteStartObject();
         writer.WriteString("token", Token);
-        if (LastCursor != null)
+        if (Options.Cursor != null)
         {
-            writer.WriteString("cursor", LastCursor);
+            writer.WriteString("cursor", Options.Cursor);
         }
-        else if (StartTs != null)
+        else if (Options.StartTs != null)
         {
-            writer.WriteNumber("start_ts", StartTs.Value);
+            writer.WriteNumber("start_ts", Options.StartTs.Value);
         }
+
+        if (Options.PageSize is > 0)
+        {
+            writer.WriteNumber("page_size", Options.PageSize.Value);
+        }
+
         writer.WriteEndObject();
         writer.Flush();
     }
@@ -86,4 +85,26 @@ public sealed class EventSource : IEquatable<EventSource>
     {
         return Token.GetHashCode();
     }
+}
+
+/// <summary>
+/// Represents the options for a Fauna EventSource.
+/// </summary>
+public class EventOptions
+{
+    /// <summary>
+    /// Cursor returned from Fauna
+    /// </summary>
+    /// <seealso href="https://docs.fauna.com/fauna/current/reference/cdc/#get-events-after-a-specific-cursor"/>
+    public string? Cursor { get; internal set; }
+
+    /// <summary>
+    /// Start timestamp returned for the feed. Used to resume the Feed.
+    /// </summary>
+    public long? StartTs { get; protected init; }
+
+    /// <summary>
+    /// Limit page size for the Feed
+    /// </summary>
+    public int? PageSize { get; protected init; }
 }

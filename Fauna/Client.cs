@@ -16,6 +16,7 @@ public class Client : BaseClient, IDisposable
 {
     private const string QueryUriPath = "/query/1";
     private const string StreamUriPath = "/stream/1";
+    private const string FeedUriPath = "/feed/1";
 
     private readonly Configuration _config;
     private readonly IConnection _connection;
@@ -160,9 +161,44 @@ public class Client : BaseClient, IDisposable
                            cancel))
         {
             LastSeenTxn = evt.TxnTime;
-            eventSource.LastCursor = evt.Cursor;
+            eventSource.Options.Cursor = evt.Cursor;
+
             StatsCollector?.Add(evt.Stats);
             yield return evt;
+        }
+    }
+    internal override async IAsyncEnumerator<FeedPage<T>> SubscribeFeedInternal<T>(
+        Types.EventSource eventSource,
+        MappingContext ctx,
+        CancellationToken cancel = default)
+    {
+        cancel.ThrowIfCancellationRequested();
+
+        var finalOptions = _config.DefaultQueryOptions;
+        var headers = GetRequestHeaders(finalOptions);
+
+        while (!cancel.IsCancellationRequested)
+        {
+            var feedData = new MemoryStream();
+            eventSource.Serialize(feedData);
+
+            using var httpResponse = await _connection.DoPostAsync(
+                FeedUriPath,
+                feedData,
+                headers,
+                GetRequestTimeoutWithBuffer(finalOptions.QueryTimeout),
+                cancel);
+            string body = await httpResponse.Content.ReadAsStringAsync(cancel);
+
+            var res = FeedPage<T>.From(body, ctx);
+            eventSource.Options.Cursor = res.Cursor;
+
+            StatsCollector?.Add(res.Stats);
+            yield return res;
+            if (!res.HasNext)
+            {
+                break;
+            }
         }
     }
 

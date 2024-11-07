@@ -62,6 +62,16 @@ public abstract class DataContext : BaseClient
         return _client.SubscribeStreamInternal<T>(eventSource, ctx, cancel);
     }
 
+    internal override IAsyncEnumerator<FeedPage<T>> SubscribeFeedInternal<T>(
+        EventSource eventSource,
+        MappingContext ctx,
+        CancellationToken cancel = default)
+    {
+        CheckInitialization();
+        return _client.SubscribeFeedInternal<T>(eventSource, ctx, cancel);
+    }
+
+
     // Schema DSL
 
     /// <summary>

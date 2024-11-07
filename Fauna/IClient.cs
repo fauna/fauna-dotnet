@@ -582,7 +582,7 @@ public abstract class BaseClient : IClient
         CancellationToken cancellationToken = default) where T : notnull
     {
         EventSource eventSource = streamOptions?.Token != null
-            ? new EventSource(streamOptions.Token) { LastCursor = streamOptions.Cursor, StartTs = streamOptions.StartTs }
+            ? new EventSource(streamOptions.Token) { Options = streamOptions }
             : await GetEventSourceFromQueryAsync(query, queryOptions, cancellationToken);
 
         return new StreamEnumerable<T>(this, eventSource, cancellationToken);
@@ -593,7 +593,7 @@ public abstract class BaseClient : IClient
     /// </summary>
     /// <param name="eventSource"></param>
     /// <param name="cancellationToken"></param>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Which Type to map the Events to.</typeparam>
     /// <returns></returns>
     public async Task<StreamEnumerable<T>> EventStreamAsync<T>(
         EventSource eventSource,
@@ -604,24 +604,84 @@ public abstract class BaseClient : IClient
         return new StreamEnumerable<T>(this, eventSource, cancellationToken);
     }
 
+
+    /// <summary>
+    /// Opens the event feed with Fauna and returns an enumerator for the events.
+    /// </summary>
+    /// <typeparam name="T">The type of event data that will be deserialized from the stream.</typeparam>
+    /// <param name="eventSource">The event source to subscribe to.</param>
+    /// <param name="ctx">The mapping context to use for deserializing stream events.</param>
+    /// <param name="cancel">The cancellation token for the operation.</param>
+    /// <returns>An async enumerator of stream events.</returns>
+    /// Implementation <seealso cref="Client.SubscribeFeedInternal{T}(EventSource,MappingContext,CancellationToken)"/>
+    internal abstract IAsyncEnumerator<FeedPage<T>> SubscribeFeedInternal<T>(
+        EventSource eventSource,
+        MappingContext ctx,
+        CancellationToken cancel = default) where T : notnull;
+
+    /// <summary>
+    /// Opens the event feed with Fauna and returns an enumerator for the events.
+    /// </summary>
+    /// <param name="eventSource"></param>
+    /// <param name="feedOptions">The options for the feed.</param>
+    /// <param name="cancellationToken">The cancellation token for the operation.</param>
+    /// <typeparam name="T">Which Type to map the Events to.</typeparam>
+    /// <returns></returns>
+    public async Task<FeedEnumerable<T>> EventFeedAsync<T>(
+        EventSource eventSource,
+        FeedOptions? feedOptions = null,
+        CancellationToken cancellationToken = default) where T : notnull
+    {
+        await Task.CompletedTask;
+
+        if (feedOptions != null) eventSource.Options = feedOptions;
+
+        return new FeedEnumerable<T>(this, eventSource, cancellationToken);
+    }
+
+    /// <summary>
+    /// Opens the event feed with Fauna and returns an enumerator for the events.
+    /// </summary>
+    /// <param name="query">The query to create the stream from Fauna.</param>
+    /// <param name="feedOptions">The options for the feed.</param>
+    /// <param name="cancellationToken">The cancellation token for the operation.</param>
+    /// <typeparam name="T">Which Type to map the Events to.</typeparam>
+    /// <returns></returns>
+    public async Task<FeedEnumerable<T>> EventFeedAsync<T>(
+        Query query,
+        FeedOptions? feedOptions = null,
+        CancellationToken cancellationToken = default) where T : notnull
+    {
+        EventSource eventSource = await GetEventSourceFromQueryAsync(query, null, cancellationToken);
+        if (feedOptions != null) eventSource.Options = feedOptions;
+
+        return new FeedEnumerable<T>(this, eventSource, cancellationToken);
+    }
+
     /// <summary>
     /// Retrieves an EventSource from Fauna Query
     /// </summary>
     /// <param name="query"></param>
     /// <param name="queryOptions"></param>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    public async Task<EventSource> GetEventSourceFromQueryAsync(
+    /// <returns>EventSource returned from Query</returns>
+    private async Task<EventSource> GetEventSourceFromQueryAsync(
         Query query,
         QueryOptions? queryOptions,
         CancellationToken cancellationToken)
     {
-        var response = await QueryAsync<EventSource>(
-            query,
-            queryOptions,
-            cancellationToken);
-
-        return response.Data;
+        try
+        {
+            var response = await QueryAsync<EventSource>(
+                query,
+                queryOptions,
+                cancellationToken);
+            return response.Data;
+        }
+        catch (SerializationException ex)
+        {
+            throw new InvalidOperationException("Query must return an EventSource.", ex);
+        }
     }
 
     /// <summary>
@@ -638,6 +698,22 @@ public abstract class BaseClient : IClient
         CancellationToken cancel = default) where T : notnull
     {
         return SubscribeStreamInternal<T>(eventSource, ctx, cancel);
+    }
+
+    /// <summary>
+    /// Opens an event feed with Fauna and returns an enumerator for the events.
+    /// </summary>
+    /// <typeparam name="T">Event Data will be deserialized to this type.</typeparam>
+    /// <param name="eventSource">The stream to subscribe to.</param>
+    /// <param name="ctx">Mapping context for stream.</param>
+    /// <param name="cancel">The cancellation token.</param>
+    /// <returns>An async enumerator of stream events.</returns>
+    public IAsyncEnumerator<FeedPage<T>> SubscribeFeed<T>(
+        EventSource eventSource,
+        MappingContext ctx,
+        CancellationToken cancel = default) where T : notnull
+    {
+        return SubscribeFeedInternal<T>(eventSource, ctx, cancel);
     }
 
     #endregion

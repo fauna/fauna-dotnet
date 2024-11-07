@@ -1,9 +1,11 @@
+using Fauna.Types;
+
 namespace Fauna;
 
 /// <summary>
 /// Represents the options when subscribing to Fauna Event Streams.
 /// </summary>
-public class StreamOptions
+public class StreamOptions : EventOptions
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="StreamOptions"/> class with the specified token and cursor.
@@ -32,12 +34,4 @@ public class StreamOptions
     /// See the <a
     /// href="https://docs.fauna.com/fauna/current/reference/cdc/#event-source">Create an event source</a>.
     public string? Token { get; }
-
-    /// <summary>Cursor from the stream, must be used with the associated Token. Used to resume the stream.</summary>
-    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart-cursor">Restart from an event cursor</a>.
-    public string? Cursor { get; }
-
-    /// <summary>Start timestamp from the stream, must be used with the associated Token. Used to resume the stream.</summary>
-    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart-txn-ts">Restart from a transaction timestamp</a>.
-    public long? StartTs { get; }
 }

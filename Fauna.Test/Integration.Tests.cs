@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Fauna.Core;
 using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
@@ -39,7 +40,7 @@ public class IntegrationTests
     }
 
     [SetUp]
-    [Category("Streaming")]
+    [Category("EventStream"), Category("EventFeed")]
     public async Task SetUpStreaming()
     {
         await Fixtures.StreamingSandboxSetup(_client);
@@ -319,9 +320,9 @@ public class IntegrationTests
         Assert.Null(testClient.StatsCollector);
     }
 
+    #region EventStreams
 
-    [Test]
-    [Category("Streaming")]
+    [Test, Category("EventStream")]
     public async Task StreamRequestCancel()
     {
         var cts = new CancellationTokenSource();
@@ -345,8 +346,7 @@ public class IntegrationTests
         Assert.ThrowsAsync<TaskCanceledException>(async () => await longRunningTask);
     }
 
-    [Test]
-    [Category("Streaming")]
+    [Test, Category("EventStream")]
     public async Task CanReadEventsFomStream()
     {
         var queries = new[]
@@ -420,8 +420,7 @@ public class IntegrationTests
         await Task.CompletedTask;
     }
 
-    [Test]
-    [Category("Streaming")]
+    [Test, Category("EventStream")]
     public Task StreamThrowsWithBadRequest()
     {
         var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
@@ -443,8 +442,7 @@ public class IntegrationTests
         return Task.CompletedTask;
     }
 
-    [Test]
-    [Category("Streaming")]
+    [Test, Category("EventStream")]
     public async Task CanResumeStreamWithStreamOptions()
     {
         string? token = null;
@@ -524,22 +522,187 @@ public class IntegrationTests
         Assert.Zero(expectedEvents, "stream handler should process all events");
     }
 
-    [Test]
-    [Category("Streaming")]
+    [Test, Category("EventStream")]
     public async Task CanOpenStreamWithEventSource()
     {
         var cts = new CancellationTokenSource(TimeSpan.FromMinutes(1)); // prevent runaway test
         cts.Token.ThrowIfCancellationRequested();
 
-        EventSource eventSource = await _client.GetEventSourceFromQueryAsync(
+        EventSource eventSource = _client.QueryAsync<EventSource>(
             FQL($"StreamingSandbox.all().eventSource()"),
             queryOptions: null,
-            cancellationToken: cts.Token
-        );
+            cancel: cts.Token
+        ).Result.Data;
 
         var stream = await _client.EventStreamAsync<StreamingSandbox>(eventSource, cts.Token);
         Assert.IsNotNull(stream);
     }
+
+    #endregion
+
+    #region EventFeeds
+
+    [Test, Category("EventFeed")]
+    public async Task CanOpenFeedWithQuery()
+    {
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(FQL($"StreamingSandbox.all().eventSource()"));
+        Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
+        Assert.IsNull(feed.CurrentPage, "should not have loaded a page");
+
+        await feed.NextAsync();
+
+        Assert.NotNull(feed.CurrentPage, "should have loaded a page");
+        Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
+        Assert.IsEmpty(feed.CurrentPage!.Events, "should not have events");
+
+        await _client.QueryAsync(FQL($"StreamingSandbox.create({{ foo: 'bar' }})"));
+
+        FeedPage<StreamingSandbox>? lastPage = null;
+        await foreach (var page in feed)
+        {
+            Assert.IsNotEmpty(page.Cursor, "should have a cursor");
+            Assert.NotZero(page.Stats.ReadOps, "should have read ops");
+            Assert.AreEqual(1, page.Events.Count, "should have 1 event");
+            Assert.AreEqual(EventType.Add, page.Events[0].Type, "should be an add event");
+            lastPage = page;
+        }
+
+        // Get another page, should be empty
+        await feed.NextAsync();
+
+        Assert.IsEmpty(feed.CurrentPage!.Events, "should not have any events");
+        if (lastPage != null)
+        {
+            Assert.AreNotEqual(feed.Cursor, lastPage.Cursor, "should have a different cursor");
+        }
+    }
+
+    [Test, Category("EventFeed")]
+    public async Task CanOpenFeedWithEventSource()
+    {
+        EventSource eventSource =
+            _client.QueryAsync<EventSource>(FQL($"StreamingSandbox.all().eventSource()")).Result.Data;
+        Assert.NotNull(eventSource);
+
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(eventSource);
+        Assert.IsNotNull(feed);
+
+        await feed.NextAsync();
+
+        Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
+        Assert.IsEmpty(feed.CurrentPage!.Events, "should not have any events");
+    }
+
+    [Test, Category("EventFeed")]
+    public async Task CanUseFeedOptionsPageSize()
+    {
+        EventSource eventSource =
+            _client.QueryAsync<EventSource>(FQL($"StreamingSandbox.all().eventSource()")).Result.Data;
+        Assert.NotNull(eventSource);
+
+        const int pageSize = 3;
+        const int start = 5;
+        const int end = 20;
+
+        // Create Events
+        await _client.QueryAsync(
+            FQL($"Set.sequence({start}, {end}).forEach(n => StreamingSandbox.create({{ n: n }}))"));
+
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(eventSource, new FeedOptions(pageSize: pageSize));
+        Assert.IsNotNull(feed);
+
+        int pages = 0;
+        await foreach (var page in feed)
+        {
+            if (page.HasNext)
+            {
+                Assert.AreEqual(pageSize, page.Events.Count);
+            }
+
+            pages++;
+        }
+
+        Assert.AreEqual((end - start) / pageSize, pages, "should have the correct number of pages");
+    }
+
+    [Test, Category("EventFeed")]
+    public async Task CanUseFeedOptionsStartTs()
+    {
+        const int pageSize = 3;
+        const int start = 5;
+        const int end = 20;
+
+        // Create Events
+        await _client.QueryAsync(
+            FQL($"Set.sequence({start}, {end}).forEach(n => StreamingSandbox.create({{ n: n }}))"));
+
+        long fiveMinutesAgo = DateTimeOffset.UtcNow.AddMinutes(-5).ToUnixTimeMilliseconds() * 1000;
+
+        EventSource eventSource =
+            _client.QueryAsync<EventSource>(FQL($"StreamingSandbox.all().eventSource()")).Result.Data;
+        Assert.NotNull(eventSource);
+
+
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(eventSource, new FeedOptions(fiveMinutesAgo, pageSize: pageSize));
+        Assert.IsNotNull(feed);
+
+        int pages = 0;
+        await foreach (var page in feed)
+        {
+            if (page.HasNext)
+            {
+                Assert.AreEqual(pageSize, page.Events.Count);
+            }
+
+            pages++;
+        }
+
+        Assert.AreEqual((end - start) / pageSize, pages, "should have the correct number of pages");
+    }
+
+    [Test, Category("EventFeed")]
+    public async Task CanUseCursorWithQuery()
+    {
+        var feed = await _client.EventFeedAsync<StreamingSandbox>(
+            FQL($"StreamingSandbox.all().eventSource()"),
+            feedOptions: new FeedOptions("abc1234==")
+        );
+
+        Assert.NotNull(feed);
+    }
+
+    [Test, Category("EventFeed")]
+    public void ThrowsWhenQueryDoesntReturnEventSource()
+    {
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await _client.EventFeedAsync<StreamingSandbox>(FQL($"42"))
+        );
+
+        Assert.That(ex!.Message, Does.Contain("Query must return an EventSource."));
+    }
+
+    [Test, Category("EventFeed")]
+    public void ThrowsWhenStartTsIsTooOld()
+    {
+        var ex = Assert.ThrowsAsync<FaunaException>(async () =>
+            {
+                long aYearAgo = DateTimeOffset.UtcNow.AddYears(-1).ToUnixTimeMilliseconds() * 1000;
+                var feed = await _client.EventFeedAsync<StreamingSandbox>(
+                    FQL($"StreamingSandbox.all().eventSource()"),
+                    new FeedOptions(aYearAgo)
+                );
+                Assert.IsNotNull(feed);
+
+                await foreach (var unused in feed)
+                {
+                }
+            }
+        );
+
+        Assert.That(ex!.Message, Does.Contain("is too far in the past"));
+    }
+
+    #endregion
 
     [Test]
     public async Task CollectionAll()
@@ -589,7 +752,8 @@ public class IntegrationTests
     [Category("serialization")]
     public async Task ValidateBytesAcrossTheWire()
     {
-        byte[] byteArray = { 70, 97, 117, 110, 97 };
+        // ReSharper disable once UseUtf8StringLiteral
+        byte[] byteArray = [70, 97, 117, 110, 97];
         byte[]? nullArray = null;
 
         var result = await _client.QueryAsync<List<object?>>(FQL($"let x:Bytes = {byteArray}; let y:Bytes|Null = {nullArray}; [x,y]"));

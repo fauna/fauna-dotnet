@@ -52,6 +52,16 @@ internal readonly struct ResponseFields
     /// </summary>
     public const string ErrorFieldName = "error";
 
+    /// <summary>
+    /// Field name for pagination information.
+    /// </summary>
+    public const string HasNextFieldName = "has_next";
+
+    /// <summary>
+    /// Field name for array of events.
+    /// </summary>
+    public const string EventsFieldName = "events";
+
     #endregion
 
     #region "stats" block
