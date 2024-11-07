@@ -57,7 +57,7 @@ public readonly struct QueryStats
     public List<string> RateLimitsHit { get; init; }
 
     /// <summary>
-    /// Processing time in milliseconds, only returned on Events.
+    /// Processing time in milliseconds. Only returned on Events.
     /// </summary>
     [JsonPropertyName(Stats_ProcessingTimeMs)]
     public int? ProcessingTimeMs { get; init; }
