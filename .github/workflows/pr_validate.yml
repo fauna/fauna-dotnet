@@ -27,8 +27,8 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Restore dependencies
-        run: dotnet restore -f net${{ matrix.dotnet-version }}
+        run: dotnet restore --framework net${{ matrix.dotnet-version }}
       - name: Build
-        run: dotnet build --no-restore -f net${{ matrix.dotnet-version }}
+        run: dotnet build --no-restore --framework net${{ matrix.dotnet-version }}
       - name: Test
-        run: dotnet test --no-build --verbosity normal -f net${{ matrix.dotnet-version }}
+        run: dotnet test --no-build --verbosity normal --framework net${{ matrix.dotnet-version }}
