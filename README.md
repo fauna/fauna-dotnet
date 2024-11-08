@@ -291,6 +291,65 @@ if (r.Data.Exists) {
 
 ```
 
+## Event Feeds (beta)
+
+The driver supports [Event
+Feeds](https://docs.fauna.com/fauna/current/learn/cdc/#event-feeds).
+
+An Event Feed asynchronously polls an [event
+source](https://docs.fauna.com/fauna/current/learn/cdc/#create-an-event-source)
+for events.
+
+To get paginated events, pass an [event
+source](https://docs.fauna.com/fauna/current/learn/cdc/#create-an-event-source)
+or a query that produces an event source to `EventFeedAsync()`:
+
+```csharp
+// Get an event source from a supported Set
+EventSource eventSource = await client.QueryAsync<EventSource>(FQL($"Person.all().eventSource()"));
+
+// Calculate timestamp for 10 minutes ago in microseconds
+long tenMinutesAgo = DateTimeOffset.UtcNow.AddMinutes(-10).ToUnixTimeMilliseconds() * 1000;
+var feedOptions = new FeedOptions(startTs: tenMinutesAgo, pageSize: 10);
+
+// Pass the event source and `FeedOptions` to `EventFeedAsync()`:
+var feed = await client.EventFeedAsync<Person>(eventSource, feedOptions);
+
+// You can also pass a query that produces an event source directly to `EventFeedAsync()`:
+var feedFromQuery = await client.EventFeedAsync<Person>(FQL($"Person.all().eventsOn({{ .price, .stock }})"), feedOptions);
+
+// EventFeedAsync() returns a `FeedEnumerable` instance that can act as an `AsyncEnumerator`.
+// Use `foreach()` or `NextAsync()` to iterate through the pages of events.
+
+// Example 1: Use `foreach()` to iterate through feed pages.
+await foreach (var page in feed)
+{
+    foreach (var evt in page.Events)
+    {
+        Console.WriteLine($"Event Type: {evt.Type}");
+        Person person = evt.Data;
+        Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
+    }
+}
+
+// Example 2: Use `NextAsync()` to manually iterate through feed pages.
+// `NextAsync()` requests the next page:
+await feed.NextAsync();
+
+if (feedFromQuery.CurrentPage != null && feedFromQuery.CurrentPage.Events.Any())
+{
+    foreach (var evt in feedFromQuery.CurrentPage.Events)
+    {
+        Console.WriteLine($"Event Type: {evt.Type}");
+        Person person = evt.Data;
+        Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
+    }
+}
+
+// Call `NextAsync()` again to fetch the next page:
+await feed.NextAsync();
+```
+
 ## Event Streaming
 
 The driver supports [Event Streaming](https://docs.fauna.com/fauna/current/learn/cdc/#event-streaming).
