@@ -34,26 +34,6 @@ public class FeedEnumerable<T> where T : notnull
     }
 
     /// <summary>
-    /// Move to the next page of the Event Feed.
-    /// </summary>
-    /// <returns></returns>
-    public async Task<bool> NextAsync()
-    {
-        await using var subscribeFeed = _client.SubscribeFeed<T>(
-            _eventSource,
-            _client.MappingCtx,
-            _cancel);
-
-        bool result = await subscribeFeed.MoveNextAsync();
-        if (result)
-        {
-            CurrentPage = subscribeFeed.Current;
-        }
-
-        return result;
-    }
-
-    /// <summary>
     /// Returns an enumerator that iterates through the Feed.
     /// </summary>
     /// <returns>Event Page Enumerator</returns>

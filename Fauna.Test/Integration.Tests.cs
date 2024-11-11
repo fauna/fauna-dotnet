@@ -549,7 +549,8 @@ public class IntegrationTests
         Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
         Assert.IsNull(feed.CurrentPage, "should not have loaded a page");
 
-        await feed.NextAsync();
+        await using IAsyncEnumerator<FeedPage<StreamingSandbox>> asyncEnumerator = feed.GetAsyncEnumerator();
+        await asyncEnumerator.MoveNextAsync();
 
         Assert.NotNull(feed.CurrentPage, "should have loaded a page");
         Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
@@ -567,8 +568,8 @@ public class IntegrationTests
             lastPage = page;
         }
 
-        // Get another page, should be empty
-        await feed.NextAsync();
+        await using IAsyncEnumerator<FeedPage<StreamingSandbox>> asyncEnumeratorAgain = feed.GetAsyncEnumerator();
+        await asyncEnumeratorAgain.MoveNextAsync();
 
         Assert.IsEmpty(feed.CurrentPage!.Events, "should not have any events");
         if (lastPage != null)
@@ -587,7 +588,8 @@ public class IntegrationTests
         var feed = await _client.EventFeedAsync<StreamingSandbox>(eventSource);
         Assert.IsNotNull(feed);
 
-        await feed.NextAsync();
+        await using IAsyncEnumerator<FeedPage<StreamingSandbox>> asyncEnumerator = feed.GetAsyncEnumerator();
+        await asyncEnumerator.MoveNextAsync();
 
         Assert.IsNotEmpty(feed.Cursor, "should have a cursor");
         Assert.IsEmpty(feed.CurrentPage!.Events, "should not have any events");
