@@ -320,7 +320,6 @@ var feedFromQuery = await client.EventFeedAsync<Person>(FQL($"Person.all().event
 
 // EventFeedAsync() returns a `FeedEnumerable` instance that can act as an `AsyncEnumerator`.
 // Use `foreach()` to iterate through the pages of events.
-
 await foreach (var page in feed)
 {
     foreach (var evt in page.Events)
@@ -330,6 +329,7 @@ await foreach (var page in feed)
         Console.WriteLine($"First Name: {person.FirstName} - Last Name: {person.LastName} - Age: {person.Age}");
     }
 }
+```
 
 ## Event Streaming
 
