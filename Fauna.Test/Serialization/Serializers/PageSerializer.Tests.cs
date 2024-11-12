@@ -64,4 +64,16 @@ public class PageSerializer_Tests
         Assert.AreEqual(40, deserialized.Data[1].Age);
         Assert.AreEqual("next_page_cursor", deserialized.After);
     }
+
+    [Test]
+    public void DeserializeUnmaterializedSet()
+    {
+        const string token = "aftertoken";
+        const string wire = $$"""{"@set":"{{token}}"}""";
+
+        var serializer = Serializer.Generate<Page<object>>(s_ctx);
+        var deserialized = Helpers.Deserialize(serializer, s_ctx, wire)!;
+        Assert.IsEmpty(deserialized.Data);
+        Assert.AreEqual(token, deserialized.After);
+    }
 }
