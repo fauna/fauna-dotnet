@@ -191,4 +191,26 @@ public class DynamicSerializerTests
         string serialized = Helpers.Serialize(Serializer.Dynamic, _ctx, deserialized);
         Assert.AreEqual("{\"@ref\":{\"id\":\"123\",\"coll\":{\"@mod\":\"MappedColl\"}}}", serialized);
     }
+
+    [Test]
+    public void RoundTripEventSource()
+    {
+        const string wire = """{"@stream":"test123="}""";
+        object? deserialized = Helpers.Deserialize(Serializer.Dynamic, _ctx, wire);
+        switch (deserialized)
+        {
+            case EventSource e:
+                Assert.AreEqual("test123=", e.Token);
+                Assert.IsNull(e.Options.Cursor);
+                Assert.IsNull(e.Options.StartTs);
+                Assert.IsNull(e.Options.PageSize);
+                break;
+            default:
+                Assert.Fail($"result is type: {deserialized?.GetType()}");
+                break;
+        }
+
+        // We do not support encoding EventSources
+        Assert.Throws<NotImplementedException>(() => Helpers.Serialize(Serializer.Dynamic, _ctx, deserialized));
+    }
 }

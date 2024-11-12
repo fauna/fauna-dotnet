@@ -59,6 +59,7 @@ internal class DynamicSerializer : BaseSerializer<object?>
             TokenType.Module => reader.GetModule(),
             TokenType.Bytes => reader.GetBytes(),
             TokenType.Null => null,
+            TokenType.EventSource => reader.GetEventSource(),
             _ => throw new SerializationException(
                 $"Unexpected token while deserializing: {reader.CurrentTokenType}"),
         };
