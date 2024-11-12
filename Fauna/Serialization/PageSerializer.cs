@@ -1,4 +1,3 @@
-using Fauna.Exceptions;
 using Fauna.Mapping;
 using Fauna.Types;
 
@@ -13,11 +12,11 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
         _dataSerializer = new ListSerializer<T>(elemSerializer);
     }
 
-    public override List<FaunaType> GetSupportedTypes() => new List<FaunaType> { FaunaType.Null, FaunaType.Set };
+    public override List<FaunaType> GetSupportedTypes() => [FaunaType.Null, FaunaType.Set];
 
     public override Page<T> Deserialize(MappingContext ctx, ref Utf8FaunaReader reader)
     {
-        var wrapInPage = false;
+        bool wrapInPage = false;
         var endToken = TokenType.None;
         switch (reader.CurrentTokenType)
         {
@@ -32,36 +31,52 @@ internal class PageSerializer<T> : BaseSerializer<Page<T>>
                 break;
         }
 
-        List<T>? data = null;
-        string? after = null;
-
         if (wrapInPage)
         {
-            data = _dataSerializer.Deserialize(ctx, ref reader);
+            var data = _dataSerializer.Deserialize(ctx, ref reader);
+            return new Page<T>(data, null);
         }
-        else
+
+        reader.Read();
+        return reader.CurrentTokenType == TokenType.String
+            ? HandleUnmaterialized(ctx, ref reader, endToken)
+            : HandleMaterialized(ctx, ref reader, endToken);
+    }
+
+    private Page<T> HandleUnmaterialized(MappingContext ctx, ref Utf8FaunaReader reader, TokenType endToken)
+    {
+        string after = reader.GetString()!;
+        reader.Read();
+        if (reader.CurrentTokenType != endToken)
         {
-            while (reader.Read() && reader.CurrentTokenType != endToken)
-            {
-                var fieldName = reader.GetString()!;
-                reader.Read();
-
-                switch (fieldName)
-                {
-                    case "data":
-                        data = _dataSerializer.Deserialize(ctx, ref reader);
-                        break;
-                    case "after":
-                        after = reader.GetString()!;
-                        break;
-                }
-            }
+            throw UnexpectedToken(reader.CurrentTokenType);
         }
 
-        if (data is null)
-            throw new SerializationException($"No page data found while deserializing into {typeof(Page<T>)}");
+        return new Page<T>([], after);
+    }
 
-        return new Page<T>(data!, after);
+    private Page<T> HandleMaterialized(MappingContext ctx, ref Utf8FaunaReader reader, TokenType endToken)
+    {
+        List<T> data = [];
+        string? after = null;
+
+        do
+        {
+            string fieldName = reader.GetString()!;
+            reader.Read();
+
+            switch (fieldName)
+            {
+                case "data":
+                    data = _dataSerializer.Deserialize(ctx, ref reader);
+                    break;
+                case "after":
+                    after = reader.GetString()!;
+                    break;
+            }
+        } while (reader.Read() && reader.CurrentTokenType != endToken);
+
+        return new Page<T>(data, after);
     }
 
     public override void Serialize(MappingContext context, Utf8FaunaWriter writer, object? o)
