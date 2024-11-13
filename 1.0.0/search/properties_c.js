@@ -1,0 +1,11 @@
+var searchData=
+[
+  ['ratelimitedcomputequerycount_0',['RateLimitedComputeQueryCount',['../struct_fauna_1_1_core_1_1_stats.html#a748ea3e6d41b59a01a0993cd1c92adb2',1,'Fauna::Core::Stats']]],
+  ['ratelimitedreadquerycount_1',['RateLimitedReadQueryCount',['../struct_fauna_1_1_core_1_1_stats.html#a4d203d51290f1cc059ac2215fbc7a978',1,'Fauna::Core::Stats']]],
+  ['ratelimitedwritequerycount_2',['RateLimitedWriteQueryCount',['../struct_fauna_1_1_core_1_1_stats.html#a4dd3b9e21139246f6b71e1d3828eae31',1,'Fauna::Core::Stats']]],
+  ['rawjson_3',['RawJson',['../class_fauna_1_1_core_1_1_query_response.html#a1e4bbf5d4c802be69412a980548236ef',1,'Fauna::Core::QueryResponse']]],
+  ['readops_4',['ReadOps',['../struct_fauna_1_1_core_1_1_stats.html#a212a96d8dfb248cbdc615cf89907b27f',1,'Fauna::Core::Stats']]],
+  ['responsebody_5',['responsebody',['../class_fauna_1_1_exceptions_1_1_network_exception.html#ac5dc1caed3250319038d2f805f2a545f',1,'Fauna.Exceptions.NetworkException.ResponseBody'],['../class_fauna_1_1_exceptions_1_1_protocol_exception.html#abc51ffe41d2b04b15d4cd83d2b94f4b9',1,'Fauna.Exceptions.ProtocolException.ResponseBody']]],
+  ['retryconfiguration_6',['RetryConfiguration',['../class_fauna_1_1_configuration.html#a1653cacae741b8362dfcb453133a7ab3',1,'Fauna::Configuration']]],
+  ['retrypolicy_7',['RetryPolicy',['../class_fauna_1_1_core_1_1_retry_configuration.html#aea6b744ea4739dfe753c74d1fde1c8d4',1,'Fauna::Core::RetryConfiguration']]]
+];
