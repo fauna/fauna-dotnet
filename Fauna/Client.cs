@@ -59,6 +59,7 @@ public class Client : BaseClient, IDisposable
     /// <param name="config">The configuration settings for the client.</param>
     public Client(Configuration config)
     {
+        config.Validate();
         _config = config;
         StatsCollector = config.StatsCollector;
         _connection = new Connection(config);

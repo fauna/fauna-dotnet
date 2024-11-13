@@ -18,6 +18,20 @@ public class ConfigurationTests
     }
 
     [Test]
+    public void ConstructorWithSecretVar()
+    {
+        string? currentVal = Environment.GetEnvironmentVariable("FAUNA_ENDPOINT");
+        Environment.SetEnvironmentVariable("FAUNA_SECRET", "");
+
+        Configuration config = new Configuration { Secret = "secret" };
+        Assert.AreEqual("secret", config.Secret);
+
+        Environment.SetEnvironmentVariable("FAUNA_SECRET", currentVal);
+
+        Assert.DoesNotThrow(() => config.Validate());
+    }
+
+    [Test]
     public void ConstructorWithEndpointEnvVar()
     {
         string? currentVal = Environment.GetEnvironmentVariable("FAUNA_ENDPOINT");
@@ -28,6 +42,8 @@ public class ConfigurationTests
         Assert.AreEqual("http://localhost:8443/", config.Endpoint.ToString());
 
         Environment.SetEnvironmentVariable("FAUNA_ENDPOINT", currentVal);
+
+        Assert.DoesNotThrow(() => config.Validate());
     }
 
     [Test]
@@ -53,6 +69,7 @@ public class ConfigurationTests
         Assert.AreEqual("secret", b.Secret);
         Assert.AreEqual(Endpoints.Default, b.Endpoint);
         Assert.IsTrue(b.DisposeHttpClient);
+        Assert.DoesNotThrow(() => b.Validate());
     }
 
     [Test]
@@ -63,7 +80,7 @@ public class ConfigurationTests
         {
             Environment.SetEnvironmentVariable("FAUNA_SECRET", null);
             var b = new Configuration();
-
+            b.Validate();
         });
         Environment.SetEnvironmentVariable("FAUNA_SECRET", currentVal);
     }
@@ -76,6 +93,7 @@ public class ConfigurationTests
         Assert.AreEqual("secret", b.Secret);
         Assert.AreEqual(Endpoints.Default, b.Endpoint);
         Assert.IsFalse(b.DisposeHttpClient);
+        Assert.DoesNotThrow(() => b.Validate());
     }
 
     [Test]
