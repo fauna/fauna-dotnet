@@ -21,7 +21,7 @@ public class ConfigurationTests
     public void ConstructorWithSecretVar()
     {
         string? currentVal = Environment.GetEnvironmentVariable("FAUNA_ENDPOINT");
-        Environment.SetEnvironmentVariable("FAUNA_SECRET", "");
+        Environment.SetEnvironmentVariable("FAUNA_SECRET", null);
 
         Configuration config = new Configuration { Secret = "secret" };
         Assert.AreEqual("secret", config.Secret);
