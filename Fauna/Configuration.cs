@@ -61,11 +61,6 @@ public record class Configuration
     /// <param name="logger">A logger. If null, a default logger is used.</param>
     public Configuration(string secret = "", HttpClient? httpClient = null, ILogger? logger = null)
     {
-        if (string.IsNullOrEmpty(secret) && string.IsNullOrEmpty(Secret))
-        {
-            throw new ArgumentNullException(nameof(Secret), "Need to set FAUNA_SECRET environment variable or pass a secret as a parameter when creating the Client.");
-        }
-
         if (!string.IsNullOrEmpty(secret))
         {
             Secret = secret;
@@ -85,5 +80,14 @@ public record class Configuration
         {
             Logger.Initialize(logger);
         }
+    }
+
+    internal void Validate()
+    {
+        if (string.IsNullOrEmpty(Secret))
+            throw new ArgumentNullException(
+                nameof(Secret),
+                "Need to set FAUNA_SECRET environment variable or pass a secret as a parameter when creating the Client."
+            );
     }
 }

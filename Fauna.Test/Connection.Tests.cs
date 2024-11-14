@@ -44,7 +44,7 @@ public class ConnectionTests
 
         var httpClient = new HttpClient(_handlerMock.Object) { BaseAddress = new Uri(TestBaseUri), };
 
-        Configuration configuration = new("", httpClient)
+        Configuration configuration = new("secret", httpClient)
         {
             Endpoint = new Uri(TestBaseUri),
             RetryConfiguration = new RetryConfiguration(MaxRetries, TimeSpan.FromMilliseconds(20))
