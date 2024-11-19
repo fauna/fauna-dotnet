@@ -16,6 +16,7 @@
     <PackageReference Include="nunit" Version="3.14.0" />
     <PackageReference Include="nunit3testadapter" Version="4.5.0" />
     <PackageReference Include="Polly" Version="8.3.0" />
+    <PackageReference Include="system.drawing.common" Version="8.0.10" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Performance/setup/*">
@@ -31,7 +32,7 @@
     <Folder Include="Types\" />
   </ItemGroup>
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
