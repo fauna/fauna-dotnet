@@ -27,6 +27,9 @@ public class PerformanceTests
         var endpoint = Environment.GetEnvironmentVariable("FAUNA_ENDPOINT") ?? "http://localhost:8443";
 
         _client = GetTestClient(secret, endpoint, true);
+
+        // Make initial query to establish connection before running perf
+        var _ = _client.QueryAsync(FQL($"null")).Result;
     }
 
     [SetUp]

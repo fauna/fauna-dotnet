@@ -50,7 +50,7 @@ internal static class TestDataParser
     /// <returns>An IEnumerable<TestCaseData> that iterates over test scenarios</returns>
     public static IEnumerable<TestCaseData> GetQueriesFromFile()
     {
-        var contents = File.ReadAllText("./setup/queries.json");
+        var contents = File.ReadAllText("./utils/queries.json");
         var jsonRoot = JsonSerializer.Deserialize<TestQueries>(contents);
 
         foreach (var query in jsonRoot!.Queries)

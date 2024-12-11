@@ -18,13 +18,13 @@
     <PackageReference Include="Polly" Version="8.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Performance/setup/*">
+    <Content Include="Performance/utils/*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>setup/%(Filename)%(Extension)</Link>
+      <Link>utils/%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="Performance/setup/fauna/*">
+    <Content Include="Performance/utils/fauna/*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>setup/fauna/%(Filename)%(Extension)</Link>
+      <Link>utils/fauna/%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
