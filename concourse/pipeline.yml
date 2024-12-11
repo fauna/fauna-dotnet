@@ -90,7 +90,7 @@ resources:
   - name: dev-tests-trigger
     type: time
     source:
-      interval: 6h
+      interval: 24h
 
 jobs:
   - name: set-self
