@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        dotnet-version: [ '8.0.x' ]
+        dotnet-version: [ '8.0', '9.0' ]
 
     services:
       fauna:
@@ -23,12 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore --framework net${{ matrix.dotnet-version }}
       - name: Build
-        run: dotnet build --no-restore
+        run: dotnet build --no-restore --framework net${{ matrix.dotnet-version }}
       - name: Test
-        run: dotnet test --no-build --verbosity normal
+        run: dotnet test --no-build --verbosity normal --framework net${{ matrix.dotnet-version }}
