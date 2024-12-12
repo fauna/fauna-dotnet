@@ -1,0 +1,3 @@
+[submodule "Fauna.Test/Performance/utils"]
+	path = Fauna.Test/Performance/utils
+	url = https://github.com/fauna/driver-perf-utils.git

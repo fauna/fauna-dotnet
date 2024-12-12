@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using Fauna.Core;
+﻿using Fauna.Core;
 using Fauna.Util;
 using Microsoft.Extensions.Logging;
 

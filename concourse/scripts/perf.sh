@@ -8,12 +8,12 @@ export LOG_UNIQUE=$(date +%s%3N)
 # Install fauna-shell
 apt update -qq
 apt install -y -qq npm
-npm install --silent -g fauna-shell@^2.0.0
+npm install --silent -g fauna-shell@^3.0.0
 
 cd repo.git
 
 # Run init.sh to setup database schema and initial data
-pushd Fauna.Test/Performance/setup
+pushd Fauna.Test/Performance/utils
 ./init.sh
 
 # Build solution and run performance tests
@@ -32,5 +32,5 @@ echo '```' >> ../slack-message/perf-stats
 echo "_<$CONCOURSE_URL|Concourse job>_" >> ../slack-message/perf-stats
 
 # Run teardown.sh to delete the test collections
-pushd Fauna.Test/Performance/setup
+pushd Fauna.Test/Performance/utils
 ./teardown.sh
