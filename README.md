@@ -288,7 +288,7 @@ if (r.Data.Exists) {
 
 ```
 
-## Event Feeds (beta)
+## Event Feeds
 
 The driver supports [Event
 Feeds](https://docs.fauna.com/fauna/current/learn/cdc/#event-feeds).
