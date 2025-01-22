@@ -3,7 +3,7 @@ using Fauna.Types;
 namespace Fauna;
 
 /// <summary>
-/// Represents the options when subscribing to Fauna Event Streams.
+/// Represents the options when subscribing to Fauna event streams.
 /// </summary>
 public class StreamOptions : EventOptions
 {
@@ -12,7 +12,7 @@ public class StreamOptions : EventOptions
     /// </summary>
     /// <param name="token">The token for a Fauna event source.</param>
     /// <param name="cursor">The cursor from the stream, must be used with the associated Token. Used to resume the stream.</param>
-    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart">Restart an Event Stream</a>.
+    /// See <a href="https://docs.fauna.com/fauna/current/reference/cdc/#restart">Restart an event stream</a>.
     public StreamOptions(string token, string cursor)
     {
         Token = token;

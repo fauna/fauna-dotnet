@@ -26,13 +26,13 @@ public enum EventType
     /// </summary>
     Remove,
     /// <summary>
-    /// A status event. Typically used as an implementation detail for a driver. Indicates a status change on the stream. Not emitted for Event Feeds.
+    /// A status event. Typically used as an implementation detail for a driver. Indicates a status change on the stream. Not emitted for event feeds.
     /// </summary>
     Status
 }
 
 /// <summary>
-/// A class representing an event from an Event Feed or Event Stream.
+/// A class representing an event from an event feed or event stream.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class Event<T> where T : notnull
@@ -46,7 +46,7 @@ public class Event<T> where T : notnull
     /// </summary>
     public long TxnTime { get; private init; }
     /// <summary>
-    /// A cursor for the event. Used to resume an Event Feed or Event Stream after the event.
+    /// A cursor for the event. Used to resume an event feed or event stream after the event.
     /// </summary>
     public string Cursor { get; private init; } = null!;
     /// <summary>

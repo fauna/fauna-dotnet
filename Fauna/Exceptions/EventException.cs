@@ -3,7 +3,7 @@ using Fauna.Core;
 namespace Fauna.Exceptions;
 
 /// <summary>
-/// Represents an exception related to Fauna Event Stream and Event Feed errors.
+/// Represents an exception related to Fauna event stream and event feed errors.
 /// </summary>
 public class EventException : ServiceException
 {

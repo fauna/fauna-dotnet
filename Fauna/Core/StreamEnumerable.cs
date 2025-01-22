@@ -3,7 +3,7 @@ using Fauna.Types;
 namespace Fauna.Core;
 
 /// <summary>
-/// A class representing a Fauna Event Stream. Additional queries will be made during enumeration.
+/// A class representing a Fauna event stream. Additional queries will be made during enumeration.
 /// </summary>
 /// <typeparam name="T">The return type of the stream.</typeparam>
 public class StreamEnumerable<T> where T : notnull

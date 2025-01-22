@@ -7,7 +7,7 @@ using static Fauna.Core.ResponseFields;
 namespace Fauna.Core;
 
 /// <summary>
-/// Represents the response from Fauna Event Feed requests.
+/// Represents the response from Fauna event feed requests.
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public class FeedPage<T> where T : notnull
