@@ -3,7 +3,7 @@ using Fauna.Types;
 namespace Fauna.Core;
 
 /// <summary>
-/// Represents the options when subscribing to Fauna Event Feeds.
+/// Represents the options when subscribing to Fauna event feeds.
 /// </summary>
 public class FeedOptions : EventOptions
 {

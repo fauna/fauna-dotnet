@@ -4,7 +4,7 @@ namespace Fauna.Core;
 
 
 /// <summary>
-/// Represents a Fauna Event Feed.
+/// Represents a Fauna event feed.
 /// </summary>
 /// <typeparam name="T">Type to map each of the Events to.</typeparam>
 public class FeedEnumerable<T> where T : notnull
@@ -19,7 +19,7 @@ public class FeedEnumerable<T> where T : notnull
     public string? Cursor => CurrentPage?.Cursor;
 
     /// <summary>
-    /// The latest page returned from the Event Feed enumerator.
+    /// The latest page returned from the event feed enumerator.
     /// </summary>
     public FeedPage<T>? CurrentPage { get; private set; }
 
